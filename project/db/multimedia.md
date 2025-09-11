@@ -1,3 +1,16 @@
+# Métodos asociados a la entidad Multimedia
+
+| Método           | Descripción                                              |
+|------------------|----------------------------------------------------------|
+| create           | Crea un nuevo archivo multimedia.                        |
+| findAll          | Obtiene la lista de todos los archivos multimedia.       |
+| findOne          | Obtiene un archivo multimedia por su identificador único.|
+| update           | Actualiza los datos de un archivo multimedia existente.  |
+| delete           | Elimina un archivo multimedia del sistema.               |
+| getUrl           | Obtiene la URL pública del archivo multimedia.           |
+| setSeoTitle      | Asigna o actualiza el título SEO del archivo.            |
+| linkToEntity     | Relaciona el archivo multimedia con otra entidad (persona, propiedad, etc.). |
+| unlinkFromEntity | Elimina la relación del archivo multimedia con otra entidad. |
 # MULTIMEDIA Table Structure
 
 | Campo     | Tipo de Dato                                                                 | NULL | Por Defecto | Descripción                                 |

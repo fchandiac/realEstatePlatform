@@ -3,7 +3,7 @@
 | Campo                | Tipo de Dato                | NULL | Por Defecto | Descripción                                         |
 |----------------------|-----------------------------|------|-------------|-----------------------------------------------------|
 | id                   | UUID (PK)                   | No   | -           | Identificador único de la persona.                  |
-| name                 | STRING                      | No   | -           | Nombre completo.                                    |
+| name                 | STRING                      | Sí   | -           | Nombre completo.                                    |
 | dni                  | STRING (UNIQUE)             | Sí   | -           | Documento nacional de identidad (RUT en Chile).      |
 | address              | STRING                      | Sí   | -           | Dirección de residencia.                            |
 | phone                | STRING                      | Sí   | -           | Número telefónico.                                  |
@@ -13,3 +13,17 @@
 | dniCardFrontId        | UUID (FK → MULTIMEDIA.id)   | Sí   | -           | Imagen frontal de la cédula.                        |
 | dniCardRearId         | UUID (FK → MULTIMEDIA.id)   | Sí   | -           | Imagen trasera de la cédula.                        |
 | userId               | UUID (FK → USER.id)         | Sí   | -           | Relación con un usuario si tiene cuenta.            |
+
+## Métodos asociados a la entidad Person
+
+| Método           | Descripción                                              |
+|------------------|----------------------------------------------------------|
+| create           | Crea una nueva persona.                                  |
+| findAll          | Obtiene la lista de todas las personas.                  |
+| findOne          | Obtiene una persona por su identificador único.          |
+| update           | Actualiza los datos de una persona existente.            |
+| delete           | Elimina una persona del sistema.                         |
+| verify           | Marca a la persona como verificada.                      |
+| requestVerification | Solicita la verificación de la persona. Este método enviará una notificación a los administradores. |
+| linkUser         | Relaciona una persona con un usuario del sistema.        |
+| unlinkUser       | Elimina la relación con un usuario.                      |
