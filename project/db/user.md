@@ -1,12 +1,12 @@
-# User Table Structure
+# User
 
 | Campo         | Tipo de Dato                                 | NULL | Por Defecto | Descripción                                                |
 |---------------|----------------------------------------------|------|-------------|------------------------------------------------------------|
 | id            | UUID (PK)                                    | No   | -           | Identificador único del usuario.                           |
 | username      | STRING                                       | No   | -           | Nombre de usuario único.                                   |
 | mail          | STRING (UNIQUE)                              | No   | -           | Correo electrónico único, usado para login.                |
-| passwordHash  | VARCHAR                                      | No   | -           | Hash de la contraseña.                                     |
-| passwordSalt  | VARCHAR                                      | No   | -           | Salt para reforzar seguridad del hash.                     |
+| passHash      | VARCHAR                                      | No   | -           | Hash de la contraseña.                                     |
+| passSalt      | VARCHAR                                      | No   | -           | Salt para reforzar seguridad del hash.                     |
 | status        | ENUM('ACTIVE', 'INACTIVE', 'VACATION', 'LEAVE') | No   | ACTIVE      | Estado del usuario.                                        |
 | role          | ENUM('SUPERADMIN', 'ADMIN', 'AGENT', 'COMMUNITY') | No   | COMMUNITY   | Rol único asignado al usuario.                             |
 | permissions   | JSON                                         | Sí   | {}          | Lista de permisos adicionales definida por un administrador.|
@@ -19,10 +19,10 @@
 | create      | Crea un nuevo usuario. Automáticamente se creará una persona vacía asociada llamando al método create de Person. |
 | findAll     | Obtiene la lista de todos los usuarios.                  |
 | findOne     | Obtiene un usuario por su identificador único.           |
-| update      | Actualiza los datos de un usuario existente.             |
+| update      | Actualiza los datos de un usuario existente. Este método permite actualizar todos los datos o solo algunos campos (actualización parcial). |
 | delete      | Elimina un usuario del sistema.                          |
 | login       | Autentica a un usuario y genera un token de acceso.      |
-| changePassword | Permite al usuario cambiar su contraseña.             |
+| changePass     | Permite al usuario cambiar su contraseña.             |
 | setStatus   | Cambia el estado del usuario (activo, inactivo, etc).    |
 | assignRole  | Asigna o cambia el rol de un usuario.                    |
 | setPermissions | Modifica los permisos adicionales del usuario.        |

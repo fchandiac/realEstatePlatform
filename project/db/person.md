@@ -1,4 +1,4 @@
-# PERSON Table Structure
+# PERSON
 
 | Campo                | Tipo de Dato                | NULL | Por Defecto | Descripción                                         |
 |----------------------|-----------------------------|------|-------------|-----------------------------------------------------|
@@ -21,7 +21,7 @@
 | create           | Crea una nueva persona.                                  |
 | findAll          | Obtiene la lista de todas las personas.                  |
 | findOne          | Obtiene una persona por su identificador único.          |
-| update           | Actualiza los datos de una persona existente.            |
+| update           | Actualiza los datos de una persona existente. Este método permite actualizar todos los datos o solo algunos campos (actualización parcial). |
 | delete           | Elimina una persona del sistema.                         |
 | verify           | Marca a la persona como verificada.                      |
 | requestVerification | Solicita la verificación de la persona. Este método enviará una notificación a los administradores. |
