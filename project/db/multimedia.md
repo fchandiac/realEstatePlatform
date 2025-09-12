@@ -16,10 +16,10 @@
 | Método           | Descripción                                              |
 |------------------|----------------------------------------------------------|
 | create           | Crea un nuevo archivo multimedia.                        |
-| findAll          | Obtiene la lista de todos los archivos multimedia.       |
+| findAll          | Obtiene la lista de todos los archivos multimedia (no incluye los eliminados lógicamente). |
 | findOne          | Obtiene un archivo multimedia por su identificador único.|
 | update           | Actualiza los datos de un archivo multimedia existente. Este método permite actualizar todos los datos o solo algunos campos (actualización parcial). |
-| delete           | Elimina un archivo multimedia del sistema.               |
+| softDelete       | Realiza un borrado lógico (soft delete) del archivo multimedia, marcándolo como inactivo o eliminado sin quitarlo físicamente de la base de datos. |
 | getUrl           | Obtiene la URL pública del archivo multimedia.           |
 | setSeoTitle      | Asigna o actualiza el título SEO del archivo.            |
 | linkToEntity     | Relaciona el archivo multimedia con otra entidad (persona, propiedad, etc.). |

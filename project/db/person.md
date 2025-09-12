@@ -16,14 +16,15 @@
 
 ## Métodos asociados a la entidad Person
 
-| Método           | Descripción                                              |
-|------------------|----------------------------------------------------------|
-| create           | Crea una nueva persona.                                  |
-| findAll          | Obtiene la lista de todas las personas.                  |
-| findOne          | Obtiene una persona por su identificador único.          |
-| update           | Actualiza los datos de una persona existente. Este método permite actualizar todos los datos o solo algunos campos (actualización parcial). |
-| delete           | Elimina una persona del sistema.                         |
-| verify           | Marca a la persona como verificada.                      |
-| requestVerification | Solicita la verificación de la persona. Este método enviará una notificación a los administradores. |
-| linkUser         | Relaciona una persona con un usuario del sistema.        |
-| unlinkUser       | Elimina la relación con un usuario.                      |
+| Método           | Descripción                                              | Validaciones / Mensajes de error |
+|------------------|----------------------------------------------------------|-------------------------------|
+| create           | Crea una nueva persona.                                  | Validar que dni (si se provee) no exista previamente. Si existe: "El DNI ya está registrado." |
+| findAll          | Obtiene la lista de todas las personas (no incluye las eliminadas lógicamente). | - |
+| findOne          | Obtiene una persona por su identificador único.          | Si no existe: "Persona no encontrada." |
+| update           | Actualiza los datos de una persona existente. Este método permite actualizar todos los datos o solo algunos campos (actualización parcial). | Validar unicidad de dni si se modifica. Si existe: "El DNI ya está registrado." |
+| softDelete       | Realiza un borrado lógico (soft delete) de la persona, marcándola como inactiva o eliminada sin quitarla físicamente de la base de datos. | Si no existe: "Persona no encontrada." |
+| verify           | Marca a la persona como verificada.                      | Si ya está verificada: "La persona ya está verificada." |
+| unverify         | Revierte el estado de verificación de la persona.        | Si no está verificada: "La persona no está verificada." |
+| requestVerification | Solicita la verificación de la persona. Este método enviará una notificación a los administradores. | Si ya hay una solicitud pendiente: "Ya existe una solicitud de verificación pendiente." |
+| linkUser         | Relaciona una persona con un usuario del sistema.        | Validar que el usuario exista y no esté ya vinculado. |
+| unlinkUser       | Elimina la relación con un usuario.                      | Si no hay usuario vinculado: "No existe usuario vinculado a esta persona." |

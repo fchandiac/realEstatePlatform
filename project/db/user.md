@@ -17,7 +17,7 @@
 | Método      | Parámetros                                              | Descripción                                              | Validaciones / Mensajes de error |
 |-------------|---------------------------------------------------------|----------------------------------------------------------|-------------------------------|
 | create      | username, mail, pass, role (opcional), personalInfo (opcional) | Crea un nuevo usuario. Automáticamente se creará una persona vacía asociada llamando al método create de Person. | Validar que username y mail no existan previamente. Si existen: "El nombre de usuario o correo ya está registrado." |
-| findAll     | -                                                       | Obtiene la lista de todos los usuarios.                  | - |
+| findAll     | -                                                       | Obtiene la lista de todos los usuarios (no incluye los eliminados lógicamente). | - |
 | findOne     | id                                                      | Obtiene un usuario por su identificador único.           | Si no existe: "Usuario no encontrado." |
 | update      | id, datos a modificar                                   | Actualiza los datos de un usuario existente. Este método permite actualizar todos los datos o solo algunos campos (actualización parcial). | Validar unicidad de username/mail si se modifican. Si existen: "El nombre de usuario o correo ya está registrado." |
 | softDelete  | id                                                      | Realiza un borrado lógico (soft delete) del usuario, marcándolo como inactivo o eliminado sin quitarlo físicamente de la base de datos. | Si no existe: "Usuario no encontrado." |
