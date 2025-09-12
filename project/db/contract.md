@@ -1,3 +1,19 @@
+## Tabla de roles posibles en contratos de arriendo y compraventa en Chile
+
+| Rol                        | Descripción                                                                 | ¿Está regulado explícitamente? | Fuente         |
+|----------------------------|-----------------------------------------------------------------------------|-------------------------------|----------------|
+| Vendedor                   | Parte que se obliga a transferir el dominio de un bien a cambio de un precio.| Sí, Código Civil art. 1793    | BCN Chile      |
+| Comprador                  | Parte que se obliga a pagar el precio en dinero por el bien adquirido.       | Sí, Código Civil art. 1793    | BCN Chile      |
+| Arrendador                 | Propietario o quien cede el uso y goce de un bien a cambio de una renta.     | Sí, Código Civil art. 1915    | BCN Chile      |
+| Arrendatario               | Quien recibe el uso o goce del bien y paga la renta.                         | Sí, Código Civil art. 1915    | BCN Chile      |
+| Notario / Ministro de Fe   | Funcionario público que autoriza y da fe de la escritura pública requerida para la compraventa. | Sí, Ley de Notariado y práctica obligatoria para inmuebles. | Vlex Chile     |
+| Conservador de Bienes Raíces| Encargado de inscribir la escritura en el registro para perfeccionar la tradición de dominio. | Sí, Código Civil art. 686 y Ley de Registro Conservatorio. | SII Chile      |
+| Testigos                   | Personas que firman para certificar las firmas o hechos, reforzando la prueba del contrato. | No en todos los casos, pero reconocidos en materia probatoria. | SII Chile      |
+| Fiador o Aval              | Persona que garantiza el cumplimiento de las obligaciones de una de las partes. | Regulación general de fianzas en Código Civil arts. 2335 y ss. | BCN Chile      |
+| Apoderado o Representante  | Persona autorizada para actuar en nombre de una de las partes.               | Sí, regulado por normas sobre mandato. | Portal Ijurídica |
+| Promitente comprador/vendedor | Parte de un contrato de promesa que se obliga a celebrar en el futuro una compraventa. | Sí, regulado en Código Civil arts. 1554 y siguientes. | BCN Chile      |
+| Terceros interesados (ej. acreedor hipotecario) | Persona con derechos reales o gravámenes que pueden afectar la operación. | Sí, regulado por normas sobre hipoteca y gravámenes. | Vlex Chile     |
+| Corredor de propiedades    | Intermediario que facilita la operación, aunque no es parte contractual.     | No regulado en Código Civil, pero sí en normativa comercial y costumbre. | Vlex Chile     |
 # Contract
 
 | Campo       | Tipo de Dato                        | NULL | Descripción                                                        |
