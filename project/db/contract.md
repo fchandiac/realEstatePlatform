@@ -12,7 +12,7 @@
 | commission  | FLOAT                               | No   | Porcentaje de comisión.                                            |
 | payments    | JSON                                | Sí   | Pagos de arriendo (registro manual).                               |
 | documents   | JSON                                | Sí   | Documentos requeridos (obligatorios para cerrar).                  |
-| people      | JSON                                | No   | Personas asociadas (Vendedor, Comprador, etc.).                    |
+| people      | JSON                                | No   | Personas asociadas al contrato, cada una con su rol (ver ENUM ContractRole). Ejemplo: [{ "personId": "uuid", "role": "TENANT" }]. |
 | description | TEXT                                | Sí   | Descripción del contrato.                                          |
 
 ## Métodos asociados a la entidad Contract
@@ -27,5 +27,95 @@
 | close         | id, endDate, documents                                  | Cierra el contrato.                                                         | Validar que todos los documentos requeridos estén presentes. Si faltan: "Faltan documentos obligatorios para cerrar el contrato." |
 | fail          | id, endDate                                             | Marca el contrato como fallido.                                             | Si ya está cerrado o fallido: "El contrato ya está cerrado o fallido." |
 | addPayment    | id, payment                                             | Agrega un pago al contrato.                                                  | Validar formato de payment. |
-| addPerson     | id, person                                              | Agrega una persona asociada al contrato.                                    | Validar formato de person. |
+| addPerson     | id, personId, role                                      | Agrega una persona asociada al contrato con un rol específico.              | Validar formato de personId y que el rol sea válido según ENUM ContractRole. |
+| getPeopleByRole | id, role                                              | Obtiene las personas asociadas a un contrato con un rol específico.         | Validar existencia de contrato y rol. |
+| validateRequiredRoles | id                                              | Valida que el contrato tenga los roles requeridos según el tipo de operación. | Si faltan roles: "Faltan roles obligatorios para este tipo de contrato." |
 | addDocument   | id, document                                            | Agrega un documento al contrato.                                            | Validar formato de document. |
+
+
+## ENUM: ContractRole
+
+Define los roles posibles de una persona dentro de un contrato. Todos los valores son en inglés.
+
+| Valor        | Descripción                |
+|--------------|---------------------------|
+| SELLER       | Vendedor                  |
+| BUYER        | Comprador                 |
+| LANDLORD     | Arrendador                |
+| TENANT       | Arrendatario              |
+| GUARANTOR    | Avalista/Garante          |
+| AGENT        | Corredor/Agente           |
+
+La justificación legal de los roles principales es la siguiente:
+
+- **SELLER** y **BUYER**: Según el artículo 1793 del Código Civil de Chile, las partes en la compraventa son el vendedor (quien se obliga a dar una cosa) y el comprador (quien se obliga a pagar el precio en dinero).
+- **LANDLORD** y **TENANT**: Según el artículo 1916 del Código Civil de Chile, las partes en el arriendo son el arrendador (LANDLORD) y el arrendatario (TENANT).
+
+Se pueden agregar más roles según necesidades del negocio.
+
+## Referencia legal sobre los roles SELLER y BUYER
+
+El Código Civil de Chile menciona por primera vez a las partes de la compraventa en el artículo 1793:
+
+**Artículo 1793 del Código Civil de Chile:**
+
+"La compraventa es un contrato en que una de las partes se obliga a dar una cosa y la otra a pagarla en dinero. Aquélla se dice vender y ésta comprar. El dinero que el comprador da por la cosa vendida, se llama precio."
+
+Este artículo define las partes del contrato de compraventa como:
+- Vendedor: Quien se obliga a dar una cosa.
+- Comprador: Quien se obliga a pagar el precio en dinero.
+
+Por lo tanto, el artículo 1793 es la base legal para los roles SELLER y BUYER en este modelo.
+
+## Documentos requeridos según tipo de operación
+
+| Documento                                              | Operación      | Descripción                                                                                   |
+|--------------------------------------------------------|----------------|-----------------------------------------------------------------------------------------------|
+| Escritura de compraventa                               | COMPRAVENTA    | Escritura pública que formaliza la transferencia de dominio.                                  |
+| Borrador de inscripción Conservador Bienes Raíces      | COMPRAVENTA    | Documento para inscribir la propiedad a nombre del comprador en el Conservador.               |
+| Certificado de no expropiación/antecedentes municipales| COMPRAVENTA    | Certifica que la propiedad no está afecta a expropiación o tiene antecedentes municipales.     |
+| Plano o croquis del inmueble                           | COMPRAVENTA    | Plano o croquis requerido para subdivisiones o especificaciones del inmueble.                 |
+| Tasación o informe de avalúo comercial                 | COMPRAVENTA    | Informe opcional que respalda el precio de compraventa.                                       |
+| Mandatos o poderes                                     | COMPRAVENTA    | Documento que acredita representación de vendedor o comprador.                                |
+| Comprobante de pago/carta de resguardo notarial        | COMPRAVENTA    | Respaldo de pagos, especialmente si hay créditos hipotecarios o pagos en cuotas.              |
+| Certificado de deuda hipotecaria y autorización banco  | COMPRAVENTA    | Certifica deuda y autorización para levantar hipoteca si aplica.                              |
+| Contrato de arriendo                                   | ARRIENDO       | Contrato privado o electrónico que regula la relación de arriendo.                            |
+| Inventario detallado del inmueble y bienes muebles     | ARRIENDO       | Listado firmado por ambas partes con el estado de conservación del inmueble y bienes.         |
+| Recibo de garantía/boleta bancaria                     | ARRIENDO       | Respaldo de la garantía entregada por el arrendatario.                                       |
+| Comprobante de último pago de gastos comunes/servicios | ARRIENDO       | Acredita que no existen deudas previas de gastos comunes o servicios básicos.                 |
+| Certificado de copropiedad/reglamento de condominio    | ARRIENDO       | Documento requerido si el inmueble está en edificio o condominio.                             |
+| Datos de contacto para notificaciones                  | ARRIENDO       | Información de contacto de las partes para notificaciones legales.                            |
+| Autorizaciones o poderes especiales                    | AMBAS          | Documento que acredita representación especial para firmar o actuar en nombre de otro.        |
+| Certificado de habitabilidad/recepción final           | AMBAS          | Certifica que el inmueble es habitable o cuenta con recepción final municipal.                |
+| Seguros asociados (incendio, hogar, etc.)              | AMBAS          | Pólizas de seguro exigidas por hipotecas o para respaldo de las partes.                       |
+| Boletas/facturas de pagos a corredores/plataformas     | AMBAS          | Respaldo de pagos realizados a intermediarios o plataformas.                                  |
+| Cláusulas adicionales anexas                           | AMBAS          | Anexos con acuerdos de mantenimiento, condiciones especiales, etc.                            |
+
+
+## Referencia legal sobre los roles LANDLORD, TENANT, SELLER y BUYER
+
+**LANDLORD y TENANT:**
+
+El uso de los términos LANDLORD (arrendador) y TENANT (arrendatario) en este modelo se fundamenta en la legislación chilena:
+
+**Artículo 1916 del Código Civil de Chile:**
+
+"Artículo 1916. Son susceptibles de arrendamiento todas las cosas corporales o incorporales que pueden usarse sin consumirse; excepto aquellas que la ley prohíbe arrendar, y los derechos estrictamente personales, como los de habitación y uso.
+
+Puede arrendarse aun la cosa ajena, y el arrendatario de buena fe tendrá acción de saneamiento contra el arrendador, en caso de evicción."
+
+Esta fuente respalda la definición y denominación de los roles LANDLORD (arrendador) y TENANT (arrendatario) en los contratos de arriendo.
+
+**SELLER y BUYER:**
+
+El Código Civil de Chile menciona por primera vez a las partes de la compraventa en el artículo 1793:
+
+**Artículo 1793 del Código Civil de Chile:**
+
+"La compraventa es un contrato en que una de las partes se obliga a dar una cosa y la otra a pagarla en dinero. Aquélla se dice vender y ésta comprar. El dinero que el comprador da por la cosa vendida, se llama precio."
+
+Este artículo define las partes del contrato de compraventa como:
+- Vendedor: Quien se obliga a dar una cosa.
+- Comprador: Quien se obliga a pagar el precio en dinero.
+
+Por lo tanto, el artículo 1793 es la base legal para los roles SELLER y BUYER en este modelo.
