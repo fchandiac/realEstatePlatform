@@ -10,8 +10,8 @@ La entidad Contract representa los acuerdos legales y comerciales entre partes p
 | id          | UUID (PK)                           | No   | Identificador único.                                               |
 | userId      | UUID (FK → USER.id)                 | No   | Usuario que creó el contrato.                                      |
 | propertyId  | UUID (FK → PROPERTY.id)             | No   | Propiedad vinculada.                                               |
-| operation   | ENUM('COMPRAVENTA', 'ARRIENDO')     | No   | Tipo de operación.                                                 |
-| status      | ENUM('IN_PROCESS', 'CLOSED', 'FAILED', 'ON_HOLD') | No   | Estado actual.                                                     |
+| operation   | ENUM(contractOperationType)          | No   | Tipo de operación.                                                 |
+| status      | ENUM(contractStatus)                 | No   | Estado actual.                                                     |
 | endDate     | DATE                                | Sí   | Fecha de cierre/fallo.                                             |
 | amount      | INT                                 | No   | Monto total.                                                       |
 | commissionPercent  | FLOAT                        | No   | Porcentaje de comisión.                                            |
@@ -23,14 +23,14 @@ La entidad Contract representa los acuerdos legales y comerciales entre partes p
 
 
 
-### ENUM operation
+### ENUM contractOperationType
 
 | Valor ENUM    | Nombre en español | Descripción                                                        |
 |---------------|-------------------|--------------------------------------------------------------------|
 | COMPRAVENTA   | Compraventa       | Contrato de compraventa de un inmueble.                            |
 | ARRIENDO      | Arriendo          | Contrato de arriendo de un inmueble.                               |
 
-### ENUM status
+### ENUM contractStatus
 
 | Valor ENUM   | Nombre en español | Descripción                                                        |
 |-------------|-------------------|--------------------------------------------------------------------|
