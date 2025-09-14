@@ -1,4 +1,9 @@
-# Contract
+
+# Entity Contract
+
+La entidad Contract representa los acuerdos legales y comerciales entre partes para la compraventa o arriendo de un inmueble en el contexto de la plataforma. Permite gestionar toda la información relevante del contrato, incluyendo las partes involucradas, el tipo de operación, los documentos asociados, pagos, estado y roles mínimos requeridos según la operación.
+
+## Estructura de datos de la entidad
 
 | Campo       | Tipo de Dato                        | NULL | Descripción                                                        |
 |-------------|-------------------------------------|------|--------------------------------------------------------------------|
@@ -9,7 +14,8 @@
 | status      | ENUM('IN_PROCESS', 'CLOSED', 'FAILED', 'ON_HOLD') | No   | Estado actual.                                                     |
 | endDate     | DATE                                | Sí   | Fecha de cierre/fallo.                                             |
 | amount      | INT                                 | No   | Monto total.                                                       |
-| commission  | FLOAT                               | No   | Porcentaje de comisión.                                            |
+| commissionPercent  | FLOAT                        | No   | Porcentaje de comisión.                                            |
+| commissionAmount   | FLOAT                        | No   | Monto de la comisión calculada para el contrato.                   |
 | payments    | JSON                                | Sí   | Pagos de arriendo (registro manual).                               |
 | documents   | JSON                                | Sí   | Documentos requeridos (obligatorios para cerrar).                  |
 | people      | JSON                                | No   | Personas asociadas al contrato, cada una con su rol (ver ENUM ContractRole). Ejemplo: [{ "personId": "uuid", "role": "TENANT" }]. |
@@ -38,10 +44,10 @@
 
 | Método        | Parámetros                                              | Descripción                                                                 | Validaciones / Mensajes de error |
 |---------------|---------------------------------------------------------|-----------------------------------------------------------------------------|-------------------------------|
-| create        | userId, propertyId, operation, amount, commission, people, (opcional: endDate, payments, documents, description) | Crea un nuevo contrato.                                                      | Validar existencia de userId y propertyId. Si no existen: "Usuario o propiedad no encontrada." |
+| create        | userId, propertyId, operation, amount, commissionPercent, commissionAmount, people, (opcional: endDate, payments, documents, description) | Crea un nuevo contrato.                                                      | Validar existencia de userId y propertyId. Si no existen: "Usuario o propiedad no encontrada." |
 | findAll       | -                                                       | Obtiene la lista de todos los contratos (no incluye los eliminados lógicamente). | - |
 | findOne       | id                                                      | Obtiene un contrato por su identificador único.                             | Si no existe: "Contrato no encontrado." |
-| update        | id, datos a modificar                                   | Actualiza los datos de un contrato existente. Este método permite actualizar todos los datos o solo algunos campos (actualización parcial). | Validar existencia de contrato. |
+| update        | id, datos a modificar (incluye commissionPercent y commissionAmount) | Actualiza los datos de un contrato existente. Este método permite actualizar todos los datos o solo algunos campos (actualización parcial). | Validar existencia de contrato. |
 | softDelete    | id                                                      | Realiza un borrado lógico (soft delete) del contrato, marcándolo como inactivo o eliminado sin quitarlo físicamente de la base de datos. | Si no existe: "Contrato no encontrado." |
 | close         | id, endDate, documents                                  | Cierra el contrato.                                                         | Validar que todos los documentos requeridos estén presentes y que el contrato tenga los roles mínimos según la operación (COMPRAVENTA: SELLER y BUYER, ARRIENDO: LANDLORD y TENANT). Si faltan: "Faltan documentos obligatorios o roles mínimos para cerrar el contrato." |
 | fail          | id, endDate                                             | Marca el contrato como fallido.                                             | Si ya está cerrado o fallido: "El contrato ya está cerrado o fallido." |
