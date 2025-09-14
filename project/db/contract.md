@@ -5,7 +5,7 @@
 | id          | UUID (PK)                           | No   | Identificador único.                                               |
 | userId      | UUID (FK → USER.id)                 | No   | Usuario que creó el contrato.                                      |
 | propertyId  | UUID (FK → PROPERTY.id)             | No   | Propiedad vinculada.                                               |
-| operation   | ENUM('VENTA', 'ARRIENDO')           | No   | Tipo de operación.                                                 |
+| operation   | ENUM('COMPRAVENTA', 'ARRIENDO')     | No   | Tipo de operación.                                                 |
 | status      | ENUM('IN_PROCESS', 'CLOSED', 'FAILED', 'ON_HOLD') | No   | Estado actual.                                                     |
 | endDate     | DATE                                | Sí   | Fecha de cierre/fallo.                                             |
 | amount      | INT                                 | No   | Monto total.                                                       |
@@ -14,6 +14,25 @@
 | documents   | JSON                                | Sí   | Documentos requeridos (obligatorios para cerrar).                  |
 | people      | JSON                                | No   | Personas asociadas al contrato, cada una con su rol (ver ENUM ContractRole). Ejemplo: [{ "personId": "uuid", "role": "TENANT" }]. |
 | description | TEXT                                | Sí   | Descripción del contrato.                                          |
+
+
+
+### ENUM operation
+
+| Valor ENUM    | Nombre en español | Descripción                                                        |
+|---------------|-------------------|--------------------------------------------------------------------|
+| COMPRAVENTA   | Compraventa       | Contrato de compraventa de un inmueble.                            |
+| ARRIENDO      | Arriendo          | Contrato de arriendo de un inmueble.                               |
+
+### ENUM status
+
+| Valor ENUM   | Nombre en español | Descripción                                                        |
+|-------------|-------------------|--------------------------------------------------------------------|
+| IN_PROCESS  | En proceso        | El contrato está en proceso, aún no se ha cerrado ni fallado.       |
+| CLOSED      | Cerrado           | El contrato ha sido cerrado exitosamente.                          |
+| FAILED      | Fallido           | El contrato ha fallado o no se concretó.                           |
+| ON_HOLD     | En espera         | El contrato está en pausa o pendiente de alguna acción.             |
+
 
 ## Métodos asociados a la entidad Contract
 
@@ -29,7 +48,7 @@
 | addPayment    | id, payment                                             | Agrega un pago al contrato.                                                  | Validar formato de payment. |
 | addPerson     | id, personId, role                                      | Agrega una persona asociada al contrato con un rol específico.              | Validar formato de personId y que el rol sea válido según ENUM ContractRole. |
 | getPeopleByRole | id, role                                              | Obtiene las personas asociadas a un contrato con un rol específico.         | Validar existencia de contrato y rol. |
-| validateRequiredRoles | id                                              | Valida que el contrato tenga los roles requeridos según el tipo de operación. | Si faltan roles: "Faltan roles obligatorios para este tipo de contrato." |
+| validateRequiredRoles | id                                              | Valida que el contrato tenga los roles requeridos según el tipo de operación. <br>**Para VENTA:** SELLER y BUYER. <br>**Para ARRIENDO:** LANDLORD y TENANT. | Si faltan roles: "Faltan roles obligatorios para este tipo de contrato." |
 | addDocument   | id, document                                            | Agrega un documento al contrato.                                            | Validar formato de document. |
 
 

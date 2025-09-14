@@ -1,3 +1,16 @@
+
+
+# Notification
+
+La entidad Notification representa los mensajes generados automáticamente por el sistema para alertar a los usuarios sobre eventos importantes dentro del flujo de la aplicación. Estas notificaciones permiten mantener informados a los usuarios sobre acciones relevantes, cambios de estado, recordatorios y asignaciones, facilitando la gestión y seguimiento de las operaciones en la plataforma.
+
+| Campo         | Tipo de Dato                                                                 | NULL | Descripción                                                                 |
+|---------------|------------------------------------------------------------------------------|------|-----------------------------------------------------------------------------|
+| id            | UUID (PK)                                                                   | No   | Identificador único de la notificación.                                     |
+| senderUserId  | UUID (FK → USER.id)                                                         | No   | Usuario que envía la notificación.                                          |
+| targetUserId  | UUID (FK → USER.id)                                                         | No   | Usuario que recibe la notificación.                                         |
+| type          | ENUM('INTERES', 'CONTACTO', 'RECORDATORIO_DE_PAGO', 'COMPROBANTE_DE_PAGO', 'AVISO_PAGO_VENCIDO', 'CAMBIO_ESTADO_PUBLICACION', 'CAMBIO_ESTADO_CONTRATO', 'NUEVA_ASIGNACION_PROPIEDAD_AGENTE') | No   | Tipo de notificación.                                                       |
+| multimediaId  | UUID (FK → MULTIMEDIA.id)                                                   | Sí   | Imagen asociada (solo una imagen).                                          |
 ## Tipos de notificación (ENUM type)
 
 | Valor ENUM                        | Descripción                                      |
@@ -9,13 +22,4 @@
 | AVISO_PAGO_VENCIDO                | Aviso de que un pago está vencido.                |
 | CAMBIO_ESTADO_PUBLICACION         | Cambio en el estado de una publicación.           |
 | CAMBIO_ESTADO_CONTRATO            | Cambio en el estado de un contrato.               |
-| NUEVA_ASIGNACION_PROPIEDAD_AGENTE | Nueva asignación de propiedad a un agente.        |
-# Notification
-
-| Campo         | Tipo de Dato                                                                 | NULL | Descripción                                                                 |
-|---------------|------------------------------------------------------------------------------|------|-----------------------------------------------------------------------------|
-| id            | UUID (PK)                                                                   | No   | Identificador único de la notificación.                                     |
-| senderUserId  | UUID (FK → USER.id)                                                         | No   | Usuario que envía la notificación.                                          |
-| targetUserId  | UUID (FK → USER.id)                                                         | No   | Usuario que recibe la notificación.                                         |
-| type          | ENUM('INTERES', 'CONTACTO', 'RECORDATORIO_DE_PAGO', 'COMPROBANTE_DE_PAGO', 'AVISO_PAGO_VENCIDO', 'CAMBIO_ESTADO_PUBLICACION', 'CAMBIO_ESTADO_CONTRATO', 'NUEVA_ASIGNACION_PROPIEDAD_AGENTE') | No   | Tipo de notificación.                                                       |
-| multimediaId  | UUID (FK → MULTIMEDIA.id)                                                   | Sí   | Imagen asociada (solo una imagen).                                          |
+| NUEVA_ASIGNACION_PROPIEDAD_AGENTE | Notificación enviada cuando un administrador asigna una propiedad a un agente. |
