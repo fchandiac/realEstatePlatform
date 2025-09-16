@@ -1,5 +1,7 @@
 
-# MULTIMEDIA
+# Entity Multimedia
+
+La entidad Multimedia permite gestionar y almacenar archivos multimedia (imágenes y videos) que pueden ser asociados a otras entidades de la plataforma, como propiedades, personas o contratos. Cada archivo cuenta con información relevante para su identificación, uso y optimización, incluyendo formato, tipo de uso, URL, nombre, tamaño y metadatos SEO. Facilita la centralización y reutilización de recursos multimedia en los distintos procesos del sistema.
 
 | Campo     | Tipo de Dato                                                                 | NULL | Por Defecto | Descripción                                 |
 |-----------|------------------------------------------------------------------------------|------|-------------|---------------------------------------------|
