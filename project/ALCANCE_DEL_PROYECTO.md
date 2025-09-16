@@ -6,7 +6,7 @@ El proyecto es una plataforma inmobiliaria digital integral, diseñada para cubr
 
 ## Visión y Propósito
 
-Su objetivo es facilitar la administración de propiedades, contratos, usuarios y contenido, al tiempo que ofrece a los miembros de la comunidad y visitantes una interfaz intuitiva para buscar, publicar, valorar y gestionar inmuebles. La solución está pensada para soportar el crecimiento del negocio, garantizar la seguridad y privacidad de los datos.
+Su objetivo es facilitar a los administradores internos la gestión de propiedades, contratos, usuarios y contenido, al tiempo que ofrece a los miembros de la comunidad y visitantes una interfaz intuitiva para buscar, publicar, valorar y gestionar inmuebles. La solución está pensada para soportar el crecimiento del negocio, garantizar la seguridad y privacidad de los datos.
 
 ## Alcance Funcional
 
@@ -14,7 +14,7 @@ Su objetivo es facilitar la administración de propiedades, contratos, usuarios 
 
 **Contratos y Documentos:** La plataforma gestiona contratos de arriendo y venta, permitiendo la creación, edición, seguimiento y cierre de acuerdos. Cada contrato puede estar vinculado a múltiples personas (arrendatario, arrendador, comprador, vendedor) y sus documentos (PDF, imágenes).
 
-**Usuarios y roles:** El sistema implementa un modelo de usuarios robusto, diferenciando entre administradores, agentes, miembros de la comunidad e invitados. Cada usuario tiene un perfil con datos personales, estado, roles y permisos específicos. El sistema soporta flujos de registro, verificación de identidad, y recuperación de contraseña.
+**Usuarios y roles:** El sistema implementa un modelo de usuarios robusto, diferenciando entre super-adminstrador (unico), administradores, agentes, miembros de la comunidad e invitados. Cada usuario tiene un perfil con datos personales, estado, roles y permisos específicos. El sistema soporta flujos de registro, verificación de identidad, y recuperación de contraseña.
 
 **Solicitudes y Valoraciones:** Los usuarios invitados o miembros de la comunidad pueden solicitar la publicación de propiedades o la valoración de un inmueble. Estas solicitudes pasan por un workflow de revisión, asignación y aprobación, permitiendo la intervención de agentes o administradores. El sistema almacena el historial de solicitudes, valoraciones y resultados, facilitando la gestión y el análisis de la demanda.
 
@@ -24,4 +24,4 @@ Su objetivo es facilitar la administración de propiedades, contratos, usuarios 
 
 **Reportes y Auditoría:** La plataforma genera reportes sobre propiedades, contratos, usuarios, actividad y métricas clave del negocio. Incluye un sistema de auditoría que registra todas las acciones relevantes (creación, edición, eliminación, notificaciones), permitiendo el seguimiento y la trazabilidad de los cambios.
 
-**Notificaciones y Comunicación:** El sistema envía notificaciones automáticas y manuales a los usuarios, informando sobre cambios de estado, aprobaciones, recordatorios, novedades y alertas. Además de las notificaciones internas está contemplado el envío de correos.
+**Notificaciones y Comunicación:** El sistema envía notificaciones automáticas, informando sobre cambios de estado, aprobaciones, recordatorios, novedades y alertas. Además de las notificaciones internas está contemplado el envío de correos.

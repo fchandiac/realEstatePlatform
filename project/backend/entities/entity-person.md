@@ -1,4 +1,8 @@
-# PERSON
+# Entity Person
+
+La entidad Person representa a una persona real, independiente de su relación con la plataforma. Puede corresponder a un usuario registrado o a una persona que solo forma parte de un contrato (por ejemplo, como comprador, vendedor, arrendador o arrendatario), sin necesidad de tener cuenta propia en el sistema. Permite almacenar y gestionar la información básica de identificación y contacto de personas físicas vinculadas a operaciones o contratos.
+
+## Estructura de datos de la entidad
 
 | Campo                | Tipo de Dato                | NULL | Por Defecto | Descripción                                         |
 |----------------------|-----------------------------|------|-------------|-----------------------------------------------------|
