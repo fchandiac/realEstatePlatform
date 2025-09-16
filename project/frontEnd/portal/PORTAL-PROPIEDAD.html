@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nombre Empresa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2eO25rK757/5M5P/J743pA6g2LhC94fJ8W9B77+5C6V6fA6w+eA6C5G88K88" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+  body {
+    font-family: Inter, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    padding-top: 0;
+    margin: 0;
+  }
+  
+  .whatsapp-float {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 50;
+  }
+
+  .whatsapp-float i {
+    font-size: 2rem;
+    color: #fff;
+    background-color: #616161;
+    padding: 1rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .whatsapp-float i:hover {
+    transform: scale(1.1);
+  }
+  
+  .featured-ribbon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #616161;
+    color: white;
+    font-weight: bold;
+    font-size: 0.7rem;
+    padding: 0.25rem 2rem;
+    transform-origin: 0% 0%;
+    transform: translate(-20%, 270%) rotate(-45deg); 
+    z-index: 20;
+    box-shadow: 0 2px 4px rgba
+    (0, 0, 0, 0.2);
+  }
+
+  .property-card {
+    overflow: hidden;
+  }
+  
+  .property-icons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background-color: #f3f4f6;
+      border-top: 1px solid #939393;
+  }
+</style>
+</head>
+<body>
+
+<!-- Barra superior fija, ahora responsiva en pantallas pequeñas -->
+<div id="top-bar-container" class="fixed top-0 left-0 w-full h-12 bg-white text-black p-4 z-40 flex flex-col md:flex-row md:justify-between md:items-center">
+  <!-- Contenedor del logo y título -->
+  <div class="flex items-center space-x-4 mb-2 md:mb-0">
+    <!-- Icono de imagen a la izquierda del título -->
+    <i class="fas fa-image fa-2x text-neutral-800"></i>
+    <h2 class="text-xl font-bold">Nombre Empresa</h2>
+  </div>
+  <!-- Contenedor de enlaces y UF, ahora en una nueva línea en móviles -->
+  <div class="flex items-center space-x-2 mt-2 md:mt-0">
+    <!-- Texto UF hoy y divisor vertical -->
+    <span class="text-sm font-light text-neutral-800">UF hoy: $37.897</span>
+    <div class="w-px h-6 bg-neutral-400 opacity-50 hidden md:block"></div>
+    <!-- Enlaces "Ingresar" y "Registrarse" con un divisor entre ellos -->
+    <a href="#" class="text-sm font-light text-neutral-800 hover:text-gray-600 transition-colors">Ingresar</a>
+    <div class="w-px h-6 bg-neutral-400 opacity-50 hidden md:block"></div>
+    <a href="#" class="text-sm font-light text-neutral-800 hover:text-gray-600 transition-colors">Registrarse</a>
+  </div>
+</div>
+
+<!-- Barra de navegación que ahora es fija por defecto -->
+<div id="nav-bar" class="fixed top-12 w-full bg-white p-4 flex justify-center items-center space-x-8 shadow-md z-30">
+  <a href="#" class="flex flex-col items-center text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    <i class="fas fa-home text-lg"></i>
+  </a>
+  
+  <!-- Menú desplegable para "Nosotros" -->
+  <div class="group relative">
+    <!-- El link 'Nosotros' ahora está en negrita -->
+    <a href="#" class="text-sm font-bold text-neutral-800 transition-colors inline-flex items-center space-x-1">
+      <span>Nosotros</span>
+      <i class="fas fa-chevron-down text-xs"></i>
+    </a>
+    <!-- Se han añadido de nuevo 'hidden' y 'group-hover:block' para que este menú esté cerrado por defecto -->
+    <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Misión y Visión
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Equipo
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Testimonios
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Contacto
+      </a>
+    </div>
+  </div>
+
+  <!-- Menú desplegable para "Propiedades" -->
+  <div class="group relative">
+    <!-- Se envuelve el texto "Propiedades" con la etiqueta <strong> para aplicarle la negrita. -->
+    <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors inline-flex items-center space-x-1">
+      <span>Propiedades</span>
+      <i class="fas fa-chevron-down text-xs"></i>
+    </a>
+    <!-- Este div ahora tiene la clase 'hidden' para que se oculte cuando no se haga hover -->
+    <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Arrendar
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Comprar
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Publica tu propiedad
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Avalúa tu Propiedad
+      </a>
+    </div>
+  </div>
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    Blog
+  </a>
+</div>
+
+<!-- Contenedor principal del cuerpo, con padding-top para que no se oculte detrás de las barras fijas -->
+<div class="container mx-auto p-4 pt-16">
+  <!-- Tarjeta de publicación, ahora con fondo blanco y sin bordes -->
+  <div class="bg-white rounded-lg w-full text-left p-4 mb-8">
+  </div>
+
+  <!-- Sección de Título de Propiedad -->
+  <div class="container mx-auto max-w-7xl">
+    <h1 class="text-4xl font-bold text-neutral-800 text-center mb-6">Título Propiedad</h1>
+  </div>
+  
+  <!-- Contenedor para las tres filas de información -->
+  <div class="flex flex-col items-center justify-center mb-8">
+    <!-- Primera fila: Tipo de propiedad -->
+    <div class="mb-2">
+      <span class="text-sm font-light text-neutral-600">Departamento en Arriendo</span>
+    </div>
+    <!-- Segunda fila: Precio -->
+    <div class="mb-2">
+      <span class="text-xl font-bold text-neutral-800">$560.990</span>
+    </div>
+    <!-- Tercera fila: Ubicación con ícono y fuente más ligera -->
+    <div class="flex items-center space-x-2">
+      <i class="fas fa-location-dot text-neutral-500"></i>
+      <span class="text-sm font-light text-neutral-600">Región del Maule, Parral</span>
+    </div>
+  </div>
+
+  <!-- Contenedor de las dos columnas principales, ahora un solo box con dos columnas internas -->
+  <div class="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto mb-8">
+    <!-- Contenedor para imágenes y "Texto por Completar 1" y "Texto por Completar 2" -->
+    <div class="w-full lg:w-3/4 bg-white p-6 rounded-lg shadow-md space-y-6">
+      <!-- Contenedor de imágenes -->
+      <div class="flex flex-col md:flex-row gap-4 h-96">
+        <!-- Imagen principal (75% de ancho) -->
+        <div class="w-full md:w-3/4 h-full overflow-hidden rounded-lg">
+          <img src="https://placehold.co/800x600/616161/ffffff?text=Imagen+Principal" alt="Imagen principal" class="w-full h-full object-cover">
+        </div>
+        <!-- Contenedor de 3 imágenes pequeñas (25% de ancho) -->
+        <div class="w-full md:w-1/4 h-full flex flex-row md:flex-col gap-4">
+          <div class="w-1/3 md:w-full h-full md:h-1/3 overflow-hidden rounded-lg">
+            <img src="https://placehold.co/400x300/C0C0C0/333333?text=Imagen+1" alt="Imagen pequeña 1" class="w-full h-full object-cover">
+          </div>
+          <div class="w-1/3 md:w-full h-full md:h-1/3 overflow-hidden rounded-lg">
+            <img src="https://placehold.co/400x300/D0D0D0/333333?text=Imagen+2" alt="Imagen pequeña 2" class="w-full h-full object-cover">
+          </div>
+          <div class="w-1/3 md:w-full h-full md:h-1/3 overflow-hidden rounded-lg">
+            <img src="https://placehold.co/400x300/E0E0E0/333333?text=Imagen+3" alt="Imagen pequeña 3" class="w-full h-full object-cover">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Inicio de la sección de características de la propiedad -->
+      <div class="flex flex-wrap items-center justify-start gap-x-8 gap-y-4 text-neutral-600 text-sm">
+        <!-- Dormitorios -->
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-bed text-lg"></i>
+          <span>3 Dormitorios</span>
+        </div>
+        <!-- Baños -->
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-bath text-lg"></i>
+          <span>2 Baños</span>
+        </div>
+        <!-- M² construidos -->
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-house-chimney text-lg"></i>
+          <span>120 m² construidos</span>
+        </div>
+        <!-- M² terreno -->
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-square text-lg"></i>
+          <span>200 m² terreno</span>
+        </div>
+        <!-- Estacionamientos -->
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-square-parking text-lg"></i>
+          <span>1 Estacionamientos</span>
+        </div>
+      </div>
+      <!-- Fin de la sección de características de la propiedad -->
+
+      <!-- Texto por Completar 2, ahora movido a este mismo box -->
+      <div>
+        <p class="text-sm text-neutral-600 mt-2 text-justify">
+          Descubre tu nuevo hogar en el corazón de Parral. Este encantador departamento, ubicado en una zona privilegiada, ofrece una vida cómoda y moderna. Cuenta con 2 dormitorios luminosos y 2 baños completos, perfectos para una familia o para quienes buscan espacio extra. La cocina, de concepto abierto, está equipada con modernos electrodomésticos y se conecta fluidamente con la sala de estar, creando un ambiente ideal para compartir. El edificio destaca por su seguridad 24/7 y sus áreas comunes, que incluyen una piscina y una sala multiuso. Su ubicación estratégica te permite estar a pocos minutos de comercios, restaurantes, parques y colegios, haciendo de cada día una experiencia más sencilla. Una excelente oportunidad para vivir con la tranquilidad y comodidad que mereces.
+        </p>
+      </div>
+    </div>
+
+    <!-- Columna derecha con los datos del agente y formulario de contacto -->
+    <div class="w-full lg:w-1/4 bg-white p-6 rounded-lg shadow-md flex-none flex flex-col justify-between text-left">
+      <!-- Contenido superior del formulario -->
+      <div class="space-y-4">
+        <!-- Título de la sección -->
+        <h3 class="text-xl font-bold text-neutral-800 text-center mb-4">Contáctanos</h3>
+      
+        <!-- Datos del agente (avatar, nombre, teléfono, email) -->
+        <div class="flex flex-col items-center space-y-2 mb-4">
+          <img src="https://placehold.co/64x64/E0E0E0/333333?text=Agente" alt="Avatar del Agente" class="rounded-full w-16 h-16 object-cover">
+          <div class="text-center">
+            <p class="text-lg font-semibold text-neutral-800">Nombre del Agente</p>
+            <div class="flex flex-col items-center text-sm text-neutral-600 mt-1 space-y-1">
+              <div class="flex items-center">
+                <i class="fas fa-phone mr-2"></i>
+                <span>+56 9 1234 5678</span>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-envelope mr-2"></i>
+                <span>agente@inmobiliaria.cl</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario de contacto -->
+        <form class="flex flex-col flex-1 gap-4">
+          <!-- Campo para el nombre -->
+          <input type="text" placeholder="Tu Nombre" class="w-full p-2 rounded-md bg-gray-100 text-neutral-800 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <!-- Campo para el correo electrónico -->
+          <input type="email" placeholder="Tu Correo Electrónico" class="w-full p-2 rounded-md bg-gray-100 text-neutral-800 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <!-- Campo de texto para el mensaje -->
+          <textarea placeholder="Me interesa esta propiedad. Por favor, contáctame para más detalles o para agendar una visita." class="flex-1 w-full p-2 rounded-md bg-gray-100 text-neutral-800 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+        </form>
+      </div>
+      <!-- Botón de "Estoy interesado", ahora fuera del flex-1 para anclarlo abajo -->
+      <button type="submit" class="w-full bg-neutral-600 text-white p-3 rounded-md hover:bg-neutral-700 transition-colors mt-4">
+        Estoy interesado
+      </button>
+    </div>
+  </div>
+
+  <!-- Fila 3: Ubicación y Mapa -->
+  <div class="w-full bg-white p-6 rounded-lg shadow-md text-left max-w-7xl mx-auto mb-8">
+    <h3 class="text-lg font-semibold text-neutral-800 mb-4">Ubicación de la Propiedad</h3>
+    <div class="relative w-full aspect-video rounded-lg overflow-hidden">
+      <!-- Mapa incrustado de Google Maps para la ubicación simulada en Parral, Chile -->
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52033.428741366115!2d-71.86178051770987!3d-36.14372990479109!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x966838848d6174fd%3A0x6a029c29497e6e58!2sParral%2C%20Maule!5e0!3m2!1sen!2scl!4v1709292812260!5m2!1sen!2scl" 
+        width="100%" 
+        height="100%" 
+        style="border:0;" 
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+  
+  <!-- Espacio vacío antes del footer -->
+  <div class="h-24"></div>
+</div>
+
+<!-- Botón flotante de WhatsApp -->
+<a href="https://wa.me/56912345678" target="_blank" class="whatsapp-float">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- Barra inferior fija con iconos de redes sociales y el nuevo borde superior -->
+<div class="fixed bottom-0 left-0 w-full bg-white text-neutral-800 p-4 z-40 flex justify-center items-center space-x-6 shadow-md border-t border-gray-300">
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-x-twitter"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-instagram"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-youtube"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+</div>
+
+<!-- Pie de página (Footer) -->
+<footer class="bg-neutral-800 text-white p-8 mt-12">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+        <!-- Columna 1: Información de la Empresa -->
+        <div>
+            <h3 class="text-lg font-bold mb-4">Información de la Empresa</h3>
+            <p class="text-sm text-neutral-400">
+                <i class="fas fa-map-marker-alt mr-2"></i>Calle Falsa 123, Parral, Región del Maule
+            </p>
+            <p class="text-sm text-neutral-400 mt-2">
+                <i class="fas fa-phone mr-2"></i>+56 9 1234 5678
+            </p>
+            <p class="text-sm text-neutral-400 mt-2">
+                <i class="fas fa-envelope mr-2"></i>info@plataformainmobiliaria.cl
+            </p>
+            <p class="text-sm text-neutral-400 mt-4">
+                <i class="fas fa-clock mr-2"></i>Lunes a Viernes: 9:00 - 18:00
+            </p>
+        </div>
+
+        <!-- Columna 2: Formulario de Contacto -->
+        <div>
+            <h3 class="text-lg font-bold mb-4">Contáctanos</h3>
+            <form class="space-y-4">
+                <input type="text" placeholder="Tu Nombre" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="email" placeholder="Tu Correo Electrónico" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <textarea rows="4" placeholder="Tu Mensaje" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <button type="submit" class="w-full bg-neutral-500 text-white p-2 rounded-md hover:bg-neutral-600 transition-colors">
+                    Enviar Mensaje
+                </button>
+            </form>
+        </div>
+
+        <!-- Columna 3: Preguntas Frecuentes -->
+        <div>
+            <h3 class="text-lg font-bold mb-4 text-left">FAQ</h3>
+            <div class="space-y-4 text-left">
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cómo puedo publicar una propiedad?</h4>
+                    <p class="text-sm text-neutral-400">Puedes publicar tu propiedad registrándote y seleccionando "Vende tu propiedad" o "Arrienda tu propiedad" en el menú principal.</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cuál es el costo del servicio?</h4>
+                    <p class="text-sm text-neutral-400">El costo varía según el plan que elijas. Puedes ver los detalles en la sección de "Planes y Precios".</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cómo agendo una visita a una propiedad?</h4>
+                    <p class="text-sm text-neutral-400">En la página de cada propiedad encontrarás un formulario para agendar una visita directamente con el agente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Línea de copyright al final del footer -->
+    <div class="mt-8 text-center text-sm text-neutral-500 border-t border-neutral-700 pt-4">
+        &copy; 2025 Plataforma Inmobiliaria. Todos los derechos reservados.
+    </div>
+</footer>
+</body>
+</html>

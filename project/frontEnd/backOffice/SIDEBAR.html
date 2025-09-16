@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SideBar</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #ffffff; 
+    padding-top: 64px;
+    margin: 0;
+    overflow-x: hidden; /* Prevents horizontal scrollbar when sidebar is off-screen */
+  }
+
+  /* Custom styles for sidebar animation */
+  .sidebar {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Rotation for the submenu arrow */
+  .rotate-90 {
+    transform: rotate(90deg);
+  }
+</style>
+</head>
+<body>
+
+<!-- Sidebar Overlay (hidden by default) -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+<!-- Sidebar menu -->
+<nav id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform -translate-x-full sidebar">
+  
+  <!-- User profile section -->
+  <div class="p-6 flex flex-col items-center border-b border-gray-200">
+    <!-- Avatar placeholder -->
+    <div class="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center text-gray-500 text-lg mb-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 0 00-7-7z" />
+      </svg>
+    </div>
+    <h4 class="text-lg font-semibold text-gray-800">Roberto Fernández</h4>
+    <p class="text-sm text-gray-500">Administrador</p>
+  </div>
+  
+  <!-- Navigation menu -->
+  <ul class="p-4 space-y-1 text-left">
+    <li>
+      <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium text-sm text-left">Dashboard</a>
+    </li>
+    <li>
+      <!-- Parent item with toggle functionality -->
+      <button id="toggle-propiedades" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm">
+        <span>Propiedades</span>
+        <svg id="arrow-propiedades" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      <!-- Submenu for properties (hidden by default) -->
+      <ul id="submenu-propiedades" class="pl-6 space-y-1 mt-1 hidden">
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Venta</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Arriendo</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Tipos de propiedad</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Solicitudes de publicación</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Valoraciones</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <!-- Parent item with toggle functionality -->
+      <button id="toggle-contratos" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm">
+        <span>Contratos</span>
+        <svg id="arrow-contratos" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      <!-- Submenu for contracts (hidden by default) -->
+      <ul id="submenu-contratos" class="pl-6 space-y-1 mt-1 hidden">
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Contratos</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Personas</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Documentos</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <!-- Parent item with toggle functionality -->
+      <button id="toggle-usuarios" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm">
+        <span>Usuarios</span>
+        <svg id="arrow-usuarios" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      <!-- Submenu for users (hidden by default) -->
+      <ul id="submenu-usuarios" class="pl-6 space-y-1 mt-1 hidden">
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Agentes</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Administradores</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Comunidad</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <!-- Parent item with toggle functionality -->
+      <button id="toggle-cms" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm">
+        <span>CMS</span>
+        <svg id="arrow-cms" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      <!-- Submenu for CMS (hidden by default) -->
+      <ul id="submenu-cms" class="pl-6 space-y-1 mt-1 hidden">
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Slider</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Sobre nosotros</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Blog</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Testimonios</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium text-sm text-left">Reportes</a>
+    </li>
+    <li>
+      <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium text-sm text-left">Auditoría</a>
+    </li>
+    <li>
+      <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium text-sm text-left">Notificaciones</a>
+    </li>
+    <!-- Nuevo menú de Configuración -->
+    <li>
+      <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium text-sm text-left">Configuración</a>
+    </li>
+    <!-- Divider -->
+    <hr class="border-gray-200 my-2">
+    <!-- Nuevo menú Mi cuenta con submenús -->
+    <li>
+      <button id="toggle-mi-cuenta" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm">
+        <span>Mi cuenta</span>
+        <svg id="arrow-mi-cuenta" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      <ul id="submenu-mi-cuenta" class="pl-6 space-y-1 mt-1 hidden">
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Mis Datos</a>
+        </li>
+        <li>
+          <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 text-left text-sm">Cambiar contraseña</a>
+        </li>
+      </ul>
+    </li>
+    <!-- Otro Divider -->
+    <hr class="border-gray-200 my-2">
+    <!-- Nuevo menú Cerrar sesión -->
+    <li>
+      <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium text-sm text-left">Cerrar sesión</a>
+    </li>
+  </ul>
+</nav>
+
+<!-- Barra superior fija con colores en escala de grises -->
+<div class="fixed top-0 left-0 w-full bg-neutral-800 text-white p-4 z-40 shadow-md flex justify-between items-center">
+  <h2 class="text-xl font-bold">Plataforma Inmobiliaria - SideBar</h2>
+  <button id="open-sidebar" class="p-2 rounded-md hover:bg-neutral-700 transition-colors">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  </button>
+</div>
+
+<!-- Contenedor principal para el contenido del cuerpo -->
+<div class="container mx-auto p-4">
+  <!-- Tarjetas de indicadores principales -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-items-center gap-4 mb-8">
+    <!-- Tarjeta de ingresos -->
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Ingresos Totales del mes</h3>
+      <h2 class="text-5xl font-bold text-gray-900 mb-2">$ 4.588.998</h2>
+      <p class="text-sm font-medium text-gray-500">-15% vs el mes anterior</p>
+    </div>
+
+    <!-- Tarjeta de propiedades activas -->
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Propiedades Activas</h3>
+      <h2 class="text-5xl font-bold text-gray-900 mb-2">344</h2>
+      <p class="text-sm font-medium text-gray-500">+10% vs el mes anterior</p>
+    </div>
+
+    <!-- Tarjeta de nuevos miembros -->
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Nuevos miembros</h3>
+      <h2 class="text-5xl font-bold text-gray-900 mb-2">34</h2>
+      <p class="text-sm font-medium text-gray-500">+12% vs el mes anterior</p>
+    </div>
+    
+    <!-- Tarjeta de tiempo promedio -->
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Tiempo promedio de venta o arriendo</h3>
+      <h2 class="text-5xl font-bold text-gray-900 mb-2">37 días</h2>
+      <p class="text-sm font-medium text-gray-500">-45% vs el mes anterior</p>
+    </div>
+  </div>
+
+  <!-- Contenedor para las tarjetas de abajo -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+    <!-- Tarjeta de distribución por tipo de propiedad -->
+    <div class="bg-white rounded-lg p-6 w-full mx-auto border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-4">Distribución por Tipo de Propiedad</h3>
+      
+      <!-- Contenedor para cada tipo de propiedad con valores actualizados -->
+      <div class="space-y-4">
+        <!-- Departamento -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Departamento</span>
+            <span class="text-sm text-gray-500">151 (44%)</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 44%;"></div>
+          </div>
+        </div>
+        
+        <!-- Casa -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Casa</span>
+            <span class="text-sm text-gray-500">120 (35%)</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 35%;"></div>
+          </div>
+        </div>
+        
+        <!-- Oficina -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Oficina</span>
+            <span class="text-sm text-gray-500">50 (15%)</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 15%;"></div>
+          </div>
+        </div>
+        
+        <!-- Parcela -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Parcela</span>
+            <span class="text-sm text-gray-500">23 (6%)</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 6%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Nueva tarjeta de ranking de agentes -->
+    <div class="bg-white rounded-lg p-6 w-full mx-auto border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-4">Ranking agentes (Rendimiento)</h3>
+      
+      <!-- Contenedor para cada agente -->
+      <div class="space-y-4">
+        <!-- Agente 1 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Juan Pérez</span>
+            <span class="text-sm text-gray-500">95%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 95%;"></div>
+          </div>
+        </div>
+        
+        <!-- Agente 2 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Ana García</span>
+            <span class="text-sm text-gray-500">88%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 88%;"></div>
+          </div>
+        </div>
+        
+        <!-- Agente 3 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Carlos López</span>
+            <span class="text-sm text-gray-500">75%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 75%;"></div>
+          </div>
+        </div>
+
+        <!-- Agente 4 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Sofía Rodríguez</span>
+            <span class="text-sm text-gray-500">65%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 65%;"></div>
+          </div>
+        </div>
+
+        <!-- Agente 5 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Pedro Martínez</span>
+            <span class="text-sm text-gray-500">50%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 50%;"></div>
+          </div>
+        </div>
+
+        <!-- Agente 6 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Marta Torres</span>
+            <span class="text-sm text-gray-500">40%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 40%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor para el gráfico y la nueva tarjeta de comparación -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+    <!-- Tarjeta para el gráfico de ingresos -->
+    <div class="bg-white rounded-lg p-6 w-full mx-auto border text-left md:col-span-8" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-4">Gráfico de Ingresos por Mes</h3>
+      <canvas id="incomeChart" class="w-full h-64"></canvas>
+      <p class="text-xs font-light text-gray-500 mt-2">
+        El gráfico representa los ingresos por mes de los últimos 6 meses.
+      </p>
+    </div>
+
+    <!-- Nueva tarjeta de comparación de ingresos -->
+    <div class="bg-white rounded-lg p-6 w-full mx-auto border text-left md:col-span-4" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-4">Comparación de Ingresos Acumulados</h3>
+      <div class="mb-4">
+        <p class="text-sm text-gray-500">Mes Actual</p>
+        <h2 class="text-4xl font-bold text-gray-900">$ 4.588.998</h2>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Mismo mes año anterior</p>
+        <h2 class="text-4xl font-bold text-gray-500">$ 3.800.000</h2>
+        <p class="text-sm font-medium text-gray-500 mt-2">+21% vs año anterior</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.onload = function() {
+    // Chart logic
+    const canvas = document.getElementById('incomeChart');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = 256;
+      drawChart();
+    }
+
+    const data = [
+      { month: 'Ene', value: 5000000 },
+      { month: 'Feb', value: 8500000 },
+      { month: 'Mar', value: 10000000 },
+      { month: 'Abr', value: 7200000 },
+      { month: 'May', value: 12000000 },
+      { month: 'Jun', value: 4588998 }
+    ];
+
+    const maxValue = 15000000;
+    const padding = 40;
+
+    function drawChart() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = '#e5e7eb';
+      ctx.lineWidth = 1;
+      ctx.font = '12px Arial';
+      ctx.fillStyle = '#6b7280';
+      const yAxisLabels = ['$0', '$5M', '$10M', '$15M'];
+      for (let i = 0; i < yAxisLabels.length; i++) {
+        const y = canvas.height - padding - (i / (yAxisLabels.length - 1)) * (canvas.height - 2 * padding);
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(canvas.width - padding, y);
+        ctx.stroke();
+        ctx.fillText(yAxisLabels[i], padding - 35, y + 5);
+      }
+
+      ctx.textAlign = 'center';
+      const xSpacing = (canvas.width - 2 * padding) / (data.length - 1);
+      data.forEach((point, index) => {
+        const x = padding + index * xSpacing;
+        ctx.fillText(point.month, x, canvas.height - padding + 20);
+      });
+
+      ctx.beginPath();
+      ctx.strokeStyle = '#4b5563';
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.shadowBlur = 5;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+      
+      data.forEach((point, index) => {
+        const x = padding + index * xSpacing;
+        const y = canvas.height - padding - (point.value / maxValue) * (canvas.height - 2 * padding);
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = '#4b5563';
+        ctx.fill();
+      });
+      ctx.shadowBlur = 0;
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+
+    // Sidebar logic
+    const sidebar = document.getElementById('sidebar');
+    const openBtn = document.getElementById('open-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const togglePropiedadesBtn = document.getElementById('toggle-propiedades');
+    const submenuPropiedades = document.getElementById('submenu-propiedades');
+    const arrowPropiedades = document.getElementById('arrow-propiedades');
+    const toggleContratosBtn = document.getElementById('toggle-contratos');
+    const submenuContratos = document.getElementById('submenu-contratos');
+    const arrowContratos = document.getElementById('arrow-contratos');
+    const toggleUsuariosBtn = document.getElementById('toggle-usuarios');
+    const submenuUsuarios = document.getElementById('submenu-usuarios');
+    const arrowUsuarios = document.getElementById('arrow-usuarios');
+    const toggleCmsBtn = document.getElementById('toggle-cms');
+    const submenuCms = document.getElementById('submenu-cms');
+    const arrowCms = document.getElementById('arrow-cms');
+    
+    // Elementos del nuevo menú
+    const toggleMiCuentaBtn = document.getElementById('toggle-mi-cuenta');
+    const submenuMiCuenta = document.getElementById('submenu-mi-cuenta');
+    const arrowMiCuenta = document.getElementById('arrow-mi-cuenta');
+
+    function toggleSidebar() {
+      const isHidden = sidebar.classList.contains('-translate-x-full');
+      if (isHidden) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+    }
+
+    // Function to toggle the properties submenu
+    function togglePropiedadesSubmenu() {
+      submenuPropiedades.classList.toggle('hidden');
+      arrowPropiedades.classList.toggle('rotate-90');
+    }
+
+    // Function to toggle the contracts submenu
+    function toggleContratosSubmenu() {
+      submenuContratos.classList.toggle('hidden');
+      arrowContratos.classList.toggle('rotate-90');
+    }
+
+    // Function to toggle the users submenu
+    function toggleUsuariosSubmenu() {
+      submenuUsuarios.classList.toggle('hidden');
+      arrowUsuarios.classList.toggle('rotate-90');
+    }
+
+    // Function to toggle the CMS submenu
+    function toggleCmsSubmenu() {
+      submenuCms.classList.toggle('hidden');
+      arrowCms.classList.toggle('rotate-90');
+    }
+    
+    // Nueva función para el menú "Mi cuenta"
+    function toggleMiCuentaSubmenu() {
+      submenuMiCuenta.classList.toggle('hidden');
+      arrowMiCuenta.classList.toggle('rotate-90');
+    }
+
+
+    openBtn.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+    togglePropiedadesBtn.addEventListener('click', togglePropiedadesSubmenu);
+    toggleContratosBtn.addEventListener('click', toggleContratosSubmenu);
+    toggleUsuariosBtn.addEventListener('click', toggleUsuariosSubmenu);
+    toggleCmsBtn.addEventListener('click', toggleCmsSubmenu);
+    
+    // Listener para el nuevo menú "Mi cuenta"
+    toggleMiCuentaBtn.addEventListener('click', toggleMiCuentaSubmenu);
+  };
+</script>
+
+</body>
+</html>

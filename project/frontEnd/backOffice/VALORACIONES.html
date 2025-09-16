@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Inmobiliario</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<style>
+  body {
+    font-family: Inter, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    padding-top: 64px;
+    margin: 0;
+  }
+  .notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #4b5563;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 9999px;
+    padding: 0px 5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Barra superior fija con colores en escala de grises -->
+<div class="fixed top-0 left-0 w-full bg-neutral-800 text-white p-4 z-40 shadow-md flex justify-between items-center">
+  <h2 class="text-xl font-bold">Plataforma Inmobiliaria - Valoraciones</h2>
+  <div class="flex items-center space-x-2">
+    <!-- Icono de notificaciones con badge -->
+    <div class="cursor-pointer p-2 rounded-md hover:bg-neutral-700 transition-colors relative">
+      <i class="fas fa-bell fa-lg"></i>
+      <span class="notification-badge">5</span>
+    </div>
+    <!-- Icono de menú Font Awesome -->
+    <div class="cursor-pointer p-2 rounded-md hover:bg-neutral-700 transition-colors">
+      <i class="fas fa-bars fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<!-- Contenedor principal del cuerpo -->
+<div class="w-full mx-auto p-4">
+  <br />
+  
+  <!-- Contenedor de la cuadrícula para las tarjetas -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- Tarjeta con el título "Total Valoraciones" -->
+    <div class="bg-white rounded-lg w-full border p-3 text-left" style="border-color: #939393;">
+      <p class="text-lg font-semibold text-gray-700">Total Valoraciones</p>
+      <p class="text-3xl text-gray-900 mt-2">250</p>
+    </div>
+    
+    <!-- Nueva Tarjeta con el título "Con solicitud" -->
+    <div class="bg-white rounded-lg w-full border p-3 text-left" style="border-color: #939393;">
+      <p class="text-lg font-semibold text-gray-700">Con solicitud</p>
+      <p class="text-3xl text-gray-900 mt-2">189</p>
+    </div>
+
+    <!-- Nueva Tarjeta con el título "Promedio Valoración" -->
+    <div class="bg-white rounded-lg w-full border p-3 text-left" style="border-color: #939393;">
+      <p class="text-lg font-semibold text-gray-700">Promedio Valoración</p>
+      <div class="text-xl text-gray-900 mt-2">
+        <p>Venta: $23.505.488</p>
+        <p>Arriendo: $324.589</p>
+      </div>
+    </div>
+
+    <!-- Nueva Tarjeta con el título "Usuarios registrados / Visitantes" -->
+    <div class="bg-white rounded-lg w-full border p-3 text-left" style="border-color: #939393;">
+      <p class="text-lg font-semibold text-gray-700">Usuarios registrados / Visitantes</p>
+      <p class="text-3xl text-gray-900 mt-2">489 / 1234</p>
+    </div>
+  </div>
+
+  <!-- Tarjeta de la tabla principal -->
+    <div class="bg-white rounded-lg w-full border p-6 text-left min-h-[600px] flex flex-col justify-between mt-4" style="border-color: #939393;">
+      <!-- Contenido de la parte superior (Fila 1, Fila 2, Fila 3) -->
+      <div>
+        <!-- Fila 1: Título y controles -->
+        <div class="flex items-center justify-between mb-4">
+          <!-- Contenedor para el botón y el título, alineados a la izquierda -->
+          <div class="flex items-center space-x-2">
+            <!-- Título actualizado sin el botón + -->
+            <h6 class="text-xl font-bold text-gray-800">Listado de Valoraciones</h6>
+          </div>
+          <!-- Controles de la derecha -->
+          <div class="flex items-center space-x-2">
+            <!-- Icono de Excel -->
+            <i class="fas fa-file-excel text-gray-500 cursor-pointer hover:text-gray-900"></i>
+            <!-- Icono de Filtro -->
+            <i class="fas fa-filter text-gray-500 cursor-pointer hover:text-gray-900"></i>
+            <!-- Input de búsqueda -->
+            <div class="relative">
+              <input type="text" placeholder="Buscar..." class="pl-8 pr-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:border-gray-500 text-sm">
+              <i class="fas fa-search absolute left-2 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Fila 2: Encabezados de columnas -->
+        <div class="flex justify-between text-sm font-bold text-gray-700 pb-2 border-b border-gray-300">
+          <div class="w-[5%]">Id</div>
+          <div class="w-[20%]">Usuario</div>
+          <div class="w-[20%]">Operación</div>
+          <div class="w-[25%]">Valoración</div>
+          <div class="w-[30%] text-right">Publicación</div>
+        </div>
+      
+        <!-- Fila 3: Datos de las columnas (ejemplo 1) -->
+        <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+          <div class="w-[5%]">1</div>
+          <div class="w-[20%]">Juan Pérez</div>
+          <div class="w-[20%]">Venta</div>
+          <div class="w-[25%]">$23.505.488</div>
+          <div class="w-[30%] text-right"><i class="fas fa-check"></i></div>
+        </div>
+        
+        <!-- Fila 3: Datos de las columnas (ejemplo 2) -->
+        <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+          <div class="w-[5%]">2</div>
+          <div class="w-[20%]">María López</div>
+          <div class="w-[20%]">Arriendo</div>
+          <div class="w-[25%]">$324.589</div>
+          <div class="w-[30%] text-right"><i class="fas fa-check"></i></div>
+        </div>
+        
+        <!-- Fila 3: Datos de las columnas (ejemplo 3) -->
+        <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+          <div class="w-[5%]">3</div>
+          <div class="w-[20%]">Pedro Gómez</div>
+          <div class="w-[20%]">Venta</div>
+          <div class="w-[25%]">$45.000.000</div>
+          <div class="w-[30%] text-right"><i class="fas fa-check"></i></div>
+        </div>
+        
+        <!-- Fila 3: Datos de las columnas (ejemplo 4) -->
+        <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+          <div class="w-[5%]">4</div>
+          <div class="w-[20%]">Ana Torres</div>
+          <div class="w-[20%]">Arriendo</div>
+          <div class="w-[25%]">$560.000</div>
+          <div class="w-[30%] text-right"><i class="fas fa-xmark"></i></div>
+        </div>
+      </div>
+    
+      <!-- Fila 4: Footer y paginación -->
+      <div class="flex justify-between items-center pt-4 border-t border-gray-300">
+        <!-- Controles de paginación -->
+        <div class="flex items-center space-x-2 text-sm text-gray-600">
+          <span>Filas por página:</span>
+          <select class="rounded-md border border-gray-300 p-1 focus:outline-none focus:border-gray-500">
+            <option>10</option>
+            <option>25</option>
+            <option selected>100</option>
+          </select>
+        </div>
+        <div class="flex items-center space-x-4 text-sm text-gray-600">
+          <span>1-10 de 100</span>
+          <!-- Botón para ir al principio -->
+          <i class="fas fa-backward-step cursor-pointer hover:text-gray-900"></i>
+          <!-- Botón para retroceder -->
+          <i class="fas fa-chevron-left cursor-pointer hover:text-gray-900"></i>
+          <span>Página 1 de 10</span>
+          <!-- Botón para avanzar -->
+          <i class="fas fa-chevron-right cursor-pointer hover:text-gray-900"></i>
+          <!-- Botón para ir al final -->
+          <i class="fas fa-forward-step cursor-pointer hover:text-gray-900"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
+
+
+

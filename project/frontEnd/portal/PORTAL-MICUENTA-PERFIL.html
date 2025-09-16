@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nombre Empresa</title>
+<!-- Tailwind CSS CDN for styling -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome CDN for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2eO25rK757/5M5P/J743pA6g2LhC94fJ8W9B77+5C6V6fA6w+eA6C5G88K88" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+  body {
+    font-family: Inter, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    padding-top: 0;
+    margin: 0;
+  }
+  
+  /* Floating WhatsApp button styling */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 50;
+  }
+
+  .whatsapp-float i {
+    font-size: 2rem;
+    color: #fff;
+    background-color: #616161;
+    padding: 1rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .whatsapp-float i:hover {
+    transform: scale(1.1);
+  }
+  
+  /* "Destacado" ribbon styling */
+  .featured-ribbon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #616161;
+    color: white;
+    font-weight: bold;
+    font-size: 0.7rem;
+    padding: 0.25rem 2rem;
+    transform-origin: 0% 0%;
+    transform: translate(-20%, 270%) rotate(-45deg); 
+    z-index: 20;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .property-card {
+    overflow: hidden;
+  }
+  
+  .property-icons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background-color: #f3f4f6;
+      border-top: 1px solid #939393;
+  }
+</style>
+</head>
+<body>
+
+<!-- Top bar with logo, title, and user links -->
+<div id="top-bar-container" class="fixed top-0 left-0 w-full h-12 bg-white text-black p-4 z-40 flex flex-col md:flex-row md:justify-between md:items-center">
+  <!-- Logo and title container -->
+  <div class="flex items-center space-x-4 mb-2 md:mb-0">
+    <!-- Image icon to the left of the title -->
+    <i class="fas fa-image fa-2x text-neutral-800"></i>
+    <h2 class="text-xl font-bold">Nombre Empresa</h2>
+  </div>
+  <!-- Links and UF text container -->
+  <div class="flex items-center space-x-4 mt-2 md:mt-0">
+    <span class="text-sm font-light text-neutral-800">UF hoy: $37.897</span>
+    <!-- Vertical divider -->
+    <div class="h-6 w-px bg-neutral-300"></div>
+    <a href="#" class="text-sm font-medium text-neutral-800 hover:text-red-500 transition-colors">Cerrar Sesión</a>
+  </div>
+</div>
+
+<!-- Main navigation bar -->
+<div id="nav-bar" class="fixed top-12 w-full bg-white p-4 flex justify-center items-center space-x-8 shadow-md z-30">
+  <a href="#" class="flex flex-col items-center text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    <i class="fas fa-home text-lg"></i>
+  </a>
+  
+  <!-- "Nosotros" dropdown menu -->
+  <div class="group relative">
+    <a href="#" class="text-sm font-bold text-neutral-800 transition-colors inline-flex items-center space-x-1">
+      <span>Nosotros</span>
+      <i class="fas fa-chevron-down text-xs"></i>
+    </a>
+    <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Misión y Visión
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Equipo
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Testimonios
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Contacto
+      </a>
+    </div>
+  </div>
+
+  <!-- "Propiedades" dropdown menu -->
+  <div class="group relative">
+    <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors inline-flex items-center space-x-1">
+      <span>Propiedades</span>
+      <i class="fas fa-chevron-down text-xs"></i>
+    </a>
+    <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Arrendar
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Comprar
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Publica tu propiedad
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Avalúa tu Propiedad
+      </a>
+    </div>
+  </div>
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    Blog
+  </a>
+
+  <!-- "Mi cuenta" dropdown menu -->
+  <div class="group relative">
+    <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors inline-flex items-center space-x-1">
+      <span>Mi cuenta</span>
+      <i class="fas fa-chevron-down text-xs"></i>
+    </a>
+    <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Mi Perfil
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Mis Publicaciones
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Mis Pagos
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Mis Contratos
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Notificaciones
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Favoritos
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Main content container with padding for fixed headers -->
+<div class="container mx-auto p-4 pt-16">
+  <!-- Empty placeholder card -->
+  <div class="bg-white rounded-lg w-full text-left p-4 mb-8">
+  </div>
+
+  <!-- "Nuestro Equipo" section -->
+  <div class="container mx-auto max-w-7xl">
+    <h1 class="text-4xl font-bold text-neutral-800 text-center mb-12">Nuestro Equipo</h1>
+  </div>
+  
+  <!-- Team member grid container -->
+  <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mb-8">
+    <!-- Team Member Card 1 -->
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+      <img src="https://placehold.co/100x100/A0A0A0/ffffff?text=FOTO" alt="Foto del Miembro del Equipo 1" class="w-24 h-24 rounded-full mb-4">
+      <h3 class="text-xl font-semibold text-neutral-800">Juan Pérez</h3>
+      <p class="text-sm text-gray-500">Agente Inmobiliario Senior</p>
+      <p class="text-sm text-gray-600 mt-2">Experto en propiedades residenciales con más de 10 años de experiencia en el mercado.</p>
+      <div class="mt-4 space-y-2">
+        <a href="tel:+56912345678" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-phone mr-2"></i>+56 9 1234 5678
+        </a>
+        <a href="mailto:juan.perez@empresa.cl" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-envelope mr-2"></i>juan.perez@empresa.cl
+        </a>
+      </div>
+    </div>
+    
+    <!-- Team Member Card 2 -->
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+      <img src="https://placehold.co/100x100/A0A0A0/ffffff?text=FOTO" alt="Foto del Miembro del Equipo 2" class="w-24 h-24 rounded-full mb-4">
+      <h3 class="text-xl font-semibold text-neutral-800">María López</h3>
+      <p class="text-sm text-gray-500">Especialista en Arriendos</p>
+      <p class="text-sm text-gray-600 mt-2">Dedicada a encontrar el hogar perfecto para cada familia y a gestionar arriendos de forma eficiente.</p>
+      <div class="mt-4 space-y-2">
+        <a href="tel:+56923456789" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-phone mr-2"></i>+56 9 2345 6789
+        </a>
+        <a href="mailto:maria.lopez@empresa.cl" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-envelope mr-2"></i>maria.lopez@empresa.cl
+        </a>
+      </div>
+    </div>
+
+    <!-- Team Member Card 3 -->
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+      <img src="https://placehold.co/100x100/A0A0A0/ffffff?text=FOTO" alt="Foto del Miembro del Equipo 3" class="w-24 h-24 rounded-full mb-4">
+      <h3 class="text-xl font-semibold text-neutral-800">Pedro Gómez</h3>
+      <p class="text-sm text-gray-500">Agente Comercial</p>
+      <p class="text-sm text-gray-600 mt-2">Especialista en la venta de propiedades comerciales e industriales. Siempre buscando la mejor inversión.</p>
+      <div class="mt-4 space-y-2">
+        <a href="tel:+56934567890" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-phone mr-2"></i>+56 9 3456 7890
+        </a>
+        <a href="mailto:pedro.gomez@empresa.cl" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-envelope mr-2"></i>pedro.gomez@empresa.cl
+        </a>
+      </div>
+    </div>
+    
+    <!-- Team Member Card 4 -->
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+      <img src="https://placehold.co/100x100/A0A0A0/ffffff?text=FOTO" alt="Foto del Miembro del Equipo 4" class="w-24 h-24 rounded-full mb-4">
+      <h3 class="text-xl font-semibold text-neutral-800">Ana Morales</h3>
+      <p class="text-sm text-gray-500">Asesora de Ventas</p>
+      <p class="text-sm text-gray-600 mt-2">Apasionada por ayudar a las personas a encontrar su propiedad ideal. Ofrece un servicio personalizado.</p>
+      <div class="mt-4 space-y-2">
+        <a href="tel:+56945678901" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-phone mr-2"></i>+56 9 4567 8901
+        </a>
+        <a href="mailto:ana.morales@empresa.cl" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-envelope mr-2"></i>ana.morales@empresa.cl
+        </a>
+      </div>
+    </div>
+    
+    <!-- Central box with team icon -->
+    <div class="bg-neutral-800 p-6 rounded-lg shadow-md flex flex-col items-center justify-center text-white">
+      <i class="fas fa-users text-8xl mb-4 text-neutral-300"></i>
+      <h3 class="text-xl font-semibold">Nuestro Equipo</h3>
+      <p class="text-sm text-neutral-400">Expertos a tu servicio.</p>
+    </div>
+
+    <!-- Team Member Card 5 -->
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+      <img src="https://placehold.co/100x100/A0A0A0/ffffff?text=FOTO" alt="Foto del Miembro del Equipo 5" class="w-24 h-24 rounded-full mb-4">
+      <h3 class="text-xl font-semibold text-neutral-800">Carlos Soto</h3>
+      <p class="text-sm text-gray-500">Especialista en Tasaciones</p>
+      <p class="text-sm text-gray-600 mt-2">Dedicado a valorar las propiedades de forma precisa y justa para garantizar la mejor transacción.</p>
+      <div class="mt-4 space-y-2">
+        <a href="tel:+56956789012" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-phone mr-2"></i>+56 9 5678 9012
+        </a>
+        <a href="mailto:carlos.soto@empresa.cl" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-envelope mr-2"></i>carlos.soto@empresa.cl
+        </a>
+      </div>
+    </div>
+
+    <!-- Team Member Card 6 -->
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+      <img src="https://placehold.co/100x100/A0A0A0/ffffff?text=FOTO" alt="Foto del Miembro del Equipo 6" class="w-24 h-24 rounded-full mb-4">
+      <h3 class="text-xl font-semibold text-neutral-800">Sofía Ramos</h3>
+      <p class="text-sm text-gray-500">Agente de Propiedades de Lujo</p>
+      <p class="text-sm text-gray-600 mt-2">Especializada en la gestión de propiedades de alto valor y en el servicio a clientes exigentes.</p>
+      <div class="mt-4 space-y-2">
+        <a href="tel:+56967890123" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-phone mr-2"></i>+56 9 6789 0123
+        </a>
+        <a href="mailto:sofia.ramos@empresa.cl" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-envelope mr-2"></i>sofia.ramos@empresa.cl
+        </a>
+      </div>
+    </div>
+
+    <!-- Team Member Card 7 -->
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+      <img src="https://placehold.co/100x100/A0A0A0/ffffff?text=FOTO" alt="Foto del Miembro del Equipo 7" class="w-24 h-24 rounded-full mb-4">
+      <h3 class="text-xl font-semibold text-neutral-800">Ricardo Torres</h3>
+      <p class="text-sm text-gray-500">Analista de Mercado</p>
+      <p class="text-sm text-gray-600 mt-2">Analiza las tendencias del mercado para proporcionar la mejor asesoría a nuestros clientes.</p>
+      <div class="mt-4 space-y-2">
+        <a href="tel:+56978901234" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-phone mr-2"></i>+56 9 7890 1234
+        </a>
+        <a href="mailto:ricardo.torres@empresa.cl" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-envelope mr-2"></i>ricardo.torres@empresa.cl
+        </a>
+      </div>
+    </div>
+    
+    <!-- Team Member Card 8 -->
+    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center text-center">
+      <img src="https://placehold.co/100x100/A0A0A0/ffffff?text=FOTO" alt="Foto del Miembro del Equipo 8" class="w-24 h-24 rounded-full mb-4">
+      <h3 class="text-xl font-semibold text-neutral-800">Laura Benítez</h3>
+      <p class="text-sm text-gray-500">Coordinadora de Visitas</p>
+      <p class="text-sm text-gray-600 mt-2">Asegura que cada visita a una propiedad sea una experiencia fluida y sin contratiempos para el cliente.</p>
+      <div class="mt-4 space-y-2">
+        <a href="tel:+56989012345" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-phone mr-2"></i>+56 9 8901 2345
+        </a>
+        <a href="mailto:laura.benitez@empresa.cl" class="text-neutral-800 hover:text-blue-500 flex items-center justify-center">
+          <i class="fas fa-envelope mr-2"></i>laura.benitez@empresa.cl
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Empty grid placeholder -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  </div>
+</div>
+
+<!-- Floating WhatsApp button with external link -->
+<a href="https://wa.me/56912345678" target="_blank" class="whatsapp-float">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- Fixed bottom bar with social media icons -->
+<div class="fixed bottom-0 left-0 w-full bg-white text-neutral-800 p-4 z-40 flex justify-center items-center space-x-6 shadow-md border-t border-gray-300">
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-x-twitter"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-instagram"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-youtube"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+</div>
+
+<!-- Footer section -->
+<footer class="bg-neutral-800 text-white p-8 mt-12">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+        <!-- Column 1: Company Info -->
+        <div>
+            <h3 class="text-lg font-bold mb-4">Información de la Empresa</h3>
+            <p class="text-sm text-neutral-400">
+                <i class="fas fa-map-marker-alt mr-2"></i>Calle Falsa 123, Parral, Región del Maule
+            </p>
+            <p class="text-sm text-neutral-400 mt-2">
+                <i class="fas fa-phone mr-2"></i>+56 9 1234 5678
+            </p>
+            <p class="text-sm text-neutral-400 mt-2">
+                <i class="fas fa-envelope mr-2"></i>info@plataformainmobiliaria.cl
+            </p>
+            <p class="text-sm text-neutral-400 mt-4">
+                <i class="fas fa-clock mr-2"></i>Lunes a Viernes: 9:00 - 18:00
+            </p>
+        </div>
+
+        <!-- Column 2: Contact Form -->
+        <div>
+            <h3 class="text-lg font-bold mb-4">Contáctanos</h3>
+            <form class="space-y-4">
+                <input type="text" placeholder="Tu Nombre" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="email" placeholder="Tu Correo Electrónico" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <textarea rows="4" placeholder="Tu Mensaje" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <button type="submit" class="w-full bg-neutral-500 text-white p-2 rounded-md hover:bg-neutral-600 transition-colors">
+                    Enviar Mensaje
+                </button>
+            </form>
+        </div>
+
+        <!-- Column 3: FAQ section -->
+        <div>
+            <h3 class="text-lg font-bold mb-4 text-left">FAQ</h3>
+            <div class="space-y-4 text-left">
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cómo puedo publicar una propiedad?</h4>
+                    <p class="text-sm text-neutral-400">Puedes publicar tu propiedad registrándote y seleccionando "Vende tu propiedad" o "Arrienda tu propiedad" en el menú principal.</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cuál es el costo del servicio?</h4>
+                    <p class="text-sm text-neutral-400">El costo varía según el plan que elijas. Puedes ver los detalles en la sección de "Planes y Precios".</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cómo agendo una visita a una propiedad?</h4>
+                    <p class="text-sm text-neutral-400">En la página de cada propiedad encontrarás un formulario para agendar una visita directamente con el agente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Copyright text -->
+    <div class="mt-8 text-center text-sm text-neutral-500 border-t border-neutral-700 pt-4">
+        &copy; 2025 Plataforma Inmobiliaria. Todos los derechos reservados.
+    </div>
+</footer>
+</body>
+</html>

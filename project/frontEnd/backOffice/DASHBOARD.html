@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Inmobiliario</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #ffffff; 
+    padding-top: 64px;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Barra superior fija con colores en escala de grises -->
+<div class="fixed top-0 left-0 w-full bg-neutral-800 text-white p-4 z-50 shadow-md flex justify-between items-center">
+  <h2 class="text-xl font-bold">Plataforma Inmobiliaria - Dashboard</h2>
+  
+  <div class="cursor-pointer p-2 rounded-md hover:bg-neutral-700 transition-colors">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  </div>
+</div>
+
+<!-- Contenedor principal para el contenido del cuerpo -->
+<div class="container mx-auto p-4">
+  <!-- Tarjetas de indicadores principales -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-items-center gap-4 mb-8">
+    <!-- Tarjeta de ingresos -->
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Ingresos Totales del mes</h3>
+      <h2 class="text-5xl font-bold text-gray-900 mb-2">$ 4.588.998</h2>
+      <p class="text-sm font-medium text-gray-500">-15% vs el mes anterior</p>
+    </div>
+
+    <!-- Tarjeta de propiedades activas -->
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Propiedades Activas</h3>
+      <h2 class="text-5xl font-bold text-gray-900 mb-2">344</h2>
+      <p class="text-sm font-medium text-gray-500">+10% vs el mes anterior</p>
+    </div>
+
+    <!-- Tarjeta de nuevos miembros -->
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Nuevos miembros</h3>
+      <h2 class="text-5xl font-bold text-gray-900 mb-2">34</h2>
+      <p class="text-sm font-medium text-gray-500">+12% vs el mes anterior</p>
+    </div>
+    
+    <!-- Tarjeta de tiempo promedio -->
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Tiempo promedio de venta o arriendo</h3>
+      <h2 class="text-5xl font-bold text-gray-900 mb-2">37 días</h2>
+      <p class="text-sm font-medium text-gray-500">-45% vs el mes anterior</p>
+    </div>
+  </div>
+
+  <!-- Contenedor para las tarjetas de abajo -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+    <!-- Tarjeta de distribución por tipo de propiedad -->
+    <div class="bg-white rounded-lg p-6 w-full mx-auto border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-4">Distribución por Tipo de Propiedad</h3>
+      
+      <!-- Contenedor para cada tipo de propiedad con valores actualizados -->
+      <div class="space-y-4">
+        <!-- Departamento -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Departamento</span>
+            <span class="text-sm text-gray-500">151 (44%)</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 44%;"></div>
+          </div>
+        </div>
+        
+        <!-- Casa -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Casa</span>
+            <span class="text-sm text-gray-500">120 (35%)</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 35%;"></div>
+          </div>
+        </div>
+        
+        <!-- Oficina -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Oficina</span>
+            <span class="text-sm text-gray-500">50 (15%)</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 15%;"></div>
+          </div>
+        </div>
+        
+        <!-- Parcela -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Parcela</span>
+            <span class="text-sm text-gray-500">23 (6%)</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 6%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Nueva tarjeta de ranking de agentes -->
+    <div class="bg-white rounded-lg p-6 w-full mx-auto border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-4">Ranking agentes (Rendimiento)</h3>
+      
+      <!-- Contenedor para cada agente -->
+      <div class="space-y-4">
+        <!-- Agente 1 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Juan Pérez</span>
+            <span class="text-sm text-gray-500">95%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 95%;"></div>
+          </div>
+        </div>
+        
+        <!-- Agente 2 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Ana García</span>
+            <span class="text-sm text-gray-500">88%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 88%;"></div>
+          </div>
+        </div>
+        
+        <!-- Agente 3 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Carlos López</span>
+            <span class="text-sm text-gray-500">75%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 75%;"></div>
+          </div>
+        </div>
+
+        <!-- Agente 4 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Sofía Rodríguez</span>
+            <span class="text-sm text-gray-500">65%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 65%;"></div>
+          </div>
+        </div>
+
+        <!-- Agente 5 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Pedro Martínez</span>
+            <span class="text-sm text-gray-500">50%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 50%;"></div>
+          </div>
+        </div>
+
+        <!-- Agente 6 -->
+        <div>
+          <div class="flex justify-between items-baseline mb-1">
+            <span class="text-sm font-medium text-gray-700">Marta Torres</span>
+            <span class="text-sm text-gray-500">40%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gray-500 h-2 rounded-full" style="width: 40%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor para el gráfico y la nueva tarjeta de comparación -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+    <!-- Tarjeta para el gráfico de ingresos -->
+    <div class="bg-white rounded-lg p-6 w-full mx-auto border text-left md:col-span-8" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-4">Gráfico de Ingresos por Mes</h3>
+      <canvas id="incomeChart" class="w-full h-64"></canvas>
+      <p class="text-xs font-light text-gray-500 mt-2">
+        El gráfico representa los ingresos por mes de los últimos 6 meses.
+      </p>
+    </div>
+
+    <!-- Nueva tarjeta de comparación de ingresos -->
+    <div class="bg-white rounded-lg p-6 w-full mx-auto border text-left md:col-span-4" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-4">Comparación de Ingresos Acumulados</h3>
+      <div class="mb-4">
+        <p class="text-sm text-gray-500">Mes Actual</p>
+        <h2 class="text-4xl font-bold text-gray-900">$ 4.588.998</h2>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">Mismo mes año anterior</p>
+        <h2 class="text-4xl font-bold text-gray-500">$ 3.800.000</h2>
+        <p class="text-sm font-medium text-gray-500 mt-2">+21% vs año anterior</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.onload = function() {
+    const canvas = document.getElementById('incomeChart');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = 256;
+      drawChart();
+    }
+
+    const data = [
+      { month: 'Ene', value: 5000000 },
+      { month: 'Feb', value: 8500000 },
+      { month: 'Mar', value: 10000000 },
+      { month: 'Abr', value: 7200000 },
+      { month: 'May', value: 12000000 },
+      { month: 'Jun', value: 4588998 }
+    ];
+
+    const maxValue = 15000000;
+    const padding = 40;
+
+    function drawChart() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = '#e5e7eb';
+      ctx.lineWidth = 1;
+      ctx.font = '12px Arial';
+      ctx.fillStyle = '#6b7280';
+      const yAxisLabels = ['$0', '$5M', '$10M', '$15M'];
+      for (let i = 0; i < yAxisLabels.length; i++) {
+        const y = canvas.height - padding - (i / (yAxisLabels.length - 1)) * (canvas.height - 2 * padding);
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(canvas.width - padding, y);
+        ctx.stroke();
+        ctx.fillText(yAxisLabels[i], padding - 35, y + 5);
+      }
+
+      ctx.textAlign = 'center';
+      const xSpacing = (canvas.width - 2 * padding) / (data.length - 1);
+      data.forEach((point, index) => {
+        const x = padding + index * xSpacing;
+        ctx.fillText(point.month, x, canvas.height - padding + 20);
+      });
+
+      ctx.beginPath();
+      ctx.strokeStyle = '#4b5563';
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.shadowBlur = 5;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+      
+      data.forEach((point, index) => {
+        const x = padding + index * xSpacing;
+        const y = canvas.height - padding - (point.value / maxValue) * (canvas.height - 2 * padding);
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = '#4b5563';
+        ctx.fill();
+      });
+      ctx.shadowBlur = 0;
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+  };
+</script>
+
+</body>
+</html>

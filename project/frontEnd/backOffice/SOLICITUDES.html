@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Inmobiliario</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<style>
+  body {
+    font-family: Inter, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    padding-top: 64px;
+    margin: 0;
+  }
+  .notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #4b5563;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 9999px;
+    padding: 0px 5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Barra superior fija con colores en escala de grises -->
+<div class="fixed top-0 left-0 w-full bg-neutral-800 text-white p-4 z-40 shadow-md flex justify-between items-center">
+  <h2 class="text-xl font-bold">Plataforma Inmobiliaria - Solicitudes de Publicación</h2>
+  <div class="flex items-center space-x-2">
+    <!-- Icono de notificaciones con badge -->
+    <div class="cursor-pointer p-2 rounded-md hover:bg-neutral-700 transition-colors relative">
+      <i class="fas fa-bell fa-lg"></i>
+      <span class="notification-badge">5</span>
+    </div>
+    <!-- Icono de menú Font Awesome -->
+    <div class="cursor-pointer p-2 rounded-md hover:bg-neutral-700 transition-colors">
+      <i class="fas fa-bars fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<!-- Contenedor principal del cuerpo -->
+<div class="w-full mx-auto p-4">
+  <br />
+  
+  <!-- Contenedor de la cuadrícula para las tarjetas -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- Tarjeta con el título "Solicitudes" -->
+    <div class="bg-white rounded-lg w-full border p-3 text-left" style="border-color: #939393;">
+      <p class="text-lg font-semibold text-gray-700">Solicitudes</p>
+      <p class="text-3xl text-gray-900 mt-2">233</p>
+    </div>
+    
+    <!-- Nueva Tarjeta con el título "Pre-aprobadas" -->
+    <div class="bg-white rounded-lg w-full border p-3 text-left" style="border-color: #939393;">
+      <p class="text-lg font-semibold text-gray-700">Pre-aprobadas</p>
+      <p class="text-3xl text-gray-900 mt-2">189</p>
+    </div>
+
+    <!-- Nueva Tarjeta con el título "Aprobadas" -->
+    <div class="bg-white rounded-lg w-full border p-3 text-left" style="border-color: #939393;">
+      <p class="text-lg font-semibold text-gray-700">Aprobadas</p>
+      <p class="text-3xl text-gray-900 mt-2">44</p>
+    </div>
+
+    <!-- Nueva Tarjeta con el título "Rechazadas" -->
+    <div class="bg-white rounded-lg w-full border p-3 text-left" style="border-color: #939393;">
+      <p class="text-lg font-semibold text-gray-700">Rechazadas</p>
+      <p class="text-3xl text-gray-900 mt-2">25</p>
+    </div>
+  </div>
+
+  <!-- Tarjeta de la tabla principal -->
+    <div class="bg-white rounded-lg w-full border p-6 text-left min-h-[600px] flex flex-col justify-between mt-4" style="border-color: #939393;">
+      <!-- Contenido de la parte superior (Fila 1, Fila 2, Fila 3) -->
+      <div>
+        <!-- Fila 1: Título y controles -->
+        <div class="flex items-center justify-between mb-4">
+          <!-- Contenedor para el botón y el título, alineados a la izquierda -->
+          <div class="flex items-center space-x-2">
+            <!-- Botón + -->
+            <button class="bg-neutral-900 text-white w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-700 transition-colors">
+              <i class="fas fa-plus fa-lg"></i>
+            </button>
+            <h6 class="text-xl font-bold text-gray-800">Listado de Propiedades</h6>
+          </div>
+          <!-- Controles de la derecha -->
+          <div class="flex items-center space-x-2">
+            <!-- Icono de Excel -->
+            <i class="fas fa-file-excel text-gray-500 cursor-pointer hover:text-gray-900"></i>
+            <!-- Icono de Filtro -->
+            <i class="fas fa-filter text-gray-500 cursor-pointer hover:text-gray-900"></i>
+            <!-- Input de búsqueda -->
+            <div class="relative">
+              <input type="text" placeholder="Buscar..." class="pl-8 pr-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:border-gray-500 text-sm">
+              <i class="fas fa-search absolute left-2 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Fila 2: Encabezados de columnas -->
+        <div class="flex justify-between text-sm font-bold text-gray-700 pb-2 border-b border-gray-300">
+          <div class="w-[5%]">Id</div>
+          <div class="w-[15%]">Usuario</div>
+          <div class="w-[15%]">Origen</div>
+          <div class="w-[10%]">Tipo</div>
+          <div class="w-[15%]">Estado</div>
+          <div class="w-[15%]">Agente</div>
+          <div class="w-[25%] text-right">Acciones</div>
+        </div>
+      
+        <!-- Fila 3: Datos de las columnas (ejemplo 1) -->
+        <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+          <div class="w-[5%]">1</div>
+          <div class="w-[15%]">Juan Pérez</div>
+          <div class="w-[15%]">Publicación</div>
+          <div class="w-[10%]">Casa</div>
+          <div class="w-[15%]">solicitud</div>
+          <div class="w-[15%]">Juan Pérez</div>
+          <div class="w-[25%] flex justify-end space-x-2">
+            <i class="fas fa-xmark text-gray-500 cursor-pointer hover:text-gray-900" title="Rechazar"></i>
+            <i class="fas fa-check text-gray-500 cursor-pointer hover:text-gray-900" title="Autorizar"></i>
+            <i class="fas fa-ellipsis-h text-gray-500 cursor-pointer hover:text-gray-900" title="Más opciones"></i>
+            <i class="fas fa-edit text-gray-500 cursor-pointer hover:text-gray-900" title="Editar"></i>
+            <i class="fas fa-trash-alt text-gray-500 cursor-pointer hover:text-gray-900" title="Eliminar"></i>
+          </div>
+        </div>
+        
+        <!-- Fila 3: Datos de las columnas (ejemplo 2) -->
+        <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+          <div class="w-[5%]">2</div>
+          <div class="w-[15%]">María López</div>
+          <div class="w-[15%]">Valoración</div>
+          <div class="w-[10%]">Departamento</div>
+          <div class="w-[15%]">pre-aprobada</div>
+          <div class="w-[15%]">María López</div>
+          <div class="w-[25%] flex justify-end space-x-2">
+            <i class="fas fa-xmark text-gray-500 cursor-pointer hover:text-gray-900" title="Rechazar"></i>
+            <i class="fas fa-check text-gray-500 cursor-pointer hover:text-gray-900" title="Autorizar"></i>
+            <i class="fas fa-ellipsis-h text-gray-500 cursor-pointer hover:text-gray-900" title="Más opciones"></i>
+            <i class="fas fa-edit text-gray-500 cursor-pointer hover:text-gray-900" title="Editar"></i>
+            <i class="fas fa-trash-alt text-gray-500 cursor-pointer hover:text-gray-900" title="Eliminar"></i>
+          </div>
+        </div>
+        
+        <!-- Fila 3: Datos de las columnas (ejemplo 3) -->
+        <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+          <div class="w-[5%]">3</div>
+          <div class="w-[15%]">Pedro Gómez</div>
+          <div class="w-[15%]">Publicación</div>
+          <div class="w-[10%]">Oficina</div>
+          <div class="w-[15%]">aprobada</div>
+          <div class="w-[15%]">Pedro Gómez</div>
+          <div class="w-[25%] flex justify-end space-x-2">
+            <i class="fas fa-xmark text-gray-500 cursor-pointer hover:text-gray-900" title="Rechazar"></i>
+            <i class="fas fa-check text-gray-500 cursor-pointer hover:text-gray-900" title="Autorizar"></i>
+            <i class="fas fa-ellipsis-h text-gray-500 cursor-pointer hover:text-gray-900" title="Más opciones"></i>
+            <i class="fas fa-edit text-gray-500 cursor-pointer hover:text-gray-900" title="Editar"></i>
+            <i class="fas fa-trash-alt text-gray-500 cursor-pointer hover:text-gray-900" title="Eliminar"></i>
+          </div>
+        </div>
+        
+        <!-- Fila 3: Datos de las columnas (ejemplo 4) -->
+        <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+          <div class="w-[5%]">4</div>
+          <div class="w-[15%]">Ana Torres</div>
+          <div class="w-[15%]">Valoración</div>
+          <div class="w-[10%]">Terreno</div>
+          <div class="w-[15%]">solicitud</div>
+          <div class="w-[15%] text-gray-400">--</div> <!-- Agente en blanco -->
+          <div class="w-[25%] flex justify-end space-x-2">
+            <!-- Ícono de usuario si el agente está en blanco -->
+            <i class="fas fa-user text-gray-500 cursor-pointer hover:text-gray-900" title="Asignar agente"></i>
+            <i class="fas fa-ellipsis-h text-gray-500 cursor-pointer hover:text-gray-900" title="Más opciones"></i>
+            <i class="fas fa-edit text-gray-500 cursor-pointer hover:text-gray-900" title="Editar"></i>
+            <i class="fas fa-trash-alt text-gray-500 cursor-pointer hover:text-gray-900" title="Eliminar"></i>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Fila 4: Footer y paginación -->
+      <div class="flex justify-between items-center pt-4 border-t border-gray-300">
+        <!-- Controles de paginación -->
+        <div class="flex items-center space-x-2 text-sm text-gray-600">
+          <span>Filas por página:</span>
+          <select class="rounded-md border border-gray-300 p-1 focus:outline-none focus:border-gray-500">
+            <option>10</option>
+            <option>25</option>
+            <option selected>100</option>
+          </select>
+        </div>
+        <div class="flex items-center space-x-4 text-sm text-gray-600">
+          <span>1-10 de 100</span>
+          <!-- Botón para ir al principio -->
+          <i class="fas fa-backward-step cursor-pointer hover:text-gray-900"></i>
+          <!-- Botón para retroceder -->
+          <i class="fas fa-chevron-left cursor-pointer hover:text-gray-900"></i>
+          <span>Página 1 de 10</span>
+          <!-- Botón para avanzar -->
+          <i class="fas fa-chevron-right cursor-pointer hover:text-gray-900"></i>
+          <!-- Botón para ir al final -->
+          <i class="fas fa-forward-step cursor-pointer hover:text-gray-900"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

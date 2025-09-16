@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plataforma Inmobiliaria - Propiedades en Arriendo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2eO25rK757/5M5P/J743pA6g2LhC94fJ8W9B77+5C6V6fA6w+eA6C5G88K88" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+  body {
+    font-family: Inter, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    padding-top: 0;
+    margin: 0;
+  }
+  
+  .whatsapp-float {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 50;
+  }
+
+  .whatsapp-float i {
+    font-size: 2rem;
+    color: #fff;
+    background-color: #616161;
+    padding: 1rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .whatsapp-float i:hover {
+    transform: scale(1.1);
+  }
+  
+  .featured-ribbon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #616161;
+    color: white;
+    font-weight: bold;
+    font-size: 0.7rem;
+    padding: 0.25rem 2rem;
+    transform-origin: 0% 0%;
+    transform: translate(-20%, 270%) rotate(-45deg); 
+    z-index: 20;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .property-card {
+    overflow: hidden;
+  }
+  
+  .property-icons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background-color: #f3f4f6;
+      border-top: 1px solid #939393;
+  }
+
+  /* Estilos para el slider de rango */
+  .price-range-slider {
+    position: relative;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-top: 1rem;
+  }
+  
+  /* El track del slider, invisible pero funcional */
+  .price-range-slider input[type="range"] {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background: transparent; /* Hacemos el track invisible */
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    z-index: 10;
+    pointer-events: none; /* Permite clicks a través de los inputs */
+  }
+
+  /* Estilo del "thumb" o círculo del slider */
+  .price-range-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #616161;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    pointer-events: auto; /* Hacemos el thumb clickeable */
+  }
+  .price-range-slider input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #616161;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    pointer-events: auto;
+  }
+
+  /* Estilo de la línea del slider que siempre es visible */
+  .slider-track {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background: #ccc;
+    z-index: 1;
+  }
+
+  /* Estilo para la "barra de llenado" entre los dos thumbs */
+  .slider-range-fill {
+    position: absolute;
+    height: 5px;
+    background: #616161;
+    z-index: 2;
+  }
+  
+  /* Los valores mostrados encima de los thumbs */
+  .price-range-values {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    top: 0;
+    font-size: 0.75rem;
+    color: #616161;
+    font-weight: bold;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Barra superior fija, ahora responsiva en pantallas pequeñas -->
+<div id="top-bar-container" class="fixed top-0 left-0 w-full h-12 bg-white text-black p-4 z-40 flex flex-col md:flex-row md:justify-between md:items-center">
+  <!-- Contenedor del logo y título -->
+  <div class="flex items-center space-x-4 mb-2 md:mb-0">
+    <!-- Icono de imagen a la izquierda del título -->
+    <i class="fas fa-image fa-2x text-neutral-800"></i>
+    <h2 class="text-xl font-bold">Plataforma Inmobiliaria - Propiedades en arriendo</h2>
+  </div>
+  <!-- Contenedor de enlaces y UF, ahora en una nueva línea en móviles -->
+  <div class="flex items-center space-x-2 mt-2 md:mt-0">
+    <!-- Texto UF hoy y divisor vertical -->
+    <span class="text-sm font-light text-neutral-800">UF hoy: $37.897</span>
+    <div class="w-px h-6 bg-neutral-400 opacity-50 hidden md:block"></div>
+    <!-- Enlaces "Ingresar" y "Registrarse" con un divisor entre ellos -->
+    <a href="#" class="text-sm font-light text-neutral-800 hover:text-gray-600 transition-colors">Ingresar</a>
+    <div class="w-px h-6 bg-neutral-400 opacity-50 hidden md:block"></div>
+    <a href="#" class="text-sm font-light text-neutral-800 hover:text-gray-600 transition-colors">Registrarse</a>
+  </div>
+</div>
+
+<!-- Barra de navegación que ahora es fija por defecto -->
+<div id="nav-bar" class="fixed top-12 w-full bg-white p-4 flex justify-center items-center space-x-8 shadow-md z-30">
+  <a href="#" class="flex flex-col items-center text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    <i class="fas fa-home text-lg"></i>
+  </a>
+  
+  <!-- Menú desplegable para "Nosotros" -->
+  <div class="group relative">
+    <!-- El link 'Nosotros' ya no tiene efecto de hover en el texto -->
+    <a href="#" class="text-sm font-medium text-neutral-800 transition-colors inline-flex items-center space-x-1">
+      <span>Nosotros</span>
+      <i class="fas fa-chevron-down text-xs"></i>
+    </a>
+    <!-- Se han añadido de nuevo 'hidden' y 'group-hover:block' para que este menú esté cerrado por defecto -->
+    <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40">
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Equipo
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Contacto
+      </a>
+      <!-- Nuevo submenú "Testimonios" -->
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Testimonios
+      </a>
+    </div>
+  </div>
+
+  <!-- Menú desplegable para "Propiedades" -->
+  <div class="group relative">
+    <!-- Se envuelve el texto "Propiedades" con la etiqueta <strong> para aplicarle la negrita. -->
+    <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors inline-flex items-center space-x-1">
+      <span><strong>Propiedades</strong></span>
+      <i class="fas fa-chevron-down text-xs"></i>
+    </a>
+    <!-- Este div ahora tiene la clase 'hidden' para que se oculte cuando no se haga hover -->
+    <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Arrendar
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Comprar
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Publica tu propiedad
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Avalúa tu Propiedad
+      </a>
+    </div>
+  </div>
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    Blog
+  </a>
+</div>
+
+<!-- Contenedor principal del cuerpo, con padding-top para que no se oculte detrás de las barras fijas -->
+<div class="container mx-auto p-4 pt-36">
+  <!-- Tarjeta de filtro, ocupando todo el ancho y con menús desplegables -->
+  <div class="bg-gray-100 rounded-lg w-full border text-left p-4 mb-8" style="border-color: #939393;">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-bold text-gray-800">Filtro</h3>
+      <button onclick="clearFilters()" class="bg-neutral-600 text-white font-semibold py-1 px-3 rounded-md hover:bg-neutral-700 transition-colors text-sm">
+        Limpiar
+      </button>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <!-- Select para Tipo de Propiedad -->
+      <div>
+        <label for="property-type" class="block text-sm font-medium text-gray-700 mb-1 text-left">Tipo de Propiedad</label>
+        <select id="property-type" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">Selecciona...</option>
+          <option value="departamento">Departamento</option>
+          <option value="casa">Casa</option>
+          <option value="terreno">Terreno</option>
+          <option value="parcela">Parcela</option>
+          <option value="estacionamiento">Estacionamiento</option>
+          <option value="oficina">Oficina</option>
+          <option value="bodega">Bodega</option>
+          <option value="galpon">Galpón</option>
+          <option value="local-comercial">Local Comercial</option>
+        </select>
+      </div>
+
+      <!-- Select para Región -->
+      <div>
+        <label for="region" class="block text-sm font-medium text-gray-700 mb-1 text-left">Región</label>
+        <select id="region" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">Selecciona...</option>
+          <option value="maule">Región del Maule</option>
+          <option value="metropolitana">Región Metropolitana</option>
+          <option value="nuble">Región de Ñuble</option>
+        </select>
+      </div>
+
+      <!-- Select para Comuna -->
+      <div>
+        <label for="commune" class="block text-sm font-medium text-gray-700 mb-1 text-left">Comuna</label>
+        <select id="commune" class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="">Selecciona...</option>
+          <option value="parral">Parral</option>
+          <option value="santiago">Santiago</option>
+          <option value="linares">Linares</option>
+          <option value="cauquenes">Cauquenes</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Contenedor para el selector de rango de precios -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-2 text-left">Rango de Valores</label>
+      <div class="price-range-slider">
+        <div class="slider-track"></div>
+        <div class="slider-range-fill"></div>
+        <input type="range" id="min-price-slider" min="0" max="1378000" value="0">
+        <input type="range" id="max-price-slider" min="0" max="1378000" value="1378000">
+        <div class="price-range-values">
+            <span id="min-price-value"></span>
+            <span id="max-price-value"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor de la cuadrícula para las 9 tarjetas -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Tarjeta 1 (EN VENTA) con banda de "Destacada" -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <div class="featured-ribbon">DESTACADA</div>
+      <!-- Píldora de estado -->
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <!-- Placeholder de imagen -->
+      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
+        <i class="fas fa-image fa-4x"></i>
+      </div>
+
+      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="property-icons-container">
+        <!-- Icono de cama -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bed mr-1"></i>
+          <span class="text-sm">1</span>
+        </div>
+        <!-- Icono de baño -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bath mr-1"></i>
+          <span class="text-sm">1</span>
+        </div>
+        <!-- Icono de casa (ahora fa-home) -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-home mr-1"></i>
+          <span class="text-sm">120 m²</span>
+        </div>
+        <!-- Icono de estacionamiento -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-square-parking mr-1"></i>
+          <span class="text-sm">1</span>
+        </div>
+      </div>
+
+      <!-- Contenido de la tarjeta -->
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">UF 2.000</h3>
+        
+        <!-- Contenedor para la región y comuna centrado -->
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Parral</p>
+        </div>
+        
+        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Departamento</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 2 (EN ARRIENDO) -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <!-- Píldora de estado -->
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <!-- Placeholder de imagen -->
+      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
+        <i class="fas fa-image fa-4x"></i>
+      </div>
+
+      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="property-icons-container">
+        <!-- Icono de cama -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bed mr-1"></i>
+          <span class="text-sm">2</span>
+        </div>
+        <!-- Icono de baño -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bath mr-1"></i>
+          <span class="text-sm">2</span>
+        </div>
+        <!-- Icono de casa (ahora fa-home) -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-home mr-1"></i>
+          <span class="text-sm">120 m²</span>
+        </div>
+        <!-- Icono de área -->
+        <div class="flex items-center text-gray-700">
+          <i class="far fa-square mr-1"></i>
+          <span class="text-sm">240 m²</span>
+        </div>
+        <!-- Icono de estacionamiento -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-square-parking mr-1"></i>
+          <span class="text-sm">2</span>
+        </div>
+      </div>
+      <!-- Contenido de la tarjeta -->
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">$ 23.500.000</h3>
+        
+        <!-- Contenedor para la región y comuna centrado -->
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Parral</p>
+        </div>
+        
+        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Casa</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 3 (EN VENTA) con banda de "Destacada" -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <div class="featured-ribbon">DESTACADA</div>
+      <!-- Píldora de estado -->
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <!-- Placeholder de imagen -->
+      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
+        <i class="fas fa-image fa-4x"></i>
+      </div>
+      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="property-icons-container">
+        <!-- Icono de área -->
+        <div class="flex items-center text-gray-700">
+          <i class="far fa-square mr-1"></i>
+          <span class="text-sm">240 m²</span>
+        </div>
+      </div>
+      <!-- Contenido de la tarjeta -->
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">UF 2.000</h3>
+        
+        <!-- Contenedor para la región y comuna centrado -->
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Talca</p>
+        </div>
+        
+        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Parcela</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 4 (EN ARRIENDO) -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <!-- Píldora de estado -->
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <!-- Placeholder de imagen -->
+      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
+        <i class="fas fa-image fa-4x"></i>
+      </div>
+      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="property-icons-container">
+        <!-- Icono de área -->
+        <div class="flex items-center text-gray-700">
+          <i class="far fa-square mr-1"></i>
+          <span class="text-sm">240 m²</span>
+        </div>
+      </div>
+      <!-- Contenido de la tarjeta -->
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">$ 23.500.000</h3>
+        
+        <!-- Contenedor para la región y comuna centrado -->
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región Metropolitana, Santiago</p>
+        </div>
+        
+        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Terreno</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 5 (EN VENTA) -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <!-- Píldora de estado -->
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <!-- Placeholder de imagen -->
+      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
+        <i class="fas fa-image fa-4x"></i>
+      </div>
+      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="property-icons-container">
+        <!-- Icono de estacionamiento -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-square-parking mr-1"></i>
+          <span class="text-sm">2</span>
+        </div>
+        <!-- Icono de área -->
+        <div class="flex items-center text-gray-700">
+          <i class="far fa-square mr-1"></i>
+          <span class="text-sm">20 m²</span>
+        </div>
+      </div>
+      <!-- Contenido de la tarjeta -->
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">UF 2.000</h3>
+        
+        <!-- Contenedor para la región y comuna centrado -->
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Parral</p>
+        </div>
+        
+        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Estacionamiento</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 6 (EN ARRIENDO) -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <!-- Píldora de estado -->
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <!-- Placeholder de imagen -->
+      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
+        <i class="fas fa-image fa-4x"></i>
+      </div>
+      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="property-icons-container">
+        <!-- Icono de cama -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bed mr-1"></i>
+          <span class="text-sm">3</span>
+        </div>
+        <!-- Icono de baño -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bath mr-1"></i>
+          <span class="text-sm">3</span>
+        </div>
+        <!-- Icono de casa (ahora fa-home) -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-home mr-1"></i>
+          <span class="text-sm">120 m²</span>
+        </div>
+        <!-- Icono de área -->
+        <div class="flex items-center text-gray-700">
+          <i class="far fa-square mr-1"></i>
+          <span class="text-sm">240 m²</span>
+        </div>
+        <!-- Icono de estacionamiento -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-square-parking mr-1"></i>
+          <span class="text-sm">3</span>
+        </div>
+      </div>
+      <!-- Contenido de la tarjeta -->
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">$ 23.500.000</h3>
+        
+        <!-- Contenedor para la región y comuna centrado -->
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Parral</p>
+        </div>
+        
+        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Oficina</p>
+        </div>
+      </div>
+    </div>
+    <!-- Nueva Tarjeta 7 (EN VENTA) con banda de "Destacada" -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <div class="featured-ribbon">DESTACADA</div>
+      <!-- Píldora de estado -->
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <!-- Placeholder de imagen -->
+      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
+        <i class="fas fa-image fa-4x"></i>
+      </div>
+      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="property-icons-container">
+        <!-- Icono de casa (construcción) -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-home mr-1"></i>
+          <span class="text-sm">300 m²</span>
+        </div>
+        <!-- Icono de baño -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bath mr-1"></i>
+          <span class="text-sm">1</span>
+        </div>
+        <!-- Icono de área -->
+        <div class="flex items-center text-gray-700">
+          <i class="far fa-square mr-1"></i>
+          <span class="text-sm">500 m²</span>
+        </div>
+      </div>
+      <!-- Contenido de la tarjeta -->
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">UF 3.500</h3>
+        
+        <!-- Contenedor para la región y comuna centrado -->
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, San Javier</p>
+        </div>
+        
+        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Bodega</p>
+        </div>
+      </div>
+    </div>
+    <!-- Nueva Tarjeta 8 (EN ARRIENDO) -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <!-- Píldora de estado -->
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <!-- Placeholder de imagen -->
+      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
+        <i class="fas fa-image fa-4x"></i>
+      </div>
+      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="property-icons-container">
+        <!-- Icono de casa (construcción) -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-home mr-1"></i>
+          <span class="text-sm">450 m²</span>
+        </div>
+        <!-- Icono de baño -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bath mr-1"></i>
+          <span class="text-sm">1</span>
+        </div>
+        <!-- Icono de área -->
+        <div class="flex items-center text-gray-700">
+          <i class="far fa-square mr-1"></i>
+          <span class="text-sm">600 m²</span>
+        </div>
+      </div>
+      <!-- Contenido de la tarjeta -->
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">$ 850.000</h3>
+        
+        <!-- Contenedor para la región y comuna centrado -->
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Linares</p>
+        </div>
+        
+        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Galpón</p>
+        </div>
+      </div>
+    </div>
+    <!-- Nueva Tarjeta 9 (EN VENTA) -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <!-- Píldora de estado -->
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <!-- Placeholder de imagen -->
+      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
+        <i class="fas fa-image fa-4x"></i>
+      </div>
+      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="property-icons-container">
+        <!-- Icono de casa (construcción) -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-home mr-1"></i>
+          <span class="text-sm">100 m²</span>
+        </div>
+        <!-- Icono de baño -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bath mr-1"></i>
+          <span class="text-sm">1</span>
+        </div>
+        <!-- Icono de área -->
+        <div class="flex items-center text-gray-700">
+          <i class="far fa-square mr-1"></i>
+          <span class="text-sm">150 m²</span>
+        </div>
+        <!-- Icono de estacionamiento -->
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-square-parking mr-1"></i>
+          <span class="text-sm">1</span>
+        </div>
+      </div>
+      <!-- Contenido de la tarjeta -->
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">UF 4.200</h3>
+        
+        <!-- Contenedor para la región y comuna centrado -->
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Cauquenes</p>
+        </div>
+        
+        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Local Comercial</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Botón flotante de WhatsApp -->
+<a href="https://wa.me/56912345678" target="_blank" class="whatsapp-float">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- Barra inferior fija con iconos de redes sociales y el nuevo borde superior -->
+<div class="fixed bottom-0 left-0 w-full bg-white text-neutral-800 p-4 z-40 flex justify-center items-center space-x-6 shadow-md border-t border-gray-300">
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-x-twitter"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-instagram"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-youtube"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+</div>
+
+<!-- Pie de página (Footer) -->
+<footer class="bg-neutral-800 text-white p-8 mt-12">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+        <!-- Columna 1: Información de la Empresa -->
+        <div>
+            <h3 class="text-lg font-bold mb-4">Información de la Empresa</h3>
+            <p class="text-sm text-neutral-400">
+                <i class="fas fa-map-marker-alt mr-2"></i>Calle Falsa 123, Parral, Región del Maule
+            </p>
+            <p class="text-sm text-neutral-400 mt-2">
+                <i class="fas fa-phone mr-2"></i>+56 9 1234 5678
+            </p>
+            <p class="text-sm text-neutral-400 mt-2">
+                <i class="fas fa-envelope mr-2"></i>info@plataformainmobiliaria.cl
+            </p>
+            <p class="text-sm text-neutral-400 mt-4">
+                <i class="fas fa-clock mr-2"></i>Lunes a Viernes: 9:00 - 18:00
+            </p>
+        </div>
+
+        <!-- Columna 2: Formulario de Contacto -->
+        <div>
+            <h3 class="text-lg font-bold mb-4">Contáctanos</h3>
+            <form class="space-y-4">
+                <input type="text" placeholder="Tu Nombre" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="email" placeholder="Tu Correo Electrónico" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <textarea rows="4" placeholder="Tu Mensaje" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <button type="submit" class="w-full bg-neutral-500 text-white p-2 rounded-md hover:bg-neutral-600 transition-colors">
+                    Enviar Mensaje
+                </button>
+            </form>
+        </div>
+
+        <!-- Columna 3: Preguntas Frecuentes -->
+        <div>
+            <h3 class="text-lg font-bold mb-4 text-left">FAQ</h3>
+            <div class="space-y-4 text-left">
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cómo puedo publicar una propiedad?</h4>
+                    <p class="text-sm text-neutral-400">Puedes publicar tu propiedad registrándote y seleccionando "Vende tu propiedad" o "Arrienda tu propiedad" en el menú principal.</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cuál es el costo del servicio?</h4>
+                    <p class="text-sm text-neutral-400">El costo varía según el plan que elijas. Puedes ver los detalles en la sección de "Planes y Precios".</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cómo agendo una visita a una propiedad?</h4>
+                    <p class="text-sm text-neutral-400">En la página de cada propiedad encontrarás un formulario para agendar una visita directamente con el agente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Línea de copyright al final del footer -->
+    <div class="mt-8 text-center text-sm text-neutral-500 border-t border-neutral-700 pt-4">
+        &copy; 2025 Plataforma Inmobiliaria. Todos los derechos reservados.
+    </div>
+</footer>
+
+<script>
+    const minPriceSlider = document.getElementById('min-price-slider');
+    const maxPriceSlider = document.getElementById('max-price-slider');
+    const minPriceValue = document.getElementById('min-price-value');
+    const maxPriceValue = document.getElementById('max-price-value');
+    const sliderFill = document.querySelector('.slider-range-fill');
+    
+    const initialMinPrice = 0;
+    const initialMaxPrice = 1378000;
+
+    // Función para formatear el número con puntos como separador de miles y el símbolo de moneda
+    const formatNumber = (num) => {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    // Actualiza los valores de los spans y la barra de llenado
+    const updatePrices = () => {
+        const minVal = parseInt(minPriceSlider.value);
+        const maxVal = parseInt(maxPriceSlider.value);
+        
+        minPriceValue.textContent = `$${formatNumber(minVal)}`;
+        maxPriceValue.textContent = `$${formatNumber(maxVal)}`;
+
+        // Calcular el porcentaje de los valores para la barra de llenado
+        const minPercent = (minVal / minPriceSlider.max) * 100;
+        const maxPercent = (maxVal / maxPriceSlider.max) * 100;
+
+        // Establecer el ancho y la posición de la barra de llenado
+        sliderFill.style.left = `${minPercent}%`;
+        sliderFill.style.width = `${maxPercent - minPercent}%`;
+    };
+
+    // Asegura que el precio mínimo no sea mayor que el máximo
+    minPriceSlider.addEventListener('input', () => {
+        if (parseInt(minPriceSlider.value) > parseInt(maxPriceSlider.value)) {
+            maxPriceSlider.value = minPriceSlider.value;
+        }
+        updatePrices();
+    });
+
+    // Asegura que el precio máximo no sea menor que el mínimo
+    maxPriceSlider.addEventListener('input', () => {
+        if (parseInt(maxPriceSlider.value) < parseInt(minPriceSlider.value)) {
+            minPriceSlider.value = maxPriceSlider.value;
+        }
+        updatePrices();
+    });
+
+    // Función para limpiar todos los filtros
+    const clearFilters = () => {
+        // Restablece los select a la opción por defecto
+        document.getElementById('property-type').value = '';
+        document.getElementById('region').value = '';
+        document.getElementById('commune').value = '';
+        
+        // Restablece los sliders a sus valores iniciales
+        minPriceSlider.value = initialMinPrice;
+        maxPriceSlider.value = initialMaxPrice;
+        
+        // Actualiza los valores en pantalla
+        updatePrices();
+    };
+    
+    // Llamada inicial para mostrar los valores por defecto
+    updatePrices();
+</script>
+</body>
+</html>

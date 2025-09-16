@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plataforma Inmobiliaria - Tipos de Propiedad</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<style>
+  body {
+    font-family: Inter, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    padding-top: 64px;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Barra superior fija con colores en escala de grises -->
+<div class="fixed top-0 left-0 w-full bg-neutral-800 text-white p-4 z-40 shadow-md flex justify-between items-center">
+  <h2 class="text-xl font-bold">Plataforma Inmobiliaria - TIPOS DE PROPIEDAD</h2>
+  <div class="flex items-center space-x-2">
+    <div class="cursor-pointer p-2 rounded-md hover:bg-neutral-700 transition-colors">
+      <i class="fas fa-bars fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<!-- Contenedor principal del cuerpo -->
+<div class="container mx-auto p-4">
+  <!-- Fila superior: icono + a la izquierda -->
+  <div class="flex items-center mb-6 justify-between w-full">
+    <div class="flex items-center">
+      <button class="bg-neutral-900 text-white w-10 h-10 flex items-center justify-center rounded-full hover:bg-neutral-700 transition-colors mr-4">
+        <i class="fas fa-plus fa-lg"></i>
+      </button>
+    </div>
+    <div class="flex items-center w-full max-w-xs ml-auto">
+      <div class="relative w-full">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+          <i class="fas fa-search"></i>
+        </span>
+        <input type="text" placeholder="Buscar..." class="pl-10 pr-3 py-2 w-full rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 bg-white" />
+      </div>
+    </div>
+  </div>
+  <!-- Fila inferior: grid de tarjetas de tipo de propiedad -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Tarjeta ejemplo, repite 10 veces -->
+    <!-- Generar 10 tarjetas -->
+    <!-- Puedes cambiar el nombre y descripción si lo deseas -->
+    <!-- Tarjeta 1 -->
+    <div class="bg-white rounded-lg w-full border p-4 text-left" style="border-color: #939393; min-height:300px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div class="text-xs text-gray-500 mb-1">Tipo de propiedad</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Casa</h3>
+        <p class="text-sm text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex flex-wrap gap-3 py-1 mb-2">
+          <i class="fas fa-bed text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-bath text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-home text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-vector-square text-black" style="font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 justify-end mt-2">
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Visualizar">
+          <i class="fas fa-eye" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Editar">
+          <i class="fas fa-edit" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition-colors" title="Eliminar">
+          <i class="fas fa-trash" style="font-size: 16px;"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Tarjeta 2 -->
+    <div class="bg-white rounded-lg w-full border p-4 text-left" style="border-color: #939393; min-height:300px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div class="text-xs text-gray-500 mb-1">Tipo de propiedad</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Departamento</h3>
+        <p class="text-sm text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex flex-wrap gap-3 py-1 mb-2">
+          <i class="fas fa-bed text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-bath text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-home text-black" style="font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 justify-end mt-2">
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Visualizar">
+          <i class="fas fa-eye" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Editar">
+          <i class="fas fa-edit" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition-colors" title="Eliminar">
+          <i class="fas fa-trash" style="font-size: 16px;"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Tarjeta 3 -->
+    <div class="bg-white rounded-lg w-full border p-4 text-left" style="border-color: #939393; min-height:300px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div class="text-xs text-gray-500 mb-1">Tipo de propiedad</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Parcela</h3>
+        <p class="text-sm text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex flex-wrap gap-3 py-1 mb-2">
+          <i class="fas fa-home text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-vector-square text-black" style="font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 justify-end mt-2">
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Visualizar">
+          <i class="fas fa-eye" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Editar">
+          <i class="fas fa-edit" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition-colors" title="Eliminar">
+          <i class="fas fa-trash" style="font-size: 16px;"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Tarjeta 4 -->
+    <div class="bg-white rounded-lg w-full border p-4 text-left" style="border-color: #939393; min-height:300px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div class="text-xs text-gray-500 mb-1">Tipo de propiedad</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Oficina</h3>
+        <p class="text-sm text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex flex-wrap gap-3 py-1 mb-2">
+          <i class="fas fa-bed text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-bath text-black" style="font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 justify-end mt-2">
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Visualizar">
+          <i class="fas fa-eye" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Editar">
+          <i class="fas fa-edit" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition-colors" title="Eliminar">
+          <i class="fas fa-trash" style="font-size: 16px;"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Tarjeta 5 -->
+    <div class="bg-white rounded-lg w-full border p-4 text-left" style="border-color: #939393; min-height:300px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div class="text-xs text-gray-500 mb-1">Tipo de propiedad</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Local Comercial</h3>
+        <p class="text-sm text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex flex-wrap gap-3 py-1 mb-2">
+          <i class="fas fa-car text-black" style="font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 justify-end mt-2">
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Visualizar">
+          <i class="fas fa-eye" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Editar">
+          <i class="fas fa-edit" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition-colors" title="Eliminar">
+          <i class="fas fa-trash" style="font-size: 16px;"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Tarjeta 6 -->
+    <div class="bg-white rounded-lg w-full border p-4 text-left" style="border-color: #939393; min-height:300px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div class="text-xs text-gray-500 mb-1">Tipo de propiedad</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Bodega</h3>
+        <p class="text-sm text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex flex-wrap gap-3 py-1 mb-2">
+          <i class="fas fa-bed text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-bath text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-home text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-vector-square text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-car text-black" style="font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 justify-end mt-2">
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Visualizar">
+          <i class="fas fa-eye" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Editar">
+          <i class="fas fa-edit" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition-colors" title="Eliminar">
+          <i class="fas fa-trash" style="font-size: 16px;"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Tarjeta 7 -->
+    <div class="bg-white rounded-lg w-full border p-4 text-left" style="border-color: #939393; min-height:300px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div class="text-xs text-gray-500 mb-1">Tipo de propiedad</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Terreno</h3>
+        <p class="text-sm text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex flex-wrap gap-3 py-1 mb-2">
+          <i class="fas fa-bed text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-bath text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-home text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-vector-square text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-car text-black" style="font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 justify-end mt-2">
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Visualizar">
+          <i class="fas fa-eye" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Editar">
+          <i class="fas fa-edit" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition-colors" title="Eliminar">
+          <i class="fas fa-trash" style="font-size: 16px;"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Tarjeta 8 -->
+    <div class="bg-white rounded-lg w-full border p-4 text-left" style="border-color: #939393; min-height:300px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div class="text-xs text-gray-500 mb-1">Tipo de propiedad</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Edificio</h3>
+        <p class="text-sm text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex flex-wrap gap-3 py-1 mb-2">
+          <i class="fas fa-bed text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-bath text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-home text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-vector-square text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-car text-black" style="font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 justify-end mt-2">
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Visualizar">
+          <i class="fas fa-eye" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Editar">
+          <i class="fas fa-edit" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition-colors" title="Eliminar">
+          <i class="fas fa-trash" style="font-size: 16px;"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Tarjeta 9 -->
+    <div class="bg-white rounded-lg w-full border p-4 text-left" style="border-color: #939393; min-height:300px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div class="text-xs text-gray-500 mb-1">Tipo de propiedad</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Sitio</h3>
+        <p class="text-sm text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex flex-wrap gap-3 py-1 mb-2">
+          <i class="fas fa-bed text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-bath text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-home text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-vector-square text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-car text-black" style="font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 justify-end mt-2">
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Visualizar">
+          <i class="fas fa-eye" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Editar">
+          <i class="fas fa-edit" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition-colors" title="Eliminar">
+          <i class="fas fa-trash" style="font-size: 16px;"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Tarjeta 10 -->
+    <div class="bg-white rounded-lg w-full border p-4 text-left" style="border-color: #939393; min-height:300px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div>
+        <div class="text-xs text-gray-500 mb-1">Tipo de propiedad</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-1">Cabaña</h3>
+        <p class="text-sm text-gray-600 mb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div class="flex flex-wrap gap-3 py-1 mb-2">
+          <i class="fas fa-bed text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-bath text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-home text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-vector-square text-black" style="font-size: 20px;"></i>
+          <i class="fas fa-car text-black" style="font-size: 20px;"></i>
+        </div>
+      </div>
+      <div class="flex flex-row gap-2 justify-end mt-2">
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Visualizar">
+          <i class="fas fa-eye" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 transition-colors" title="Editar">
+          <i class="fas fa-edit" style="font-size: 16px;"></i>
+        </button>
+        <button class="bg-gray-200 text-gray-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 transition-colors" title="Eliminar">
+          <i class="fas fa-trash" style="font-size: 16px;"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pie de página (Footer) -->
+<footer class="bg-neutral-800 text-white p-8 mt-12">
+  <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
+    <!-- Columna 1: Información de la Empresa -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 flex items-center">
+        <img src="/PropLogo2.png" alt="Logo Plataforma Inmobiliaria" class="w-8 h-8 mr-2 inline-block align-middle" />
+        Plataforma Inmobiliaria
+      </h3>
+      <p class="text-sm text-neutral-400 flex items-center mb-2"><i class="fas fa-map-marker-alt mr-2"></i>Calle Falsa 123, Parral, Región del Maule</p>
+      <p class="text-sm text-neutral-400 flex items-center mb-2"><i class="fas fa-phone mr-2"></i>+56 9 1234 5678</p>
+      <p class="text-sm text-neutral-400 flex items-center mb-2"><i class="fas fa-envelope mr-2"></i>info@plataformainmobiliaria.cl</p>
+      <p class="text-sm text-neutral-400 flex items-center mt-4"><i class="fas fa-clock mr-2"></i>Lunes a Viernes: 9:00 - 18:00</p>
+    </div>
+    <!-- Columna 2: Menú -->
+    <div>
+      <h3 class="text-lg font-bold mb-4">Menú</h3>
+      <ul class="mt-2">
+        <li>
+          <a href="#" class="flex items-center gap-3 px-3 py-1 rounded text-sm font-semibold text-white transition-colors">
+            <i class="fas fa-home text-xl"></i>
+            Inicio
+          </a>
+        </li>
+        <li>
+          <div class="flex flex-col gap-1 px-3 py-1 rounded">
+            <span class="flex items-center gap-2 text-sm font-semibold text-white">
+              <i class="fas fa-users text-xl"></i>
+              Nosotros
+            </span>
+            <ul class="ml-6 mt-1 space-y-1">
+              <li><a href="#" class="block text-xs text-neutral-400 hover:underline">Historia</a></li>
+              <li><a href="#" class="block text-xs text-neutral-400 hover:underline">Equipo</a></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="flex flex-col gap-1 px-3 py-2 rounded">
+            <span class="flex items-center gap-2 text-sm font-semibold text-white">
+              <i class="fas fa-building text-xl"></i>
+              Propiedades
+            </span>
+            <ul class="ml-6 mt-1 space-y-1">
+              <li><a href="#" class="block text-xs text-neutral-400 hover:underline">En venta</a></li>
+              <li><a href="#" class="block text-xs text-neutral-400 hover:underline">En arriendo</a></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <a href="#" class="flex items-center gap-3 px-3 py-1 rounded text-sm font-semibold text-white transition-colors">
+            <i class="fas fa-edit text-xl"></i>
+            Blog
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center gap-3 px-3 py-1 rounded text-sm font-semibold text-white transition-colors">
+            <i class="fas fa-money-check-alt text-xl"></i>
+            Valoriza tu Propiedad
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- Columna 3: Formulario de Contacto -->
+    <div>
+      <h3 class="text-lg font-bold mb-4">Contáctanos</h3>
+      <form class="space-y-4">
+        <input type="text" placeholder="Tu Nombre" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="email" placeholder="Tu Correo Electrónico" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <textarea rows="4" placeholder="Tu Mensaje" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        <button type="submit" class="w-full bg-neutral-500 text-white p-2 rounded-md hover:bg-neutral-600 transition-colors">
+          Enviar Mensaje
+        </button>
+      </form>
+    </div>
+    <!-- Columna 4: Preguntas Frecuentes -->
+    <div>
+      <h3 class="text-lg font-bold mb-4 text-left">FAQ</h3>
+      <div class="space-y-4 text-left">
+        <div>
+          <h4 class="font-medium text-white text-sm">¿Cómo puedo publicar una propiedad?</h4>
+          <p class="text-sm text-neutral-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur.</p>
+        </div>
+        <div>
+          <h4 class="font-medium text-white text-sm">¿Cuál es el costo del servicio?</h4>
+          <p class="text-sm text-neutral-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur.</p>
+        </div>
+        <div>
+          <h4 class="font-medium text-white text-sm">¿Cómo puedo contactar a un agente?</h4>
+          <p class="text-sm text-neutral-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-8 text-center text-sm text-neutral-500 border-t border-neutral-700 pt-4">
+    &copy; 2025 Plataforma Inmobiliaria. Todos los derechos reservados.
+  </div>
+</footer>
+</body>
+</html>

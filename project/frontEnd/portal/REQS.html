@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requerimientos del Portal del Cliente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define la fuente Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        
+        /* Estilo base para cada tarjeta de requerimiento */
+        .requirement-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        
+        .requirement-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Contenedor de íconos de estado */
+        .icon-container {
+            flex-shrink: 0;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            font-size: 1.5rem;
+        }
+        
+        /* Colores para requerimientos aceptados */
+        .accepted .icon-container {
+            background-color: #d1fae5;
+            color: #10b981;
+        }
+        
+        /* Colores para requerimientos rechazados */
+        .rejected .icon-container {
+            background-color: #fee2e2;
+            color: #ef4444;
+        }
+        
+        /* Contenido de la nota, siempre visible */
+        .note-content {
+            margin-top: 0.75rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #f9fafb;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+        }
+
+        .note-title {
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-extrabold text-center mb-10 text-gray-800">Requerimientos del Portal del Cliente</h1>
+
+        <!-- Sección: Menú de navegación y estructura del sitio -->
+        <h2 class="text-2xl font-bold mt-8 mb-4 text-gray-700 border-b-2 border-gray-300 pb-2">Menú de navegación y estructura del sitio</h2>
+        <div class="space-y-6">
+            <!-- Submenú "Nosotros" -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Submenú "Nosotros"</h3>
+                    <p class="text-gray-700">Se acepta la creación de un submenú que se despliega al pasar el mouse sobre "Nosotros", e incluye las opciones **Equipos**, **Contacto** y **Testimonios**.</p>
+                    <div class="note-content">
+                        <p class="note-title">Nota:</p>
+                        <p>La inclusión de **Testimonios** como submenú crea una duplicidad con el enlace en la barra de navegación principal. Para evitar esta redundancia y asegurar una experiencia de usuario más coherente, se eliminará la sección de Testimonios de la barra de navegación principal y solo será accesible a través del submenú de "Nosotros".</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menú de navegación principal -->
+            <div class="requirement-card rejected">
+                <div class="icon-container">❌</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Menú de navegación principal</h3>
+                    <p class="text-gray-700">Se acepta el orden de las secciones del menú principal: **Inicio**, **Nosotros**, **Propiedades**, **Paga tu arriendo** y **Blog**. Se **rechaza** la creación de un sistema de pago de arriendo, ya que no estaba contemplado en la cotización inicial ni en el alcance del proyecto.</p>
+                    <div class="note-content">
+                        <p class="note-title">Nota:</p>
+                        <p>Conforme al requerimiento anterior, el enlace a la sección de Testimonios ha sido desplazado para ser un submenú de "Nosotros". Por lo tanto, no figurará en la barra de navegación principal para evitar duplicidad.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subsecciones en "Propiedades" -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Subsecciones en "Propiedades"</h3>
+                    <p class="text-gray-700">Se acepta la incorporación de submenús **Compra** y **Arrienda** dentro de la sección **Propiedades**.</p>
+                </div>
+            </div>
+
+            <!-- Enlace de "Propiedad" -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Enlace de "Propiedad"</h3>
+                    <p class="text-gray-700">Se acepta que, al hacer clic en una propiedad, esta se abra en una nueva pestaña.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección: Diseño y funcionalidad visual -->
+        <h2 class="text-2xl font-bold mt-8 mb-4 text-gray-700 border-b-2 border-gray-300 pb-2">Diseño y funcionalidad visual</h2>
+        <div class="space-y-6">
+            <!-- Diseño responsive -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Diseño responsive</h3>
+                    <p class="text-gray-700">Se acepta que el sitio sea **responsive** (adaptable a diferentes dispositivos), ya que siempre fue parte del proyecto.</p>
+                </div>
+            </div>
+        
+            <!-- Imágenes en la página de inicio -->
+            <div class="requirement-card rejected">
+                <div class="icon-container">❌</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Imágenes en la página de inicio</h3>
+                    <p class="text-gray-700">Se **rechaza** colocar imágenes fijas de parcelas en la página de inicio, ya que el sitio cuenta con un **slider** en el que las imágenes pueden ser administradas desde el *back-end*.</p>
+                    <div class="note-content">
+                        <p class="note-title">Nota:</p>
+                        <p>Si el administrador requiere cambiar las imágenes de estas parcelas de forma recurrente, no podrá hacerlo sin una actualización del código. La solución de **slider** permite que el administrador tenga autonomía total sobre estas imágenes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ícono y función de WhatsApp -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Ícono y función de WhatsApp</h3>
+                    <p class="text-gray-700">Se acepta agregar un ícono de **WhatsApp** en la parte inferior derecha del sitio.</p>
+                </div>
+            </div>
+
+            <!-- Testimonios e imágenes -->
+            <div class="requirement-card rejected">
+                <div class="icon-container">❌</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Testimonios e imágenes</h3>
+                    <p class="text-gray-700">Se **rechaza** la solicitud de usar imágenes fijas para la sección de testimonios. Las imágenes deben ser cargadas y administradas por el administrador.</p>
+                    <div class="note-content">
+                        <p class="note-title">Nota:</p>
+                        <p>El mismo criterio de administración de imágenes aplica aquí. El administrador debe poder actualizar las imágenes de los testimonios sin la intervención de un desarrollador para que el portal sea más autónomo.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Redes sociales -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Redes sociales</h3>
+                    <p class="text-gray-700">Se acepta agregar otros íconos y enlaces a las redes sociales del cliente.</p>
+                </div>
+            </div>
+
+            <!-- Previsualización de imágenes -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Previsualización de imágenes</h3>
+                    <p class="text-gray-700">Se acepta la funcionalidad de **previsualizar** las imágenes al momento de cargarlas para publicar una propiedad. Esto ya se había considerado como parte del proceso de publicación paso a paso.</p>
+                </div>
+            </div>
+
+            <!-- Rango de precios diferenciado -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Rango de precios diferenciado</h3>
+                    <p class="text-gray-700">Se acepta la idea de tener **rangos de precios distintos** para propiedades en arriendo y en venta. Esto es una excelente idea para mejorar la usabilidad del filtro.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección: Funcionalidades de propiedades -->
+        <h2 class="text-2xl font-bold mt-8 mb-4 text-gray-700 border-b-2 border-gray-300 pb-2">Funcionalidades de propiedades</h2>
+        <div class="space-y-6">
+            <!-- Descripción de propiedades -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Descripción de propiedades</h3>
+                    <p class="text-gray-700">Se acepta agregar la **descripción** detallada de las propiedades. Este punto había quedado pendiente en sesiones anteriores.</p>
+                </div>
+            </div>
+
+            <!-- Campo "Propiedades que te podrían interesar" -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Campo "Propiedades que te podrían interesar"</h3>
+                    <p class="text-gray-700">Se acepta la creación de esta sección. El criterio para mostrar estas propiedades será que estén en la misma comuna y aparecerán en una banda inferior.</p>
+                </div>
+            </div>
+
+            <!-- Administración de propiedades -->
+            <div class="requirement-card rejected">
+                <div class="icon-container">❌</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Administración de propiedades</h3>
+                    <p class="text-gray-700">Se **rechaza** que los usuarios registrados puedan administrar propiedades. La administración de propiedades es una función exclusiva del administrador o agente.</p>
+                    <div class="note-content">
+                        <p class="note-title">Nota:</p>
+                        <p>Según los requerimientos funcionales, los usuarios registrados podrán administrar sus propias publicaciones, lo cual es distinto a tener privilegios de administrador del portal.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Otras características de propiedades -->
+            <div class="requirement-card rejected">
+                <div class="icon-container">❌</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Otras características de propiedades</h3>
+                    <p class="text-gray-700">Se **rechaza** la adición de nuevas características a las propiedades, ya que esto implicaría la creación e implementación de 16 nuevos *endpoints* de búsqueda, 16 botones, 16 íconos, 16 servicios y pruebas de *backend*.</p>
+                    <div class="note-content">
+                        <p class="note-title">Nota:</p>
+                        <p>El trabajo adicional se estima en entre 20 y 30 horas de desarrollo. Se propone incluir esta funcionalidad en una siguiente etapa de desarrollo, o se puede agregar ahora, considerando los costos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Valora tu propiedad -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Valora tu propiedad</h3>
+                    <p class="text-gray-700">Se acepta agregar la funcionalidad de **Valora tu propiedad**, lo cual ya se había conversado.</p>
+                </div>
+            </div>
+
+            <!-- Campos de propiedades -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Campos de propiedades</h3>
+                    <p class="text-gray-700">Se acepta agregar campos como **Bodegas** y **Estacionamiento**.</p>
+                    <div class="note-content">
+                        <p class="note-title">Nota:</p>
+                        <p>Ya se había definido la funcionalidad de que el administrador pueda crear cualquier tipo de propiedad con el nombre que estime conveniente. Los nuevos campos se pueden agregar sin problemas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Regiones y comunas -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Regiones y comunas</h3>
+                    <p class="text-gray-700">Se acepta la inclusión de **regiones** y **comunas** como criterios de búsqueda y visualización. Esta funcionalidad ya estaba considerada como parte de la entidad de propiedad y como un requisito del formulario de publicación.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección: Publicación y contacto -->
+        <h2 class="text-2xl font-bold mt-8 mb-4 text-gray-700 border-b-2 border-gray-300 pb-2">Sección de publicación y contacto</h2>
+        <div class="space-y-6">
+            <!-- Pasos para publicar -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Pasos para publicar</h3>
+                    <p class="text-gray-700">Se acepta la creación de un proceso de **publicación paso a paso**.</p>
+                    <div class="note-content">
+                        <p class="note-title">Nota:</p>
+                        <p>Esta característica ya había sido consensuada y aprobada para su integración en los Requerimientos Funcionales, lo que facilitará la experiencia de los usuarios al publicar propiedades.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen del proceso de publicación -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Resumen del proceso de publicación</h3>
+                    <p class="text-gray-700">Se acepta incluir un **resumen** al final del proceso de publicación, para que el usuario pueda revisar y corregir los datos antes de publicar.</p>
+                    <div class="note-content">
+                        <p class="note-title">Nota:</p>
+                        <p>Esta práctica es parte de la metodología de pasos (*stepper*) y ya estaba considerada. Ayudará a prevenir errores en la publicación y a mejorar la calidad de los datos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mensaje predeterminado -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Mensaje predeterminado</h3>
+                    <p class="text-gray-700">Se acepta la inclusión de un **mensaje predeterminado** en el formulario de contacto de las propiedades. Debes definir el texto exacto del mensaje.</p>
+                </div>
+            </div>
+
+            <!-- Blog -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Blog</h3>
+                    <p class="text-gray-700">Se acepta la inclusión de **categorías** en el blog, lo que implica un *endpoint* adicional.</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="requirement-card accepted">
+                <div class="icon-container">✅</div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-1">Footer</h3>
+                    <p class="text-gray-700">Se acepta agregar la sección de **Preguntas Frecuentes** (FAQ) en el pie de página del sitio. ¡Es una excelente idea para mejorar la experiencia del usuario!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

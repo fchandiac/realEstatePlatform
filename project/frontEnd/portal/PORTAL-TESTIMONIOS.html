@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nombre Empresa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2eO25rK757/5M5P/J743pA6g2LhC94fJ8W9B77+5C6V6fA6w+eA6C5G88K88" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+  body {
+    font-family: Inter, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    padding-top: 0;
+    margin: 0;
+  }
+  
+  .whatsapp-float {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 50;
+  }
+
+  .whatsapp-float i {
+    font-size: 2rem;
+    color: #fff;
+    background-color: #616161;
+    padding: 1rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .whatsapp-float i:hover {
+    transform: scale(1.1);
+  }
+  
+  .featured-ribbon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #616161;
+    color: white;
+    font-weight: bold;
+    font-size: 0.7rem;
+    padding: 0.25rem 2rem;
+    transform-origin: 0% 0%;
+    transform: translate(-20%, 270%) rotate(-45deg); 
+    z-index: 20;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .property-card {
+    overflow: hidden;
+  }
+  
+  .property-icons-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      gap: 1rem;
+      padding: 1rem;
+      background-color: #f3f4f6;
+      border-top: 1px solid #939393;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Barra superior fija, ahora responsiva en pantallas pequeñas -->
+<div id="top-bar-container" class="fixed top-0 left-0 w-full h-12 bg-white text-black p-4 z-40 flex flex-col md:flex-row md:justify-between md:items-center">
+  <!-- Contenedor del logo y título -->
+  <div class="flex items-center space-x-4 mb-2 md:mb-0">
+    <!-- Icono de imagen a la izquierda del título -->
+    <i class="fas fa-image fa-2x text-neutral-800"></i>
+    <h2 class="text-xl font-bold">Nombre Empresa</h2>
+  </div>
+  <!-- Contenedor de enlaces y UF, ahora en una nueva línea en móviles -->
+  <div class="flex items-center space-x-2 mt-2 md:mt-0">
+    <!-- Texto UF hoy y divisor vertical -->
+    <span class="text-sm font-light text-neutral-800">UF hoy: $37.897</span>
+    <div class="w-px h-6 bg-neutral-400 opacity-50 hidden md:block"></div>
+    <!-- Enlaces "Ingresar" y "Registrarse" con un divisor entre ellos -->
+    <a href="#" class="text-sm font-light text-neutral-800 hover:text-gray-600 transition-colors">Ingresar</a>
+    <div class="w-px h-6 bg-neutral-400 opacity-50 hidden md:block"></div>
+    <a href="#" class="text-sm font-light text-neutral-800 hover:text-gray-600 transition-colors">Registrarse</a>
+  </div>
+</div>
+
+<!-- Barra de navegación que ahora es fija por defecto -->
+<div id="nav-bar" class="fixed top-12 w-full bg-white p-4 flex justify-center items-center space-x-8 shadow-md z-30">
+  <a href="#" class="flex flex-col items-center text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    <i class="fas fa-home text-lg"></i>
+  </a>
+  
+  <!-- Menú desplegable para "Nosotros" -->
+  <div class="group relative">
+    <!-- El link 'Nosotros' ahora está en negrita -->
+    <a href="#" class="text-sm font-bold text-neutral-800 transition-colors inline-flex items-center space-x-1">
+      <span>Nosotros</span>
+      <i class="fas fa-chevron-down text-xs"></i>
+    </a>
+    <!-- Se han añadido de nuevo 'hidden' y 'group-hover:block' para que este menú esté cerrado por defecto -->
+    <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Misión y Visión
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Equipo
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Testimonios
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Contacto
+      </a>
+    </div>
+  </div>
+
+  <!-- Menú desplegable para "Propiedades" -->
+  <div class="group relative">
+    <!-- Se envuelve el texto "Propiedades" con la etiqueta <strong> para aplicarle la negrita. -->
+    <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors inline-flex items-center space-x-1">
+      <span>Propiedades</span>
+      <i class="fas fa-chevron-down text-xs"></i>
+    </a>
+    <!-- Este div ahora tiene la clase 'hidden' para que se oculte cuando no se haga hover -->
+    <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Arrendar
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Comprar
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Publica tu propiedad
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Avalúa tu Propiedad
+      </a>
+    </div>
+  </div>
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    Blog
+  </a>
+</div>
+
+<!-- Contenedor principal del cuerpo, con padding-top para que no se oculte detrás de las barras fijas -->
+<div class="container mx-auto p-4 pt-16">
+  <!-- Tarjeta de publicación, ahora con fondo blanco y sin bordes -->
+  <div class="bg-white rounded-lg w-full text-left p-4 mb-8">
+  </div>
+
+  <!-- Contenedor de la cuadrícula para las 9 tarjetas -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Aquí es donde estaban las tarjetas de propiedades. Ahora está vacío. -->
+  </div>
+
+  <!-- Sección de testimonios -->
+  <div class="container mx-auto p-4 pt-8">
+    <h2 class="text-2xl font-bold text-center mb-8">Testimonios de Clientes</h2>
+    
+    <!-- Contenedor de testimonios en una sola columna -->
+    <div class="space-y-8">
+        <!-- Testimonio 1 -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md flex items-center space-x-4">
+            <!-- Columna 1: Imagen -->
+            <div class="flex-shrink-0">
+                <img src="https://placehold.co/100x100/A0A0A0/FFFFFF?text=User" alt="User" class="rounded-full w-20 h-20 object-cover">
+            </div>
+            <!-- Columna 2: Contenido -->
+            <div class="flex-grow text-left">
+                <p class="text-gray-700 italic mb-2">"El proceso de encontrar mi primer hogar fue mucho más sencillo de lo que imaginé, gracias a la dedicación y profesionalismo del equipo. ¡Totalmente recomendable!"</p>
+                <div class="text-sm text-gray-500">
+                    <p class="font-bold">Juan Pérez</p>
+                    <p>Publicado el 15 de Mayo de 2024</p>
+                </div>
+            </div>
+        </div>
+        <!-- Testimonio 2 -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md flex items-center space-x-4">
+            <!-- Columna 1: Imagen -->
+            <div class="flex-shrink-0">
+                <img src="https://placehold.co/100x100/A0A0A0/FFFFFF?text=User" alt="User" class="rounded-full w-20 h-20 object-cover">
+            </div>
+            <!-- Columna 2: Contenido -->
+            <div class="flex-grow text-left">
+                <p class="text-gray-700 italic mb-2">"Excelente plataforma para publicar mi propiedad. Recibí una oferta en menos de una semana. El equipo me guió en cada paso de la negociación."</p>
+                <div class="text-sm text-gray-500">
+                    <p class="font-bold">María González</p>
+                    <p>Publicado el 20 de Abril de 2024</p>
+                </div>
+            </div>
+        </div>
+        <!-- Testimonio 3 -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md flex items-center space-x-4">
+            <!-- Columna 1: Imagen -->
+            <div class="flex-shrink-0">
+                <img src="https://placehold.co/100x100/A0A0A0/FFFFFF?text=User" alt="User" class="rounded-full w-20 h-20 object-cover">
+            </div>
+            <!-- Columna 2: Contenido -->
+            <div class="flex-grow text-left">
+                <p class="text-gray-700 italic mb-2">"El equipo de servicio al cliente es inigualable. Siempre atentos y dispuestos a resolver cualquier duda. Mi experiencia fue fantástica."</p>
+                <div class="text-sm text-gray-500">
+                    <p class="font-bold">Pedro Sánchez</p>
+                    <p>Publicado el 10 de Marzo de 2024</p>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Botón flotante de WhatsApp -->
+<a href="https://wa.me/56912345678" target="_blank" class="whatsapp-float">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- Barra inferior fija con iconos de redes sociales y el nuevo borde superior -->
+<div class="fixed bottom-0 left-0 w-full bg-white text-neutral-800 p-4 z-40 flex justify-center items-center space-x-6 shadow-md border-t border-gray-300">
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-facebook-f"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-x-twitter"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-instagram"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-youtube"></i>
+  </a>
+  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+</div>
+
+<!-- Pie de página (Footer) -->
+<footer class="bg-neutral-800 text-white p-8 mt-12">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+        <!-- Columna 1: Información de la Empresa -->
+        <div>
+            <h3 class="text-lg font-bold mb-4">Información de la Empresa</h3>
+            <p class="text-sm text-neutral-400">
+                <i class="fas fa-map-marker-alt mr-2"></i>Calle Falsa 123, Parral, Región del Maule
+            </p>
+            <p class="text-sm text-neutral-400 mt-2">
+                <i class="fas fa-phone mr-2"></i>+56 9 1234 5678
+            </p>
+            <p class="text-sm text-neutral-400 mt-2">
+                <i class="fas fa-envelope mr-2"></i>info@plataformainmobiliaria.cl
+            </p>
+            <p class="text-sm text-neutral-400 mt-4">
+                <i class="fas fa-clock mr-2"></i>Lunes a Viernes: 9:00 - 18:00
+            </p>
+        </div>
+
+        <!-- Columna 2: Formulario de Contacto -->
+        <div>
+            <h3 class="text-lg font-bold mb-4">Contáctanos</h3>
+            <form class="space-y-4">
+                <input type="text" placeholder="Tu Nombre" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="email" placeholder="Tu Correo Electrónico" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <textarea rows="4" placeholder="Tu Mensaje" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                <button type="submit" class="w-full bg-neutral-500 text-white p-2 rounded-md hover:bg-neutral-600 transition-colors">
+                    Enviar Mensaje
+                </button>
+            </form>
+        </div>
+
+        <!-- Columna 3: Preguntas Frecuentes -->
+        <div>
+            <h3 class="text-lg font-bold mb-4 text-left">FAQ</h3>
+            <div class="space-y-4 text-left">
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cómo puedo publicar una propiedad?</h4>
+                    <p class="text-sm text-neutral-400">Puedes publicar tu propiedad registrándote y seleccionando "Vende tu propiedad" o "Arrienda tu propiedad" en el menú principal.</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cuál es el costo del servicio?</h4>
+                    <p class="text-sm text-neutral-400">El costo varía según el plan que elijas. Puedes ver los detalles en la sección de "Planes y Precios".</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-white text-sm">¿Cómo agendo una visita a una propiedad?</h4>
+                    <p class="text-sm text-neutral-400">En la página de cada propiedad encontrarás un formulario para agendar una visita directamente con el agente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Línea de copyright al final del footer -->
+    <div class="mt-8 text-center text-sm text-neutral-500 border-t border-neutral-700 pt-4">
+        &copy; 2025 Plataforma Inmobiliaria. Todos los derechos reservados.
+    </div>
+</footer>
+</body>
+</html>
