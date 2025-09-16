@@ -12,6 +12,32 @@
 | permissions   | JSON                                         | Sí   | {}          | Lista de permisos adicionales definida por un administrador.|
 | personalInfo  | JSON                                         | Sí   | {}           | Información adicional (ej. preferencias, perfil extendido). |
 
+
+## Lista de permisos (Permission ENUM)
+
+La siguiente lista define los permisos granulares que pueden asignarse a un usuario, permitiendo controlar el acceso a operaciones específicas sobre las entidades del sistema. Cada permiso tiene un nombre en inglés (clave), su traducción al español y una breve descripción.
+
+| Permission (clave)         | Traducción (español)         | Descripción                                                                 |
+|---------------------------|------------------------------|-----------------------------------------------------------------------------|
+| MANAGE_USERS              | Gestionar usuarios           | Permite crear, editar, eliminar y ver usuarios en la plataforma.            |
+| MANAGE_AGENTS             | Gestionar agentes            | Permite crear, editar, eliminar y ver agentes inmobiliarios.                |
+| MANAGE_ADMINS             | Gestionar administradores    | Permite crear, editar, eliminar y ver administradores.                      |
+| MANAGE_PROPERTIES         | Gestionar propiedades        | Permite crear, editar, eliminar y ver propiedades.                          |
+| ASSIGN_PROPERTY_AGENT     | Asignar propiedad a agente   | Permite asignar propiedades a agentes específicos.                          |
+| MANAGE_CONTRACTS          | Gestionar contratos          | Permite crear, editar, eliminar y ver contratos.                            |
+| MANAGE_NOTIFICATIONS      | Gestionar notificaciones     | Permite crear, enviar y ver notificaciones del sistema.                     |
+| MANAGE_MULTIMEDIA         | Gestionar multimedia         | Permite subir, editar y eliminar archivos multimedia.                       |
+| MANAGE_DOCUMENT_TYPES     | Gestionar tipos de documento | Permite crear, editar y eliminar tipos de documento.                        |
+| MANAGE_PROPERTY_TYPES     | Gestionar tipos de propiedad | Permite crear, editar y eliminar tipos de propiedad.                        |
+| MANAGE_ARTICLES           | Gestionar artículos          | Permite crear, editar y eliminar artículos del blog.                        |
+| MANAGE_TESTIMONIALS       | Gestionar testimonios        | Permite crear, editar y eliminar testimonios de usuarios/clientes.          |
+| VIEW_REPORTS              | Ver reportes                 | Permite acceder a reportes y estadísticas del sistema.                      |
+| SUPER_ADMIN               | Permiso total (superadmin)   | Permiso total sobre todas las operaciones y entidades del sistema.          |
+
+> Nota: Los permisos pueden combinarse según el rol y las necesidades de cada usuario. El campo `permissions` en la entidad User almacena un array de estos valores.
+
+---
+
 ## Métodos asociados a la entidad User
 
 | Método      | Parámetros                                              | Descripción                                              | Validaciones / Mensajes de error |

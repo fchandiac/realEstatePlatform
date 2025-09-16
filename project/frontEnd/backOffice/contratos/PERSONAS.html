@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plataforma Inmobiliaria - Personas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<style>
+  body {
+    font-family: Inter, sans-serif;
+    text-align: center;
+    background-color: #ffffff;
+    padding-top: 64px;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Barra superior fija con colores en escala de grises -->
+<div class="fixed top-0 left-0 w-full bg-neutral-800 text-white p-4 z-40 shadow-md flex justify-between items-center">
+  <h2 class="text-xl font-bold">Plataforma Inmobiliaria - PERSONAS</h2>
+  <div class="flex items-center space-x-2">
+    <!-- Icono de notificación -->
+    <button class="p-2 rounded-md hover:bg-neutral-700 transition-colors">
+      <i class="fas fa-bell fa-lg text-white"></i>
+    </button>
+    <div class="cursor-pointer p-2 rounded-md hover:bg-neutral-700 transition-colors">
+      <i class="fas fa-bars fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<!-- Contenedor principal del cuerpo -->
+<div class="container mx-auto p-4">
+  <!-- Primera fila: tarjetas resumen -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Total Personas</h3>
+      <h2 class="text-4xl font-bold text-gray-900 mb-2">1,234</h2>
+      <p class="text-sm font-medium text-gray-500">Personas registradas</p>
+    </div>
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Contratos de Arriendo</h3>
+      <h2 class="text-4xl font-bold text-gray-900 mb-2">456</h2>
+      <p class="text-sm font-medium text-gray-500">Contratos activos</p>
+    </div>
+    <div class="bg-white rounded-lg p-6 w-full border text-left" style="border-color: #939393;">
+      <h3 class="text-lg font-semibold text-gray-500 mb-2">Contratos de Venta</h3>
+      <h2 class="text-4xl font-bold text-gray-900 mb-2">321</h2>
+      <p class="text-sm font-medium text-gray-500">Contratos activos</p>
+    </div>
+  </div>
+  <!-- Segunda fila: grid de personas -->
+
+    <!-- Main table card -->
+  <div class="bg-white rounded-lg w-full border p-6 text-left min-h-[600px] flex flex-col justify-between mt-4" style="border-color: #939393;">
+    <!-- Top content (Row 1, Row 2, Row 3) -->
+    <div>
+      <!-- Row 1: Title and controls -->
+      <div class="flex items-center justify-between mb-4">
+        <!-- Container for button and title, left-aligned -->
+        <div class="flex items-center space-x-2">
+          <!-- Circular button with + icon -->
+          <div class="bg-black rounded-full w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-800 transition-colors" title="Nuevo Contrato">
+            <i class="fas fa-plus text-white text-sm"></i>
+          </div>
+          <h6 class="text-xl font-bold text-gray-800">Listado de Contratos</h6>
+        </div>
+        <!-- Right controls -->
+        <div class="flex items-center space-x-2">
+          <!-- Excel icon -->
+          <i class="fas fa-file-excel text-gray-500 cursor-pointer hover:text-gray-900"></i>
+          <!-- Filter icon -->
+          <i class="fas fa-filter text-gray-500 cursor-pointer hover:text-gray-900"></i>
+          <!-- Search input -->
+          <div class="relative">
+            <input type="text" placeholder="Buscar..." class="pl-8 pr-2 py-1 rounded-md border border-gray-300 focus:outline-none focus:border-gray-500 text-sm">
+            <i class="fas fa-search absolute left-2 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Row 2: Column headers -->
+      <div class="flex justify-between text-sm font-bold text-gray-700 pb-2 border-b border-gray-300">
+        <div class="w-[5%]">Id</div>
+        <div class="w-[10%]">Operación</div>
+        <div class="w-[15%]">Documentos Pendientes</div>
+        <div class="w-[20%]">Personas</div>
+        <div class="w-[15%]">Creación</div>
+        <div class="w-[10%]">Estado</div>
+        <div class="w-[15%]">Cierre</div>
+        <div class="w-[10%] text-right">Acciones</div>
+      </div>
+    
+      <!-- Row 3: Column data (example 1) -->
+      <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+        <div class="w-[5%]">1</div>
+        <div class="w-[10%]">Venta</div>
+        <div class="w-[15%]">3</div>
+        <div class="w-[20%] flex flex-col items-start">
+          <span>John Doe</span>
+          <span>Jane Smith</span>
+        </div>
+        <div class="w-[15%]">01/10/2024</div>
+        <div class="w-[10%] text-yellow-600 font-semibold">En proceso</div>
+        <div class="w-[15%]">-</div>
+        <div class="w-[10%] flex justify-end space-x-2">
+          <i class="fas fa-eye text-gray-500 cursor-pointer hover:text-gray-900" title="Ver contrato"></i>
+          <i class="fas fa-pen-to-square text-gray-500 cursor-pointer hover:text-gray-900" title="Editar contrato"></i>
+        </div>
+      </div>
+      
+      <!-- Row 3: Column data (example 2) -->
+      <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+        <div class="w-[5%]">2</div>
+        <div class="w-[10%]">Arriendo</div>
+        <div class="w-[15%]">0</div>
+        <div class="w-[20%] flex flex-col items-start">
+          <span>Alice Johnson</span>
+          <span>Bob Williams</span>
+        </div>
+        <div class="w-[15%]">15/09/2024</div>
+        <div class="w-[10%] text-green-600 font-semibold">Cerrado</div>
+        <div class="w-[15%]">20/10/2024</div>
+        <div class="w-[10%] flex justify-end space-x-2">
+          <i class="fas fa-eye text-gray-500 cursor-pointer hover:text-gray-900" title="Ver contrato"></i>
+          <i class="fas fa-pen-to-square text-gray-500 cursor-pointer hover:text-gray-900" title="Editar contrato"></i>
+        </div>
+      </div>
+      
+      <!-- Row 3: Column data (example 3) -->
+      <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+        <div class="w-[5%]">3</div>
+        <div class="w-[10%]">Venta</div>
+        <div class="w-[15%]">1</div>
+        <div class="w-[20%] flex flex-col items-start">
+          <span>Carlos Perez</span>
+          <span>Maria Rodriguez</span>
+        </div>
+        <div class="w-[15%]">25/10/2024</div>
+        <div class="w-[10%] text-yellow-600 font-semibold">En proceso</div>
+        <div class="w-[15%]">-</div>
+        <div class="w-[10%] flex justify-end space-x-2">
+          <i class="fas fa-eye text-gray-500 cursor-pointer hover:text-gray-900" title="Ver contrato"></i>
+          <i class="fas fa-pen-to-square text-gray-500 cursor-pointer hover:text-gray-900" title="Editar contrato"></i>
+        </div>
+      </div>
+      
+      <!-- Row 3: Column data (example 4) -->
+      <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+        <div class="w-[5%]">4</div>
+        <div class="w-[10%]">Arriendo</div>
+        <div class="w-[15%]">0</div>
+        <div class="w-[20%] flex flex-col items-start">
+          <span>Emily Davis</span>
+          <span>Frank Miller</span>
+        </div>
+        <div class="w-[15%]">05/09/2024</div>
+        <div class="w-[10%] text-green-600 font-semibold">Cerrado</div>
+        <div class="w-[15%]">18/10/2024</div>
+        <div class="w-[10%] flex justify-end space-x-2">
+          <i class="fas fa-eye text-gray-500 cursor-pointer hover:text-gray-900" title="Ver contrato"></i>
+          <i class="fas fa-pen-to-square text-gray-500 cursor-pointer hover:text-gray-900" title="Editar contrato"></i>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Row 4: Footer and pagination -->
+    <div class="flex justify-between items-center pt-4 border-t border-gray-300">
+      <!-- Pagination controls -->
+      <div class="flex items-center space-x-2 text-sm text-gray-600">
+        <span>Filas por página:</span>
+        <select class="rounded-md border border-gray-300 p-1 focus:outline-none focus:border-gray-500">
+          <option>10</option>
+          <option>25</option>
+          <option selected>100</option>
+        </select>
+      </div>
+      <div class="flex items-center space-x-4 text-sm text-gray-600">
+        <span>1-10 de 100</span>
+        <!-- Button to go to the beginning -->
+        <i class="fas fa-backward-step cursor-pointer hover:text-gray-900"></i>
+        <!-- Button to go back -->
+        <i class="fas fa-chevron-left cursor-pointer hover:text-gray-900"></i>
+        <span>Página 1 de 10</span>
+        <!-- Button to go forward -->
+        <i class="fas fa-chevron-right cursor-pointer hover:text-gray-900"></i>
+        <!-- Button to go to the end -->
+        <i class="fas fa-forward-step cursor-pointer hover:text-gray-900"></i>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SideBar</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -154,9 +156,6 @@
       <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium text-sm text-left">Notificaciones</a>
     </li>
     <!-- Nuevo menú de Configuración -->
-    <li>
-      <a href="#" class="block p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors duration-200 font-medium text-sm text-left">Configuración</a>
-    </li>
     <!-- Divider -->
     <hr class="border-gray-200 my-2">
     <!-- Nuevo menú Mi cuenta con submenús -->
@@ -188,11 +187,18 @@
 <!-- Barra superior fija con colores en escala de grises -->
 <div class="fixed top-0 left-0 w-full bg-neutral-800 text-white p-4 z-40 shadow-md flex justify-between items-center">
   <h2 class="text-xl font-bold">Plataforma Inmobiliaria - SideBar</h2>
-  <button id="open-sidebar" class="p-2 rounded-md hover:bg-neutral-700 transition-colors">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-  </button>
+  <div class="flex items-center space-x-2">
+    <!-- Icono de notificación -->
+    <button class="p-2 rounded-md hover:bg-neutral-700 transition-colors">
+      <i class="fas fa-bell fa-lg text-white"></i>
+    </button>
+    <!-- Botón menú hamburguesa -->
+    <button id="open-sidebar" class="p-2 rounded-md hover:bg-neutral-700 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
 </div>
 
 <!-- Contenedor principal para el contenido del cuerpo -->
