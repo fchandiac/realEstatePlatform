@@ -82,20 +82,53 @@
       background-color: #f3f4f6;
       border-top: 1px solid #939393;
   }
+
+  /* Estilo para sliders negros */
+  .slider-black {
+    -webkit-appearance: none;
+    appearance: none;
+    background: #000;
+    height: 6px;
+    border-radius: 3px;
+  }
+
+  .slider-black::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .slider-black::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
 </style>
 </head>
 <body>
 
 <!-- Barra superior fija, ahora responsiva en pantallas pequeñas -->
-<div id="top-bar-container" class="fixed top-0 left-0 w-full h-12 bg-white text-black p-4 z-40 flex flex-col md:flex-row md:justify-between md:items-center">
+<div id="top-bar-container" class="fixed top-0 left-0 w-full h-12 bg-white text-black p-4 z-40 grid grid-cols-1 md:grid-cols-3 md:items-center gap-4 md:gap-0">
   <!-- Contenedor del logo y título -->
-  <div class="flex items-center space-x-4 mb-2 md:mb-0">
+  <div class="flex items-center space-x-4">
     <!-- Icono de imagen a la izquierda del título -->
     <i class="fas fa-image fa-2x text-neutral-800"></i>
     <h2 class="text-xl font-bold">Plataforma Inmobiliaria</h2>
   </div>
-  <!-- Contenedor de enlaces y UF, ahora en una nueva línea en móviles -->
-  <div class="flex items-center space-x-2 mt-2 md:mt-0">
+  <!-- Contenedor central con email y teléfono -->
+  <div class="flex flex-col md:flex-row md:justify-center items-center space-y-1 md:space-y-0 md:space-x-4 text-center">
+    <span class="text-sm font-light text-neutral-800">contacto@empresa.cl</span>
+    <span class="text-sm font-light text-neutral-800">+56 9 1234 567</span>
+  </div>
+  <!-- Contenedor de enlaces y UF -->
+  <div class="flex items-center justify-end space-x-2">
     <!-- Texto UF hoy y divisor vertical -->
     <span class="text-sm font-light text-neutral-800">UF hoy: $37.897</span>
     <div class="w-px h-6 bg-neutral-400 opacity-50 hidden md:block"></div>
@@ -107,30 +140,16 @@
 </div>
 
 <!-- Sección Hero con búsqueda -->
-<section class="relative w-full h-96 bg-gradient-to-r from-neutral-800 to-neutral-600 flex items-center justify-center text-white overflow-hidden">
+<section class="relative w-full h-96 bg-gradient-to-r from-neutral-800 to-white flex items-center justify-center text-white overflow-hidden">
   <!-- Botón izquierdo -->
   <button class="absolute left-8 top-1/2 transform -translate-y-1/2 bg-black/50 text-white w-16 h-16 flex items-center justify-center rounded-full hover:bg-black/75 transition-colors z-10 text-2xl">
     <i class="fas fa-chevron-left"></i>
   </button>
 
-  <div class="text-center z-20">
-    <h1 class="text-4xl md:text-6xl font-bold mb-4">Encuentra tu hogar ideal</h1>
-    <p class="text-lg md:text-xl mb-8">Descubre las mejores propiedades en venta y arriendo</p>
-    
-    <!-- Barra de búsqueda -->
-    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-4 flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-      <input type="text" placeholder="Buscar por ubicación, tipo de propiedad..." class="flex-1 p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <select class="p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <option value="">Tipo de propiedad</option>
-        <option value="casa">Casa</option>
-        <option value="departamento">Departamento</option>
-        <option value="oficina">Oficina</option>
-        <option value="local">Local Comercial</option>
-      </select>
-      <button class="bg-neutral-800 text-white px-6 py-3 rounded-md hover:bg-neutral-700 transition-colors">
-        <i class="fas fa-search mr-2"></i>Buscar
-      </button>
-    </div>
+  <!-- Contenido informativo en la parte inferior izquierda -->
+  <div class="absolute bottom-8 left-8 text-left z-20 max-w-md">
+    <h2 class="text-2xl font-bold mb-2">Slide 2</h2>
+    <p class="text-sm opacity-90">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
   </div>
 
   <!-- Botón derecho -->
@@ -148,43 +167,7 @@
   </div>
 </section>
 
-<!-- Sección de filtros avanzados -->
-<section class="bg-gray-100 py-8">
-  <div class="container mx-auto px-4">
-    <div class="flex flex-wrap justify-center items-center space-x-4 space-y-4 md:space-y-0">
-      <div class="flex items-center space-x-2">
-        <label class="text-sm font-medium text-gray-700">Precio mínimo:</label>
-        <input type="number" placeholder="UF" class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-20" />
-      </div>
-      <div class="flex items-center space-x-2">
-        <label class="text-sm font-medium text-gray-700">Precio máximo:</label>
-        <input type="number" placeholder="UF" class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-20" />
-      </div>
-      <div class="flex items-center space-x-2">
-        <label class="text-sm font-medium text-gray-700">Dormitorios:</label>
-        <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="">Cualquiera</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-        </select>
-      </div>
-      <div class="flex items-center space-x-2">
-        <label class="text-sm font-medium text-gray-700">Baños:</label>
-        <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="">Cualquiera</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-        </select>
-      </div>
-      <button class="bg-neutral-800 text-white px-4 py-2 rounded-md hover:bg-neutral-700 transition-colors">
-        Aplicar Filtros
-      </button>
-    </div>
-  </div>
-</section>
+
 
 <!-- Placeholder para evitar el "salto" de contenido -->
 <div id="nav-bar-placeholder" style="height: 0;"></div>
@@ -197,22 +180,19 @@
   
   <!-- Menú desplegable para "Nosotros" -->
   <div class="group relative">
-    <!-- El link 'Nosotros' ya no tiene efecto de hover en el texto -->
     <a href="#" class="text-sm font-medium text-neutral-800 transition-colors inline-flex items-center space-x-1">
       <span>Nosotros</span>
       <i class="fas fa-chevron-down text-xs"></i>
     </a>
-    <!-- Se han añadido de nuevo 'hidden' y 'group-hover:block' para que este menú esté cerrado por defecto -->
     <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40">
       <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Equipo
+        Nuestro Equipo
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Testimonios
       </a>
       <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
         Contacto
-      </a>
-      <!-- Nuevo submenú "Testimonios" -->
-      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Testimonios
       </a>
     </div>
   </div>
@@ -223,22 +203,23 @@
       <span>Propiedades</span>
       <i class="fas fa-chevron-down text-xs"></i>
     </a>
-    <!-- Este div ahora tiene la clase 'hidden' para que se oculte cuando no se haga hover -->
     <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
       <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Arrendar
+        En venta
       </a>
       <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Comprar
-      </a>
-      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Publica tu propiedad
-      </a>
-      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Avalúa tu Propiedad
+        En Arriendo
       </a>
     </div>
   </div>
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    Publica tu propiedad
+  </a>
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    Valoriza tu propiedad
+  </a>
 
   <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
     Blog
@@ -394,6 +375,64 @@
         </div>
       </div>
     </div>
+
+    <!-- Sección de filtros avanzados -->
+    <section class="bg-gray-100 py-8 col-span-full">
+      <div class="container mx-auto px-4">
+        <!-- Fila de selects -->
+        <div class="flex flex-wrap justify-center items-center space-x-4 mb-6">
+          <div class="flex items-center space-x-2">
+            <label class="text-sm font-medium text-gray-700">Operación:</label>
+            <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Todas</option>
+              <option value="venta">Venta</option>
+              <option value="arriendo">Arriendo</option>
+            </select>
+          </div>
+          <div class="flex items-center space-x-2">
+            <label class="text-sm font-medium text-gray-700">Tipo de propiedad:</label>
+            <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Todos</option>
+              <option value="departamento">Departamento</option>
+              <option value="casa">Casa</option>
+              <option value="oficina">Oficina</option>
+              <option value="local">Local Comercial</option>
+            </select>
+          </div>
+          <div class="flex items-center space-x-2">
+            <label class="text-sm font-medium text-gray-700">Región:</label>
+            <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Todas</option>
+              <option value="metropolitana">Metropolitana</option>
+              <option value="maule">Maule</option>
+            </select>
+          </div>
+          <div class="flex items-center space-x-2">
+            <label class="text-sm font-medium text-gray-700">Comuna:</label>
+            <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Todas</option>
+              <option value="santiago">Santiago</option>
+              <option value="parral">Parral</option>
+              <option value="talca">Talca</option>
+            </select>
+          </div>
+        </div>
+        <!-- Fila de range sliders -->
+        <div class="flex flex-row space-x-4 mb-6 px-4">
+          <div class="flex flex-col space-y-2 w-1/2">
+            <label class="text-sm font-medium text-gray-700">Valor UF:</label>
+            <input type="range" min="0" max="10000" class="w-full slider-black" />
+            <div class="text-xs text-gray-500">0 - 10,000 UF</div>
+          </div>
+          <div class="flex flex-col space-y-2 w-1/2">
+            <label class="text-sm font-medium text-gray-700">Valor CLP:</label>
+            <input type="range" min="0" max="1000000000" class="w-full slider-black" />
+            <div class="text-xs text-gray-500">0 - 1,000,000,000 CLP</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Tarjeta 4 (EN ARRIENDO) -->
     <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
       <!-- Píldora de estado -->
