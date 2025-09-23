@@ -642,81 +642,148 @@
   <i class="fab fa-whatsapp"></i>
 </a>
 
-<!-- Barra inferior fija con iconos de redes sociales y el nuevo borde superior -->
-<div class="fixed bottom-0 left-0 w-full bg-white text-neutral-800 p-4 z-40 flex justify-center items-center space-x-6 shadow-md border-t border-gray-300">
-  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
-    <i class="fab fa-facebook-f"></i>
-  </a>
-  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
-    <i class="fab fa-x-twitter"></i>
-  </a>
-  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
-    <i class="fab fa-instagram"></i>
-  </a>
-  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
-    <i class="fab fa-youtube"></i>
-  </a>
-  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
-    <i class="fab fa-whatsapp"></i>
-  </a>
-</div>
+
 
 <!-- Pie de página (Footer) -->
-<footer class="bg-neutral-800 text-white p-8 mt-12">
-    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+<footer class="bg-neutral-800 text-white p-8 mt-12 border-t border-neutral-700">
+    <div>
+      <!-- Fila superior: alianzas y redes sociales -->
+      <div class="container mx-auto mb-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <!-- Columna 1: Nuestras alianzas -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-white">Nuestras alianzas</h3>
+          <div class="flex flex-col md:flex-row gap-4">
+            <!-- Tarjeta 1 -->
+            <div class="flex items-center gap-3">
+              <i class="fas fa-globe fa-3x text-neutral-400"></i>
+              <div>
+                <div class="text-base font-semibold text-white">Cámara Chilena de Propiedades</div>
+                <div class="text-xs text-neutral-400 font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+              </div>
+            </div>
+            <!-- Tarjeta 2 -->
+            <div class="flex items-center gap-3">
+              <i class="fas fa-globe fa-3x text-neutral-400"></i>
+              <div>
+                <div class="text-base font-semibold text-white">Alianza Global</div>
+                <div class="text-xs text-neutral-400 font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Columna 2: Síguenos en redes sociales (vertical y alineado arriba) -->
+        <div class="flex flex-col items-start md:items-end justify-start">
+          <h3 class="text-lg font-semibold mb-4 text-white text-left md:text-right">Síguenos en redes sociales</h3>
+          <div class="flex flex-row gap-4 justify-start md:justify-end">
+            <a href="#" aria-label="Instagram" class="text-white hover:text-blue-500 text-2xl"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook" class="text-white hover:text-blue-500 text-2xl"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="LinkedIn" class="text-white hover:text-blue-500 text-2xl"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="YouTube" class="text-white hover:text-blue-500 text-2xl"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
         <!-- Columna 1: Información de la Empresa -->
         <div>
-            <h3 class="text-lg font-bold mb-4">Información de la Empresa</h3>
-            <p class="text-sm text-neutral-400">
-                <i class="fas fa-map-marker-alt mr-2"></i>Calle Falsa 123, Parral, Región del Maule
-            </p>
-            <p class="text-sm text-neutral-400 mt-2">
-                <i class="fas fa-phone mr-2"></i>+56 9 1234 5678
-            </p>
-            <p class="text-sm text-neutral-400 mt-2">
-                <i class="fas fa-envelope mr-2"></i>info@plataformainmobiliaria.cl
-            </p>
-            <p class="text-sm text-neutral-400 mt-4">
-                <i class="fas fa-clock mr-2"></i>Lunes a Viernes: 9:00 - 18:00
-            </p>
+          <h3 class="text-lg font-semibold mb-4 text-white flex items-center">
+            <i class="fas fa-image fa-lg mr-2 text-neutral-400"></i>
+            Plataforma Inmobiliaria
+          </h3>
+          <p class="text-sm font-light text-neutral-400 flex items-center mb-2"><i class="fas fa-map-marker-alt mr-2"></i>Calle Falsa 123, Parral, Región del Maule</p>
+          <p class="text-sm font-light text-neutral-400 flex items-center mb-2"><i class="fas fa-phone mr-2"></i>+56 9 1234 5678</p>
+          <p class="text-sm font-light text-neutral-400 flex items-center mb-2"><i class="fas fa-envelope mr-2"></i>info@plataformainmobiliaria.cl</p>
+          <p class="text-sm font-light text-neutral-400 flex items-center mt-4"><i class="fas fa-clock mr-2"></i>Lunes a Viernes: 9:00 - 18:00</p>
         </div>
-
-        <!-- Columna 2: Formulario de Contacto -->
+        <!-- Columna 2: Menú estilizado del SideBar -->
         <div>
-            <h3 class="text-lg font-bold mb-4">Contáctanos</h3>
-            <form class="space-y-4">
-                <input type="text" placeholder="Tu Nombre" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="email" placeholder="Tu Correo Electrónico" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <textarea rows="4" placeholder="Tu Mensaje" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                <button type="submit" class="w-full bg-neutral-500 text-white p-2 rounded-md hover:bg-neutral-600 transition-colors">
-                    Enviar Mensaje
-                </button>
-            </form>
+          <h3 class="text-lg font-semibold mb-4 text-white">Menú</h3>
+          <ul class="mt-2 space-y-2">
+            <li>
+              <a href="#" class="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-white hover:bg-neutral-700 transition-colors">
+                <i class="fas fa-home text-xl text-white"></i>
+                Inicio
+              </a>
+            </li>
+            <li>
+              <div class="flex flex-col gap-1 px-3 py-1 rounded-lg">
+                <span class="flex items-center gap-2 text-sm font-semibold text-white">
+                  <i class="fas fa-users text-xl text-white"></i>
+                  Nosotros
+                </span>
+                <ul class="ml-6 mt-1 space-y-1">
+                  <li><a href="#" class="block text-xs text-neutral-400 hover:text-white hover:underline">Historia</a></li>
+                  <li><a href="#" class="block text-xs text-neutral-400 hover:text-white hover:underline">Equipo</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <div class="flex flex-col gap-1 px-3 py-2 rounded-lg">
+                <span class="flex items-center gap-2 text-sm font-semibold text-white">
+                  <i class="fas fa-building text-xl text-white"></i>
+                  Propiedades
+                </span>
+                <ul class="ml-6 mt-1 space-y-1">
+                  <li><a href="#" class="block text-xs text-neutral-400 hover:text-white hover:underline">En venta</a></li>
+                  <li><a href="#" class="block text-xs text-neutral-400 hover:text-white hover:underline">En arriendo</a></li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <a href="#" class="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-white hover:bg-neutral-700 transition-colors">
+                <i class="fas fa-plus text-xl text-white"></i>
+                Publica tu propiedad
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-white hover:bg-neutral-700 transition-colors">
+                <i class="fas fa-calculator text-xl text-white"></i>
+                Valoriza tu propiedad
+              </a>
+            </li>
+            <li>
+              <a href="#" class="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-white hover:bg-neutral-700 transition-colors">
+                <i class="fas fa-blog text-xl text-white"></i>
+                Blog
+              </a>
+            </li>
+          </ul>
         </div>
-
-        <!-- Columna 3: Preguntas Frecuentes -->
+        <!-- Columna 3: Formulario de Contacto -->
         <div>
-            <h3 class="text-lg font-bold mb-4 text-left">FAQ</h3>
-            <div class="space-y-4 text-left">
-                <div>
-                    <h4 class="font-medium text-white text-sm">¿Cómo puedo publicar una propiedad?</h4>
-                    <p class="text-sm text-neutral-400">Puedes publicar tu propiedad registrándote y seleccionando "Vende tu propiedad" o "Arrienda tu propiedad" en el menú principal.</p>
-                </div>
-                <div>
-                    <h4 class="font-medium text-white text-sm">¿Cuál es el costo del servicio?</h4>
-                    <p class="text-sm text-neutral-400">El costo varía según el plan que elijas. Puedes ver los detalles en la sección de "Planes y Precios".</p>
-                </div>
-                <div>
-                    <h4 class="font-medium text-white text-sm">¿Cómo agendo una visita a una propiedad?</h4>
-                    <p class="text-sm text-neutral-400">En la página de cada propiedad encontrarás un formulario para agendar una visita directamente con el agente.</p>
-                </div>
+          <h3 class="text-lg font-semibold mb-4 text-white">Contáctanos</h3>
+          <form class="space-y-4">
+            <input type="text" placeholder="Tu Nombre" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-light">
+            <input type="email" placeholder="Tu Correo Electrónico" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-light">
+            <textarea rows="2" placeholder="Tu Mensaje" class="w-full p-2 rounded-md bg-neutral-700 text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-light"></textarea>
+            <div class="flex justify-end">
+              <button type="submit" class="text-blue-500 hover:text-blue-400 text-2xl">
+                <i class="fas fa-paper-plane"></i>
+              </button>
             </div>
+          </form>
         </div>
-    </div>
-    
-    <!-- Línea de copyright al final del footer -->
-    <div class="mt-8 text-center text-sm text-neutral-500 border-t border-neutral-700 pt-4">
+        <!-- Columna 4: Preguntas Frecuentes -->
+        <div>
+          <h3 class="text-lg font-semibold mb-4 text-left">FAQ</h3>
+          <div class="space-y-4 text-left">
+            <div>
+              <h4 class="text-sm font-semibold text-white">¿Cómo puedo publicar una propiedad?</h4>
+              <p class="text-sm font-light text-neutral-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur.</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold text-white">¿Cuál es el costo del servicio?</h4>
+              <p class="text-sm font-light text-neutral-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur.</p>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold text-white">¿Cómo puedo contactar a un agente?</h4>
+              <p class="text-sm font-light text-neutral-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi eu consectetur.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 text-center text-sm font-light text-neutral-500 border-t border-neutral-700 pt-4">
         &copy; 2025 Plataforma Inmobiliaria. Todos los derechos reservados.
+      </div>
     </div>
 </footer>
 
