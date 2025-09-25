@@ -140,7 +140,9 @@
 </div>
 
 <!-- Sección Hero con búsqueda -->
-<section class="relative w-full h-96 bg-gradient-to-r from-neutral-800 to-white flex items-center justify-center text-white overflow-hidden">
+<section class="relative w-full aspect-[16/6.3] bg-cover bg-center flex items-center justify-center text-white overflow-hidden" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_1fqkp31fqkp31fqk.png');">
+  <!-- Overlay para mantener legibilidad del texto -->
+  <div class="absolute inset-0 bg-black/40"></div>
   <!-- Botón izquierdo -->
   <button class="absolute left-8 top-1/2 transform -translate-y-1/2 bg-black/50 text-white w-16 h-16 flex items-center justify-center rounded-full hover:bg-black/75 transition-colors z-10 text-2xl">
     <i class="fas fa-chevron-left"></i>
@@ -234,8 +236,8 @@
   <section class="mb-8">
     <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Propiedades Destacadas</h2>
     
-    <!-- Contenedor de la cuadrícula para las 9 tarjetas -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Contenedor de la cuadrícula para las 6 tarjetas destacadas -->
+    <div class="grid grid-cols-3 gap-4">
     <!-- Tarjeta 1 (EN VENTA) con banda de "Destacada" -->
     <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
       <div class="featured-ribbon">DESTACADA</div>
@@ -244,9 +246,7 @@
         EN VENTA
       </div>
       <!-- Placeholder de imagen -->
-      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
-        <i class="fas fa-image fa-4x"></i>
-      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_dyb7qvdyb7qvdyb7.png');"></div>
 
       <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
       <div class="property-icons-container">
@@ -294,9 +294,7 @@
         EN ARRIENDO
       </div>
       <!-- Placeholder de imagen -->
-      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
-        <i class="fas fa-image fa-4x"></i>
-      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_g7izsrg7izsrg7iz.png');"></div>
 
       <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
       <div class="property-icons-container">
@@ -349,9 +347,7 @@
         EN VENTA
       </div>
       <!-- Placeholder de imagen -->
-      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
-        <i class="fas fa-image fa-4x"></i>
-      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_f0rjlaf0rjlaf0rj.png');"></div>
       <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
       <div class="property-icons-container">
         <!-- Icono de área -->
@@ -371,78 +367,19 @@
         
         <!-- Contenedor para el nuevo texto de tipo de propiedad -->
         <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
-          <p>Parcela</p>
+                    <p>Parcela</p>
         </div>
       </div>
     </div>
 
-    <!-- Sección de filtros avanzados -->
-    <section class="bg-gray-100 py-8 col-span-full">
-      <div class="container mx-auto px-4">
-        <!-- Fila de selects -->
-        <div class="flex flex-wrap justify-center items-center space-x-4 mb-6">
-          <div class="flex items-center space-x-2">
-            <label class="text-sm font-medium text-gray-700">Operación:</label>
-            <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="">Todas</option>
-              <option value="venta">Venta</option>
-              <option value="arriendo">Arriendo</option>
-            </select>
-          </div>
-          <div class="flex items-center space-x-2">
-            <label class="text-sm font-medium text-gray-700">Tipo de propiedad:</label>
-            <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="">Todos</option>
-              <option value="departamento">Departamento</option>
-              <option value="casa">Casa</option>
-              <option value="oficina">Oficina</option>
-              <option value="local">Local Comercial</option>
-            </select>
-          </div>
-          <div class="flex items-center space-x-2">
-            <label class="text-sm font-medium text-gray-700">Región:</label>
-            <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="">Todas</option>
-              <option value="metropolitana">Metropolitana</option>
-              <option value="maule">Maule</option>
-            </select>
-          </div>
-          <div class="flex items-center space-x-2">
-            <label class="text-sm font-medium text-gray-700">Comuna:</label>
-            <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="">Todas</option>
-              <option value="santiago">Santiago</option>
-              <option value="parral">Parral</option>
-              <option value="talca">Talca</option>
-            </select>
-          </div>
-        </div>
-        <!-- Fila de range sliders -->
-        <div class="flex flex-row space-x-4 mb-6 px-4">
-          <div class="flex flex-col space-y-2 w-1/2">
-            <label class="text-sm font-medium text-gray-700">Valor UF:</label>
-            <input type="range" min="0" max="10000" class="w-full slider-black" />
-            <div class="text-xs text-gray-500">0 - 10,000 UF</div>
-          </div>
-          <div class="flex flex-col space-y-2 w-1/2">
-            <label class="text-sm font-medium text-gray-700">Valor CLP:</label>
-            <input type="range" min="0" max="1000000000" class="w-full slider-black" />
-            <div class="text-xs text-gray-500">0 - 1,000,000,000 CLP</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Tarjeta 4 (EN ARRIENDO) -->
+       <!-- Tarjeta 4 (EN ARRIENDO) -->
     <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
       <!-- Píldora de estado -->
       <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
         EN ARRIENDO
       </div>
       <!-- Placeholder de imagen -->
-      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
-        <i class="fas fa-image fa-4x"></i>
-      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_g7izsrg7izsrg7iz.png');"></div>
       <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
       <div class="property-icons-container">
         <!-- Icono de área -->
@@ -473,9 +410,7 @@
         EN VENTA
       </div>
       <!-- Placeholder de imagen -->
-      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
-        <i class="fas fa-image fa-4x"></i>
-      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_hkuj2ehkuj2ehkuj.png');"></div>
       <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
       <div class="property-icons-container">
         <!-- Icono de estacionamiento -->
@@ -511,9 +446,7 @@
         EN ARRIENDO
       </div>
       <!-- Placeholder de imagen -->
-      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
-        <i class="fas fa-image fa-4x"></i>
-      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_ptzvimptzvimptzv.png');"></div>
       <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
       <div class="property-icons-container">
         <!-- Icono de cama -->
@@ -557,139 +490,328 @@
         </div>
       </div>
     </div>
-    <!-- Nueva Tarjeta 7 (EN VENTA) con banda de "Destacada" -->
+    </div>
+  </section>
+
+ 
+    
+    <!-- Panel de paginación -->
+    <div class="flex justify-end mt-8">
+      <div class="flex space-x-2">
+        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">1</button>
+        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">2</button>
+        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">3</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de filtros avanzados -->
+  <section class="bg-gray-100 py-8">
+    <div class="container mx-auto px-4">
+      <!-- Fila de selects -->
+      <div class="flex flex-wrap justify-center items-center space-x-4 mb-6">
+        <div class="flex items-center space-x-2">
+          <label class="text-sm font-medium text-gray-700">Operación:</label>
+          <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Todas</option>
+            <option value="venta">Venta</option>
+            <option value="arriendo">Arriendo</option>
+          </select>
+        </div>
+        <div class="flex items-center space-x-2">
+          <label class="text-sm font-medium text-gray-700">Tipo de propiedad:</label>
+          <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Todos</option>
+            <option value="departamento">Departamento</option>
+            <option value="casa">Casa</option>
+            <option value="oficina">Oficina</option>
+            <option value="local">Local Comercial</option>
+          </select>
+        </div>
+        <div class="flex items-center space-x-2">
+          <label class="text-sm font-medium text-gray-700">Región:</label>
+          <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Todas</option>
+            <option value="metropolitana">Metropolitana</option>
+            <option value="maule">Maule</option>
+          </select>
+        </div>
+        <div class="flex items-center space-x-2">
+          <label class="text-sm font-medium text-gray-700">Comuna:</label>
+          <select class="p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Todas</option>
+            <option value="santiago">Santiago</option>
+            <option value="parral">Parral</option>
+            <option value="talca">Talca</option>
+          </select>
+        </div>
+      </div>
+      <!-- Fila de range sliders -->
+      <div class="flex flex-row space-x-4 mb-6 px-4">
+        <div class="flex flex-col space-y-2 w-1/2">
+          <label class="text-sm font-medium text-gray-700">Valor UF:</label>
+          <input type="range" min="0" max="10000" class="w-full slider-black" />
+          <div class="text-xs text-gray-500">0 - 10,000 UF</div>
+        </div>
+        <div class="flex flex-col space-y-2 w-1/2">
+          <label class="text-sm font-medium text-gray-700">Valor CLP:</label>
+          <input type="range" min="0" max="1000000000" class="w-full slider-black" />
+          <div class="text-xs text-gray-500">0 - 1,000,000,000 CLP</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Propiedades -->
+  <section class="mb-8">
+    <div class="container mx-auto">
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Propiedades</h2>
+      <!-- Contenedor de la cuadrícula para las 9 tarjetas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Tarjeta 1 -->
     <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
-      <div class="featured-ribbon">DESTACADA</div>
-      <!-- Píldora de estado -->
       <div class="absolute top-2 right-2 bg-neutral-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
         EN VENTA
       </div>
-      <!-- Placeholder de imagen -->
-      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
-        <i class="fas fa-image fa-4x"></i>
-      </div>
-      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_dyb7qvdyb7qvdyb7.png');"></div>
       <div class="property-icons-container">
-        <!-- Icono de casa (construcción) -->
         <div class="flex items-center text-gray-700">
-          <i class="fas fa-home mr-1"></i>
-          <span class="text-sm">300 m²</span>
+          <i class="fas fa-bed mr-1"></i>
+          <span class="text-sm">1</span>
         </div>
-        <!-- Icono de baño -->
         <div class="flex items-center text-gray-700">
           <i class="fas fa-bath mr-1"></i>
           <span class="text-sm">1</span>
         </div>
-        <!-- Icono de área -->
         <div class="flex items-center text-gray-700">
-          <i class="far fa-square mr-1"></i>
-          <span class="text-sm">500 m²</span>
+          <i class="fas fa-home mr-1"></i>
+          <span class="text-sm">120 m²</span>
         </div>
       </div>
-      <!-- Contenido de la tarjeta -->
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">UF 2.000</h3>
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Parral</p>
+        </div>
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Departamento</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 2 -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_g7izsrg7izsrg7iz.png');"></div>
+      <div class="property-icons-container">
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bed mr-1"></i>
+          <span class="text-sm">2</span>
+        </div>
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bath mr-1"></i>
+          <span class="text-sm">2</span>
+        </div>
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-home mr-1"></i>
+          <span class="text-sm">120 m²</span>
+        </div>
+      </div>
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">$ 23.500.000</h3>
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Parral</p>
+        </div>
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Casa</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 3 -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <div class="absolute top-2 right-2 bg-neutral-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN VENTA
+      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_f0rjlaf0rjlaf0rj.png');"></div>
+      <div class="property-icons-container">
+        <div class="flex items-center text-gray-700">
+          <i class="far fa-square mr-1"></i>
+          <span class="text-sm">240 m²</span>
+        </div>
+      </div>
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">UF 2.000</h3>
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Talca</p>
+        </div>
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Parcela</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 4 -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_g7izsrg7izsrg7iz.png');"></div>
+      <div class="property-icons-container">
+        <div class="flex items-center text-gray-700">
+          <i class="far fa-square mr-1"></i>
+          <span class="text-sm">240 m²</span>
+        </div>
+      </div>
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">$ 23.500.000</h3>
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región Metropolitana, Santiago</p>
+        </div>
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Terreno</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 5 -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <div class="absolute top-2 right-2 bg-neutral-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN VENTA
+      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_hkuj2ehkuj2ehkuj.png');"></div>
+      <div class="property-icons-container">
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-square-parking mr-1"></i>
+          <span class="text-sm">2</span>
+        </div>
+      </div>
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">UF 2.000</h3>
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Parral</p>
+        </div>
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Estacionamiento</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 6 -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN ARRIENDO
+      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_ptzvimptzvimptzv.png');"></div>
+      <div class="property-icons-container">
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bed mr-1"></i>
+          <span class="text-sm">3</span>
+        </div>
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bath mr-1"></i>
+          <span class="text-sm">3</span>
+        </div>
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-home mr-1"></i>
+          <span class="text-sm">120 m²</span>
+        </div>
+      </div>
+      <div class="p-6 text-center">
+        <h3 class="text-xl font-bold text-gray-800 mb-2">$ 23.500.000</h3>
+        <div class="flex flex-col items-center space-y-2 text-center">
+          <p class="text-sm font-medium text-gray-400">Región del Maule, Parral</p>
+        </div>
+        <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
+          <p>Oficina</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta 7 -->
+    <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
+      <div class="featured-ribbon">DESTACADA</div>
+      <div class="absolute top-2 right-2 bg-neutral-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+        EN VENTA
+      </div>
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_1fqkp31fqkp31fqk.png');"></div>
+      <div class="property-icons-container">
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-home mr-1"></i>
+          <span class="text-sm">300 m²</span>
+        </div>
+        <div class="flex items-center text-gray-700">
+          <i class="fas fa-bath mr-1"></i>
+          <span class="text-sm">1</span>
+        </div>
+      </div>
       <div class="p-6 text-center">
         <h3 class="text-xl font-bold text-gray-800 mb-2">UF 3.500</h3>
-        
-        <!-- Contenedor para la región y comuna centrado -->
         <div class="flex flex-col items-center space-y-2 text-center">
           <p class="text-sm font-medium text-gray-400">Región del Maule, San Javier</p>
         </div>
-        
-        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
         <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
           <p>Bodega</p>
         </div>
       </div>
     </div>
-    <!-- Nueva Tarjeta 8 (EN ARRIENDO) -->
+    <!-- Tarjeta 8 -->
     <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
-      <!-- Píldora de estado -->
       <div class="absolute top-2 right-2 bg-neutral-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
         EN ARRIENDO
       </div>
-      <!-- Placeholder de imagen -->
-      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
-        <i class="fas fa-image fa-4x"></i>
-      </div>
-      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_dyb7qvdyb7qvdyb7.png');"></div>
       <div class="property-icons-container">
-        <!-- Icono de casa (construcción) -->
         <div class="flex items-center text-gray-700">
           <i class="fas fa-home mr-1"></i>
           <span class="text-sm">450 m²</span>
         </div>
-        <!-- Icono de baño -->
         <div class="flex items-center text-gray-700">
           <i class="fas fa-bath mr-1"></i>
           <span class="text-sm">1</span>
         </div>
-        <!-- Icono de área -->
-        <div class="flex items-center text-gray-700">
-          <i class="far fa-square mr-1"></i>
-          <span class="text-sm">600 m²</span>
-        </div>
       </div>
-      <!-- Contenido de la tarjeta -->
       <div class="p-6 text-center">
         <h3 class="text-xl font-bold text-gray-800 mb-2">$ 850.000</h3>
-        
-        <!-- Contenedor para la región y comuna centrado -->
         <div class="flex flex-col items-center space-y-2 text-center">
           <p class="text-sm font-medium text-gray-400">Región del Maule, Linares</p>
         </div>
-        
-        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
         <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
           <p>Galpón</p>
         </div>
       </div>
     </div>
-    <!-- Nueva Tarjeta 9 (EN VENTA) -->
+    <!-- Tarjeta 9 -->
     <div class="relative bg-white rounded-lg w-full border text-left property-card" style="border-color: #939393;">
-      <!-- Píldora de estado -->
       <div class="absolute top-2 right-2 bg-neutral-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
         EN VENTA
       </div>
-      <!-- Placeholder de imagen -->
-      <div class="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400">
-        <i class="fas fa-image fa-4x"></i>
-      </div>
-      <!-- Fila de iconos debajo de la imagen (alineada a la izquierda) -->
+      <div class="w-full aspect-video bg-cover bg-center rounded-t-lg" style="background-image: url('/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_f0rjlaf0rjlaf0rj.png');"></div>
       <div class="property-icons-container">
-        <!-- Icono de casa (construcción) -->
         <div class="flex items-center text-gray-700">
           <i class="fas fa-home mr-1"></i>
           <span class="text-sm">100 m²</span>
         </div>
-        <!-- Icono de baño -->
         <div class="flex items-center text-gray-700">
           <i class="fas fa-bath mr-1"></i>
           <span class="text-sm">1</span>
         </div>
-        <!-- Icono de área -->
-        <div class="flex items-center text-gray-700">
-          <i class="far fa-square mr-1"></i>
-          <span class="text-sm">150 m²</span>
-        </div>
-        <!-- Icono de estacionamiento -->
-        <div class="flex items-center text-gray-700">
-          <i class="fas fa-square-parking mr-1"></i>
-          <span class="text-sm">1</span>
-        </div>
       </div>
-      <!-- Contenido de la tarjeta -->
       <div class="p-6 text-center">
         <h3 class="text-xl font-bold text-gray-800 mb-2">UF 4.200</h3>
-        
-        <!-- Contenedor para la región y comuna centrado -->
         <div class="flex flex-col items-center space-y-2 text-center">
           <p class="text-sm font-medium text-gray-400">Región del Maule, Cauquenes</p>
         </div>
-        
-        <!-- Contenedor para el nuevo texto de tipo de propiedad -->
         <div class="flex justify-start mt-4 space-x-2 text-neutral-600 font-semibold">
           <p>Local Comercial</p>
         </div>
+      </div>
+    </div>
+    </div>
+    
+    <!-- Panel de paginación para propiedades -->
+    <div class="flex justify-end mt-8">
+      <div class="flex space-x-2">
+        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">1</button>
+        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">2</button>
+        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">3</button>
+        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">4</button>
       </div>
     </div>
   </section>
