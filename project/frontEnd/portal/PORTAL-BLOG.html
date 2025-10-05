@@ -12,7 +12,8 @@
     font-family: Inter, sans-serif;
     text-align: center;
     background-color: #ffffff;
-    padding-top: 0;
+    /* Espacio superior para la barra fija */
+    padding-top: 4.5rem;
     margin: 0;
   }
   
@@ -56,29 +57,35 @@
     overflow: hidden;
   }
   
-  .property-icons-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      gap: 1rem;
-      padding: 1rem;
-      background-color: #f3f4f6;
-      border-top: 1px solid #939393;
+  /* Clase para el efecto sticky en el menú de navegación */
+  .sticky-nav {
+    position: fixed;
+    top: 3rem; /* 3rem = 48px, la altura de la top bar */
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 30;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   }
 </style>
 </head>
 <body>
 
 <!-- Barra superior fija, ahora responsiva en pantallas pequeñas -->
-<div id="top-bar-container" class="fixed top-0 left-0 w-full h-12 bg-white text-black p-4 z-40 flex flex-col md:flex-row md:justify-between md:items-center">
+<div id="top-bar-container" class="fixed top-0 left-0 w-full h-12 bg-white text-black p-4 z-40 grid grid-cols-1 md:grid-cols-3 md:items-center gap-4 md:gap-0">
   <!-- Contenedor del logo y título -->
-  <div class="flex items-center space-x-4 mb-2 md:mb-0">
+  <div class="flex items-center space-x-4">
     <!-- Icono de imagen a la izquierda del título -->
     <i class="fas fa-image fa-2x text-neutral-800"></i>
     <h2 class="text-xl font-bold">Plataforma Inmobiliaria</h2>
   </div>
-  <!-- Contenedor de enlaces y UF, ahora en una nueva línea en móviles -->
-  <div class="flex items-center space-x-2 mt-2 md:mt-0">
+  <!-- Contenedor central con email y teléfono -->
+  <div class="flex flex-col md:flex-row md:justify-center items-center space-y-1 md:space-y-0 md:space-x-4 text-center">
+    <span class="text-sm font-light text-neutral-800">contacto@empresa.cl</span>
+    <span class="text-sm font-light text-neutral-800">+56 9 1234 567</span>
+  </div>
+  <!-- Contenedor de enlaces y UF -->
+  <div class="flex items-center justify-end space-x-2">
     <!-- Texto UF hoy y divisor vertical -->
     <span class="text-sm font-light text-neutral-800">UF hoy: $37.897</span>
     <div class="w-px h-6 bg-neutral-400 opacity-50 hidden md:block"></div>
@@ -89,45 +96,66 @@
   </div>
 </div>
 
-<!-- Barra de navegación que ahora es fija por defecto -->
-<div id="nav-bar" class="fixed top-12 w-full bg-white p-4 flex justify-center items-center space-x-8 shadow-md z-30">
-  <a href="#" class="flex items-center gap-2 text-sm font-medium text-neutral-900 hover:text-purple-600 transition-colors">
-    <i class="fas fa-home text-xl"></i>
-    <span>Inicio</span>
+<!-- Placeholder para evitar el "salto" de contenido -->
+<div id="nav-bar-placeholder" style="height: 0;"></div>
+
+<!-- Barra de navegación con los menús que se volverán sticky al hacer scroll -->
+<div id="nav-bar" class="w-full bg-white p-4 flex justify-center items-center space-x-8 shadow-md">
+  <a href="#" class="flex flex-col items-center text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    <i class="fas fa-home text-lg"></i>
   </a>
+  
+  <!-- Menú desplegable para "Nosotros" -->
   <div class="group relative">
-    <a href="#" class="flex items-center gap-1 text-sm font-medium text-neutral-900 hover:text-purple-600 transition-colors">
+    <a href="#" class="text-sm font-medium text-neutral-800 transition-colors inline-flex items-center space-x-1">
       <span>Nosotros</span>
       <i class="fas fa-chevron-down text-xs"></i>
     </a>
     <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40">
-      <a href="#" class="block px-4 py-2 text-sm text-neutral-900 hover:bg-purple-100">Historia</a>
-      <a href="#" class="block px-4 py-2 text-sm text-neutral-900 hover:bg-purple-100">Equipo</a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Nuestro Equipo
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Testimonios
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Contacto
+      </a>
     </div>
   </div>
+
+  <!-- Menú desplegable para "Propiedades" -->
   <div class="group relative">
-    <a href="#" class="flex items-center gap-1 text-sm font-medium text-neutral-900 hover:text-purple-600 transition-colors">
+    <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors inline-flex items-center space-x-1">
       <span>Propiedades</span>
       <i class="fas fa-chevron-down text-xs"></i>
     </a>
     <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
-      <a href="#" class="block px-4 py-2 text-sm text-neutral-900 hover:bg-purple-100">En venta</a>
-      <a href="#" class="block px-4 py-2 text-sm text-neutral-900 hover:bg-purple-100">En arriendo</a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        En venta
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        En Arriendo
+      </a>
     </div>
   </div>
-  <a href="#" class="text-sm font-medium text-neutral-900 hover:text-purple-600 transition-colors">
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
     Publica tu propiedad
   </a>
-  <a href="#" class="text-sm font-medium text-neutral-900 hover:text-purple-600 transition-colors">
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
     Valoriza tu propiedad
   </a>
-  <a href="#" class="text-sm font-medium text-neutral-900 hover:text-purple-600 transition-colors">
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
     Blog
   </a>
 </div>
 
-<!-- Contenedor principal del cuerpo, con padding-top para que no se oculte detrás de las barras fijas -->
-<div class="container mx-auto p-4 pt-16">
+<!-- Contenedor principal del cuerpo -->
+<div class="container mx-auto p-4">
+  <br />
   <!-- Tarjeta de publicación, ahora con fondo blanco y sin bordes -->
   <div class="bg-white rounded-lg w-full text-left p-4 mb-8">
   </div>
@@ -139,26 +167,29 @@
 
   <!-- Sección de blog para lectura completa, ya no en formato de tarjeta -->
   <div class="container mx-auto p-4 pt-8">
-    <h2 class="text-2xl font-bold text-center mb-8">Últimas Noticias del Blog</h2>
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-gray-800 mb-4">Blog Inmobiliario</h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">Mantente informado con las últimas tendencias, consejos y noticias del mercado inmobiliario</p>
+    </div>
     
     <!-- Nueva sección de filtros por categoría -->
-    <div class="flex justify-center flex-wrap gap-2 mb-8">
-        <button class="bg-neutral-800 text-white font-medium py-2 px-6 rounded-full shadow-md hover:bg-blue-600 transition-colors">
+    <div class="flex justify-center flex-wrap gap-3 mb-12">
+        <button class="bg-neutral-800 text-white font-medium py-3 px-8 rounded-full shadow-lg hover:bg-gray-700 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
             Todos
         </button>
-        <button class="bg-gray-200 text-gray-700 font-medium py-2 px-6 rounded-full shadow-sm hover:bg-gray-300 transition-colors">
+        <button class="bg-white text-gray-700 font-medium py-3 px-8 rounded-full shadow-md hover:bg-gray-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border border-gray-200">
             Comprar
         </button>
-        <button class="bg-gray-200 text-gray-700 font-medium py-2 px-6 rounded-full shadow-sm hover:bg-gray-300 transition-colors">
+        <button class="bg-white text-gray-700 font-medium py-3 px-8 rounded-full shadow-md hover:bg-gray-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border border-gray-200">
             Arrendar
         </button>
-        <button class="bg-gray-200 text-gray-700 font-medium py-2 px-6 rounded-full shadow-sm hover:bg-gray-300 transition-colors">
+        <button class="bg-white text-gray-700 font-medium py-3 px-8 rounded-full shadow-md hover:bg-gray-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border border-gray-200">
             Inversión
         </button>
-        <button class="bg-gray-200 text-gray-700 font-medium py-2 px-6 rounded-full shadow-sm hover:bg-gray-300 transition-colors">
+        <button class="bg-white text-gray-700 font-medium py-3 px-8 rounded-full shadow-md hover:bg-gray-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border border-gray-200">
             Decoración
         </button>
-        <button class="bg-gray-200 text-gray-700 font-medium py-2 px-6 rounded-full shadow-sm hover:bg-gray-300 transition-colors">
+        <button class="bg-white text-gray-700 font-medium py-3 px-8 rounded-full shadow-md hover:bg-gray-50 hover:shadow-lg transition-all duration-300 transform hover:scale-105 border border-gray-200">
             Mercado
         </button>
     </div>
@@ -176,8 +207,10 @@
               <p class="text-sm text-gray-400 mt-2">Publicado el 25 de Octubre de 2024</p>
             </div>
             <!-- Contenedor para la imagen -->
-            <div class="relative flex-1 md:w-1/2">
-                <img src="https://placehold.co/1000x500/E5E7EB/4B5563" alt="Imagen del Artículo 1" class="w-full h-auto object-cover rounded-lg">
+            <div class="relative flex-1 md:w-1/2 overflow-hidden rounded-lg">
+                <img src="/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_ptzvimptzvimptzv.png" alt="Imagen del Artículo 1" class="w-full h-auto object-cover rounded-lg transition-transform duration-300 hover:scale-105">
+                <!-- Degradado similar al slider del home -->
+                <div class="absolute inset-0 bg-gradient-to-r from-neutral-800/60 to-transparent rounded-lg"></div>
             </div>
         </div>
         <!-- Contenedor del cuerpo del texto, separado del de arriba -->
@@ -203,8 +236,10 @@
               <p class="text-sm text-gray-400 mt-2">Publicado el 15 de Noviembre de 2024</p>
             </div>
             <!-- Contenedor para la imagen -->
-            <div class="relative flex-1 md:w-1/2">
-                <img src="https://placehold.co/1000x500/E5E7EB/4B5563" alt="Imagen del Artículo 2" class="w-full h-auto object-cover rounded-lg">
+            <div class="relative flex-1 md:w-1/2 overflow-hidden rounded-lg">
+                <img src="/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_dyb7qvdyb7qvdyb7 (1).png" alt="Imagen del Artículo 2" class="w-full h-auto object-cover rounded-lg transition-transform duration-300 hover:scale-105">
+                <!-- Degradado similar al slider del home -->
+                <div class="absolute inset-0 bg-gradient-to-r from-neutral-800/60 to-transparent rounded-lg"></div>
             </div>
         </div>
         <!-- Contenedor del cuerpo del texto, separado del de arriba -->
@@ -220,38 +255,65 @@
       </article>
     </div>
 
+    <!-- Divisor elegante entre artículos -->
+    <div class="my-12 flex items-center justify-center">
+      <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+      <div class="px-4">
+        <i class="fas fa-circle text-gray-400 text-xs"></i>
+      </div>
+      <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+    </div>
+
     <!-- Nueva sección: Banda de tarjetas de blogs -->
-    <div class="mt-12">
-        <h3 class="text-xl font-bold text-center mb-6">Otros artículos que te pueden interesar</h3>
+    <div class="mt-16">
+        <div class="text-center mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Artículos relacionados</h3>
+            <p class="text-gray-600">Descubre más contenido que puede interesarte</p>
+        </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Tarjeta de Blog 1 -->
-            <a href="#" class="block bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                <img src="https://placehold.co/600x400/E5E7EB/4B5563" alt="Blog 1" class="w-full h-40 object-cover">
+            <a href="#" class="block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div class="relative overflow-hidden">
+                    <img src="/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_dyb7qvdyb7qvdyb7 (2).png" alt="Blog 1" class="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105">
+                    <!-- Degradado sutil -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
                 <div class="p-4">
-                    <!-- Categoría ahora en gris -->
-                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-600">Inversión</span>
-                    <h4 class="text-lg font-bold mt-1 text-neutral-800">5 Estrategias para invertir en propiedades</h4>
+                    <!-- Categoría con mejor estilo -->
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">Inversión</span>
+                    <h4 class="text-lg font-bold mt-1 text-neutral-800 group-hover:text-gray-600 transition-colors">5 Estrategias para invertir en propiedades</h4>
+                    <p class="text-sm text-gray-600 mt-2">Descubre las mejores estrategias para maximizar tu inversión inmobiliaria.</p>
                 </div>
             </a>
             
             <!-- Tarjeta de Blog 2 -->
-            <a href="#" class="block bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                <img src="https://placehold.co/600x400/E5E7EB/4B5563" alt="Blog 2" class="w-full h-40 object-cover">
+            <a href="#" class="block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div class="relative overflow-hidden">
+                    <img src="/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_dyb7qvdyb7qvdyb7 (3).png" alt="Blog 2" class="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105">
+                    <!-- Degradado sutil -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
                 <div class="p-4">
-                    <!-- Categoría ahora en gris -->
-                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-600">Decoración</span>
-                    <h4 class="text-lg font-bold mt-1 text-neutral-800">Cómo maximizar el espacio en tu departamento</h4>
+                    <!-- Categoría con mejor estilo -->
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">Decoración</span>
+                    <h4 class="text-lg font-bold mt-1 text-neutral-800 group-hover:text-gray-600 transition-colors">Cómo maximizar el espacio en tu departamento</h4>
+                    <p class="text-sm text-gray-600 mt-2">Ideas prácticas para optimizar cada metro cuadrado de tu hogar.</p>
                 </div>
             </a>
             
             <!-- Tarjeta de Blog 3 -->
-            <a href="#" class="block bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                <img src="https://placehold.co/600x400/E5E7EB/4B5563" alt="Blog 3" class="w-full h-40 object-cover">
+            <a href="#" class="block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <div class="relative overflow-hidden">
+                    <img src="/Users/felipe/dev/realEstatePlatform/project/assets/Gemini_Generated_Image_dyb7qvdyb7qvdyb7 (4).png" alt="Blog 3" class="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105">
+                    <!-- Degradado sutil -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
                 <div class="p-4">
-                    <!-- Categoría ahora en gris -->
-                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-600">Arrendar</span>
-                    <h4 class="text-lg font-bold mt-1 text-neutral-800">Guía completa para arrendatarios primerizos</h4>
+                    <!-- Categoría con mejor estilo -->
+                    <span class="inline-block bg-gray-200 text-gray-700 text-xs font-semibold px-2 py-1 rounded-full mb-2">Arrendar</span>
+                    <h4 class="text-lg font-bold mt-1 text-neutral-800 group-hover:text-gray-600 transition-colors">Guía completa para arrendatarios primerizos</h4>
+                    <p class="text-sm text-gray-600 mt-2">Todo lo que necesitas saber antes de arrendar tu primera propiedad.</p>
                 </div>
             </a>
         </div>
@@ -409,5 +471,37 @@
       </div>
     </div>
 </footer>
+
+<script>
+    // Función para manejar el comportamiento sticky de la barra de navegación
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtenemos los elementos del DOM
+        const navBar = document.getElementById('nav-bar');
+        const navBarPlaceholder = document.getElementById('nav-bar-placeholder');
+
+        // Obtenemos la posición inicial de la barra de navegación
+        const navBarOffset = navBar.offsetTop;
+        const navBarHeight = navBar.offsetHeight;
+
+        // Función que se ejecuta al hacer scroll
+        function handleScroll() {
+            // Si el scroll supera la posición inicial de la barra de navegación
+            if (window.scrollY >= navBarOffset) {
+                // Añadimos la clase para fijarla
+                navBar.classList.add('sticky-nav');
+                // Asignamos la altura del placeholder para que el contenido no salte
+                navBarPlaceholder.style.height = `${navBarHeight}px`;
+            } else {
+                // Si estamos en la parte superior, quitamos la clase y el placeholder
+                navBar.classList.remove('sticky-nav');
+                navBarPlaceholder.style.height = '0';
+            }
+        }
+
+        // Asignamos el evento de scroll
+        window.addEventListener('scroll', handleScroll);
+    });
+</script>
+
 </body>
 </html>

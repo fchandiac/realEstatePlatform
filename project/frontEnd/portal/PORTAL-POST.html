@@ -12,8 +12,20 @@
     font-family: Inter, sans-serif;
     text-align: center;
     background-color: #ffffff;
-    padding-top: 0;
+    /* Espacio superior para la barra fija */
+    padding-top: 4.5rem;
     margin: 0;
+  }
+  
+  /* Estilos para la navegación sticky */
+  .sticky-nav {
+    position: fixed;
+    top: 3rem; /* Debajo de la top bar */
+    left: 0;
+    width: 100%;
+    z-index: 30;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .whatsapp-float {
@@ -127,15 +139,20 @@
 <body>
 
 <!-- Barra superior fija, ahora responsiva en pantallas pequeñas -->
-<div id="top-bar-container" class="fixed top-0 left-0 w-full h-12 bg-white text-black p-4 z-40 flex flex-col md:flex-row md:justify-between md:items-center">
+<div id="top-bar-container" class="fixed top-0 left-0 w-full h-12 bg-white text-black p-4 z-40 grid grid-cols-1 md:grid-cols-3 md:items-center gap-4 md:gap-0">
   <!-- Contenedor del logo y título -->
-  <div class="flex items-center space-x-4 mb-2 md:mb-0">
+  <div class="flex items-center space-x-4">
     <!-- Icono de imagen a la izquierda del título -->
     <i class="fas fa-image fa-2x text-neutral-800"></i>
-    <h2 class="text-xl font-bold">Plataforma Inmobiliaria - Publicación</h2>
+    <h2 class="text-xl font-bold">Plataforma Inmobiliaria</h2>
   </div>
-  <!-- Contenedor de enlaces y UF, ahora en una nueva línea en móviles -->
-  <div class="flex items-center space-x-2 mt-2 md:mt-0">
+  <!-- Contenedor central con email y teléfono -->
+  <div class="flex flex-col md:flex-row md:justify-center items-center space-y-1 md:space-y-0 md:space-x-4 text-center">
+    <span class="text-sm font-light text-neutral-800">contacto@empresa.cl</span>
+    <span class="text-sm font-light text-neutral-800">+56 9 1234 567</span>
+  </div>
+  <!-- Contenedor de enlaces y UF -->
+  <div class="flex items-center justify-end space-x-2">
     <!-- Texto UF hoy y divisor vertical -->
     <span class="text-sm font-light text-neutral-800">UF hoy: $37.897</span>
     <div class="w-px h-6 bg-neutral-400 opacity-50 hidden md:block"></div>
@@ -146,65 +163,65 @@
   </div>
 </div>
 
-<!-- Barra de navegación que ahora es fija por defecto -->
-<div id="nav-bar" class="fixed top-12 w-full bg-white p-4 flex justify-center items-center space-x-8 shadow-md z-30">
+<!-- Barra de navegación con los menús que se volverán sticky al hacer scroll -->
+<div id="nav-bar" class="w-full bg-white p-4 flex justify-center items-center space-x-8 shadow-md">
   <a href="#" class="flex flex-col items-center text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
     <i class="fas fa-home text-lg"></i>
   </a>
   
   <!-- Menú desplegable para "Nosotros" -->
   <div class="group relative">
-    <!-- El link 'Nosotros' ya no tiene efecto de hover en el texto -->
     <a href="#" class="text-sm font-medium text-neutral-800 transition-colors inline-flex items-center space-x-1">
       <span>Nosotros</span>
       <i class="fas fa-chevron-down text-xs"></i>
     </a>
-    <!-- Se han añadido de nuevo 'hidden' y 'group-hover:block' para que este menú esté cerrado por defecto -->
     <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40">
       <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Equipo
+        Nuestro Equipo
+      </a>
+      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
+        Testimonios
       </a>
       <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
         Contacto
-      </a>
-      <!-- Nuevo submenú "Testimonios" -->
-      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Testimonios
       </a>
     </div>
   </div>
 
   <!-- Menú desplegable para "Propiedades" -->
   <div class="group relative">
-    <!-- Se envuelve el texto "Propiedades" con la etiqueta <strong> para aplicarle la negrita. -->
     <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors inline-flex items-center space-x-1">
-      <span><strong>Propiedades</strong></span>
+      <span>Propiedades</span>
       <i class="fas fa-chevron-down text-xs"></i>
     </a>
-    <!-- Este div ahora tiene la clase 'hidden' para que se oculte cuando no se haga hover -->
     <div class="absolute hidden group-hover:block bg-white shadow-lg py-2 mt-2 space-y-2 left-1/2 -translate-x-1/2 z-40 w-max">
       <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Arrendar
+        En venta
       </a>
       <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Comprar
-      </a>
-      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Publica tu propiedad
-      </a>
-      <a href="#" class="block px-4 py-2 text-sm font-medium text-neutral-800 hover:text-blue-500 hover:bg-gray-100 transition-colors">
-        Avalúa tu Propiedad
+        En Arriendo
       </a>
     </div>
   </div>
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    Publica tu propiedad
+  </a>
+
+  <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
+    Valoriza tu propiedad
+  </a>
 
   <a href="#" class="text-sm font-medium text-neutral-800 hover:text-blue-500 transition-colors">
     Blog
   </a>
 </div>
 
-<!-- Contenedor principal del cuerpo, con padding-top para que no se oculte detrás de las barras fijas -->
-<div class="container mx-auto p-4 pt-36">
+<!-- Placeholder para la barra de navegación sticky -->
+<div id="nav-bar-placeholder"></div>
+
+<!-- Contenedor principal del cuerpo -->
+<div class="container mx-auto p-4">
   <!-- Tarjeta de publicación, ahora con fondo blanco y sin bordes -->
   <div class="bg-white rounded-lg w-full text-left p-4 mb-8">
     <!-- Título Publica tu Propiedad -->
@@ -525,25 +542,6 @@
   <i class="fab fa-whatsapp"></i>
 </a>
 
-<!-- Barra inferior fija con iconos de redes sociales y el nuevo borde superior -->
-<div class="fixed bottom-0 left-0 w-full bg-white text-neutral-800 p-4 z-40 flex justify-center items-center space-x-6 shadow-md border-t border-gray-300">
-  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
-    <i class="fab fa-facebook-f"></i>
-  </a>
-  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
-    <i class="fab fa-x-twitter"></i>
-  </a>
-  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
-    <i class="fab fa-instagram"></i>
-  </a>
-  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
-    <i class="fab fa-youtube"></i>
-  </a>
-  <a href="#" class="text-2xl hover:text-neutral-500 transition-colors">
-    <i class="fab fa-whatsapp"></i>
-  </a>
-</div>
-
 <!-- Pie de página (Footer) -->
 <footer class="bg-neutral-800 text-white p-8 mt-12 border-t border-neutral-700">
     <div>
@@ -803,5 +801,36 @@
     // Initial update on page load
     updateStepper();
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Obtenemos los elementos del DOM
+        const navBar = document.getElementById('nav-bar');
+        const navBarPlaceholder = document.getElementById('nav-bar-placeholder');
+
+        // Obtenemos la posición inicial de la barra de navegación
+        const navBarOffset = navBar.offsetTop;
+        const navBarHeight = navBar.offsetHeight;
+
+        // Función que se ejecuta al hacer scroll
+        function handleScroll() {
+            // Si el scroll supera la posición inicial de la barra de navegación
+            if (window.scrollY >= navBarOffset) {
+                // Añadimos la clase para fijarla
+                navBar.classList.add('sticky-nav');
+                // Asignamos la altura del placeholder para que el contenido no salte
+                navBarPlaceholder.style.height = `${navBarHeight}px`;
+            } else {
+                // Si estamos en la parte superior, quitamos la clase y el placeholder
+                navBar.classList.remove('sticky-nav');
+                navBarPlaceholder.style.height = '0';
+            }
+        }
+
+        // Asignamos el evento de scroll
+        window.addEventListener('scroll', handleScroll);
+    });
+</script>
+
 </body>
 </html>
