@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { MultimediaType } from '../../../entities/multimedia.entity';
+import { MultimediaType, MultimediaFormat } from '../../../entities/multimedia.entity';
 
 @Injectable()
 export class StaticFilesService implements OnModuleInit {
@@ -64,6 +64,17 @@ export class StaticFilesService implements OnModuleInit {
   // Obtiene la ruta completa del sistema de archivos para un archivo
   getFullPath(relativePath: string): string {
     return path.join(this.uploadBasePath, relativePath);
+  }
+
+  // Guarda un archivo en el sistema de archivos
+  async saveFile(buffer: Buffer, relativePath: string): Promise<void> {
+    const fullPath = this.getFullPath(relativePath);
+    await fs.writeFile(fullPath, buffer);
+  }
+
+  // Determina el formato del archivo basado en su tipo MIME
+  getFormatFromMimeType(mimeType: string): MultimediaFormat {
+    return mimeType.startsWith('image/') ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
   }
 
   // Verifica si un archivo existe
