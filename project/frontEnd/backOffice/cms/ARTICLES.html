@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artículos - CMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: Inter, sans-serif;
+            text-align: center;
+            background-color: #ffffff;
+            padding-top: 64px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra superior fija -->
+    <div class="fixed top-0 left-0 w-full bg-neutral-800 text-white p-4 z-40 shadow-md flex justify-between items-center">
+        <h2 class="text-xl font-bold">Plataforma Inmobiliaria</h2>
+        <div class="flex items-center space-x-4">
+            <span class="text-lg font-semibold">ARTÍCULOS</span>
+            <!-- Icono de notificación -->
+            <button class="p-2 rounded-md hover:bg-neutral-700 transition-colors">
+                <i class="fas fa-bell fa-lg text-white"></i>
+            </button>
+            <div class="cursor-pointer p-2 rounded-md hover:bg-neutral-700 transition-colors">
+                <i class="fas fa-bars fa-lg"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container mx-auto p-4">
+        <!-- Grid de artículos -->
+        <div class="grid grid-cols-1 gap-4">
+            <!-- Tarjeta del grid de artículos -->
+            <div class="bg-white rounded-lg w-full border p-6 text-left min-h-[600px] flex flex-col justify-between" style="border-color: #939393;">
+                <!-- Contenido principal -->
+                <div>
+                    <!-- Fila 1: Botón +, Título, Controles y Buscador -->
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-2">
+                            <!-- Botón + a la izquierda del título -->
+                            <button class="bg-neutral-900 text-white w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-700 transition-colors">
+                                <i class="fas fa-plus fa-lg"></i>
+                            </button>
+                            <h6 class="text-xl font-bold text-gray-800">Gestión de Artículos</h6>
+                        </div>
+                        <!-- Controles de la derecha -->
+                        <div class="flex items-center space-x-4">
+                            <!-- Icono de Excel -->
+                            <i class="fas fa-file-excel text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <!-- Icono de Filtro -->
+                            <i class="fas fa-filter text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <!-- Buscador a la derecha de los controles -->
+                            <form class="flex items-center">
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <i class="fas fa-search text-gray-400"></i>
+                                    </span>
+                                    <input type="text" class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-800 w-64" placeholder="Buscar artículos..." />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Fila 2: Encabezados de columnas -->
+                    <div class="flex justify-between text-sm font-bold text-gray-700 pb-2 border-b border-gray-300">
+                        <div class="w-1/12">Nº</div>
+                        <div class="w-4/12">Título</div>
+                        <div class="w-3/12">Categoría</div>
+                        <div class="w-2/12">Estado</div>
+                        <div class="w-2/12 text-right">Acciones</div>
+                    </div>
+
+                    <!-- Fila 3: Datos de artículos -->
+                    <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+                        <div class="w-1/12">1</div>
+                        <div class="w-4/12">
+                            <div class="font-medium">Tendencias del mercado inmobiliario 2025</div>
+                            <div class="text-xs text-gray-500">Lo que debes saber para invertir este año</div>
+                        </div>
+                        <div class="w-3/12">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Mercado</span>
+                        </div>
+                        <div class="w-2/12">
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Publicado</span>
+                        </div>
+                        <div class="w-2/12 flex justify-end space-x-2">
+                            <i class="fas fa-eye text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <i class="fas fa-edit text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <i class="fas fa-trash-alt text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                        </div>
+                    </div>
+
+                    <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+                        <div class="w-1/12">2</div>
+                        <div class="w-4/12">
+                            <div class="font-medium">Guía para comprar tu primera vivienda</div>
+                            <div class="text-xs text-gray-500">Pasos esenciales para nuevos compradores</div>
+                        </div>
+                        <div class="w-3/12">
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Comprar</span>
+                        </div>
+                        <div class="w-2/12">
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Borrador</span>
+                        </div>
+                        <div class="w-2/12 flex justify-end space-x-2">
+                            <i class="fas fa-eye text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <i class="fas fa-edit text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <i class="fas fa-trash-alt text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                        </div>
+                    </div>
+
+                    <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+                        <div class="w-1/12">3</div>
+                        <div class="w-4/12">
+                            <div class="font-medium">Decoración moderna para espacios pequeños</div>
+                            <div class="text-xs text-gray-500">Ideas creativas para optimizar tu hogar</div>
+                        </div>
+                        <div class="w-3/12">
+                            <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Decoración</span>
+                        </div>
+                        <div class="w-2/12">
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Publicado</span>
+                        </div>
+                        <div class="w-2/12 flex justify-end space-x-2">
+                            <i class="fas fa-eye text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <i class="fas fa-edit text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <i class="fas fa-trash-alt text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                        </div>
+                    </div>
+
+                    <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+                        <div class="w-1/12">4</div>
+                        <div class="w-4/12">
+                            <div class="font-medium">Inversión en propiedades comerciales</div>
+                            <div class="text-xs text-gray-500">Estrategias para maximizar rendimientos</div>
+                        </div>
+                        <div class="w-3/12">
+                            <span class="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded">Inversión</span>
+                        </div>
+                        <div class="w-2/12">
+                            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Revisión</span>
+                        </div>
+                        <div class="w-2/12 flex justify-end space-x-2">
+                            <i class="fas fa-eye text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <i class="fas fa-edit text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <i class="fas fa-trash-alt text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                        </div>
+                    </div>
+
+                    <div class="py-2 flex justify-between items-center text-sm text-gray-600 border-b border-gray-100">
+                        <div class="w-1/12">5</div>
+                        <div class="w-4/12">
+                            <div class="font-medium">Alquiler seguro: Todo lo que necesitas saber</div>
+                            <div class="text-xs text-gray-500">Protege tus derechos como arrendatario</div>
+                        </div>
+                        <div class="w-3/12">
+                            <span class="bg-cyan-100 text-cyan-800 text-xs font-medium px-2.5 py-0.5 rounded">Arrendar</span>
+                        </div>
+                        <div class="w-2/12">
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Publicado</span>
+                        </div>
+                        <div class="w-2/12 flex justify-end space-x-2">
+                            <i class="fas fa-eye text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <i class="fas fa-edit text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                            <i class="fas fa-trash-alt text-gray-500 cursor-pointer hover:text-gray-900"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer con paginación -->
+                <div class="flex justify-between items-center pt-4 border-t border-gray-300">
+                    <div class="flex items-center space-x-2 text-sm text-gray-600">
+                        <span>Mostrando 1-5 de 25 artículos</span>
+                    </div>
+                    <!-- Controles de paginación -->
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">Anterior</button>
+                        <button class="px-3 py-1 text-sm bg-neutral-800 text-white rounded">1</button>
+                        <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">2</button>
+                        <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">3</button>
+                        <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">Siguiente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
