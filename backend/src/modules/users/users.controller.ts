@@ -8,8 +8,10 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+    const user = await this.usersService.create(createUserDto);
+    const { password, setPassword, validatePassword, ...userResponse } = user as any;
+    return userResponse;
   }
 
   @Post('login')
