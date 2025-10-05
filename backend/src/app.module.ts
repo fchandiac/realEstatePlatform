@@ -19,6 +19,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { DocumentTypesModule } from './modules/document-types/document-types.module';
 import { PropertyTypesModule } from './modules/property-types/property-types.module';
 import { AuthModule } from './auth/auth/auth.module';
+import { AuditModule } from './audit/audit.module';
 import { AuditInterceptor } from './common/interceptors/audit.interceptor';
 
 @Module({
@@ -46,6 +47,7 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
     DocumentTypesModule,
     PropertyTypesModule,
     AuthModule,
+    AuditModule,
   ],
   controllers: [AppController],
   providers: [
