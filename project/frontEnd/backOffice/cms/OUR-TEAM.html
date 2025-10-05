@@ -53,32 +53,39 @@
         <!-- Grid de tarjetas -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Tarjeta 1: Juan Pérez -->
-            <div class="bg-white rounded-lg border border-gray-300 transition-all duration-300 p-6">
-                <div class="flex flex-col items-center text-center">
-                    <!-- Avatar (gradiente wireframe) -->
-                    <div class="w-24 h-24 bg-gradient-to-r from-neutral-400 to-neutral-600 rounded-full mb-4 flex items-center justify-center">
-                        <i class="fas fa-user fa-2x text-white"></i>
+            <div class="bg-white rounded-lg border border-gray-300 transition-all duration-300 p-6 text-left">
+                <!-- Primera Fila: Avatar y detalles -->
+                <div class="flex items-center justify-between mb-4">
+                    <!-- Avatar y detalles del miembro -->
+                    <div class="flex items-center">
+                        <i class="fas fa-user-circle fa-4x text-gray-400"></i>
+                        <div class="flex flex-col ml-4">
+                            <h3 class="text-xl font-bold text-gray-800">Juan Pérez</h3>
+                            <p class="text-sm text-gray-500">Agente Inmobiliario Senior</p>
+                        </div>
                     </div>
-                    <!-- Nombre -->
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Juan Pérez</h3>
-                    <!-- Cargo -->
-                    <p class="text-sm text-neutral-600 font-semibold mb-3">Agente Inmobiliario Senior</p>
-                    <!-- Descripción -->
-                    <p class="text-sm text-gray-600 mb-4">Experto en propiedades residenciales con más de 10 años de experiencia en el mercado.</p>
-                    <!-- Contacto -->
-                    <div class="space-y-2 w-full">
-                        <div class="flex items-center justify-center space-x-2 text-sm text-gray-700">
-                            <i class="fas fa-phone text-neutral-600"></i>
-                            <span>+56 9 1234 5678</span>
-                        </div>
-                        <div class="flex items-center justify-center space-x-2 text-sm text-gray-700">
-                            <i class="fas fa-envelope text-neutral-600"></i>
-                            <span>juan.perez@empresa.cl</span>
-                        </div>
+                
+                </div>
+
+                <!-- Biografía -->
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600">Experto en propiedades residenciales con más de 10 años de experiencia en el mercado.</p>
+                </div>
+
+                <!-- Información de contacto -->
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                        <i class="fas fa-phone text-neutral-600"></i>
+                        <span>+56 9 1234 5678</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                        <i class="fas fa-envelope text-neutral-600"></i>
+                        <span>juan.perez@empresa.cl</span>
                     </div>
                 </div>
+
                 <!-- Iconos de acción -->
-                <div class="flex justify-end space-x-4 text-gray-500 mt-4">
+                <div class="flex justify-end space-x-4 text-gray-500">
                     <i class="fas fa-eye hover:text-gray-900 cursor-pointer fa-lg"></i>
                     <i class="fas fa-edit hover:text-gray-900 cursor-pointer fa-lg"></i>
                     <i class="fas fa-trash-alt hover:text-gray-900 cursor-pointer fa-lg"></i>
@@ -86,32 +93,40 @@
             </div>
 
             <!-- Tarjeta 2: María González -->
-            <div class="bg-white rounded-lg border border-gray-300 transition-all duration-300 p-6">
-                <div class="flex flex-col items-center text-center">
-                    <!-- Avatar (gradiente wireframe) -->
-                    <div class="w-24 h-24 bg-gradient-to-r from-neutral-400 to-neutral-600 rounded-full mb-4 flex items-center justify-center">
-                        <i class="fas fa-user fa-2x text-white"></i>
+            <div class="bg-white rounded-lg border border-gray-300 transition-all duration-300 p-6 text-left">
+                <!-- Primera Fila: Avatar y detalles -->
+                <div class="flex items-center justify-between mb-4">
+                    <!-- Avatar y detalles del miembro -->
+                    <div class="flex items-center">
+                        <i class="fas fa-user-circle fa-4x text-gray-400"></i>
+                        <div class="flex flex-col ml-4">
+                            <h3 class="text-xl font-bold text-gray-800">María González</h3>
+                            <p class="text-sm text-gray-500">Especialista en Propiedades Comerciales</p>
+                        </div>
                     </div>
-                    <!-- Nombre -->
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">María González</h3>
-                    <!-- Cargo -->
-                    <p class="text-sm text-neutral-600 font-semibold mb-3">Especialista en Propiedades Comerciales</p>
-                    <!-- Descripción -->
-                    <p class="text-sm text-gray-600 mb-4">Especialista en propiedades comerciales con amplia experiencia en asesoramiento empresarial.</p>
-                    <!-- Contacto -->
-                    <div class="space-y-2 w-full">
-                        <div class="flex items-center justify-center space-x-2 text-sm text-gray-700">
-                            <i class="fas fa-phone text-neutral-600"></i>
-                            <span>+56 9 5678 1234</span>
-                        </div>
-                        <div class="flex items-center justify-center space-x-2 text-sm text-gray-700">
-                            <i class="fas fa-envelope text-neutral-600"></i>
-                            <span>maria.gonzalez@empresa.cl</span>
-                        </div>
+                    <!-- Estado -->
+                
+                </div>
+
+                <!-- Biografía -->
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600">Especialista en propiedades comerciales con amplia experiencia en asesoramiento empresarial.</p>
+                </div>
+
+                <!-- Información de contacto -->
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                        <i class="fas fa-phone text-neutral-600"></i>
+                        <span>+56 9 5678 1234</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                        <i class="fas fa-envelope text-neutral-600"></i>
+                        <span>maria.gonzalez@empresa.cl</span>
                     </div>
                 </div>
+
                 <!-- Iconos de acción -->
-                <div class="flex justify-end space-x-4 text-gray-500 mt-4">
+                <div class="flex justify-end space-x-4 text-gray-500">
                     <i class="fas fa-eye hover:text-gray-900 cursor-pointer fa-lg"></i>
                     <i class="fas fa-edit hover:text-gray-900 cursor-pointer fa-lg"></i>
                     <i class="fas fa-trash-alt hover:text-gray-900 cursor-pointer fa-lg"></i>
@@ -119,32 +134,39 @@
             </div>
 
             <!-- Tarjeta 3: Carlos Rodríguez -->
-            <div class="bg-white rounded-lg border border-gray-300 transition-all duration-300 p-6">
-                <div class="flex flex-col items-center text-center">
-                    <!-- Avatar (gradiente wireframe) -->
-                    <div class="w-24 h-24 bg-gradient-to-r from-neutral-400 to-neutral-600 rounded-full mb-4 flex items-center justify-center">
-                        <i class="fas fa-user fa-2x text-white"></i>
+            <div class="bg-white rounded-lg border border-gray-300 transition-all duration-300 p-6 text-left">
+                <!-- Primera Fila: Avatar y detalles -->
+                <div class="flex items-center justify-between mb-4">
+                    <!-- Avatar y detalles del miembro -->
+                    <div class="flex items-center">
+                        <i class="fas fa-user-circle fa-4x text-gray-400"></i>
+                        <div class="flex flex-col ml-4">
+                            <h3 class="text-xl font-bold text-gray-800">Carlos Rodríguez</h3>
+                            <p class="text-sm text-gray-500">Consultor Inmobiliario</p>
+                        </div>
                     </div>
-                    <!-- Nombre -->
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Carlos Rodríguez</h3>
-                    <!-- Cargo -->
-                    <p class="text-sm text-neutral-600 font-semibold mb-3">Consultor Inmobiliario</p>
-                    <!-- Descripción -->
-                    <p class="text-sm text-gray-600 mb-4">Consultor especializado en inversiones inmobiliarias y análisis de mercado.</p>
-                    <!-- Contacto -->
-                    <div class="space-y-2 w-full">
-                        <div class="flex items-center justify-center space-x-2 text-sm text-gray-700">
-                            <i class="fas fa-phone text-neutral-600"></i>
-                            <span>+56 9 9876 5432</span>
-                        </div>
-                        <div class="flex items-center justify-center space-x-2 text-sm text-gray-700">
-                            <i class="fas fa-envelope text-neutral-600"></i>
-                            <span>carlos.rodriguez@empresa.cl</span>
-                        </div>
+                
+                </div>
+
+                <!-- Biografía -->
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600">Consultor especializado en inversiones inmobiliarias y análisis de mercado.</p>
+                </div>
+
+                <!-- Información de contacto -->
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                        <i class="fas fa-phone text-neutral-600"></i>
+                        <span>+56 9 9876 5432</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm text-gray-700">
+                        <i class="fas fa-envelope text-neutral-600"></i>
+                        <span>carlos.rodriguez@empresa.cl</span>
                     </div>
                 </div>
+
                 <!-- Iconos de acción -->
-                <div class="flex justify-end space-x-4 text-gray-500 mt-4">
+                <div class="flex justify-end space-x-4 text-gray-500">
                     <i class="fas fa-eye hover:text-gray-900 cursor-pointer fa-lg"></i>
                     <i class="fas fa-edit hover:text-gray-900 cursor-pointer fa-lg"></i>
                     <i class="fas fa-trash-alt hover:text-gray-900 cursor-pointer fa-lg"></i>
