@@ -1,0 +1,29 @@
+import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
+
+export class CreateTestimonialDto {
+  @IsNotEmpty()
+  @IsString()
+  text: string;
+
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsOptional()
+  @IsString()
+  multimediaUrl?: string;
+}
+
+export class UpdateTestimonialDto {
+  @IsOptional()
+  @IsString()
+  text?: string;
+
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  multimediaUrl?: string;
+}

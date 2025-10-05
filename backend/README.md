@@ -77,6 +77,40 @@ src/
 - `PATCH /team-members/:id` - Actualizar un miembro
 - `DELETE /team-members/:id` - Eliminar un miembro (soft delete)
 
+### Articles
+
+- `GET /articles` - Obtener todos los artículos
+- `GET /articles/:id` - Obtener un artículo específico
+- `POST /articles` - Crear un nuevo artículo
+- `PATCH /articles/:id` - Actualizar un artículo
+- `DELETE /articles/:id` - Eliminar un artículo (soft delete)
+
+**Categorías disponibles:** Comprar, Arrendar, Inversión, Decoración, Mercado
+
+### Testimonials
+
+- `GET /testimonials` - Obtener todos los testimonios
+- `GET /testimonials/:id` - Obtener un testimonio específico
+- `POST /testimonials` - Crear un nuevo testimonio
+- `PATCH /testimonials/:id` - Actualizar un testimonio
+- `DELETE /testimonials/:id` - Eliminar un testimonio (soft delete)
+
+### Identities
+
+- `GET /identities` - Obtener todas las identidades corporativas
+- `GET /identities/:id` - Obtener una identidad específica
+- `POST /identities` - Crear una nueva identidad corporativa
+- `PATCH /identities/:id` - Actualizar una identidad
+- `DELETE /identities/:id` - Eliminar una identidad (soft delete)
+
+### About Us
+
+- `GET /about-us` - Obtener toda la información corporativa
+- `GET /about-us/:id` - Obtener información corporativa específica
+- `POST /about-us` - Crear nueva información corporativa
+- `PATCH /about-us/:id` - Actualizar información corporativa
+- `DELETE /about-us/:id` - Eliminar información corporativa (soft delete)
+
 ## Scripts Disponibles
 
 - `npm run build` - Compilar el proyecto
