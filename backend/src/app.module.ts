@@ -9,6 +9,8 @@ import { ArticlesModule } from './modules/articles/articles.module';
 import { TestimonialsModule } from './modules/testimonials/testimonials.module';
 import { IdentitiesModule } from './modules/identities/identities.module';
 import { AboutUsModule } from './modules/about-us/about-us.module';
+import { UsersModule } from './modules/users/users.module';
+import { PropertiesModule } from './modules/properties/properties.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { AboutUsModule } from './modules/about-us/about-us.module';
     TestimonialsModule,
     IdentitiesModule,
     AboutUsModule,
+    UsersModule,
+    PropertiesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

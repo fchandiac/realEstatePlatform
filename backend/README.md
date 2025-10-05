@@ -111,6 +111,37 @@ src/
 - `PATCH /about-us/:id` - Actualizar información corporativa
 - `DELETE /about-us/:id` - Eliminar información corporativa (soft delete)
 
+### Users
+
+- `GET /users` - Obtener todos los usuarios
+- `GET /users/:id` - Obtener un usuario específico
+- `GET /users/:id/profile` - Obtener perfil extendido del usuario
+- `POST /users` - Crear un nuevo usuario
+- `POST /users/login` - Autenticar usuario
+- `PATCH /users/:id` - Actualizar un usuario
+- `PATCH /users/:id/status` - Cambiar estado del usuario
+- `PATCH /users/:id/role` - Asignar rol al usuario
+- `PATCH /users/:id/permissions` - Modificar permisos del usuario
+- `PATCH /users/:id/change-password` - Cambiar contraseña
+- `DELETE /users/:id` - Eliminar un usuario (soft delete)
+
+**Roles disponibles:** SUPERADMIN, ADMIN, AGENT, COMMUNITY
+**Estados disponibles:** ACTIVE, INACTIVE, VACATION, LEAVE
+
+### Properties
+
+- `GET /properties` - Obtener todas las propiedades
+- `GET /properties/:id` - Obtener una propiedad específica
+- `GET /properties/creator/:creatorUserId` - Obtener propiedades por creador
+- `GET /properties/agent/:agentId` - Obtener propiedades por agente asignado
+- `POST /properties` - Crear una nueva propiedad
+- `PATCH /properties/:id` - Actualizar una propiedad
+- `PATCH /properties/:id/assign-agent` - Asignar agente a propiedad
+- `DELETE /properties/:id` - Eliminar una propiedad (soft delete)
+
+**Estados disponibles:** REQUEST, PRE-APPROVED, PUBLISHED, INACTIVE, SOLD, RENTED
+**Operaciones disponibles:** VENTA, ARRIENDO
+
 ## Scripts Disponibles
 
 - `npm run build` - Compilar el proyecto
