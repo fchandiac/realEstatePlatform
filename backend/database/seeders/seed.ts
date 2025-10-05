@@ -1,7 +1,8 @@
 import { AppDataSource, initializeDataSource } from './seeder.config';
 import { SeederFactory } from './seeder.factory';
 import { Person } from '../../src/entities/person.entity';
-import { User, UserRole } from '../../src/entities/user.entity';
+import { User, UserRole, UserStatus, Permission } from '../../src/entities/user.entity';
+import * as bcrypt from 'bcrypt';
 import { Property } from '../../src/entities/property.entity';
 import { Contract, ContractRole } from '../../src/entities/contract.entity';
 import { DocumentType } from '../../src/entities/document-type.entity';
@@ -43,6 +44,30 @@ async function seedDatabase() {
     // Seed Users (some linked to people)
     console.log('Seeding users...');
     const userRepository = AppDataSource.getRepository(User);
+
+    // Create admin user first
+    console.log('Creating admin user...');
+    const adminUser = await userRepository.save(
+      userRepository.create({
+        username: 'admin',
+        email: 'admin@realestate.com',
+        password: await bcrypt.hash('7890', 10),
+        role: UserRole.SUPERADMIN,
+        status: UserStatus.ACTIVE,
+        personalInfo: {
+          firstName: 'Admin',
+          lastName: 'User',
+          phone: '+56 9 1234 5678',
+          avatar: 'https://ui-avatars.com/api/?name=Admin+User'
+        },
+        permissions: Object.values(Permission),
+        lastLogin: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
+    );
+
+    // Then seed random users
     const users = await userRepository.save(
       Array.from({ length: 20 }, (_, i) => {
         const user = userRepository.create(SeederFactory.createRandomUser());
@@ -139,13 +164,7 @@ async function seedDatabase() {
     console.log('Seeding testimonials...');
     const testimonialRepository = AppDataSource.getRepository(Testimonial);
     const testimonials = await testimonialRepository.save(
-      Array.from({ length: 20 }, () => {
-        const data = SeederFactory.createRandomTestimonial();
-        return testimonialRepository.create({
-          ...data,
-          deletedAt: undefined
-        });
-      })
+      Array.from({ length: 20 }, () => testimonialRepository.create(SeederFactory.createRandomTestimonial()))
     );
     
     // Seed About Us

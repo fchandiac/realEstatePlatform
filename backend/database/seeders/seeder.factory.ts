@@ -18,12 +18,14 @@ import {
 } from './seeder.types';
 
 export class SeederFactory {
+  private static usedPropertyTypes = new Set<string>();
+  private static usedDocumentTypes = new Set<string>();
   static createRandomPerson(): PersonSeed {
     return {
       name: faker.person.fullName(),
       dni: faker.string.numeric(8),
       address: faker.location.streetAddress(),
-      phone: faker.phone.number(),
+      phone: faker.string.numeric(9),
       email: faker.internet.email(),
       verified: faker.datatype.boolean(),
       verificationRequest: faker.helpers.arrayElement([undefined, faker.date.past()]),
@@ -120,18 +122,26 @@ export class SeederFactory {
   }
 
   static createRandomDocumentType() {
+    const possibleTypes = [
+      'DNI',
+      'Passport',
+      'Driver License',
+      'Property Title',
+      'Contract',
+      'Insurance Policy',
+      'Tax Declaration'
+    ].filter(type => !this.usedDocumentTypes.has(type));
+
+    if (possibleTypes.length === 0) {
+      throw new Error('No more unique document types available');
+    }
+
+    const selectedType = faker.helpers.arrayElement(possibleTypes);
+    this.usedDocumentTypes.add(selectedType);
+
     return {
-      name: faker.helpers.arrayElement([
-        'DNI',
-        'Passport',
-        'Driver License',
-        'Property Title',
-        'Contract',
-        'Insurance Policy',
-        'Tax Declaration'
-      ]),
+      name: selectedType,
       description: faker.lorem.sentence(),
-      required: faker.datatype.boolean(),
       createdAt: faker.date.past(),
       updatedAt: new Date(),
       deletedAt: null
@@ -139,16 +149,33 @@ export class SeederFactory {
   }
 
   static createRandomPropertyType() {
+    const possibleTypes = [
+      'House',
+      'Apartment',
+      'Condo',
+      'Land',
+      'Commercial',
+      'Office',
+      'Industrial',
+      'Retail',
+      'Warehouse',
+      'Mixed Use',
+      'Multi-Family',
+      'Single Family',
+      'Townhouse',
+      'Villa',
+      'Studio'
+    ].filter(type => !this.usedPropertyTypes.has(type));
+
+    if (possibleTypes.length === 0) {
+      throw new Error('No more unique property types available');
+    }
+
+    const selectedType = faker.helpers.arrayElement(possibleTypes);
+    this.usedPropertyTypes.add(selectedType);
+
     return {
-      name: faker.helpers.arrayElement([
-        'House',
-        'Apartment',
-        'Condo',
-        'Land',
-        'Commercial',
-        'Office',
-        'Industrial'
-      ]),
+      name: selectedType,
       description: faker.lorem.sentence(),
       createdAt: faker.date.past(),
       updatedAt: new Date(),
@@ -162,31 +189,29 @@ export class SeederFactory {
       position: faker.person.jobTitle(),
       bio: faker.lorem.paragraph(),
       email: faker.internet.email(),
-      phone: faker.phone.number(),
+      phone: `+56 9 ${faker.string.numeric(4)} ${faker.string.numeric(4)}`,
       createdAt: faker.date.past(),
       updatedAt: new Date(),
       deletedAt: null
     };
   }
 
-  static createRandomTestimonial() {
+  static createRandomTestimonial(): TestimonialSeed {
     return {
-      author: faker.person.fullName(),
-      content: faker.lorem.paragraph(),
-      rating: faker.number.int({ min: 1, max: 5 }),
-      isApproved: faker.datatype.boolean(),
+      text: faker.lorem.paragraph(),
+      name: faker.person.fullName(),
+      multimediaUrl: faker.image.url(),
       createdAt: faker.date.past(),
-      updatedAt: new Date(),
-      deletedAt: null
+      updatedAt: new Date()
     };
   }
 
   static createRandomAboutUs() {
     return {
-      title: faker.company.catchPhrase(),
-      content: faker.lorem.paragraphs(3),
-      mission: faker.lorem.paragraph(),
+      bio: faker.company.catchPhrase() + '\n\n' + faker.lorem.paragraphs(3),
+      mision: faker.lorem.paragraph(),
       vision: faker.lorem.paragraph(),
+      multimediaUrl: faker.image.url(),
       createdAt: faker.date.past(),
       updatedAt: new Date(),
       deletedAt: null
