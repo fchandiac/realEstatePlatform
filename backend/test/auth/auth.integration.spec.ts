@@ -1,11 +1,14 @@
 import 'dotenv/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import request from 'supertest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../../src/auth/auth/auth.module';
 import { UsersModule } from '../../src/modules/users/users.module';
+import { AuditModule } from '../../src/audit/audit.module';
 import { User } from '../../src/entities/user.entity';
+import { AuditLog } from '../../src/entities/audit-log.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -19,6 +22,7 @@ describe('AuthController (integration)', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
+        ConfigModule.forRoot(),
         TypeOrmModule.forRoot({
           type: 'mysql',
           host: process.env.DB_HOST,
@@ -26,12 +30,13 @@ describe('AuthController (integration)', () => {
           username: process.env.DB_USERNAME,
           password: process.env.DB_PASSWORD,
           database: process.env.DB_DATABASE,
-          entities: [User],
+          entities: [User, AuditLog],
           synchronize: true, // Solo para pruebas, no usar en producción
         }),
         TypeOrmModule.forFeature([User]),
         UsersModule,
         AuthModule,
+        AuditModule
       ],
     }).compile();
 
@@ -67,7 +72,7 @@ describe('AuthController (integration)', () => {
       .send({ email: 'test.integration@example.com', password })
       .expect(201);
 
-    expect(res.body).toHaveProperty('accessToken');
+    expect(res.body).toHaveProperty('access_token');
     expect(res.body.user.email).toBe('test.integration@example.com');
   });
 });
