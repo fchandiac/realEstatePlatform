@@ -17,7 +17,7 @@ export class UsersService {
     const existingUser = await this.userRepository.findOne({
       where: [
         { username: createUserDto.username },
-        { mail: createUserDto.mail },
+        { email: createUserDto.email },
       ],
     });
 
@@ -25,20 +25,16 @@ export class UsersService {
       throw new ConflictException('El nombre de usuario o correo ya está registrado.');
     }
 
-    // Hash password
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hash = await bcrypt.hash(createUserDto.password, salt);
-
     const user = this.userRepository.create({
       ...createUserDto,
-      passHash: hash,
-      passSalt: salt,
       status: UserStatus.ACTIVE,
       role: createUserDto.role || UserRole.COMMUNITY,
       permissions: createUserDto.permissions || [],
       personalInfo: createUserDto.personalInfo || {},
     });
+
+    // Hash password using the entity method
+    await user.setPassword(createUserDto.password);
 
     return await this.userRepository.save(user);
   }
@@ -75,9 +71,9 @@ export class UsersService {
       }
     }
 
-    if (updateUserDto.mail && updateUserDto.mail !== user.mail) {
+    if (updateUserDto.email && updateUserDto.email !== user.email) {
       const existingUser = await this.userRepository.findOne({
-        where: { mail: updateUserDto.mail },
+        where: { email: updateUserDto.email },
       });
       if (existingUser) {
         throw new ConflictException('El correo ya está registrado.');
@@ -95,14 +91,14 @@ export class UsersService {
 
   async login(loginDto: LoginDto): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { mail: loginDto.mail, deletedAt: IsNull() },
+      where: { email: loginDto.email, deletedAt: IsNull() },
     });
 
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas.');
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.passHash);
+    const isPasswordValid = await user.validatePassword(loginDto.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Credenciales inválidas.');
     }
@@ -117,17 +113,12 @@ export class UsersService {
   async changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<void> {
     const user = await this.findOne(id);
 
-    const isCurrentPasswordValid = await bcrypt.compare(changePasswordDto.currentPassword, user.passHash);
+    const isCurrentPasswordValid = await user.validatePassword(changePasswordDto.currentPassword);
     if (!isCurrentPasswordValid) {
       throw new UnauthorizedException('Contraseña actual incorrecta.');
     }
 
-    const saltRounds = 10;
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hash = await bcrypt.hash(changePasswordDto.newPassword, salt);
-
-    user.passHash = hash;
-    user.passSalt = salt;
+    await user.setPassword(changePasswordDto.newPassword);
     await this.userRepository.save(user);
   }
 

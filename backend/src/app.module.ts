@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { databaseConfig } from './config/database.config';
@@ -17,6 +18,8 @@ import { MultimediaModule } from './modules/multimedia/multimedia.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { DocumentTypesModule } from './modules/document-types/document-types.module';
 import { PropertyTypesModule } from './modules/property-types/property-types.module';
+import { AuthModule } from './auth/auth/auth.module';
+import { AuditInterceptor } from './common/interceptors/audit.interceptor';
 
 @Module({
   imports: [
@@ -42,8 +45,15 @@ import { PropertyTypesModule } from './modules/property-types/property-types.mod
     NotificationsModule,
     DocumentTypesModule,
     PropertyTypesModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AuditInterceptor,
+    },
+  ],
 })
 export class AppModule {}

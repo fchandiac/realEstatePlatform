@@ -216,6 +216,72 @@ src/
 - `PATCH /property-types/:id` - Actualizar un tipo de propiedad
 - `DELETE /property-types/:id` - Eliminar un tipo de propiedad (soft delete)
 
+## Autenticación (JWE - JSON Web Encryption)
+
+El sistema implementa autenticación segura basada en **tokens JWE cifrados** con RSA-OAEP-256 + A256GCM.
+
+### Endpoints de Autenticación
+
+- `POST /auth/sign-in` - Iniciar sesión y obtener token JWE
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "password123"
+  }
+  ```
+
+**Respuesta exitosa:**
+```json
+{
+  "access_token": "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2R0NNIn0...",
+  "userId": "uuid",
+  "email": "user@example.com",
+  "role": "AGENT",
+  "name": "John Doe",
+  "user": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "role": "AGENT",
+    "name": "John Doe"
+  }
+}
+```
+
+### Uso de Tokens
+
+Para acceder a rutas protegidas, incluir el token en el header:
+```
+Authorization: Bearer <access_token>
+```
+
+### Endpoint de Prueba Protegido
+
+- `GET /protected` - Endpoint de prueba que requiere autenticación
+  - **Requiere:** Token JWE válido en header Authorization
+  - **Respuesta:** Información del usuario autenticado
+
+### Roles de Usuario
+
+- `SUPERADMIN` - Administrador completo del sistema
+- `ADMIN` - Administrador con permisos limitados
+- `AGENT` - Agente inmobiliario
+- `COMMUNITY` - Usuario de la comunidad
+
+### Estados de Usuario
+
+- `ACTIVE` - Usuario activo
+- `INACTIVE` - Usuario inactivo
+- `VACATION` - Usuario de vacaciones
+- `LEAVE` - Usuario de licencia
+
+### Seguridad
+
+- **Hashing de contraseñas:** bcrypt con salt
+- **Tokens cifrados:** JWE (no legibles sin clave privada)
+- **Expiración corta:** 15 minutos por defecto
+- **Auditoría:** Registro de intentos de login exitosos y fallidos
+- **Rate limiting:** Recomendado para producción
+
 ## Scripts Disponibles
 
 - `npm run build` - Compilar el proyecto

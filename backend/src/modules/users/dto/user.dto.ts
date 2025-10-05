@@ -9,7 +9,7 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsEmail()
-  mail: string;
+  email: string;
 
   @IsNotEmpty()
   @IsString()
@@ -37,7 +37,7 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsEmail()
-  mail?: string;
+  email?: string;
 
   @IsOptional()
   @IsEnum(UserStatus)
@@ -61,7 +61,7 @@ export class UpdateUserDto {
 export class LoginDto {
   @IsNotEmpty()
   @IsEmail()
-  mail: string;
+  email: string;
 
   @IsNotEmpty()
   @IsString()

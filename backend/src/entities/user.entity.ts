@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 import { IsNotEmpty, IsString, IsOptional, IsEmail, IsEnum, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import * as bcrypt from 'bcrypt';
 
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
@@ -67,17 +68,12 @@ export class User {
   @Column({ type: 'varchar', length: 255, unique: true })
   @IsNotEmpty()
   @IsEmail()
-  mail: string;
+  email: string;
 
   @Column({ type: 'varchar', length: 255 })
   @IsNotEmpty()
   @IsString()
-  passHash: string;
-
-  @Column({ type: 'varchar', length: 255 })
-  @IsNotEmpty()
-  @IsString()
-  passSalt: string;
+  password: string;
 
   @Column({
     type: 'enum',
@@ -115,4 +111,20 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  // Authentication methods
+  async setPassword(plainPassword: string): Promise<void> {
+    this.password = await bcrypt.hash(plainPassword, 12);
+  }
+
+  async validatePassword(plainPassword: string): Promise<boolean> {
+    return await bcrypt.compare(plainPassword, this.password);
+  }
+
+  get name(): string {
+    if (this.personalInfo?.firstName && this.personalInfo?.lastName) {
+      return `${this.personalInfo.firstName} ${this.personalInfo.lastName}`;
+    }
+    return this.username;
+  }
 }
