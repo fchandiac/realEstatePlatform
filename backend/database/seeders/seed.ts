@@ -1,0 +1,217 @@
+import { AppDataSource, initializeDataSource } from './seeder.config';
+import { SeederFactory } from './seeder.factory';
+import { Person } from '../../src/entities/person.entity';
+import { User, UserRole } from '../../src/entities/user.entity';
+import { Property } from '../../src/entities/property.entity';
+import { Contract, ContractRole } from '../../src/entities/contract.entity';
+import { DocumentType } from '../../src/entities/document-type.entity';
+import { PropertyType } from '../../src/entities/property-type.entity';
+import { TeamMember } from '../../src/entities/team-member.entity';
+import { Testimonial } from '../../src/entities/testimonial.entity';
+import { AboutUs } from '../../src/entities/about-us.entity';
+import { Article, ArticleCategory } from '../../src/entities/article.entity';
+import { Multimedia, MultimediaFormat, MultimediaType } from '../../src/entities/multimedia.entity';
+import {
+  PersonSeed,
+  UserSeed,
+  PropertySeed,
+  ContractSeed,
+  DocumentTypeSeed,
+  PropertyTypeSeed,
+  TeamMemberSeed,
+  TestimonialSeed,
+  AboutUsSeed,
+  ArticleSeed,
+  MultimediaSeed
+} from './seeder.types';
+
+async function seedDatabase() {
+  try {
+    await initializeDataSource();
+    
+    // Clear existing data
+    console.log('Cleaning existing data...');
+    await AppDataSource.synchronize(true);
+    
+    // Seed People
+    console.log('Seeding people...');
+    const personRepository = AppDataSource.getRepository(Person);
+    const people = await personRepository.save(
+      Array.from({ length: 50 }, () => personRepository.create(SeederFactory.createRandomPerson()))
+    );
+    
+    // Seed Users (some linked to people)
+    console.log('Seeding users...');
+    const userRepository = AppDataSource.getRepository(User);
+    const users = await userRepository.save(
+      Array.from({ length: 20 }, (_, i) => {
+        const user = userRepository.create(SeederFactory.createRandomUser());
+        if (i < people.length) {
+          // Update the person with the user's ID after the user is created
+          people[i].userId = user.id;
+        }
+        return user;
+      })
+    );
+
+    // Update people with user IDs
+    await personRepository.save(people);
+    
+        // Seed Property Types
+    console.log('Seeding property types...');
+    const propertyTypeRepository = AppDataSource.getRepository(PropertyType);
+    const propertyTypes = await propertyTypeRepository.save(
+      Array.from({ length: 7 }, () => {
+        const data = SeederFactory.createRandomPropertyType();
+        return propertyTypeRepository.create({
+          ...data,
+          deletedAt: undefined
+        });
+      })
+    );
+    
+    // Seed Properties
+    console.log('Seeding properties...');
+    const propertyRepository = AppDataSource.getRepository(Property);
+    const agentUsers = users.filter(user => user.role === UserRole.AGENT);
+    const properties = await propertyRepository.save(
+      Array.from({ length: 30 }, () => {
+        const propertyData = SeederFactory.createRandomProperty();
+        const randomAgent = agentUsers[Math.floor(Math.random() * agentUsers.length)];
+        return propertyRepository.create({
+          ...propertyData,
+          creatorUserId: randomAgent.id,
+          assignedAgentId: randomAgent.id
+        });
+      }));
+      
+    // Seed Contracts
+    console.log('Seeding contracts...');
+    const contractRepository = AppDataSource.getRepository(Contract);
+    const contracts = await contractRepository.save(
+      Array.from({ length: 15 }, () => {
+        const contractData = SeederFactory.createRandomContract();
+        const property = properties[Math.floor(Math.random() * properties.length)];
+        const user = users[Math.floor(Math.random() * users.length)];
+        const person = people[Math.floor(Math.random() * people.length)];
+        
+        return contractRepository.create({
+          ...contractData,
+          propertyId: property.id,
+          userId: user.id,
+          property: property,
+          user: user,
+          people: [{
+            personId: person.id,
+            role: ContractRole.TENANT
+          }]
+        });
+      })
+    );
+    
+    // Seed Document Types
+    console.log('Seeding document types...');
+    const documentTypeRepository = AppDataSource.getRepository(DocumentType);
+    const documentTypes = await documentTypeRepository.save(
+      Array.from({ length: 7 }, () => {
+        const data = SeederFactory.createRandomDocumentType();
+        return documentTypeRepository.create({
+          ...data,
+          deletedAt: undefined
+        });
+      })
+    );
+    
+    // Seed Team Members
+    console.log('Seeding team members...');
+    const teamMemberRepository = AppDataSource.getRepository(TeamMember);
+    const teamMembers = await teamMemberRepository.save(
+      Array.from({ length: 10 }, () => {
+        const data = SeederFactory.createRandomTeamMember();
+        return teamMemberRepository.create({
+          ...data,
+          deletedAt: undefined
+        });
+      })
+    );
+    
+    // Seed Testimonials
+    console.log('Seeding testimonials...');
+    const testimonialRepository = AppDataSource.getRepository(Testimonial);
+    const testimonials = await testimonialRepository.save(
+      Array.from({ length: 20 }, () => {
+        const data = SeederFactory.createRandomTestimonial();
+        return testimonialRepository.create({
+          ...data,
+          deletedAt: undefined
+        });
+      })
+    );
+    
+    // Seed About Us
+    console.log('Seeding about us...');
+    const aboutUsRepository = AppDataSource.getRepository(AboutUs);
+    const aboutUsData = SeederFactory.createRandomAboutUs();
+    const aboutUs = await aboutUsRepository.save(
+      aboutUsRepository.create({
+        ...aboutUsData,
+        deletedAt: undefined
+      })
+    );
+    
+        // Seed Articles
+    console.log('Seeding articles...');
+    const articleRepository = AppDataSource.getRepository(Article);
+    const articles = await articleRepository.save(
+      Array.from({ length: 15 }, () => {
+        const articleData = SeederFactory.createRandomArticle();
+        return articleRepository.create({
+          title: articleData.title,
+          subtitle: `Subtítulo para ${articleData.title}`,
+          text: articleData.content,
+          category: ArticleCategory.MERCADO,
+          multimediaUrl: 'https://example.com/articles/image.jpg'
+        });
+      })
+    );
+    
+    // Seed Multimedia
+    console.log('Seeding multimedia...');
+    const multimediaRepository = AppDataSource.getRepository(Multimedia);
+    const multimedia = await multimediaRepository.save(
+      Array.from({ length: 50 }, () => {
+        const mediaData = SeederFactory.createRandomMultimedia();
+        const multimediaFormat = mediaData.type === 'VIDEO' ? MultimediaFormat.VIDEO : MultimediaFormat.IMG;
+        const multimediaType = multimediaFormat === MultimediaFormat.VIDEO 
+          ? MultimediaType.PROPERTY_VIDEO 
+          : MultimediaType.PROPERTY_IMG;
+        
+        return multimediaRepository.create({
+          format: multimediaFormat,
+          type: multimediaType,
+          url: mediaData.url,
+          seoTitle: mediaData.title,
+          filename: `${mediaData.title.toLowerCase().replace(/\s+/g, '-')}.${multimediaFormat === MultimediaFormat.VIDEO ? 'mp4' : 'jpg'}`,
+          fileSize: Math.floor(Math.random() * 10000000)
+        });
+      })
+    );
+    
+    console.log('Seeding completed successfully!');
+    
+  } catch (error) {
+    console.error('Error during seeding:', error);
+    throw error;
+  } finally {
+    await AppDataSource.destroy();
+  }
+}
+
+// Run the seeder
+seedDatabase().then(() => {
+  console.log('Database seeding completed');
+  process.exit(0);
+}).catch((error) => {
+  console.error('Database seeding failed:', error);
+  process.exit(1);
+});

@@ -1,0 +1,24 @@
+import { DeepPartial } from 'typeorm';
+import { Person } from '../../src/entities/person.entity';
+import { User, UserRole, UserStatus } from '../../src/entities/user.entity';
+import { Property } from '../../src/entities/property.entity';
+import { Contract } from '../../src/entities/contract.entity';
+import { DocumentType } from '../../src/entities/document-type.entity';
+import { PropertyType } from '../../src/entities/property-type.entity';
+import { TeamMember } from '../../src/entities/team-member.entity';
+import { Testimonial } from '../../src/entities/testimonial.entity';
+import { AboutUs } from '../../src/entities/about-us.entity';
+import { Article } from '../../src/entities/article.entity';
+import { Multimedia } from '../../src/entities/multimedia.entity';
+
+export type PersonSeed = DeepPartial<Person>;
+export type UserSeed = DeepPartial<User>;
+export type PropertySeed = DeepPartial<Property>;
+export type ContractSeed = DeepPartial<Contract>;
+export type DocumentTypeSeed = DeepPartial<DocumentType>;
+export type PropertyTypeSeed = DeepPartial<PropertyType>;
+export type TeamMemberSeed = DeepPartial<TeamMember>;
+export type TestimonialSeed = DeepPartial<Testimonial>;
+export type AboutUsSeed = DeepPartial<AboutUs>;
+export type ArticleSeed = DeepPartial<Article>;
+export type MultimediaSeed = DeepPartial<Multimedia>;

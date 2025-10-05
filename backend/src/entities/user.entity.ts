@@ -93,11 +93,11 @@ export class User {
   @IsEnum(UserRole)
   role: UserRole;
 
-  @Column({ type: 'json', nullable: true, default: [] })
+  @Column({ type: 'json', nullable: true })
   @IsOptional()
   permissions?: Permission[];
 
-  @Column({ type: 'json', nullable: true, default: {} })
+  @Column({ type: 'json', nullable: true })
   @IsOptional()
   @ValidateNested()
   @Type(() => PersonalInfo)
@@ -111,6 +111,9 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  lastLogin?: Date;
 
   // Authentication methods
   async setPassword(plainPassword: string): Promise<void> {
