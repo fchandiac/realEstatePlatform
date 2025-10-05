@@ -11,7 +11,17 @@ La entidad Article permite almacenar y gestionar artículos para su publicación
 | subtitle      | VARCHAR      | Sí   | Bajada o resumen del artículo.                   |
 | text          | TEXT         | No   | Texto principal del artículo.                    |
 | multimediaUrl | VARCHAR      | Sí   | URL a un archivo multimedia asociado (opcional). |
-| category      | VARCHAR      | No   | Categoría o temática del artículo.               |
+| category      | ENUM('Comprar', 'Arrendar', 'Inversión', 'Decoración', 'Mercado') | No   | Categoría o temática del artículo.               |
+
+## Categorías disponibles
+
+Las categorías disponibles para los artículos son las siguientes:
+
+- **Comprar**: Artículos relacionados con la compra de propiedades.
+- **Arrendar**: Artículos sobre alquileres y arrendamientos.
+- **Inversión**: Contenido sobre inversiones inmobiliarias.
+- **Decoración**: Artículos de decoración y diseño de interiores.
+- **Mercado**: Análisis y tendencias del mercado inmobiliario.
 
 ## Reglas y validaciones
 
@@ -31,7 +41,7 @@ La entidad Article permite almacenar y gestionar artículos para su publicación
   "subtitle": "Lo que debes saber para invertir este año",
   "text": "El mercado inmobiliario en 2025 presenta nuevas oportunidades...",
   "multimediaUrl": "https://cdn.plataforma.com/articulos/mercado-2025.jpg",
-  "category": "Tendencias"
+  "category": "Mercado"
 }
 ```
 
