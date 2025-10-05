@@ -6,13 +6,14 @@ export enum MultimediaFormat {
 }
 
 export enum MultimediaType {
-  CEDULA_FRONT = 'CEDULA_FRONT',
-  CEDULA_REAR = 'CEDULA_REAR',
+  DNI_FRONT = 'DNI_FRONT',
+  DNI_REAR = 'DNI_REAR',
   SLIDE = 'SLIDE',
   LOGO = 'LOGO',
   STAFF = 'STAFF',
   PROPERTY_IMG = 'PROPERTY_IMG',
-  PROPERTY_VIDEO = 'PROPERTY_VIDEO'
+  PROPERTY_VIDEO = 'PROPERTY_VIDEO',
+  PARTNERSHIP = 'PARTNERSHIP'
 }
 
 @Entity('multimedia')

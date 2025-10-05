@@ -184,7 +184,7 @@ src/
 - `PATCH /multimedia/:id/seo-title` - Establecer título SEO
 
 **Formatos disponibles:** IMG, VIDEO
-**Tipos disponibles:** CEDULA_FRONT, CEDULA_REAR, SLIDE, LOGO, STAFF, PROPERTY_IMG, PROPERTY_VIDEO
+**Tipos disponibles:** DNI_FRONT, DNI_REAR, SLIDE, LOGO, STAFF, PROPERTY_IMG, PROPERTY_VIDEO, PARTNERSHIP
 
 ### Notifications
 
