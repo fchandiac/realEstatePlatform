@@ -11,6 +11,12 @@ import { IdentitiesModule } from './modules/identities/identities.module';
 import { AboutUsModule } from './modules/about-us/about-us.module';
 import { UsersModule } from './modules/users/users.module';
 import { PropertiesModule } from './modules/properties/properties.module';
+import { ContractsModule } from './modules/contracts/contracts.module';
+import { PeopleModule } from './modules/people/people.module';
+import { MultimediaModule } from './modules/multimedia/multimedia.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { DocumentTypesModule } from './modules/document-types/document-types.module';
+import { PropertyTypesModule } from './modules/property-types/property-types.module';
 
 @Module({
   imports: [
@@ -30,6 +36,12 @@ import { PropertiesModule } from './modules/properties/properties.module';
     AboutUsModule,
     UsersModule,
     PropertiesModule,
+    ContractsModule,
+    PeopleModule,
+    MultimediaModule,
+    NotificationsModule,
+    DocumentTypesModule,
+    PropertyTypesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

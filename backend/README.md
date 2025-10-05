@@ -142,6 +142,80 @@ src/
 **Estados disponibles:** REQUEST, PRE-APPROVED, PUBLISHED, INACTIVE, SOLD, RENTED
 **Operaciones disponibles:** VENTA, ARRIENDO
 
+### Contracts
+
+- `GET /contracts` - Obtener todos los contratos
+- `GET /contracts/:id` - Obtener un contrato específico
+- `POST /contracts` - Crear un nuevo contrato
+- `PATCH /contracts/:id` - Actualizar un contrato
+- `DELETE /contracts/:id` - Eliminar un contrato (soft delete)
+- `POST /contracts/:id/close` - Cerrar un contrato
+- `POST /contracts/:id/fail` - Marcar contrato como fallido
+- `POST /contracts/:id/payments` - Agregar pago al contrato
+- `POST /contracts/:id/people` - Agregar persona al contrato
+- `GET /contracts/:id/people?role=ROLE` - Obtener personas por rol
+- `POST /contracts/:id/validate-roles` - Validar roles requeridos
+
+**Estados disponibles:** IN_PROCESS, CLOSED, FAILED, ON_HOLD
+**Operaciones disponibles:** COMPRAVENTA, ARRIENDO
+**Roles disponibles:** SELLER, BUYER, LANDLORD, TENANT, GUARANTOR, AGENT
+
+### People
+
+- `GET /people` - Obtener todas las personas
+- `GET /people/:id` - Obtener una persona específica
+- `POST /people` - Crear una nueva persona
+- `PATCH /people/:id` - Actualizar una persona
+- `DELETE /people/:id` - Eliminar una persona (soft delete)
+- `POST /people/:id/verify` - Verificar persona
+- `POST /people/:id/unverify` - Desverificar persona
+- `POST /people/:id/request-verification` - Solicitar verificación
+- `POST /people/:id/link-user` - Vincular usuario
+- `POST /people/:id/unlink-user` - Desvincular usuario
+
+### Multimedia
+
+- `GET /multimedia` - Obtener todos los archivos multimedia
+- `GET /multimedia/:id` - Obtener un archivo multimedia específico
+- `POST /multimedia` - Crear un nuevo archivo multimedia
+- `PATCH /multimedia/:id` - Actualizar un archivo multimedia
+- `DELETE /multimedia/:id` - Eliminar un archivo multimedia (soft delete)
+- `GET /multimedia/:id/url` - Obtener URL del archivo
+- `PATCH /multimedia/:id/seo-title` - Establecer título SEO
+
+**Formatos disponibles:** IMG, VIDEO
+**Tipos disponibles:** CEDULA_FRONT, CEDULA_REAR, SLIDE, LOGO, STAFF, PROPERTY_IMG, PROPERTY_VIDEO
+
+### Notifications
+
+- `GET /notifications` - Obtener todas las notificaciones
+- `GET /notifications/:id` - Obtener una notificación específica
+- `POST /notifications` - Crear una nueva notificación
+- `PATCH /notifications/:id` - Actualizar una notificación
+- `DELETE /notifications/:id` - Eliminar una notificación (soft delete)
+- `POST /notifications/:id/open` - Marcar como abierta
+- `GET /notifications/user/:userId` - Obtener notificaciones de usuario
+
+**Tipos disponibles:** INTERES, CONTACTO, COMPROBANTE_DE_PAGO, AVISO_PAGO_VENCIDO, CAMBIO_ESTADO_PUBLICACION, CAMBIO_ESTADO_CONTRATO, NUEVA_ASIGNACION_PROPIEDAD_AGENTE
+**Estados disponibles:** SEND, OPEN
+
+### Document Types
+
+- `GET /document-types` - Obtener todos los tipos de documento
+- `GET /document-types/:id` - Obtener un tipo de documento específico
+- `POST /document-types` - Crear un nuevo tipo de documento
+- `PATCH /document-types/:id` - Actualizar un tipo de documento
+- `DELETE /document-types/:id` - Eliminar un tipo de documento (soft delete)
+- `PATCH /document-types/:id/available` - Cambiar disponibilidad
+
+### Property Types
+
+- `GET /property-types` - Obtener todos los tipos de propiedad
+- `GET /property-types/:id` - Obtener un tipo de propiedad específico
+- `POST /property-types` - Crear un nuevo tipo de propiedad
+- `PATCH /property-types/:id` - Actualizar un tipo de propiedad
+- `DELETE /property-types/:id` - Eliminar un tipo de propiedad (soft delete)
+
 ## Scripts Disponibles
 
 - `npm run build` - Compilar el proyecto
