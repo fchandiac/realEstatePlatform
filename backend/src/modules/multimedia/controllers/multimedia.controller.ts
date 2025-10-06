@@ -47,6 +47,7 @@ export class MultimediaController {
       console.log('Metadata received:', metadata);
 
       const multimedia = await this.multimediaService.uploadFile(file, metadata, res.locals.userId);
+      console.log('File saved with unique name:', multimedia.filename);
       res.status(HttpStatus.CREATED).json(multimedia);
     } catch (error) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });

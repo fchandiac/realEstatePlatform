@@ -53,6 +53,27 @@ export class MultimediaService {
     return paths[type] || '';
   }
 
+  private generateUniqueFilename(originalName: string, type: MultimediaType): string {
+    // Obtener la extensión del archivo original
+    const extension = path.extname(originalName);
+    
+    // Crear prefijo basado en el tipo
+    const typePrefix = type.toLowerCase().replace('_', '-');
+    
+    // Generar timestamp en formato YYYYMMDD_HHMMSS
+    const now = new Date();
+    const timestamp = now.toISOString()
+      .replace(/[-:]/g, '') // Remover guiones y dos puntos
+      .replace('T', '_')    // Reemplazar T con underscore
+      .split('.')[0];       // Remover milisegundos
+    
+    // Generar string aleatorio de 8 caracteres
+    const randomString = Math.random().toString(36).substring(2, 10).toUpperCase();
+    
+    // Combinar todo: prefijo_tipo_timestamp_random.ext
+    return `${typePrefix}_${timestamp}_${randomString}${extension}`;
+  }
+
   async uploadFile(
     file: Express.Multer.File,
     metadata: MultimediaUploadMetadata,
@@ -63,7 +84,9 @@ export class MultimediaService {
     // Ensure the directory exists
     await fs.mkdir(uploadDir, { recursive: true });
 
-    const filePath = path.join(uploadDir, file.originalname);
+    // Generate unique filename
+    const uniqueFilename = this.generateUniqueFilename(file.originalname, metadata.type as MultimediaType);
+    const filePath = path.join(uploadDir, uniqueFilename);
 
     try {
       // Save the file to the upload directory
@@ -77,7 +100,7 @@ export class MultimediaService {
       multimedia.url = filePath;
       multimedia.userId = userId || undefined; // Ensure userId is undefined if not provided
       multimedia.format = file.mimetype.startsWith('image') ? MultimediaFormat.IMG : MultimediaFormat.VIDEO; // Infer format
-      multimedia.filename = file.originalname;
+      multimedia.filename = uniqueFilename; // Use the unique filename instead of original
       multimedia.fileSize = file.size;
 
       return await this.multimediaRepository.save(multimedia);
