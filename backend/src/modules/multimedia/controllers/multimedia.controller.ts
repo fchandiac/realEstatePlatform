@@ -38,17 +38,22 @@ export class MultimediaController {
   })
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body('type') type: MultimediaType,
-    @Body('seoTitle') seoTitle?: string,
-    @Body('description') description?: string,
-  ) {
-    return await this.multimediaService.uploadFile(file, type, {
-      seoTitle,
-      description,
-    });
+    @Body() metadata: MultimediaUploadMetadata,
+    @Res() res: Response,
+  ): Promise<void> {
+    try {
+      console.log('Endpoint reached: /multimedia/upload');
+      console.log('File received:', file);
+      console.log('Metadata received:', metadata);
+
+      const multimedia = await this.multimediaService.uploadFile(file, metadata, res.locals.userId);
+      res.status(HttpStatus.CREATED).json(multimedia);
+    } catch (error) {
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
   }
 
-  @Get(':filepath(*)')
+  @Get('*filepath')
   async serveFile(@Param('filepath') filepath: string, @Res() res: Response) {
     const file = await this.multimediaService.serveFile(filepath);
     res.end(file);

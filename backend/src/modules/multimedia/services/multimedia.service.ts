@@ -1,9 +1,9 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Multimedia, MultimediaType, MultimediaFormat } from '../../../entities/multimedia.entity';
 import { promises as fs } from 'fs';
 import * as path from 'path';
+import { Multimedia, MultimediaType, MultimediaFormat } from '../../../entities/multimedia.entity';
 import { MultimediaUploadMetadata, MultimediaResponse } from '../interfaces/multimedia.interface';
 import { StaticFilesService } from './static-files.service';
 
@@ -55,49 +55,34 @@ export class MultimediaService {
 
   async uploadFile(
     file: Express.Multer.File,
-    type: MultimediaType,
-    metadata: {
-      seoTitle?: string;
-      description?: string;
-    },
+    metadata: MultimediaUploadMetadata,
+    userId: string,
   ): Promise<Multimedia> {
-    const uploadPath = this.getUploadPath(type);
-    if (!uploadPath) {
-      throw new HttpException('Invalid multimedia type', HttpStatus.BAD_REQUEST);
-    }
+    const uploadDir = path.join(this.baseUploadPath, metadata.type);
 
-    const filename = `${Date.now()}-${file.originalname}`;
-    const fullPath = path.join(this.baseUploadPath, uploadPath, filename);
+    // Ensure the directory exists
+    await fs.mkdir(uploadDir, { recursive: true });
+
+    const filePath = path.join(uploadDir, file.originalname);
 
     try {
-      // Guardar archivo
-      await fs.writeFile(fullPath, file.buffer);
+      // Save the file to the upload directory
+      await fs.writeFile(filePath, file.buffer);
 
-      // Determinar el formato basado en el tipo MIME
-      const format = this.getFormatFromMimeType(file.mimetype);
-
-      // Crear registro en base de datos
+      // Save metadata to the database
       const multimedia = new Multimedia();
-      multimedia.type = type;
-      multimedia.format = format;
-      multimedia.filename = filename;
+      multimedia.type = metadata.type as MultimediaType;
+      multimedia.seoTitle = metadata.seoTitle;
+      multimedia.description = metadata.description;
+      multimedia.url = filePath;
+      multimedia.userId = userId || undefined; // Ensure userId is undefined if not provided
+      multimedia.format = file.mimetype.startsWith('image') ? MultimediaFormat.IMG : MultimediaFormat.VIDEO; // Infer format
+      multimedia.filename = file.originalname;
       multimedia.fileSize = file.size;
-      multimedia.url = `/${uploadPath}/${filename}`;
-      if (metadata.seoTitle) {
-        multimedia.seoTitle = metadata.seoTitle;
-      }
 
-      // Guardar en la base de datos
       return await this.multimediaRepository.save(multimedia);
     } catch (error) {
-      // Si hay error, intentar eliminar el archivo si se creó
-      try {
-        await fs.unlink(fullPath);
-      } catch {}
-      throw new HttpException(
-        'Error uploading file',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException('Error uploading file', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

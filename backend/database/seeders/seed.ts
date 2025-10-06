@@ -67,6 +67,27 @@ async function seedDatabase() {
       })
     );
 
+    // Create at least one agent user
+    const agentUser = await userRepository.save(
+      userRepository.create({
+        username: 'agent1',
+        email: 'agent@realestate.com',
+        password: await bcrypt.hash('password123', 10),
+        role: UserRole.AGENT,
+        status: UserStatus.ACTIVE,
+        personalInfo: {
+          firstName: 'Agent',
+          lastName: 'User',
+          phone: '+56 9 9876 5432',
+          avatar: 'https://ui-avatars.com/api/?name=Agent+User'
+        },
+        permissions: [Permission.MANAGE_PROPERTIES, Permission.ASSIGN_PROPERTY_AGENT],
+        lastLogin: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
+    );
+
     // Then seed random users
     const users = await userRepository.save(
       Array.from({ length: 20 }, (_, i) => {
@@ -79,8 +100,8 @@ async function seedDatabase() {
       })
     );
 
-    // Update people with user IDs
-    await personRepository.save(people);
+    // Add the admin and agent users to the users array
+    users.push(adminUser, agentUser);
     
         // Seed Property Types
     console.log('Seeding property types...');

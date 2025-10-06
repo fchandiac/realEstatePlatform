@@ -23,7 +23,7 @@
     "seed": "ts-node database/seeders/seed.ts",
     "seed:reset": "ts-node database/seeders/seed.ts --reset",
     "test:full": "npm run seed:reset && npm run test",
-    "test:multimedia": "npm run seed:reset && npm run test test/multimedia/multimedia.integration.spec.ts",
+    "test:multimedia": "npm run seed:reset && npm run test test/multimedia/multimedia.upload.spec.ts",
     "test:person": "npm run seed:reset && npm run test test/person/person.integration.spec.ts",
     "test:property": "npm run seed:reset && npm run test test/property/property.integration.spec.ts",
     "test:auth": "npm run seed:reset && npm run test test/auth/auth.integration.spec.ts"

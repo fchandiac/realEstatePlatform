@@ -38,13 +38,19 @@ export class Multimedia {
   url: string;
 
   @Column({ nullable: true })
-  seoTitle: string;
+  seoTitle?: string;
 
   @Column()
   filename: string;
 
   @Column('int')
   fileSize: number;
+
+  @Column({ nullable: true })
+  description?: string;
+
+  @Column({ nullable: true })
+  userId?: string;
 
   @CreateDateColumn()
   createdAt: Date;
