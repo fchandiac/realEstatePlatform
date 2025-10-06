@@ -239,7 +239,7 @@ describe('PropertyController (integration)', () => {
 
       expect(Array.isArray(response.body)).toBeTruthy();
       response.body.forEach(property => {
-        expect(property.operationType).toBe('VENTA');
+  expect(property.operationType).toBe('SALE');
       });
     });
   });
@@ -269,7 +269,7 @@ describe('PropertyController (integration)', () => {
       const updateData = {
         title: 'Updated Test Property',
         status: 'PUBLISHED',
-        operationType: 'ARRIENDO',
+        operationType: 'RENT',
         regionCommune: {
           region: 'Updated Region',
           communes: ['Updated Commune']
@@ -290,7 +290,7 @@ describe('PropertyController (integration)', () => {
 
     it('debe fallar al actualizar con precio negativo', async () => {
       const invalidUpdate = {
-        price: -1000
+        priceCLP: -1000
       };
 
       await request(app.getHttpServer())

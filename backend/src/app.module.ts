@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { databaseConfig } from './config/database.config';
+import { ormConfig } from './config/ormconfig';
 import { TeamMembersModule } from './modules/team-members/team-members.module';
 import { ArticlesModule } from './modules/articles/articles.module';
 import { TestimonialsModule } from './modules/testimonials/testimonials.module';
@@ -30,7 +30,7 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: databaseConfig,
+      useFactory: ormConfig,
       inject: [ConfigService],
     }),
     TeamMembersModule,

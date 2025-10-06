@@ -25,6 +25,7 @@ describe('AuthController (integration)', () => {
         ConfigModule.forRoot(),
         TypeOrmModule.forRoot({
           type: 'mysql',
+          driver: require('mysql2'),
           host: process.env.DB_HOST,
           port: parseInt(process.env.DB_PORT || '3306', 10),
           username: process.env.DB_USERNAME,

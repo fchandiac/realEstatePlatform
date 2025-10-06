@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString, IsOptional, IsEnum, IsNumber, IsUUID, ValidateNested, IsArray, IsDateString } from 'class-validator';
+import { Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PropertyStatus, PropertyOperationType, RegionCommune, MultimediaItem, PostRequest } from '../../../entities/property.entity';
 
@@ -114,10 +115,12 @@ export class UpdatePropertyDto {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
   priceCLP?: number;
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
   priceUF?: number;
 
   @IsOptional()
@@ -176,7 +179,7 @@ export class UpdatePropertyDto {
 
   @IsOptional()
   @IsEnum(PropertyOperationType)
-  operation?: PropertyOperationType;
+  operationType?: PropertyOperationType;
 
   @IsOptional()
   @ValidateNested()

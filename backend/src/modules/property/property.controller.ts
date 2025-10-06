@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ValidationPipe } from '@nestjs/common';
 import { PropertyService } from './property.service';
-import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
+import { CreatePropertyDto } from './dto/property.dto';
+import { UpdatePropertyDto } from '../properties/dto/property.dto';
 
 @Controller('properties')
 export class PropertyController {

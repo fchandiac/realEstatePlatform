@@ -7,6 +7,7 @@ dotenv.config({ path: join(__dirname, '../../.env') });
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
+  driver: require('mysql2'),
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '3306'),
   username: process.env.DB_USERNAME || 'root',

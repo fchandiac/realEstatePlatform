@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 
 export const databaseConfig = (configService: ConfigService): TypeOrmModuleOptions => ({
   type: 'mysql',
+  driver: require('mysql2'),
   host: configService.get<string>('DB_HOST'),
   port: configService.get<number>('DB_PORT'),
   username: configService.get<string>('DB_USERNAME'),

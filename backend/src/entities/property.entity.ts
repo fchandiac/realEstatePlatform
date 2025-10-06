@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { IsNotEmpty, IsString, IsOptional, IsEnum, IsNumber, IsUUID, ValidateNested, IsArray } from 'class-validator';
+import { Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { User } from './user.entity';
 
@@ -124,11 +125,13 @@ export class Property {
   @Column({ type: 'int', default: 0 })
   @IsNotEmpty()
   @IsNumber()
+  @Min(0)
   priceCLP: number;
 
   @Column({ type: 'float', default: 0 })
   @IsNotEmpty()
   @IsNumber()
+  @Min(0)
   priceUF: number;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
