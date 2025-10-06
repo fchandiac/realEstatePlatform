@@ -2,15 +2,11 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class JoseWrapperService {
-  private jose: any = null;
+  private jose: any;
 
   async getJose(): Promise<any> {
     if (!this.jose) {
-      try {
-        this.jose = await import('jose');
-      } catch (error) {
-        throw new Error(`Failed to load jose library: ${error.message}`);
-      }
+      this.jose = await import('jose');
     }
     return this.jose;
   }

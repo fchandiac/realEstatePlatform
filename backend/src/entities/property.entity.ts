@@ -13,8 +13,8 @@ export enum PropertyStatus {
 }
 
 export enum PropertyOperationType {
-  VENTA = 'VENTA',
-  ARRIENDO = 'ARRIENDO',
+  SALE = 'SALE',
+  RENT = 'RENT',
 }
 
 export class RegionCommune {
@@ -99,6 +99,14 @@ export class Property {
   @IsNotEmpty()
   @IsUUID()
   creatorUserId: string;
+
+  @Column({
+    type: 'enum',
+    enum: PropertyOperationType,
+  })
+  @IsNotEmpty()
+  @IsEnum(PropertyOperationType)
+  operationType: PropertyOperationType;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'creatorUserId' })

@@ -6,7 +6,11 @@ module.exports = {
     '<rootDir>/test/**/*.spec.ts'
   ],
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.(t|j)s$': ['ts-jest', {
+      tsconfig: {
+        allowJs: true,
+      },
+    }],
   },
   collectCoverageFrom: [
     'src/**/*.(t|j)s',
@@ -14,4 +18,7 @@ module.exports = {
   ],
   coverageDirectory: './coverage',
   testEnvironment: 'node',
+  moduleNameMapper: {
+    '^jose$': '<rootDir>/test/mocks/jose.mock.ts',
+  },
 };
