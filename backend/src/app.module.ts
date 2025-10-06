@@ -18,7 +18,7 @@ import { MultimediaModule } from './modules/multimedia/multimedia.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { DocumentTypesModule } from './modules/document-types/document-types.module';
 import { PropertyTypesModule } from './modules/property-types/property-types.module';
-import { AuthModule } from './auth/auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { AuditModule } from './audit/audit.module';
 import { AuditInterceptor } from './common/interceptors/audit.interceptor';
 
