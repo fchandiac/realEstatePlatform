@@ -27,7 +27,10 @@
     "test:person": "npm run seed:reset && npm run test test/person/person.integration.spec.ts",
     "test:property": "npm run seed:reset && npm run test test/property/property.integration.spec.ts",
     "test:auth": "npm run seed:reset && npm run test test/auth/auth.integration.spec.ts",
-    "test:contract": "npm run seed:reset && npm run test test/contract/contract.integration.spec.ts"
+    "test:contract": "npm run seed:reset && npm run test test/contract/contract.integration.spec.ts",
+    "test:team-member": "npm run seed:reset && npm run test test/team-member/team-member.integration.spec.ts",
+    "test:testimonial": "npm run seed:reset && npm run test test/testimonial/testimonial.integration.spec.ts",
+    "test:about-us": "npm run seed:reset && npm run test test/about-us/about-us.integration.spec.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
