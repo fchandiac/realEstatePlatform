@@ -26,7 +26,8 @@
     "test:multimedia": "npm run seed:reset && npm run test test/multimedia/multimedia.upload.spec.ts",
     "test:person": "npm run seed:reset && npm run test test/person/person.integration.spec.ts",
     "test:property": "npm run seed:reset && npm run test test/property/property.integration.spec.ts",
-    "test:auth": "npm run seed:reset && npm run test test/auth/auth.integration.spec.ts"
+    "test:auth": "npm run seed:reset && npm run test test/auth/auth.integration.spec.ts",
+    "test:contract": "npm run seed:reset && npm run test test/contract/contract.integration.spec.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
