@@ -13,3 +13,11 @@ export const decrypt = jest.fn().mockResolvedValue({
   plaintext: Buffer.from('mockPayload'),
   protectedHeader: { alg: 'RSA-OAEP-256', enc: 'A256GCM' }
 });
+export const EncryptJWT = jest.fn().mockImplementation(() => ({
+  setProtectedHeader: jest.fn().mockReturnThis(),
+  setIssuedAt: jest.fn().mockReturnThis(),
+  setIssuer: jest.fn().mockReturnThis(),
+  setAudience: jest.fn().mockReturnThis(),
+  setExpirationTime: jest.fn().mockReturnThis(),
+  encrypt: jest.fn().mockResolvedValue('mockToken')
+}));

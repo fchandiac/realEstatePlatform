@@ -26,8 +26,10 @@ export class AuthService {
 
   async signIn(loginDto: LoginDto): Promise<SignInResult> {
     try {
+      console.log('AuthService.signIn called');
       // Validate user credentials
       const user = await this.usersService.login(loginDto);
+      console.log('User validated:', user.id);
 
       // Create JWT payload
       const payload = {
@@ -35,9 +37,11 @@ export class AuthService {
         email: user.email,
         role: user.role,
       };
+      console.log('Payload created:', payload);
 
       // Generate JWE token
       const access_token = await this.jweService.encrypt(payload, '15m');
+      console.log('Token generated:', !!access_token);
 
       return {
         access_token,
@@ -53,6 +57,7 @@ export class AuthService {
         },
       };
     } catch (error) {
+      console.log('Error in signIn:', error.message);
       // Re-throw with generic message for security
       throw new UnauthorizedException('Credenciales inválidas');
     }

@@ -33,14 +33,16 @@ const mockJose = {
   }))
 };
 
-jest.mock('jose', () => mockJose);
-
 describe('PropertyController (integration)', () => {
   let app: INestApplication;
   let propertyRepository: Repository<Property>;
   let userRepository: Repository<User>;
   let adminToken: string;
   let testPropertyId: string;
+
+  beforeAll(() => {
+    jest.mock('jose', () => mockJose);
+  });
 
   beforeAll(async () => {
     try {

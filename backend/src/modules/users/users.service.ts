@@ -90,9 +90,19 @@ export class UsersService {
   }
 
   async login(loginDto: LoginDto): Promise<User> {
+    console.log('Login attempt for email:', loginDto.email);
     const user = await this.userRepository.findOne({
       where: { email: loginDto.email, deletedAt: IsNull() },
     });
+
+    console.log('User found:', !!user);
+    if (user) {
+      console.log('User status:', user.status);
+      console.log('Stored password hash:', user.password);
+      console.log('Provided password:', loginDto.password);
+      const isPasswordValid = await user.validatePassword(loginDto.password);
+      console.log('Password valid:', isPasswordValid);
+    }
 
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas.');

@@ -25,7 +25,7 @@ describe('AuthController (integration)', () => {
         ConfigModule.forRoot(),
         TypeOrmModule.forRoot({
           type: 'mysql',
-          driver: require('mysql2'),
+          connectorPackage: 'mysql2',
           host: process.env.DB_HOST,
           port: parseInt(process.env.DB_PORT || '3306', 10),
           username: process.env.DB_USERNAME,
@@ -55,17 +55,31 @@ describe('AuthController (integration)', () => {
   });
 
   it('debe registrar y loguear un usuario real', async () => {
-    // 1. Crear usuario directamente en la base de datos
+    // 1. Registrar usuario vía API
     const password = 'Test1234!';
-    const user = userRepository.create({
+    const registerData = {
       username: 'testintegration',
       email: 'test.integration@example.com',
-      password: '', // será seteado por setPassword
-      status: 'ACTIVE',
-      role: 'COMMUNITY',
-    } as Partial<User>);
-    await user.setPassword(password);
-    await userRepository.save(user);
+      password: password,
+      personalInfo: {
+        firstName: 'Test',
+        lastName: 'Integration',
+        phone: '+56912345678'
+      }
+    };
+
+    const registerResponse = await request(app.getHttpServer())
+      .post('/users')
+      .send(registerData)
+      .expect(201);
+
+    console.log('Register response:', registerResponse.body);
+
+    // Verificar que el usuario se creó
+    const createdUser = await userRepository.findOne({
+      where: { email: 'test.integration@example.com' }
+    });
+    console.log('Created user:', createdUser);
 
     // 2. Hacer login vía API
     const res = await request(app.getHttpServer())
