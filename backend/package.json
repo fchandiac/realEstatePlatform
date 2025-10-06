@@ -34,7 +34,8 @@
     "test:document-type": "npm run seed:reset && npm run test test/document-type/document-type.integration.spec.ts",
     "test:identity": "npm run seed:reset && npm run test test/identity/identity.integration.spec.ts",
     "test:notification": "npm run seed:reset && npm run test test/notification/notification.integration.spec.ts",
-    "test:article": "npm run seed:reset && npm run test test/article/article.integration.spec.ts"
+    "test:article": "npm run seed:reset && npm run test test/article/article.integration.spec.ts",
+    "test:audit-log": "npm run seed:reset && npm run test test/audit-log/audit-log.integration.spec.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
