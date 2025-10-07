@@ -77,3 +77,16 @@ export class ChangePasswordDto {
   @IsString()
   newPassword: string;
 }
+
+export class AssignRoleDto {
+  @IsNotEmpty()
+  @IsEnum(UserRole)
+  role: UserRole;
+}
+
+export class UpdatePermissionsDto {
+  @IsNotEmpty()
+  @IsArray()
+  @IsEnum(Permission, { each: true })
+  permissions: Permission[];
+}

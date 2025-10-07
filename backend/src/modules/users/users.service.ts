@@ -1,15 +1,19 @@
-import { Injectable, NotFoundException, ConflictException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, UnauthorizedException, BadRequestException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User, UserStatus, UserRole, Permission } from '../../entities/user.entity';
 import { CreateUserDto, UpdateUserDto, LoginDto, ChangePasswordDto } from './dto/user.dto';
+import { AuditService } from '../../audit/audit.service';
+import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject(AuditService)
+    private readonly auditService: AuditService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -120,37 +124,117 @@ export class UsersService {
     return user;
   }
 
-  async changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<void> {
-    const user = await this.findOne(id);
-
-    const isCurrentPasswordValid = await user.validatePassword(changePasswordDto.currentPassword);
-    if (!isCurrentPasswordValid) {
-      throw new UnauthorizedException('Contraseña actual incorrecta.');
-    }
-
-    await user.setPassword(changePasswordDto.newPassword);
-    await this.userRepository.save(user);
-  }
-
-  async setStatus(id: string, status: UserStatus): Promise<User> {
-    const user = await this.findOne(id);
-    user.status = status;
-    return await this.userRepository.save(user);
-  }
-
   async assignRole(id: string, role: UserRole): Promise<User> {
     const user = await this.findOne(id);
+    const oldRole = user.role;
     user.role = role;
-    return await this.userRepository.save(user);
+    const updatedUser = await this.userRepository.save(user);
+
+    // Audit logging
+    await this.auditService.createAuditLog({
+      userId: id,
+      action: AuditAction.ROLE_CHANGED,
+      entityType: AuditEntityType.USER,
+      entityId: id,
+      description: `Rol del usuario cambiado de ${oldRole} a ${role}`,
+      oldValues: { role: oldRole },
+      newValues: { role },
+      success: true,
+    });
+
+    return updatedUser;
   }
 
   async setPermissions(id: string, permissions: Permission[]): Promise<User> {
     const user = await this.findOne(id);
+    const oldPermissions = user.permissions;
     user.permissions = permissions;
-    return await this.userRepository.save(user);
+    const updatedUser = await this.userRepository.save(user);
+
+    // Audit logging
+    await this.auditService.createAuditLog({
+      userId: id,
+      action: AuditAction.PERMISSIONS_CHANGED,
+      entityType: AuditEntityType.USER,
+      entityId: id,
+      description: `Permisos del usuario actualizados`,
+      oldValues: { permissions: oldPermissions },
+      newValues: { permissions },
+      success: true,
+    });
+
+    return updatedUser;
+  }
+
+  async changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    const isCurrentPasswordValid = await bcrypt.compare(changePasswordDto.currentPassword, user.password);
+    if (!isCurrentPasswordValid) {
+      throw new UnauthorizedException('Contraseña actual incorrecta');
+    }
+
+    const hashedNewPassword = await bcrypt.hash(changePasswordDto.newPassword, 12);
+    await this.userRepository.update(id, { password: hashedNewPassword });
+
+    // Audit log
+    await this.auditService.createAuditLog({
+      userId: id,
+      action: AuditAction.PASSWORD_CHANGED,
+      entityType: AuditEntityType.USER,
+      entityId: id,
+      description: `Contraseña cambiada para el usuario ${user.email}`,
+      success: true,
+    });
+  }
+
+  async setStatus(id: string, status: UserStatus): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    const oldStatus = user.status;
+    user.status = status;
+    const updatedUser = await this.userRepository.save(user);
+
+    // Audit logging
+    await this.auditService.createAuditLog({
+      userId: id,
+      action: AuditAction.STATUS_CHANGED,
+      entityType: AuditEntityType.USER,
+      entityId: id,
+      description: `Estado del usuario cambiado de ${oldStatus} a ${status}`,
+      oldValues: { status: oldStatus },
+      newValues: { status },
+      success: true,
+    });
+
+    return updatedUser;
   }
 
   async getProfile(id: string): Promise<User> {
-    return await this.findOne(id);
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    // Audit logging
+    await this.auditService.createAuditLog({
+      userId: id,
+      action: AuditAction.PROFILE_VIEWED,
+      entityType: AuditEntityType.USER,
+      entityId: id,
+      description: `Perfil del usuario ${user.email} visualizado`,
+      success: true,
+    });
+
+    return user;
   }
 }

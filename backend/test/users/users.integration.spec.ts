@@ -5,7 +5,7 @@ import request from 'supertest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from '../../src/modules/users/users.module';
 import { AuthModule } from '../../src/auth/auth/auth.module';
-import { User, UserRole, UserStatus } from '../../src/entities/user.entity';
+import { User, UserRole, UserStatus, Permission } from '../../src/entities/user.entity';
 import { AuditLog } from '../../src/entities/audit-log.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -71,8 +71,10 @@ describe('UsersController (integration)', () => {
 
   afterAll(async () => {
     // Limpiar datos de prueba
-    await userRepository.delete({ email: 'admin.test@example.com' });
-    await userRepository.delete({ email: 'test.user@example.com' });
+    if (userRepository) {
+      await userRepository.delete({ email: 'admin.test@example.com' });
+      await userRepository.delete({ email: 'test.user@example.com' });
+    }
     await app.close();
   });
 
@@ -168,17 +170,153 @@ describe('UsersController (integration)', () => {
     });
   });
 
-  describe('DELETE /users/:id', () => {
-    it('debe eliminar un usuario existente', async () => {
+  describe('PATCH /users/:id/change-password', () => {
+    it('debe cambiar la contraseña de un usuario', async () => {
+      // Primero cambiar el estado a ACTIVE para poder hacer login
       await request(app.getHttpServer())
-        .delete(`/users/${testUserId}`)
+        .patch(`/users/${testUserId}/status`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ status: UserStatus.ACTIVE })
+        .expect(200);
+
+      const changePasswordData = {
+        currentPassword: 'Test123!',
+        newPassword: 'NewTest123!'
+      };
+
+      await request(app.getHttpServer())
+        .patch(`/users/${testUserId}/change-password`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send(changePasswordData)
+        .expect(200);
+
+      // Verificar que la nueva contraseña funciona
+      const loginResponse = await request(app.getHttpServer())
+        .post('/auth/sign-in')
+        .send({
+          email: 'test.user@example.com',
+          password: 'NewTest123!'
+        })
+        .expect(200);
+
+      expect(loginResponse.body.access_token).toBeDefined();
+    });
+
+    it('debe fallar con contraseña actual incorrecta', async () => {
+      const changePasswordData = {
+        currentPassword: 'WrongPassword!',
+        newPassword: 'NewTest123!'
+      };
+
+      await request(app.getHttpServer())
+        .patch(`/users/${testUserId}/change-password`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send(changePasswordData)
+        .expect(401);
+    });
+
+    it('debe fallar al cambiar contraseña de usuario que no existe', async () => {
+      const changePasswordData = {
+        currentPassword: 'Test123!',
+        newPassword: 'NewTest123!'
+      };
+
+      await request(app.getHttpServer())
+        .patch('/users/99999999-9999-9999-9999-999999999999/change-password')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send(changePasswordData)
+        .expect(404);
+    });
+  });
+
+  describe('GET /users/:id/profile', () => {
+    it('debe obtener el perfil extendido de un usuario', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/users/${testUserId}/profile`)
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(200);
 
-      // Verificar que el usuario fue eliminado
+      expect(response.body).toBeDefined();
+      expect(response.body.id).toBe(testUserId);
+      expect(response.body).toHaveProperty('username');
+      expect(response.body).toHaveProperty('email');
+      expect(response.body).toHaveProperty('role');
+      expect(response.body).toHaveProperty('status');
+      expect(response.body).toHaveProperty('permissions');
+      expect(response.body).toHaveProperty('personalInfo');
+    });
+
+    it('debe fallar al obtener perfil de usuario que no existe', async () => {
       await request(app.getHttpServer())
-        .get(`/users/${testUserId}`)
+        .get('/users/99999999-9999-9999-9999-999999999999/profile')
         .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404);
+    });
+  });
+
+  describe('PATCH /users/:id/status', () => {
+    it('debe cambiar el estado de un usuario', async () => {
+      const response = await request(app.getHttpServer())
+        .patch(`/users/${testUserId}/status`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ status: UserStatus.INACTIVE })
+        .expect(200);
+
+      expect(response.body).toBeDefined();
+      expect(response.body.id).toBe(testUserId);
+      expect(response.body.status).toBe(UserStatus.INACTIVE);
+    });
+
+    it('debe fallar al cambiar estado de usuario que no existe', async () => {
+      await request(app.getHttpServer())
+        .patch('/users/99999999-9999-9999-9999-999999999999/status')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404);
+    });
+  });
+
+  describe('PATCH /users/:id/role', () => {
+    it('debe cambiar el rol de un usuario', async () => {
+      const response = await request(app.getHttpServer())
+        .patch(`/users/${testUserId}/role`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ role: UserRole.AGENT })
+        .expect(200);
+
+      expect(response.body).toBeDefined();
+      expect(response.body.id).toBe(testUserId);
+      expect(response.body.role).toBe(UserRole.AGENT);
+    });
+
+    it('debe fallar al cambiar rol de usuario que no existe', async () => {
+      await request(app.getHttpServer())
+        .patch('/users/99999999-9999-9999-9999-999999999999/role')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ role: UserRole.ADMIN })
+        .expect(404);
+    });
+  });
+
+  describe('PATCH /users/:id/permissions', () => {
+    it('debe cambiar los permisos de un usuario', async () => {
+      const newPermissions = [Permission.MANAGE_USERS, Permission.MANAGE_PROPERTIES];
+
+      const response = await request(app.getHttpServer())
+        .patch(`/users/${testUserId}/permissions`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ permissions: newPermissions })
+        .expect(200);
+
+      expect(response.body).toBeDefined();
+      expect(response.body.id).toBe(testUserId);
+      expect(response.body.permissions).toEqual(newPermissions);
+    });
+
+    it('debe fallar al cambiar permisos de usuario que no existe', async () => {
+      await request(app.getHttpServer())
+        .patch('/users/99999999-9999-9999-9999-999999999999/permissions')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ permissions: [Permission.MANAGE_USERS] })
         .expect(404);
     });
   });
