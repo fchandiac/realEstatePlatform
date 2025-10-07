@@ -45,4 +45,11 @@ export class AboutUsService {
     const aboutUs = await this.findOne(id);
     await this.aboutUsRepository.softDelete(id);
   }
+
+  async findLatest(): Promise<AboutUs | null> {
+    return await this.aboutUsRepository.findOne({
+      where: { deletedAt: IsNull() },
+      order: { createdAt: 'DESC' },
+    });
+  }
 }

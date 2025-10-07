@@ -33,6 +33,17 @@ La entidad AboutUs permite almacenar información corporativa de la empresa, inc
 }
 ```
 
+## Endpoints disponibles
+
+| Método | Endpoint              | Descripción                                 | Parámetros |
+|--------|-----------------------|---------------------------------------------|------------|
+| GET    | /about-us             | Obtiene todas las entradas corporativas     | - |
+| GET    | /about-us/latest      | Obtiene la entrada corporativa más reciente | - |
+| GET    | /about-us/:id         | Obtiene una entrada por ID                  | id (UUID) |
+| POST   | /about-us             | Crea nueva entrada corporativa              | Body con datos |
+| PATCH  | /about-us/:id         | Actualiza entrada existente                 | id, body con datos |
+| DELETE | /about-us/:id         | Elimina entrada (soft delete)               | id |
+
 ## Métodos asociados a la entidad About
 
 | Método      | Parámetros                | Descripción                                 | Validaciones / Mensajes de error |
@@ -40,5 +51,6 @@ La entidad AboutUs permite almacenar información corporativa de la empresa, inc
 | create      | bio, mision, vision, multimediaUrl | Crea una nueva entrada de información corporativa. | - |
 | findAll     | -                        | Obtiene la lista de todas las entradas corporativas. | - |
 | findOne     | id                       | Obtiene una entrada corporativa por su identificador. | Si no existe: "Información corporativa no encontrada." |
+| findLatest  | -                        | Obtiene la entrada corporativa más reciente. | Retorna null si no hay registros. |
 | update      | id, datos a modificar    | Actualiza los datos de la información corporativa. | Validar existencia de la entrada. |
 | softDelete  | id                       | Realiza un borrado lógico de la información corporativa. | Si no existe: "Información corporativa no encontrada." |

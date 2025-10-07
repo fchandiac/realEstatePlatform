@@ -16,6 +16,11 @@ export class AboutUsController {
     return this.aboutUsService.findAll();
   }
 
+  @Get('latest')
+  findLatest() {
+    return this.aboutUsService.findLatest();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.aboutUsService.findOne(id);
