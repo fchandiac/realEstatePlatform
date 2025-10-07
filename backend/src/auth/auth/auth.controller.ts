@@ -1,7 +1,10 @@
 import { Controller, Post, Body, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../../modules/users/dto/user.dto';
-import { Audit, AuditInterceptor } from '../../common/interceptors/audit.interceptor';
+import {
+  Audit,
+  AuditInterceptor,
+} from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 
 @Controller('auth')

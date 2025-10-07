@@ -37,7 +37,7 @@ describe('AuthController (integration)', () => {
         TypeOrmModule.forFeature([User]),
         UsersModule,
         AuthModule,
-        AuditModule
+        AuditModule,
       ],
     }).compile();
 
@@ -45,7 +45,9 @@ describe('AuthController (integration)', () => {
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     await app.init();
 
-    userRepository = moduleFixture.get<Repository<User>>(getRepositoryToken(User));
+    userRepository = moduleFixture.get<Repository<User>>(
+      getRepositoryToken(User),
+    );
   });
 
   afterAll(async () => {
@@ -64,8 +66,8 @@ describe('AuthController (integration)', () => {
       personalInfo: {
         firstName: 'Test',
         lastName: 'Integration',
-        phone: '+56912345678'
-      }
+        phone: '+56912345678',
+      },
     };
 
     const registerResponse = await request(app.getHttpServer())
@@ -77,7 +79,7 @@ describe('AuthController (integration)', () => {
 
     // Verificar que el usuario se creó
     const createdUser = await userRepository.findOne({
-      where: { email: 'test.integration@example.com' }
+      where: { email: 'test.integration@example.com' },
     });
     console.log('Created user:', createdUser);
 

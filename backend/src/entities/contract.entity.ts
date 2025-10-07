@@ -1,17 +1,26 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 import { Property } from './property.entity';
 
 export enum ContractOperationType {
   COMPRAVENTA = 'COMPRAVENTA',
-  ARRIENDO = 'ARRIENDO'
+  ARRIENDO = 'ARRIENDO',
 }
 
 export enum ContractStatus {
   IN_PROCESS = 'IN_PROCESS',
   CLOSED = 'CLOSED',
   FAILED = 'FAILED',
-  ON_HOLD = 'ON_HOLD'
+  ON_HOLD = 'ON_HOLD',
 }
 
 export enum ContractRole {
@@ -20,7 +29,7 @@ export enum ContractRole {
   LANDLORD = 'LANDLORD',
   TENANT = 'TENANT',
   GUARANTOR = 'GUARANTOR',
-  AGENT = 'AGENT'
+  AGENT = 'AGENT',
 }
 
 export interface ContractPerson {
@@ -54,14 +63,14 @@ export class Contract {
 
   @Column({
     type: 'enum',
-    enum: ContractOperationType
+    enum: ContractOperationType,
   })
   operation: ContractOperationType;
 
   @Column({
     type: 'enum',
     enum: ContractStatus,
-    default: ContractStatus.IN_PROCESS
+    default: ContractStatus.IN_PROCESS,
   })
   status: ContractStatus;
 

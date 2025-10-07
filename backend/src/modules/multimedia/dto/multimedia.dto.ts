@@ -1,5 +1,16 @@
-import { IsNotEmpty, IsEnum, IsOptional, IsString, IsUrl, IsNumber, IsPositive } from 'class-validator';
-import { MultimediaFormat, MultimediaType } from '../../../entities/multimedia.entity';
+import {
+  IsNotEmpty,
+  IsEnum,
+  IsOptional,
+  IsString,
+  IsUrl,
+  IsNumber,
+  IsPositive,
+} from 'class-validator';
+import {
+  MultimediaFormat,
+  MultimediaType,
+} from '../../../entities/multimedia.entity';
 
 export class CreateMultimediaDto {
   @IsEnum(MultimediaFormat)

@@ -1,6 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ValidationPipe,
+} from '@nestjs/common';
 import { TeamMembersService } from './team-members.service';
-import { CreateTeamMemberDto, UpdateTeamMemberDto } from './dto/team-member.dto';
+import {
+  CreateTeamMemberDto,
+  UpdateTeamMemberDto,
+} from './dto/team-member.dto';
 
 @Controller('team-members')
 export class TeamMembersController {

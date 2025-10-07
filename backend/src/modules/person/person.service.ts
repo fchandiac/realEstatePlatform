@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Person } from '../../entities/person.entity';
@@ -46,14 +50,15 @@ export class PersonService {
     const person = await this.findOne(id);
 
     // Si se está actualizando el DNI, verificar que no exista
-      if (updatePersonDto.dni && updatePersonDto.dni !== person.dni) {
+    if (updatePersonDto.dni && updatePersonDto.dni !== person.dni) {
       const existingPerson = await this.personRepository.findOne({
         where: { dni: updatePersonDto.dni },
       });
       if (existingPerson) {
         throw new ConflictException('Ya existe una persona con ese DNI');
       }
-    }    Object.assign(person, updatePersonDto);
+    }
+    Object.assign(person, updatePersonDto);
     return await this.personRepository.save(person);
   }
 

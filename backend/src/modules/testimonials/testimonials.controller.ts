@@ -1,14 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ValidationPipe,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { TestimonialsService } from './testimonials.service';
-import { CreateTestimonialDto, UpdateTestimonialDto } from './dto/testimonial.dto';
+import {
+  CreateTestimonialDto,
+  UpdateTestimonialDto,
+} from './dto/testimonial.dto';
 
 @Controller('testimonials')
 export class TestimonialsController {
   constructor(private readonly testimonialsService: TestimonialsService) {}
 
   @Post()
-  create(@Body(ValidationPipe) createTestimonialDto: CreateTestimonialDto) {
-    return this.testimonialsService.create(createTestimonialDto);
+  @UseInterceptors(FileInterceptor('file'))
+  create(
+    @Body(ValidationPipe) createTestimonialDto: CreateTestimonialDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.testimonialsService.create(createTestimonialDto, file);
   }
 
   @Get()

@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, IsOptional, IsEmail, ValidateNested } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsEmail,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { SocialMedia, Partnership } from '../../../entities/identity.entity';
 

@@ -39,7 +39,7 @@ describe('ArticleController (integration)', () => {
       subtitle: 'Todo lo que necesitas saber antes de invertir',
       text: 'Comprar una casa es una de las decisiones más importantes en la vida. En este artículo te explicamos los pasos a seguir, documentos necesarios y consejos para tomar la mejor decisión.',
       multimediaUrl: 'https://example.com/images/guia-compra-casa.jpg',
-      category: ArticleCategory.COMPRAR
+      category: ArticleCategory.COMPRAR,
     };
 
     const response = await request(app.getHttpServer())
@@ -88,7 +88,7 @@ describe('ArticleController (integration)', () => {
       title: 'Guía Actualizada para Comprar tu Primera Casa',
       subtitle: 'Versión ampliada con más consejos',
       text: 'Comprar una casa es una de las decisiones más importantes en la vida. En esta versión actualizada incluimos consejos adicionales sobre financiamiento y negociación.',
-      category: ArticleCategory.INVERSION
+      category: ArticleCategory.INVERSION,
     };
 
     const response = await request(app.getHttpServer())
@@ -131,7 +131,7 @@ describe('ArticleController (integration)', () => {
     const invalidData = {
       title: '', // título vacío
       text: '', // texto vacío
-      category: 'INVALID_CATEGORY' // categoría inválida
+      category: 'INVALID_CATEGORY', // categoría inválida
     };
 
     const response = await request(app.getHttpServer())

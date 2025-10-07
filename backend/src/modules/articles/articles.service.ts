@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Article } from '../../entities/article.entity';
@@ -43,7 +47,10 @@ export class ArticlesService {
     return article;
   }
 
-  async update(id: string, updateArticleDto: UpdateArticleDto): Promise<Article> {
+  async update(
+    id: string,
+    updateArticleDto: UpdateArticleDto,
+  ): Promise<Article> {
     const article = await this.findOne(id);
 
     // Check if title is being updated and already exists

@@ -35,7 +35,10 @@ export class IdentitiesService {
     return identity;
   }
 
-  async update(id: string, updateIdentityDto: UpdateIdentityDto): Promise<Identity> {
+  async update(
+    id: string,
+    updateIdentityDto: UpdateIdentityDto,
+  ): Promise<Identity> {
     const identity = await this.findOne(id);
     Object.assign(identity, updateIdentityDto);
     return await this.identityRepository.save(identity);

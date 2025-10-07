@@ -1,4 +1,7 @@
-import { MultimediaFormat, MultimediaType } from '../../../entities/multimedia.entity';
+import {
+  MultimediaFormat,
+  MultimediaType,
+} from '../../../entities/multimedia.entity';
 
 export interface MultimediaUploadMetadata {
   type: string;

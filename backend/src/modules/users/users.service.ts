@@ -1,9 +1,26 @@
-import { Injectable, NotFoundException, ConflictException, UnauthorizedException, BadRequestException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  UnauthorizedException,
+  BadRequestException,
+  Inject,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User, UserStatus, UserRole, Permission } from '../../entities/user.entity';
-import { CreateUserDto, UpdateUserDto, LoginDto, ChangePasswordDto } from './dto/user.dto';
+import {
+  User,
+  UserStatus,
+  UserRole,
+  Permission,
+} from '../../entities/user.entity';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  LoginDto,
+  ChangePasswordDto,
+} from './dto/user.dto';
 import { AuditService } from '../../audit/audit.service';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 
@@ -26,7 +43,9 @@ export class UsersService {
     });
 
     if (existingUser) {
-      throw new ConflictException('El nombre de usuario o correo ya está registrado.');
+      throw new ConflictException(
+        'El nombre de usuario o correo ya está registrado.',
+      );
     }
 
     const user = this.userRepository.create({
@@ -166,18 +185,27 @@ export class UsersService {
     return updatedUser;
   }
 
-  async changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<void> {
+  async changePassword(
+    id: string,
+    changePasswordDto: ChangePasswordDto,
+  ): Promise<void> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
     }
 
-    const isCurrentPasswordValid = await bcrypt.compare(changePasswordDto.currentPassword, user.password);
+    const isCurrentPasswordValid = await bcrypt.compare(
+      changePasswordDto.currentPassword,
+      user.password,
+    );
     if (!isCurrentPasswordValid) {
       throw new UnauthorizedException('Contraseña actual incorrecta');
     }
 
-    const hashedNewPassword = await bcrypt.hash(changePasswordDto.newPassword, 12);
+    const hashedNewPassword = await bcrypt.hash(
+      changePasswordDto.newPassword,
+      12,
+    );
     await this.userRepository.update(id, { password: hashedNewPassword });
 
     // Audit log

@@ -3,7 +3,11 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { DataSource } from 'typeorm';
-import { AuditAction, AuditEntityType, RequestSource } from '../../src/common/enums/audit.enums';
+import {
+  AuditAction,
+  AuditEntityType,
+  RequestSource,
+} from '../../src/common/enums/audit.enums';
 
 describe('AuditController (integration)', () => {
   let app: INestApplication;
@@ -39,7 +43,7 @@ describe('AuditController (integration)', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .query({
         limit: 10,
-        offset: 0
+        offset: 0,
       })
       .expect(200);
 
@@ -55,7 +59,7 @@ describe('AuditController (integration)', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .query({
         action: AuditAction.LOGIN,
-        limit: 5
+        limit: 5,
       })
       .expect(200);
 
@@ -76,7 +80,7 @@ describe('AuditController (integration)', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .query({
         entityType: AuditEntityType.USER,
-        limit: 5
+        limit: 5,
       })
       .expect(200);
 
@@ -97,7 +101,7 @@ describe('AuditController (integration)', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .query({
         success: true,
-        limit: 5
+        limit: 5,
       })
       .expect(200);
 
@@ -118,7 +122,7 @@ describe('AuditController (integration)', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .query({
         source: RequestSource.USER,
-        limit: 5
+        limit: 5,
       })
       .expect(200);
 
@@ -141,7 +145,10 @@ describe('AuditController (integration)', () => {
       .query({ limit: 1 })
       .expect(200);
 
-    if (allLogsResponse.body.logs.length > 0 && allLogsResponse.body.logs[0].userId) {
+    if (
+      allLogsResponse.body.logs.length > 0 &&
+      allLogsResponse.body.logs[0].userId
+    ) {
       const userId = allLogsResponse.body.logs[0].userId;
 
       const response = await request(app.getHttpServer())
@@ -294,7 +301,7 @@ describe('AuditController (integration)', () => {
       .query({
         dateFrom: dateFrom.toISOString(),
         dateTo: dateTo.toISOString(),
-        limit: 10
+        limit: 10,
       })
       .expect(200);
 

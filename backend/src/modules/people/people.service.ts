@@ -1,8 +1,17 @@
-import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Person } from '../../entities/person.entity';
-import { CreatePersonDto, UpdatePersonDto, LinkUserDto } from './dto/person.dto';
+import {
+  CreatePersonDto,
+  UpdatePersonDto,
+  LinkUserDto,
+} from './dto/person.dto';
 
 @Injectable()
 export class PeopleService {
@@ -15,7 +24,7 @@ export class PeopleService {
     // Check if DNI already exists
     if (createPersonDto.dni) {
       const existingPerson = await this.personRepository.findOne({
-        where: { dni: createPersonDto.dni, deletedAt: IsNull() }
+        where: { dni: createPersonDto.dni, deletedAt: IsNull() },
       });
       if (existingPerson) {
         throw new ConflictException('El DNI ya está registrado');
@@ -52,7 +61,7 @@ export class PeopleService {
     // Check if DNI already exists (if being updated)
     if (updatePersonDto.dni && updatePersonDto.dni !== person.dni) {
       const existingPerson = await this.personRepository.findOne({
-        where: { dni: updatePersonDto.dni, deletedAt: IsNull() }
+        where: { dni: updatePersonDto.dni, deletedAt: IsNull() },
       });
       if (existingPerson) {
         throw new ConflictException('El DNI ya está registrado');
@@ -94,7 +103,9 @@ export class PeopleService {
     const person = await this.findOne(id);
 
     if (person.verificationRequest) {
-      throw new BadRequestException('Ya existe una solicitud de verificación pendiente');
+      throw new BadRequestException(
+        'Ya existe una solicitud de verificación pendiente',
+      );
     }
 
     person.verificationRequest = new Date();
@@ -117,7 +128,9 @@ export class PeopleService {
     const person = await this.findOne(id);
 
     if (!person.userId) {
-      throw new BadRequestException('No existe usuario vinculado a esta persona');
+      throw new BadRequestException(
+        'No existe usuario vinculado a esta persona',
+      );
     }
 
     person.userId = null;

@@ -34,7 +34,10 @@ export class MultimediaService {
     return multimedia;
   }
 
-  async update(id: string, updateMultimediaDto: UpdateMultimediaDto): Promise<Multimedia> {
+  async update(
+    id: string,
+    updateMultimediaDto: UpdateMultimediaDto,
+  ): Promise<Multimedia> {
     const multimedia = await this.findOne(id);
 
     Object.assign(multimedia, updateMultimediaDto);

@@ -1,4 +1,14 @@
-import { Controller, Post, Get, Delete, Param, UploadedFile, UseInterceptors, Body, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Delete,
+  Param,
+  UploadedFile,
+  UseInterceptors,
+  Body,
+  HttpStatus,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DocumentsService } from '../services/documents.service';
 import { ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
@@ -56,7 +66,7 @@ export class DocumentsController {
         parsedMetadata = undefined;
       }
     }
-    
+
     return await this.documentsService.uploadDocument({
       file,
       documentTypeId,
@@ -73,6 +83,9 @@ export class DocumentsController {
   @Delete(':id')
   async deleteDocument(@Param('id') id: string) {
     await this.documentsService.deleteDocument(id);
-    return { statusCode: HttpStatus.OK, message: 'Document deleted successfully' };
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Document deleted successfully',
+    };
   }
 }

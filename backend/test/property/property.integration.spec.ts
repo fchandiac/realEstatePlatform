@@ -29,8 +29,8 @@ const mockJose = {
     setIssuer: jest.fn().mockReturnThis(),
     setAudience: jest.fn().mockReturnThis(),
     setExpirationTime: jest.fn().mockReturnThis(),
-    encrypt: jest.fn().mockResolvedValue('mockToken')
-  }))
+    encrypt: jest.fn().mockResolvedValue('mockToken'),
+  })),
 };
 
 describe('PropertyController (integration)', () => {
@@ -49,64 +49,72 @@ describe('PropertyController (integration)', () => {
       // Ejecutar seed:reset antes de las pruebas
       console.log('🔄 Resetting database to initial state...');
       await new Promise((resolve, reject) => {
-        const seedProcess = exec('npm run seed:reset', { env: process.env }, (error) => {
-          if (error) {
-            console.error('❌ Failed to reset database:', error.message);
-            reject(error);
-          } else {
-            console.log('✅ Database reset successful');
-            resolve(true);
-          }
-        });
+        const seedProcess = exec(
+          'npm run seed:reset',
+          { env: process.env },
+          (error) => {
+            if (error) {
+              console.error('❌ Failed to reset database:', error.message);
+              reject(error);
+            } else {
+              console.log('✅ Database reset successful');
+              resolve(true);
+            }
+          },
+        );
         seedProcess.stdout?.pipe(process.stdout);
         seedProcess.stderr?.pipe(process.stderr);
       });
 
       const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot(),
-        TypeOrmModule.forRoot({
-          type: 'mysql',
-          host: process.env.DB_HOST,
-          port: parseInt(process.env.DB_PORT || '3306', 10),
-          username: process.env.DB_USERNAME,
-          password: process.env.DB_PASSWORD,
-          database: process.env.DB_DATABASE,
-          entities: [Property, User, AuditLog],
-          synchronize: true,
-        }),
-        TypeOrmModule.forFeature([Property, User]),
-        PropertyModule,
-        UsersModule,
-        AuthModule,
-        AuditModule
-      ],
-    }).compile();
+        imports: [
+          ConfigModule.forRoot(),
+          TypeOrmModule.forRoot({
+            type: 'mysql',
+            host: process.env.DB_HOST,
+            port: parseInt(process.env.DB_PORT || '3306', 10),
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_DATABASE,
+            entities: [Property, User, AuditLog],
+            synchronize: true,
+          }),
+          TypeOrmModule.forFeature([Property, User]),
+          PropertyModule,
+          UsersModule,
+          AuthModule,
+          AuditModule,
+        ],
+      }).compile();
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-    await app.init();
+      app = moduleFixture.createNestApplication();
+      app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+      await app.init();
 
-    propertyRepository = moduleFixture.get<Repository<Property>>(getRepositoryToken(Property));
-    userRepository = moduleFixture.get<Repository<User>>(getRepositoryToken(User));
+      propertyRepository = moduleFixture.get<Repository<Property>>(
+        getRepositoryToken(Property),
+      );
+      userRepository = moduleFixture.get<Repository<User>>(
+        getRepositoryToken(User),
+      );
 
-    // Crear usuario admin para las pruebas
-    const adminUser = userRepository.create({
-      username: 'admin.property.test',
-      email: 'admin.property.test@example.com',
-      role: UserRole.ADMIN,
-      status: UserStatus.ACTIVE
-    });
-    await adminUser.setPassword('Admin123!');
-    const savedAdmin = await userRepository.save(adminUser);
-
-    // Obtener token de admin
-    const loginResponse = await request(app.getHttpServer())
-      .post('/auth/sign-in')
-      .send({
+      // Crear usuario admin para las pruebas
+      const adminUser = userRepository.create({
+        username: 'admin.property.test',
         email: 'admin.property.test@example.com',
-        password: 'Admin123!'
+        role: UserRole.ADMIN,
+        status: UserStatus.ACTIVE,
       });
+      await adminUser.setPassword('Admin123!');
+      const savedAdmin = await userRepository.save(adminUser);
+
+      // Obtener token de admin
+      const loginResponse = await request(app.getHttpServer())
+        .post('/auth/sign-in')
+        .send({
+          email: 'admin.property.test@example.com',
+          password: 'Admin123!',
+        });
 
       adminToken = loginResponse.body.access_token;
     } catch (error) {
@@ -115,22 +123,18 @@ describe('PropertyController (integration)', () => {
     }
   });
 
-
-
-
-
   afterAll(async () => {
     try {
       // Eliminar registros existentes
       if (propertyRepository && userRepository) {
         const properties = await propertyRepository.find();
         const users = await userRepository.find();
-        
+
         if (properties.length > 0) {
-          await propertyRepository.softDelete(properties.map(p => p.id));
+          await propertyRepository.softDelete(properties.map((p) => p.id));
         }
         if (users.length > 0) {
-          await userRepository.softDelete(users.map(u => u.id));
+          await userRepository.softDelete(users.map((u) => u.id));
         }
       }
     } catch (error) {
@@ -145,7 +149,9 @@ describe('PropertyController (integration)', () => {
   describe('POST /properties', () => {
     it('debe crear una nueva propiedad', async () => {
       // Get the admin user
-      const admin = await userRepository.findOne({ where: { email: 'admin.property.test@example.com' } });
+      const admin = await userRepository.findOne({
+        where: { email: 'admin.property.test@example.com' },
+      });
       expect(admin).toBeDefined();
 
       const newProperty = {
@@ -164,21 +170,23 @@ describe('PropertyController (integration)', () => {
         landSquareMeters: 200, // Changed from totalArea
         regionCommune: {
           region: 'Test Region',
-          communes: ['Test Commune 1', 'Test Commune 2']
+          communes: ['Test Commune 1', 'Test Commune 2'],
         },
-        multimedia: [{
-          url: 'http://example.com/image1.jpg',
-          type: 'IMAGE',
-          description: 'Front view'
-        }],
+        multimedia: [
+          {
+            url: 'http://example.com/image1.jpg',
+            type: 'IMAGE',
+            description: 'Front view',
+          },
+        ],
         postRequest: {
           origin: 'WEB',
           phone: '+56912345678',
           email: 'test@example.com',
           name: 'Test User',
           userType: 'OWNER',
-          valuationAmount: 250000
-        }
+          valuationAmount: 250000,
+        },
       };
 
       // Intentar crear una propiedad y capturar la respuesta incluso si falla
@@ -209,8 +217,8 @@ describe('PropertyController (integration)', () => {
         operation: 'VENTA',
         regionCommune: {
           region: 'Test Region',
-          communes: ['Test Commune']
-        }
+          communes: ['Test Commune'],
+        },
       };
 
       await request(app.getHttpServer())
@@ -240,8 +248,8 @@ describe('PropertyController (integration)', () => {
         .expect(200);
 
       expect(Array.isArray(response.body)).toBeTruthy();
-      response.body.forEach(property => {
-  expect(property.operationType).toBe('SALE');
+      response.body.forEach((property) => {
+        expect(property.operationType).toBe('SALE');
       });
     });
   });
@@ -274,8 +282,8 @@ describe('PropertyController (integration)', () => {
         operationType: 'RENT',
         regionCommune: {
           region: 'Updated Region',
-          communes: ['Updated Commune']
-        }
+          communes: ['Updated Commune'],
+        },
       };
 
       const response = await request(app.getHttpServer())
@@ -292,7 +300,7 @@ describe('PropertyController (integration)', () => {
 
     it('debe fallar al actualizar con precio negativo', async () => {
       const invalidUpdate = {
-        priceCLP: -1000
+        priceCLP: -1000,
       };
 
       await request(app.getHttpServer())

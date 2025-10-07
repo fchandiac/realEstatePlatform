@@ -1,8 +1,15 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { PropertyType } from '../../entities/property-type.entity';
-import { CreatePropertyTypeDto, UpdatePropertyTypeDto } from './dto/property-type.dto';
+import {
+  CreatePropertyTypeDto,
+  UpdatePropertyTypeDto,
+} from './dto/property-type.dto';
 
 @Injectable()
 export class PropertyTypesService {
@@ -11,16 +18,20 @@ export class PropertyTypesService {
     private readonly propertyTypeRepository: Repository<PropertyType>,
   ) {}
 
-  async create(createPropertyTypeDto: CreatePropertyTypeDto): Promise<PropertyType> {
+  async create(
+    createPropertyTypeDto: CreatePropertyTypeDto,
+  ): Promise<PropertyType> {
     // Check if name already exists
     const existingPropertyType = await this.propertyTypeRepository.findOne({
-      where: { name: createPropertyTypeDto.name, deletedAt: IsNull() }
+      where: { name: createPropertyTypeDto.name, deletedAt: IsNull() },
     });
     if (existingPropertyType) {
       throw new ConflictException('El nombre del tipo de propiedad ya existe');
     }
 
-    const propertyType = this.propertyTypeRepository.create(createPropertyTypeDto);
+    const propertyType = this.propertyTypeRepository.create(
+      createPropertyTypeDto,
+    );
     return await this.propertyTypeRepository.save(propertyType);
   }
 
@@ -42,16 +53,24 @@ export class PropertyTypesService {
     return propertyType;
   }
 
-  async update(id: string, updatePropertyTypeDto: UpdatePropertyTypeDto): Promise<PropertyType> {
+  async update(
+    id: string,
+    updatePropertyTypeDto: UpdatePropertyTypeDto,
+  ): Promise<PropertyType> {
     const propertyType = await this.findOne(id);
 
     // Check if name already exists (if being updated)
-    if (updatePropertyTypeDto.name && updatePropertyTypeDto.name !== propertyType.name) {
+    if (
+      updatePropertyTypeDto.name &&
+      updatePropertyTypeDto.name !== propertyType.name
+    ) {
       const existingPropertyType = await this.propertyTypeRepository.findOne({
-        where: { name: updatePropertyTypeDto.name, deletedAt: IsNull() }
+        where: { name: updatePropertyTypeDto.name, deletedAt: IsNull() },
       });
       if (existingPropertyType) {
-        throw new ConflictException('El nombre del tipo de propiedad ya existe');
+        throw new ConflictException(
+          'El nombre del tipo de propiedad ya existe',
+        );
       }
     }
 

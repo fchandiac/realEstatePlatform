@@ -10,9 +10,7 @@ export class JweService implements OnModuleInit {
   private publicKey: any;
   private privateKey: any;
 
-  constructor(
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly configService: ConfigService) {}
 
   async onModuleInit() {
     await this.loadKeys();
@@ -20,10 +18,17 @@ export class JweService implements OnModuleInit {
 
   private async loadKeys() {
     try {
-      const privateKeyPath = this.configService.get<string>('JWE_PRIVATE_KEY_PATH') || 'keys/private.pem';
-      const publicKeyPath = this.configService.get<string>('JWE_PUBLIC_KEY_PATH') || 'keys/public.pem';
+      const privateKeyPath =
+        this.configService.get<string>('JWE_PRIVATE_KEY_PATH') ||
+        'keys/private.pem';
+      const publicKeyPath =
+        this.configService.get<string>('JWE_PUBLIC_KEY_PATH') ||
+        'keys/public.pem';
 
-      const privateKeyPem = fs.readFileSync(path.resolve(privateKeyPath), 'utf8');
+      const privateKeyPem = fs.readFileSync(
+        path.resolve(privateKeyPath),
+        'utf8',
+      );
       const publicKeyPem = fs.readFileSync(path.resolve(publicKeyPath), 'utf8');
 
       this.privateKey = await jose.importPKCS8(privateKeyPem, 'RSA-OAEP-256');

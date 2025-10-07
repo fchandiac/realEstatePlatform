@@ -1,6 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, HttpCode, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ValidationPipe,
+  HttpCode,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto, UpdateUserDto, LoginDto, ChangePasswordDto, AssignRoleDto, UpdatePermissionsDto } from './dto/user.dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  LoginDto,
+  ChangePasswordDto,
+  AssignRoleDto,
+  UpdatePermissionsDto,
+} from './dto/user.dto';
 import { UserStatus, UserRole, Permission } from '../../entities/user.entity';
 import { JwtAuthGuard } from '../../modules/auth/guards/jwt-auth.guard';
 
@@ -11,7 +29,8 @@ export class UsersController {
   @Post()
   async create(@Body(ValidationPipe) createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
-    const { password, setPassword, validatePassword, ...userResponse } = user as any;
+    const { password, setPassword, validatePassword, ...userResponse } =
+      user as any;
     return userResponse;
   }
 
@@ -66,10 +85,13 @@ export class UsersController {
     @Param('id') id: string,
     @Body(ValidationPipe) updatePermissionsDto: UpdatePermissionsDto,
   ) {
-    return this.usersService.setPermissions(id, updatePermissionsDto.permissions);
+    return this.usersService.setPermissions(
+      id,
+      updatePermissionsDto.permissions,
+    );
   }
 
-    @Patch(':id/change-password')
+  @Patch(':id/change-password')
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   async changePassword(

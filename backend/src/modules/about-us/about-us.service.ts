@@ -35,7 +35,10 @@ export class AboutUsService {
     return aboutUs;
   }
 
-  async update(id: string, updateAboutUsDto: UpdateAboutUsDto): Promise<AboutUs> {
+  async update(
+    id: string,
+    updateAboutUsDto: UpdateAboutUsDto,
+  ): Promise<AboutUs> {
     const aboutUs = await this.findOne(id);
     Object.assign(aboutUs, updateAboutUsDto);
     return await this.aboutUsRepository.save(aboutUs);

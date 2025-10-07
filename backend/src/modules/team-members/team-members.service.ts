@@ -1,8 +1,15 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { TeamMember } from '../../entities/team-member.entity';
-import { CreateTeamMemberDto, UpdateTeamMemberDto } from './dto/team-member.dto';
+import {
+  CreateTeamMemberDto,
+  UpdateTeamMemberDto,
+} from './dto/team-member.dto';
 
 @Injectable()
 export class TeamMembersService {
@@ -44,11 +51,17 @@ export class TeamMembersService {
     return teamMember;
   }
 
-  async update(id: string, updateTeamMemberDto: UpdateTeamMemberDto): Promise<TeamMember> {
+  async update(
+    id: string,
+    updateTeamMemberDto: UpdateTeamMemberDto,
+  ): Promise<TeamMember> {
     const teamMember = await this.findOne(id);
 
     // Check if email is being updated and already exists
-    if (updateTeamMemberDto.mail && updateTeamMemberDto.mail !== teamMember.mail) {
+    if (
+      updateTeamMemberDto.mail &&
+      updateTeamMemberDto.mail !== teamMember.mail
+    ) {
       const existingMember = await this.teamMemberRepository.findOne({
         where: { mail: updateTeamMemberDto.mail },
       });

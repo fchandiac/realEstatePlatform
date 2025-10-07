@@ -21,6 +21,7 @@ import { PropertyTypesModule } from './modules/property-types/property-types.mod
 import { AuthModule } from './modules/auth/auth.module';
 import { AuditModule } from './audit/audit.module';
 import { AuditInterceptor } from './common/interceptors/audit.interceptor';
+import { DocumentModule } from './modules/document/document.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
     PropertyTypesModule,
     AuthModule,
     AuditModule,
+    DocumentModule,
   ],
   controllers: [AppController],
   providers: [

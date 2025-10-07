@@ -1,4 +1,8 @@
-import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JweService } from '../jwe/jwe.service';
 
@@ -13,7 +17,9 @@ export class JweAuthGuard extends AuthGuard('jwe') {
     const authHeader = request.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Missing or invalid authorization header');
+      throw new UnauthorizedException(
+        'Missing or invalid authorization header',
+      );
     }
 
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix

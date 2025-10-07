@@ -1,7 +1,11 @@
 import { Controller, Get, Query, Param, ParseEnumPipe } from '@nestjs/common';
 import { AuditService, AuditLogFilters } from './audit.service';
 import { AuditLog } from '../entities/audit-log.entity';
-import { AuditAction, AuditEntityType, RequestSource } from '../common/enums/audit.enums';
+import {
+  AuditAction,
+  AuditEntityType,
+  RequestSource,
+} from '../common/enums/audit.enums';
 import { UserRole } from '../entities/user.entity';
 
 @Controller('audit')
@@ -49,11 +53,16 @@ export class AuditController {
 
   @Get('logs/entity/:entityType/:entityId')
   async getEntityAuditLogs(
-    @Param('entityType', new ParseEnumPipe(AuditEntityType)) entityType: AuditEntityType,
+    @Param('entityType', new ParseEnumPipe(AuditEntityType))
+    entityType: AuditEntityType,
     @Param('entityId') entityId: string,
     @Query('limit') limit?: number,
   ): Promise<AuditLog[]> {
-    return await this.auditService.getEntityAuditLogs(entityType, entityId, limit || 50);
+    return await this.auditService.getEntityAuditLogs(
+      entityType,
+      entityId,
+      limit || 50,
+    );
   }
 
   @Get('stats')

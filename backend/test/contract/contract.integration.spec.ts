@@ -39,10 +39,10 @@ describe('ContractController (integration)', () => {
     // Obtener un usuario y propiedad existentes de la base de datos
     const userRepository = dataSource.getRepository(User);
     const propertyRepository = dataSource.getRepository(Property);
-    
+
     const user = await userRepository.findOne({ where: {} });
     const property = await propertyRepository.findOne({ where: {} });
-    
+
     expect(user).toBeDefined();
     expect(property).toBeDefined();
 
@@ -55,7 +55,7 @@ describe('ContractController (integration)', () => {
       commissionPercent: 5.0,
       commissionAmount: 5000,
       people: [{ personId: 'person-1', role: 'BUYER' }],
-      description: 'Contrato de prueba para integración'
+      description: 'Contrato de prueba para integración',
     };
 
     const response = await request(app.getHttpServer())
@@ -97,7 +97,7 @@ describe('ContractController (integration)', () => {
   it('PATCH /contracts/:id - debe actualizar un contrato existente', async () => {
     const updateData = {
       status: 'CLOSED',
-      description: 'Contrato actualizado para pruebas'
+      description: 'Contrato actualizado para pruebas',
     };
 
     const response = await request(app.getHttpServer())

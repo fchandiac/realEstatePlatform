@@ -1,6 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { ContractsService } from './contracts.service';
-import { CreateContractDto, UpdateContractDto, AddPaymentDto, AddPersonDto, CloseContractDto } from './dto/contract.dto';
+import {
+  CreateContractDto,
+  UpdateContractDto,
+  AddPaymentDto,
+  AddPersonDto,
+  CloseContractDto,
+} from './dto/contract.dto';
 import { ContractRole } from '../../entities/contract.entity';
 
 @Controller('contracts')
@@ -23,7 +38,10 @@ export class ContractsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateContractDto: UpdateContractDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateContractDto: UpdateContractDto,
+  ) {
     return this.contractsService.update(id, updateContractDto);
   }
 

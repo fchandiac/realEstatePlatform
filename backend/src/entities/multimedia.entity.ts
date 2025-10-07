@@ -1,8 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 export enum MultimediaFormat {
   IMG = 'IMG',
-  VIDEO = 'VIDEO'
+  VIDEO = 'VIDEO',
 }
 
 export enum MultimediaType {
@@ -14,7 +21,8 @@ export enum MultimediaType {
   PROPERTY_IMG = 'PROPERTY_IMG',
   PROPERTY_VIDEO = 'PROPERTY_VIDEO',
   PARTNERSHIP = 'PARTNERSHIP',
-  DOCUMENT = 'DOCUMENT'
+  DOCUMENT = 'DOCUMENT',
+  TESTIMONIAL_IMG = 'TESTIMONIAL_IMG',
 }
 
 @Entity('multimedia')
@@ -24,13 +32,13 @@ export class Multimedia {
 
   @Column({
     type: 'enum',
-    enum: MultimediaFormat
+    enum: MultimediaFormat,
   })
   format: MultimediaFormat;
 
   @Column({
     type: 'enum',
-    enum: MultimediaType
+    enum: MultimediaType,
   })
   type: MultimediaType;
 

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsUUID } from 'class-validator';
 
 export class CreateTestimonialDto {
   @IsNotEmpty()
@@ -10,8 +10,8 @@ export class CreateTestimonialDto {
   name: string;
 
   @IsOptional()
-  @IsString()
-  multimediaUrl?: string;
+  @IsUUID()
+  multimediaId?: string;
 }
 
 export class UpdateTestimonialDto {
@@ -24,6 +24,6 @@ export class UpdateTestimonialDto {
   name?: string;
 
   @IsOptional()
-  @IsString()
-  multimediaUrl?: string;
+  @IsUUID()
+  multimediaId?: string;
 }

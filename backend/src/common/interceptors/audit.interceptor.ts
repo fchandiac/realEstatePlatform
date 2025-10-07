@@ -1,7 +1,17 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+  Inject,
+} from '@nestjs/common';
 import { Observable, catchError, tap } from 'rxjs';
 import { AuditService } from '../../audit/audit.service';
-import { AuditAction, AuditEntityType, RequestSource } from '../enums/audit.enums';
+import {
+  AuditAction,
+  AuditEntityType,
+  RequestSource,
+} from '../enums/audit.enums';
 
 export interface AuditMetadata {
   action: AuditAction;
@@ -10,15 +20,30 @@ export interface AuditMetadata {
   entityId?: string;
 }
 
-export function Audit(action: AuditAction, entityType: AuditEntityType, description: string, entityId?: string) {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-    Reflect.defineMetadata('audit', { action, entityType, description, entityId }, descriptor.value);
+export function Audit(
+  action: AuditAction,
+  entityType: AuditEntityType,
+  description: string,
+  entityId?: string,
+) {
+  return function (
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor,
+  ) {
+    Reflect.defineMetadata(
+      'audit',
+      { action, entityType, description, entityId },
+      descriptor.value,
+    );
   };
 }
 
 @Injectable()
 export class AuditInterceptor implements NestInterceptor {
-  constructor(@Inject(AuditService) private readonly auditService: AuditService) {}
+  constructor(
+    @Inject(AuditService) private readonly auditService: AuditService,
+  ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
@@ -35,7 +60,9 @@ export class AuditInterceptor implements NestInterceptor {
         tap(async (result) => {
           try {
             // Success case
-            const entityId = auditMetadata.entityId || this.extractEntityId(result, auditMetadata.entityType);
+            const entityId =
+              auditMetadata.entityId ||
+              this.extractEntityId(result, auditMetadata.entityType);
             await this.auditService.createAuditLog({
               userId,
               ipAddress,
@@ -71,7 +98,7 @@ export class AuditInterceptor implements NestInterceptor {
             console.error('Audit logging failed:', auditError);
           }
           throw error;
-        })
+        }),
       );
     }
 
@@ -88,7 +115,10 @@ export class AuditInterceptor implements NestInterceptor {
     );
   }
 
-  private extractEntityId(result: any, entityType: AuditEntityType): string | undefined {
+  private extractEntityId(
+    result: any,
+    entityType: AuditEntityType,
+  ): string | undefined {
     if (!result) return undefined;
 
     // Try common patterns for extracting entity ID

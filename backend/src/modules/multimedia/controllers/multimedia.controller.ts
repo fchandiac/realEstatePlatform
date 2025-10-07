@@ -1,10 +1,24 @@
-import { Controller, Post, Get, Delete, Param, UploadedFile, UseInterceptors, Body, Res, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Delete,
+  Param,
+  UploadedFile,
+  UseInterceptors,
+  Body,
+  Res,
+  HttpStatus,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MultimediaService } from '../services/multimedia.service';
 import { MultimediaType } from '../../../entities/multimedia.entity';
 import type { Response } from 'express';
 import { ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
-import { MultimediaUploadMetadata, MultimediaResponse } from '../interfaces/multimedia.interface';
+import {
+  MultimediaUploadMetadata,
+  MultimediaResponse,
+} from '../interfaces/multimedia.interface';
 import type { Express } from 'express';
 
 @ApiTags('multimedia')
@@ -46,11 +60,17 @@ export class MultimediaController {
       console.log('File received:', file);
       console.log('Metadata received:', metadata);
 
-      const multimedia = await this.multimediaService.uploadFile(file, metadata, res.locals.userId);
+      const multimedia = await this.multimediaService.uploadFile(
+        file,
+        metadata,
+        res.locals.userId,
+      );
       console.log('File saved with unique name:', multimedia.filename);
       res.status(HttpStatus.CREATED).json(multimedia);
     } catch (error) {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
+      res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ message: error.message });
     }
   }
 

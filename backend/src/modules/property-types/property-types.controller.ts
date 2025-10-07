@@ -1,6 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PropertyTypesService } from './property-types.service';
-import { CreatePropertyTypeDto, UpdatePropertyTypeDto } from './dto/property-type.dto';
+import {
+  CreatePropertyTypeDto,
+  UpdatePropertyTypeDto,
+} from './dto/property-type.dto';
 
 @Controller('property-types')
 export class PropertyTypesController {
@@ -22,7 +33,10 @@ export class PropertyTypesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePropertyTypeDto: UpdatePropertyTypeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updatePropertyTypeDto: UpdatePropertyTypeDto,
+  ) {
     return this.propertyTypesService.update(id, updatePropertyTypeDto);
   }
 

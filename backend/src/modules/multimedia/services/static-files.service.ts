@@ -2,7 +2,10 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { MultimediaType, MultimediaFormat } from '../../../entities/multimedia.entity';
+import {
+  MultimediaType,
+  MultimediaFormat,
+} from '../../../entities/multimedia.entity';
 
 @Injectable()
 export class StaticFilesService implements OnModuleInit {
@@ -74,7 +77,9 @@ export class StaticFilesService implements OnModuleInit {
 
   // Determina el formato del archivo basado en su tipo MIME
   getFormatFromMimeType(mimeType: string): MultimediaFormat {
-    return mimeType.startsWith('image/') ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
+    return mimeType.startsWith('image/')
+      ? MultimediaFormat.IMG
+      : MultimediaFormat.VIDEO;
   }
 
   // Verifica si un archivo existe
@@ -93,7 +98,8 @@ export class StaticFilesService implements OnModuleInit {
     try {
       await fs.unlink(fullPath);
     } catch (error) {
-      if (error.code !== 'ENOENT') { // Ignora error si el archivo no existe
+      if (error.code !== 'ENOENT') {
+        // Ignora error si el archivo no existe
         throw error;
       }
     }

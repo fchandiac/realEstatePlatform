@@ -1,5 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { IsNotEmpty, IsString, IsOptional, IsUUID } from 'class-validator';
+import { Multimedia } from './multimedia.entity';
 
 @Entity('testimonials')
 export class Testimonial {
@@ -16,10 +26,14 @@ export class Testimonial {
   @IsString()
   name: string;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'uuid', nullable: true })
   @IsOptional()
-  @IsString()
-  multimediaUrl?: string;
+  @IsUUID()
+  multimediaId?: string;
+
+  @ManyToOne(() => Multimedia, { nullable: true })
+  @JoinColumn({ name: 'multimediaId' })
+  multimedia?: Multimedia;
 
   @CreateDateColumn()
   createdAt: Date;

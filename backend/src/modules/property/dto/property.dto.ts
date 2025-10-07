@@ -1,6 +1,21 @@
-import { IsNotEmpty, IsString, IsOptional, IsEnum, IsNumber, IsUUID, ValidateNested, IsArray } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsEnum,
+  IsNumber,
+  IsUUID,
+  ValidateNested,
+  IsArray,
+} from 'class-validator';
 import { Type } from 'class-transformer';
-import { PropertyStatus, PropertyOperationType, RegionCommune, MultimediaItem, PostRequest } from '../../../entities/property.entity';
+import {
+  PropertyStatus,
+  PropertyOperationType,
+  RegionCommune,
+  MultimediaItem,
+  PostRequest,
+} from '../../../entities/property.entity';
 
 export class CreatePropertyDto {
   @IsNotEmpty()

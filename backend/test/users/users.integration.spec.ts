@@ -5,7 +5,12 @@ import request from 'supertest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from '../../src/modules/users/users.module';
 import { AuthModule } from '../../src/auth/auth/auth.module';
-import { User, UserRole, UserStatus, Permission } from '../../src/entities/user.entity';
+import {
+  User,
+  UserRole,
+  UserStatus,
+  Permission,
+} from '../../src/entities/user.entity';
 import { AuditLog } from '../../src/entities/audit-log.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -34,7 +39,7 @@ describe('UsersController (integration)', () => {
         TypeOrmModule.forFeature([User]),
         UsersModule,
         AuthModule,
-        AuditModule
+        AuditModule,
       ],
     }).compile();
 
@@ -42,7 +47,9 @@ describe('UsersController (integration)', () => {
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
     await app.init();
 
-    userRepository = moduleFixture.get<Repository<User>>(getRepositoryToken(User));
+    userRepository = moduleFixture.get<Repository<User>>(
+      getRepositoryToken(User),
+    );
 
     // Crear un usuario admin para las pruebas
     // Limpiar cualquier dato previo
@@ -53,7 +60,7 @@ describe('UsersController (integration)', () => {
       username: 'admin.test',
       email: 'admin.test@example.com',
       role: 'ADMIN',
-      status: 'ACTIVE'
+      status: 'ACTIVE',
     } as Partial<User>);
     await adminUser.setPassword('Admin123!');
     await userRepository.save(adminUser);
@@ -63,7 +70,7 @@ describe('UsersController (integration)', () => {
       .post('/auth/sign-in')
       .send({
         email: 'admin.test@example.com',
-        password: 'Admin123!'
+        password: 'Admin123!',
       });
 
     adminToken = loginResponse.body.access_token;
@@ -85,7 +92,7 @@ describe('UsersController (integration)', () => {
         email: 'test.user@example.com',
         password: 'Test123!',
         role: UserRole.COMMUNITY,
-        permissions: []
+        permissions: [],
       };
 
       const response = await request(app.getHttpServer())
@@ -110,7 +117,7 @@ describe('UsersController (integration)', () => {
         email: 'test.user@example.com', // Email duplicado
         password: 'Test123!',
         role: 'USER',
-        status: 'ACTIVE'
+        status: 'ACTIVE',
       };
 
       await request(app.getHttpServer())
@@ -156,7 +163,7 @@ describe('UsersController (integration)', () => {
     it('debe actualizar un usuario existente', async () => {
       const updateData = {
         username: 'updateduser',
-        status: 'INACTIVE'
+        status: 'INACTIVE',
       };
 
       const response = await request(app.getHttpServer())
@@ -181,7 +188,7 @@ describe('UsersController (integration)', () => {
 
       const changePasswordData = {
         currentPassword: 'Test123!',
-        newPassword: 'NewTest123!'
+        newPassword: 'NewTest123!',
       };
 
       await request(app.getHttpServer())
@@ -195,7 +202,7 @@ describe('UsersController (integration)', () => {
         .post('/auth/sign-in')
         .send({
           email: 'test.user@example.com',
-          password: 'NewTest123!'
+          password: 'NewTest123!',
         })
         .expect(200);
 
@@ -205,7 +212,7 @@ describe('UsersController (integration)', () => {
     it('debe fallar con contraseña actual incorrecta', async () => {
       const changePasswordData = {
         currentPassword: 'WrongPassword!',
-        newPassword: 'NewTest123!'
+        newPassword: 'NewTest123!',
       };
 
       await request(app.getHttpServer())
@@ -218,7 +225,7 @@ describe('UsersController (integration)', () => {
     it('debe fallar al cambiar contraseña de usuario que no existe', async () => {
       const changePasswordData = {
         currentPassword: 'Test123!',
-        newPassword: 'NewTest123!'
+        newPassword: 'NewTest123!',
       };
 
       await request(app.getHttpServer())
@@ -299,7 +306,10 @@ describe('UsersController (integration)', () => {
 
   describe('PATCH /users/:id/permissions', () => {
     it('debe cambiar los permisos de un usuario', async () => {
-      const newPermissions = [Permission.MANAGE_USERS, Permission.MANAGE_PROPERTIES];
+      const newPermissions = [
+        Permission.MANAGE_USERS,
+        Permission.MANAGE_PROPERTIES,
+      ];
 
       const response = await request(app.getHttpServer())
         .patch(`/users/${testUserId}/permissions`)

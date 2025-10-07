@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AboutUsService } from './about-us.service';
 import { CreateAboutUsDto, UpdateAboutUsDto } from './dto/about-us.dto';
 
@@ -14,11 +23,6 @@ export class AboutUsController {
   @Get()
   findAll() {
     return this.aboutUsService.findAll();
-  }
-
-  @Get('latest')
-  findLatest() {
-    return this.aboutUsService.findLatest();
   }
 
   @Get(':id')

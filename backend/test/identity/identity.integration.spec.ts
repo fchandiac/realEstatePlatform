@@ -38,23 +38,33 @@ describe('IdentitiesController (integration)', () => {
       address: 'Calle Principal 123, Ciudad',
       phone: '+57 300 123 4567',
       mail: 'contacto@realestatepro.com',
-      businessHours: 'Lunes a Viernes: 8:00 AM - 6:00 PM, Sábado: 9:00 AM - 2:00 PM, Domingo: Cerrado',
+      businessHours:
+        'Lunes a Viernes: 8:00 AM - 6:00 PM, Sábado: 9:00 AM - 2:00 PM, Domingo: Cerrado',
       socialMedia: {
-        facebook: { url: 'https://facebook.com/realestatepro', available: true },
-        instagram: { url: 'https://instagram.com/realestatepro', available: true },
-        linkedin: { url: 'https://linkedin.com/company/realestatepro', available: true },
-        youtube: { url: 'https://twitter.com/realestatepro', available: true }
+        facebook: {
+          url: 'https://facebook.com/realestatepro',
+          available: true,
+        },
+        instagram: {
+          url: 'https://instagram.com/realestatepro',
+          available: true,
+        },
+        linkedin: {
+          url: 'https://linkedin.com/company/realestatepro',
+          available: true,
+        },
+        youtube: { url: 'https://twitter.com/realestatepro', available: true },
       },
       partnerships: [
         {
           name: 'Banco Nacional',
-          description: 'Alianza estratégica para financiamiento hipotecario'
+          description: 'Alianza estratégica para financiamiento hipotecario',
         },
         {
           name: 'Constructora XYZ',
-          description: 'Desarrollo conjunto de proyectos inmobiliarios'
-        }
-      ]
+          description: 'Desarrollo conjunto de proyectos inmobiliarios',
+        },
+      ],
     };
 
     const response = await request(app.getHttpServer())
@@ -101,7 +111,7 @@ describe('IdentitiesController (integration)', () => {
     const updateData = {
       name: 'Real Estate Pro Plus',
       phone: '+57 300 987 6543',
-      mail: 'info@realestatepro.com'
+      mail: 'info@realestatepro.com',
     };
 
     const response = await request(app.getHttpServer())
@@ -145,7 +155,7 @@ describe('IdentitiesController (integration)', () => {
     const invalidData = {
       name: '', // nombre vacío
       mail: 'invalid-email', // email inválido
-      phone: 'invalid-phone' // teléfono inválido
+      phone: 'invalid-phone', // teléfono inválido
     };
 
     const response = await request(app.getHttpServer())

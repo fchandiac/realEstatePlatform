@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { MultimediaService } from './multimedia.service';
 import { CreateMultimediaDto, UpdateMultimediaDto } from './dto/multimedia.dto';
 
@@ -22,7 +31,10 @@ export class MultimediaController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMultimediaDto: UpdateMultimediaDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateMultimediaDto: UpdateMultimediaDto,
+  ) {
     return this.multimediaService.update(id, updateMultimediaDto);
   }
 

@@ -2,7 +2,9 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import * as mysql from 'mysql2';
 
-export const ormConfig = (configService: ConfigService): TypeOrmModuleOptions => ({
+export const ormConfig = (
+  configService: ConfigService,
+): TypeOrmModuleOptions => ({
   type: 'mysql',
   host: configService.get<string>('DB_HOST'),
   port: configService.get<number>('DB_PORT'),
@@ -14,5 +16,5 @@ export const ormConfig = (configService: ConfigService): TypeOrmModuleOptions =>
   logging: configService.get<string>('NODE_ENV') === 'development',
   migrations: [__dirname + '/../migrations/*{.ts,.js}'],
   migrationsRun: false,
-  driver: mysql
+  driver: mysql,
 });

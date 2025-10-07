@@ -1,8 +1,15 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { DocumentType } from '../../entities/document-type.entity';
-import { CreateDocumentTypeDto, UpdateDocumentTypeDto } from './dto/document-type.dto';
+import {
+  CreateDocumentTypeDto,
+  UpdateDocumentTypeDto,
+} from './dto/document-type.dto';
 
 @Injectable()
 export class DocumentTypesService {
@@ -11,13 +18,17 @@ export class DocumentTypesService {
     private readonly documentTypeRepository: Repository<DocumentType>,
   ) {}
 
-  async create(createDocumentTypeDto: CreateDocumentTypeDto): Promise<DocumentType> {
+  async create(
+    createDocumentTypeDto: CreateDocumentTypeDto,
+  ): Promise<DocumentType> {
     // Check if name already exists
     const existingDocumentType = await this.documentTypeRepository.findOne({
-      where: { name: createDocumentTypeDto.name, deletedAt: IsNull() }
+      where: { name: createDocumentTypeDto.name, deletedAt: IsNull() },
     });
     if (existingDocumentType) {
-      throw new ConflictException('El nombre del tipo de documento ya está registrado');
+      throw new ConflictException(
+        'El nombre del tipo de documento ya está registrado',
+      );
     }
 
     const documentType = this.documentTypeRepository.create({
@@ -45,16 +56,24 @@ export class DocumentTypesService {
     return documentType;
   }
 
-  async update(id: string, updateDocumentTypeDto: UpdateDocumentTypeDto): Promise<DocumentType> {
+  async update(
+    id: string,
+    updateDocumentTypeDto: UpdateDocumentTypeDto,
+  ): Promise<DocumentType> {
     const documentType = await this.findOne(id);
 
     // Check if name already exists (if being updated)
-    if (updateDocumentTypeDto.name && updateDocumentTypeDto.name !== documentType.name) {
+    if (
+      updateDocumentTypeDto.name &&
+      updateDocumentTypeDto.name !== documentType.name
+    ) {
       const existingDocumentType = await this.documentTypeRepository.findOne({
-        where: { name: updateDocumentTypeDto.name, deletedAt: IsNull() }
+        where: { name: updateDocumentTypeDto.name, deletedAt: IsNull() },
       });
       if (existingDocumentType) {
-        throw new ConflictException('El nombre del tipo de documento ya está registrado');
+        throw new ConflictException(
+          'El nombre del tipo de documento ya está registrado',
+        );
       }
     }
 

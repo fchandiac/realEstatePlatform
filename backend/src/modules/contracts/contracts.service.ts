@@ -1,8 +1,23 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
-import { Contract, ContractOperationType, ContractStatus, ContractRole } from '../../entities/contract.entity';
-import { CreateContractDto, UpdateContractDto, AddPaymentDto, AddPersonDto, CloseContractDto } from './dto/contract.dto';
+import {
+  Contract,
+  ContractOperationType,
+  ContractStatus,
+  ContractRole,
+} from '../../entities/contract.entity';
+import {
+  CreateContractDto,
+  UpdateContractDto,
+  AddPaymentDto,
+  AddPersonDto,
+  CloseContractDto,
+} from './dto/contract.dto';
 
 @Injectable()
 export class ContractsService {
@@ -18,7 +33,8 @@ export class ContractsService {
     const contract = this.contractRepository.create({
       ...createContractDto,
       status: ContractStatus.IN_PROCESS,
-      commissionAmount: (createContractDto.amount * createContractDto.commissionPercent) / 100,
+      commissionAmount:
+        (createContractDto.amount * createContractDto.commissionPercent) / 100,
     });
 
     return await this.contractRepository.save(contract);
@@ -44,11 +60,15 @@ export class ContractsService {
     return contract;
   }
 
-  async update(id: string, updateContractDto: UpdateContractDto): Promise<Contract> {
+  async update(
+    id: string,
+    updateContractDto: UpdateContractDto,
+  ): Promise<Contract> {
     const contract = await this.findOne(id);
 
     if (updateContractDto.commissionPercent !== undefined) {
-      updateContractDto.commissionAmount = (contract.amount * updateContractDto.commissionPercent) / 100;
+      updateContractDto.commissionAmount =
+        (contract.amount * updateContractDto.commissionPercent) / 100;
     }
 
     Object.assign(contract, updateContractDto);
@@ -60,10 +80,16 @@ export class ContractsService {
     await this.contractRepository.softDelete(id);
   }
 
-  async close(id: string, closeContractDto: CloseContractDto): Promise<Contract> {
+  async close(
+    id: string,
+    closeContractDto: CloseContractDto,
+  ): Promise<Contract> {
     const contract = await this.findOne(id);
 
-    if (contract.status === ContractStatus.CLOSED || contract.status === ContractStatus.FAILED) {
+    if (
+      contract.status === ContractStatus.CLOSED ||
+      contract.status === ContractStatus.FAILED
+    ) {
       throw new BadRequestException('El contrato ya está cerrado o fallido');
     }
 
@@ -83,7 +109,10 @@ export class ContractsService {
   async fail(id: string, endDate: Date): Promise<Contract> {
     const contract = await this.findOne(id);
 
-    if (contract.status === ContractStatus.CLOSED || contract.status === ContractStatus.FAILED) {
+    if (
+      contract.status === ContractStatus.CLOSED ||
+      contract.status === ContractStatus.FAILED
+    ) {
       throw new BadRequestException('El contrato ya está cerrado o fallido');
     }
 
@@ -93,7 +122,10 @@ export class ContractsService {
     return await this.contractRepository.save(contract);
   }
 
-  async addPayment(id: string, addPaymentDto: AddPaymentDto): Promise<Contract> {
+  async addPayment(
+    id: string,
+    addPaymentDto: AddPaymentDto,
+  ): Promise<Contract> {
     const contract = await this.findOne(id);
 
     const payment = {
@@ -128,21 +160,27 @@ export class ContractsService {
 
   async getPeopleByRole(id: string, role: ContractRole): Promise<any[]> {
     const contract = await this.findOne(id);
-    return contract.people.filter(person => person.role === role);
+    return contract.people.filter((person) => person.role === role);
   }
 
   async validateRequiredRoles(contract: Contract): Promise<void> {
     const requiredRoles = this.getRequiredRolesForOperation(contract.operation);
-    const existingRoles = contract.people.map(person => person.role);
+    const existingRoles = contract.people.map((person) => person.role);
 
-    const missingRoles = requiredRoles.filter(role => !existingRoles.includes(role));
+    const missingRoles = requiredRoles.filter(
+      (role) => !existingRoles.includes(role),
+    );
 
     if (missingRoles.length > 0) {
-      throw new BadRequestException(`Faltan roles obligatorios para este tipo de contrato: ${missingRoles.join(', ')}`);
+      throw new BadRequestException(
+        `Faltan roles obligatorios para este tipo de contrato: ${missingRoles.join(', ')}`,
+      );
     }
   }
 
-  private getRequiredRolesForOperation(operation: ContractOperationType): ContractRole[] {
+  private getRequiredRolesForOperation(
+    operation: ContractOperationType,
+  ): ContractRole[] {
     switch (operation) {
       case ContractOperationType.COMPRAVENTA:
         return [ContractRole.SELLER, ContractRole.BUYER];
@@ -153,12 +191,17 @@ export class ContractsService {
     }
   }
 
-  private validateRequiredDocuments(contract: Contract, documents: any[]): void {
-    const requiredDocuments = documents.filter(doc => doc.required);
-    const uploadedDocuments = documents.filter(doc => doc.uploaded);
+  private validateRequiredDocuments(
+    contract: Contract,
+    documents: any[],
+  ): void {
+    const requiredDocuments = documents.filter((doc) => doc.required);
+    const uploadedDocuments = documents.filter((doc) => doc.uploaded);
 
     if (requiredDocuments.length !== uploadedDocuments.length) {
-      throw new BadRequestException('Faltan documentos obligatorios para cerrar el contrato');
+      throw new BadRequestException(
+        'Faltan documentos obligatorios para cerrar el contrato',
+      );
     }
   }
 }

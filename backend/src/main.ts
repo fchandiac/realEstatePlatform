@@ -7,13 +7,13 @@ import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  
+
   // Configuración de CORS
   app.enableCors();
-  
+
   // Configuración de validación global
   app.useGlobalPipes(new ValidationPipe());
-  
+
   // Configuración de archivos estáticos
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',

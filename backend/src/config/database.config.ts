@@ -1,7 +1,9 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 
-export const databaseConfig = (configService: ConfigService): TypeOrmModuleOptions => ({
+export const databaseConfig = (
+  configService: ConfigService,
+): TypeOrmModuleOptions => ({
   type: 'mysql',
   driver: require('mysql2'),
   host: configService.get<string>('DB_HOST'),

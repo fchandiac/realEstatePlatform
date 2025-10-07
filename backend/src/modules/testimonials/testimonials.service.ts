@@ -2,17 +2,44 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Testimonial } from '../../entities/testimonial.entity';
-import { CreateTestimonialDto, UpdateTestimonialDto } from './dto/testimonial.dto';
+import {
+  CreateTestimonialDto,
+  UpdateTestimonialDto,
+} from './dto/testimonial.dto';
+import { MultimediaService as UploadMultimediaService } from '../multimedia/services/multimedia.service';
+import { MultimediaType } from '../../entities/multimedia.entity';
+import type { Express } from 'express';
 
 @Injectable()
 export class TestimonialsService {
   constructor(
     @InjectRepository(Testimonial)
     private readonly testimonialRepository: Repository<Testimonial>,
+    private readonly uploadMultimediaService: UploadMultimediaService,
   ) {}
 
-  async create(createTestimonialDto: CreateTestimonialDto): Promise<Testimonial> {
-    const testimonial = this.testimonialRepository.create(createTestimonialDto);
+  async create(
+    createTestimonialDto: CreateTestimonialDto,
+    file?: Express.Multer.File,
+  ): Promise<Testimonial> {
+    let multimediaId: string | undefined;
+
+    if (file) {
+      const metadata = {
+        type: MultimediaType.TESTIMONIAL_IMG,
+        seoTitle: '',
+        description: '',
+      };
+      const multimedia = await this.uploadMultimediaService.uploadFile(
+        file,
+        metadata,
+        'system',
+      ); // Assuming userId is 'system' for now
+      multimediaId = multimedia.id;
+    }
+
+    const testimonialData = { ...createTestimonialDto, multimediaId };
+    const testimonial = this.testimonialRepository.create(testimonialData);
     return await this.testimonialRepository.save(testimonial);
   }
 
@@ -35,7 +62,10 @@ export class TestimonialsService {
     return testimonial;
   }
 
-  async update(id: string, updateTestimonialDto: UpdateTestimonialDto): Promise<Testimonial> {
+  async update(
+    id: string,
+    updateTestimonialDto: UpdateTestimonialDto,
+  ): Promise<Testimonial> {
     const testimonial = await this.findOne(id);
     Object.assign(testimonial, updateTestimonialDto);
     return await this.testimonialRepository.save(testimonial);

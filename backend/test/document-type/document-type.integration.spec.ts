@@ -36,7 +36,7 @@ describe('DocumentTypeController (integration)', () => {
     const documentTypeData = {
       name: 'Contrato de Venta',
       description: 'Documento legal para transacciones de venta de propiedades',
-      available: true
+      available: true,
     };
 
     const response = await request(app.getHttpServer())
@@ -78,7 +78,7 @@ describe('DocumentTypeController (integration)', () => {
     const updateData = {
       name: 'Contrato de Venta Actualizado',
       description: 'Documento legal actualizado para transacciones de venta',
-      available: false
+      available: false,
     };
 
     const response = await request(app.getHttpServer())

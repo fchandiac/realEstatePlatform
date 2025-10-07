@@ -1,6 +1,26 @@
-import { IsNotEmpty, IsEnum, IsOptional, IsUUID, IsNumber, IsPositive, IsArray, IsObject, IsString, IsDateString, ValidateNested, IsBoolean } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsEnum,
+  IsOptional,
+  IsUUID,
+  IsNumber,
+  IsPositive,
+  IsArray,
+  IsObject,
+  IsString,
+  IsDateString,
+  ValidateNested,
+  IsBoolean,
+} from 'class-validator';
 import { Type } from 'class-transformer';
-import { ContractOperationType, ContractStatus, ContractRole, ContractPerson, ContractPayment, ContractDocument } from '../../../entities/contract.entity';
+import {
+  ContractOperationType,
+  ContractStatus,
+  ContractRole,
+  ContractPerson,
+  ContractPayment,
+  ContractDocument,
+} from '../../../entities/contract.entity';
 
 export class ContractPersonDto {
   @IsUUID()

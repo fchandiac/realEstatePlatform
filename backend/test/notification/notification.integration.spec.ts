@@ -37,7 +37,7 @@ describe('NotificationController (integration)', () => {
       targetUserIds: ['550e8400-e29b-41d4-a716-446655440000'],
       type: 'CONTACTO',
       targetMails: ['user@example.com'],
-      status: 'SEND'
+      status: 'SEND',
     };
 
     const response = await request(app.getHttpServer())
@@ -79,7 +79,7 @@ describe('NotificationController (integration)', () => {
     const updateData = {
       type: 'COMPROBANTE_DE_PAGO',
       status: 'OPEN',
-      targetMails: ['updated@example.com', 'admin@example.com']
+      targetMails: ['updated@example.com', 'admin@example.com'],
     };
 
     const response = await request(app.getHttpServer())

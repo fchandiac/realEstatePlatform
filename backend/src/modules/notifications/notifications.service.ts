@@ -1,8 +1,18 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
-import { Notification, NotificationStatus } from '../../entities/notification.entity';
-import { CreateNotificationDto, UpdateNotificationDto } from './dto/notification.dto';
+import {
+  Notification,
+  NotificationStatus,
+} from '../../entities/notification.entity';
+import {
+  CreateNotificationDto,
+  UpdateNotificationDto,
+} from './dto/notification.dto';
 
 @Injectable()
 export class NotificationsService {
@@ -11,7 +21,9 @@ export class NotificationsService {
     private readonly notificationRepository: Repository<Notification>,
   ) {}
 
-  async create(createNotificationDto: CreateNotificationDto): Promise<Notification> {
+  async create(
+    createNotificationDto: CreateNotificationDto,
+  ): Promise<Notification> {
     const notification = this.notificationRepository.create({
       ...createNotificationDto,
       status: NotificationStatus.SEND,
@@ -39,7 +51,10 @@ export class NotificationsService {
     return notification;
   }
 
-  async update(id: string, updateNotificationDto: UpdateNotificationDto): Promise<Notification> {
+  async update(
+    id: string,
+    updateNotificationDto: UpdateNotificationDto,
+  ): Promise<Notification> {
     const notification = await this.findOne(id);
 
     Object.assign(notification, updateNotificationDto);
@@ -68,8 +83,8 @@ export class NotificationsService {
     // TODO: Implement proper JSON array querying
     // For now, get all notifications and filter in memory
     const allNotifications = await this.findAll();
-    return allNotifications.filter(notification =>
-      notification.targetUserIds.includes(userId)
+    return allNotifications.filter((notification) =>
+      notification.targetUserIds.includes(userId),
     );
   }
 }

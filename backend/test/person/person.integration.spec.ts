@@ -21,7 +21,7 @@ describe('PersonController (integration)', () => {
     await app.init();
 
     dataSource = moduleFixture.get<DataSource>(DataSource);
-    
+
     // Crear token JWT para autenticación
     jwtToken = createJwtToken({
       sub: '123',
@@ -54,7 +54,7 @@ describe('PersonController (integration)', () => {
         dni: '12345678-9',
         address: '123 Test St',
         phone: '+56912345678',
-        email: 'test.person@example.com'
+        email: 'test.person@example.com',
       };
 
       const response = await request(app.getHttpServer())
@@ -78,7 +78,7 @@ describe('PersonController (integration)', () => {
       const personData = {
         name: 'Test Person',
         dni: '12345678-9',
-        email: 'test.person@example.com'
+        email: 'test.person@example.com',
       };
 
       // Crear la primera persona
@@ -103,13 +103,13 @@ describe('PersonController (integration)', () => {
       const person1 = {
         name: 'Person 1',
         dni: '11111111-1',
-        email: 'person1@example.com'
+        email: 'person1@example.com',
       };
 
       const person2 = {
         name: 'Person 2',
         dni: '22222222-2',
-        email: 'person2@example.com'
+        email: 'person2@example.com',
       };
 
       await request(app.getHttpServer())
@@ -138,7 +138,7 @@ describe('PersonController (integration)', () => {
       const personData = {
         name: 'Test Person',
         dni: '12345678-9',
-        email: 'test.person@example.com'
+        email: 'test.person@example.com',
       };
 
       const createResponse = await request(app.getHttpServer())
@@ -174,7 +174,7 @@ describe('PersonController (integration)', () => {
       const personData = {
         name: 'Test Person',
         dni: '12345678-9',
-        email: 'test.person@example.com'
+        email: 'test.person@example.com',
       };
 
       const createResponse = await request(app.getHttpServer())
@@ -187,7 +187,7 @@ describe('PersonController (integration)', () => {
       // Actualizar la persona
       const updateData = {
         name: 'Updated Name',
-        address: 'New Address'
+        address: 'New Address',
       };
 
       const response = await request(app.getHttpServer())
@@ -208,7 +208,7 @@ describe('PersonController (integration)', () => {
       const personData = {
         name: 'Test Person',
         dni: '12345678-9',
-        email: 'test.person@example.com'
+        email: 'test.person@example.com',
       };
 
       const createResponse = await request(app.getHttpServer())

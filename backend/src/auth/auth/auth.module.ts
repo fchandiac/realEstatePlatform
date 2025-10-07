@@ -9,7 +9,12 @@ import { JwtStrategy } from '../../modules/auth/strategies/jwt.strategy';
 import { JwtAuthGuard } from '../../modules/auth/guards/jwt-auth.guard';
 
 @Module({
-  imports: [ConfigModule, UsersModule, JweModule, PassportModule.register({ defaultStrategy: 'jwt' })],
+  imports: [
+    ConfigModule,
+    UsersModule,
+    JweModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+  ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtAuthGuard],
   exports: [AuthService, JwtAuthGuard],

@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ValidationPipe,
+  Query,
+} from '@nestjs/common';
 import { PropertiesService } from './properties.service';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 

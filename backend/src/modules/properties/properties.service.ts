@@ -37,7 +37,10 @@ export class PropertiesService {
     return property;
   }
 
-  async update(id: string, updatePropertyDto: UpdatePropertyDto): Promise<Property> {
+  async update(
+    id: string,
+    updatePropertyDto: UpdatePropertyDto,
+  ): Promise<Property> {
     const property = await this.findOne(id);
     Object.assign(property, updatePropertyDto);
     return await this.propertyRepository.save(property);

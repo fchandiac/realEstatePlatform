@@ -21,7 +21,10 @@ describe('Multimedia Uploads (e2e)', () => {
   });
 
   it('should upload an image successfully', async () => {
-    const imagePath = path.join(__dirname, 'multimediaSamples/images/property-img-01.jpg');
+    const imagePath = path.join(
+      __dirname,
+      'multimediaSamples/images/property-img-01.jpg',
+    );
 
     const response = await request(app.getHttpServer())
       .post('/multimedia/upload')
@@ -35,7 +38,10 @@ describe('Multimedia Uploads (e2e)', () => {
   });
 
   it('should upload a video successfully', async () => {
-    const videoPath = path.join(__dirname, 'multimediaSamples/videos/property-video-01.mp4');
+    const videoPath = path.join(
+      __dirname,
+      'multimediaSamples/videos/property-video-01.mp4',
+    );
 
     const response = await request(app.getHttpServer())
       .post('/multimedia/upload')

@@ -40,7 +40,7 @@ describe('TeamMemberController (integration)', () => {
       bio: 'Experto en ventas de propiedades residenciales con más de 10 años de experiencia.',
       phone: '+56 9 1234 5678',
       mail: 'juan.perez@realestate.com',
-      multimediaUrl: 'https://example.com/images/juan-perez.jpg'
+      multimediaUrl: 'https://example.com/images/juan-perez.jpg',
     };
 
     const response = await request(app.getHttpServer())
@@ -81,7 +81,7 @@ describe('TeamMemberController (integration)', () => {
   it('PATCH /team-members/:id - debe actualizar un miembro del equipo existente', async () => {
     const updateData = {
       position: 'Gerente de Ventas',
-      bio: 'Experto en ventas de propiedades residenciales y comerciales con más de 12 años de experiencia.'
+      bio: 'Experto en ventas de propiedades residenciales y comerciales con más de 12 años de experiencia.',
     };
 
     const response = await request(app.getHttpServer())

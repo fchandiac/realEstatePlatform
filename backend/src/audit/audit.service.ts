@@ -2,7 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, LessThan, MoreThan } from 'typeorm';
 import { AuditLog } from '../entities/audit-log.entity';
-import { AuditAction, AuditEntityType, RequestSource } from '../common/enums/audit.enums';
+import {
+  AuditAction,
+  AuditEntityType,
+  RequestSource,
+} from '../common/enums/audit.enums';
 
 export interface CreateAuditLogInput {
   userId?: string;
@@ -60,31 +64,45 @@ export class AuditService {
     return await this.auditLogRepository.save(auditLog);
   }
 
-  async findAuditLogs(filters: AuditLogFilters = {}): Promise<[AuditLog[], number]> {
+  async findAuditLogs(
+    filters: AuditLogFilters = {},
+  ): Promise<[AuditLog[], number]> {
     const queryBuilder = this.auditLogRepository.createQueryBuilder('audit');
 
     if (filters.userId) {
-      queryBuilder.andWhere('audit.userId = :userId', { userId: filters.userId });
+      queryBuilder.andWhere('audit.userId = :userId', {
+        userId: filters.userId,
+      });
     }
 
     if (filters.action) {
-      queryBuilder.andWhere('audit.action = :action', { action: filters.action });
+      queryBuilder.andWhere('audit.action = :action', {
+        action: filters.action,
+      });
     }
 
     if (filters.entityType) {
-      queryBuilder.andWhere('audit.entityType = :entityType', { entityType: filters.entityType });
+      queryBuilder.andWhere('audit.entityType = :entityType', {
+        entityType: filters.entityType,
+      });
     }
 
     if (filters.entityId) {
-      queryBuilder.andWhere('audit.entityId = :entityId', { entityId: filters.entityId });
+      queryBuilder.andWhere('audit.entityId = :entityId', {
+        entityId: filters.entityId,
+      });
     }
 
     if (filters.success !== undefined) {
-      queryBuilder.andWhere('audit.success = :success', { success: filters.success });
+      queryBuilder.andWhere('audit.success = :success', {
+        success: filters.success,
+      });
     }
 
     if (filters.source) {
-      queryBuilder.andWhere('audit.source = :source', { source: filters.source });
+      queryBuilder.andWhere('audit.source = :source', {
+        source: filters.source,
+      });
     }
 
     if (filters.dateFrom || filters.dateTo) {
@@ -118,7 +136,11 @@ export class AuditService {
     });
   }
 
-  async getEntityAuditLogs(entityType: AuditEntityType, entityId: string, limit = 50): Promise<AuditLog[]> {
+  async getEntityAuditLogs(
+    entityType: AuditEntityType,
+    entityId: string,
+    limit = 50,
+  ): Promise<AuditLog[]> {
     return await this.auditLogRepository.find({
       where: { entityType, entityId },
       order: { createdAt: 'DESC' },
@@ -182,7 +204,9 @@ export class AuditService {
       .createQueryBuilder()
       .update(AuditLog)
       .set({ ipAddress: null })
-      .where('ipAddress IN (:...invalidIps)', { invalidIps: ['::1', '127.0.0.1', ''] })
+      .where('ipAddress IN (:...invalidIps)', {
+        invalidIps: ['::1', '127.0.0.1', ''],
+      })
       .execute();
 
     // Update invalid user agents
@@ -190,7 +214,9 @@ export class AuditService {
       .createQueryBuilder()
       .update(AuditLog)
       .set({ userAgent: null })
-      .where('userAgent IN (:...invalidAgents)', { invalidAgents: ['', 'N/A', 'null'] })
+      .where('userAgent IN (:...invalidAgents)', {
+        invalidAgents: ['', 'N/A', 'null'],
+      })
       .execute();
   }
 
@@ -202,7 +228,12 @@ export class AuditService {
   }
 
   private sanitizeUserAgent(userAgent: string | undefined): string | null {
-    if (!userAgent || userAgent === '' || userAgent === 'N/A' || userAgent === 'null') {
+    if (
+      !userAgent ||
+      userAgent === '' ||
+      userAgent === 'N/A' ||
+      userAgent === 'null'
+    ) {
       return null;
     }
     return userAgent;
@@ -216,8 +247,15 @@ export class AuditService {
     const sanitized = { ...data };
 
     // Remove sensitive fields
-    const sensitiveFields = ['password', 'passHash', 'passSalt', 'token', 'secret', 'key'];
-    sensitiveFields.forEach(field => {
+    const sensitiveFields = [
+      'password',
+      'passHash',
+      'passSalt',
+      'token',
+      'secret',
+      'key',
+    ];
+    sensitiveFields.forEach((field) => {
       if (sanitized[field]) {
         sanitized[field] = '[REDACTED]';
       }

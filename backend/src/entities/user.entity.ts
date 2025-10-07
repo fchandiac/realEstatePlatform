@@ -1,5 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
-import { IsNotEmpty, IsString, IsOptional, IsEmail, IsEnum, ValidateNested } from 'class-validator';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsEmail,
+  IsEnum,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 

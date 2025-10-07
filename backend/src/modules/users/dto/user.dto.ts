@@ -1,6 +1,19 @@
-import { IsNotEmpty, IsString, IsOptional, IsEmail, IsEnum, ValidateNested, IsArray } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsOptional,
+  IsEmail,
+  IsEnum,
+  ValidateNested,
+  IsArray,
+} from 'class-validator';
 import { Type } from 'class-transformer';
-import { UserStatus, UserRole, Permission, PersonalInfo } from '../../../entities/user.entity';
+import {
+  UserStatus,
+  UserRole,
+  Permission,
+  PersonalInfo,
+} from '../../../entities/user.entity';
 
 export class CreateUserDto {
   @IsNotEmpty()

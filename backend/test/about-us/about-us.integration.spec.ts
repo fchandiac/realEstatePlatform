@@ -36,9 +36,11 @@ describe('AboutUsController (integration)', () => {
   it('POST /about-us - debe crear una nueva entrada de información corporativa', async () => {
     const aboutUsData = {
       bio: 'Somos una empresa inmobiliaria líder con más de 15 años de experiencia en el mercado.',
-      mision: 'Brindar servicios inmobiliarios excepcionales que superen las expectativas de nuestros clientes.',
-      vision: 'Ser la empresa inmobiliaria de referencia en el país, reconocida por nuestra integridad y excelencia.',
-      multimediaUrl: 'https://example.com/images/company-building.jpg'
+      mision:
+        'Brindar servicios inmobiliarios excepcionales que superen las expectativas de nuestros clientes.',
+      vision:
+        'Ser la empresa inmobiliaria de referencia en el país, reconocida por nuestra integridad y excelencia.',
+      multimediaUrl: 'https://example.com/images/company-building.jpg',
     };
 
     const response = await request(app.getHttpServer())
@@ -73,14 +75,17 @@ describe('AboutUsController (integration)', () => {
 
     expect(response.body.id).toBe(testAboutUsId);
     expect(response.body.bio).toContain('empresa inmobiliaria líder');
-    expect(response.body.mision).toContain('servicios inmobiliarios excepcionales');
+    expect(response.body.mision).toContain(
+      'servicios inmobiliarios excepcionales',
+    );
   });
 
   it('PATCH /about-us/:id - debe actualizar información corporativa existente', async () => {
     const updateData = {
       bio: 'Somos una empresa inmobiliaria líder con más de 18 años de experiencia en el mercado.',
-      vision: 'Ser la empresa inmobiliaria de referencia en Latinoamérica, reconocida por nuestra integridad y excelencia.',
-      multimediaUrl: 'https://example.com/images/company-building-updated.jpg'
+      vision:
+        'Ser la empresa inmobiliaria de referencia en Latinoamérica, reconocida por nuestra integridad y excelencia.',
+      multimediaUrl: 'https://example.com/images/company-building-updated.jpg',
     };
 
     const response = await request(app.getHttpServer())

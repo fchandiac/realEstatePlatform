@@ -45,7 +45,7 @@ describe('PropertyTypeController (integration)', () => {
         hasBathrooms: true,
         hasBuiltSquareMeters: true,
         hasLandSquareMeters: true,
-        hasParkingSpaces: true
+        hasParkingSpaces: true,
       };
 
       const response = await request(app.getHttpServer())
@@ -60,15 +60,21 @@ describe('PropertyTypeController (integration)', () => {
       expect(response.body.description).toBe(propertyTypeData.description);
       expect(response.body.hasBedrooms).toBe(propertyTypeData.hasBedrooms);
       expect(response.body.hasBathrooms).toBe(propertyTypeData.hasBathrooms);
-      expect(response.body.hasBuiltSquareMeters).toBe(propertyTypeData.hasBuiltSquareMeters);
-      expect(response.body.hasLandSquareMeters).toBe(propertyTypeData.hasLandSquareMeters);
-      expect(response.body.hasParkingSpaces).toBe(propertyTypeData.hasParkingSpaces);
+      expect(response.body.hasBuiltSquareMeters).toBe(
+        propertyTypeData.hasBuiltSquareMeters,
+      );
+      expect(response.body.hasLandSquareMeters).toBe(
+        propertyTypeData.hasLandSquareMeters,
+      );
+      expect(response.body.hasParkingSpaces).toBe(
+        propertyTypeData.hasParkingSpaces,
+      );
     });
 
     it('debe fallar al crear un tipo de propiedad con nombre duplicado', async () => {
       const propertyTypeData = {
         name: 'Casa',
-        description: 'Vivienda unifamiliar'
+        description: 'Vivienda unifamiliar',
       };
 
       // Crear el primer tipo de propiedad
@@ -90,21 +96,17 @@ describe('PropertyTypeController (integration)', () => {
       // Crear algunos tipos de propiedad de prueba
       const type1 = {
         name: 'Casa',
-        description: 'Vivienda unifamiliar'
+        description: 'Vivienda unifamiliar',
       };
 
       const type2 = {
         name: 'Departamento',
-        description: 'Vivienda en edificio'
+        description: 'Vivienda en edificio',
       };
 
-      await request(app.getHttpServer())
-        .post('/property-types')
-        .send(type1);
+      await request(app.getHttpServer()).post('/property-types').send(type1);
 
-      await request(app.getHttpServer())
-        .post('/property-types')
-        .send(type2);
+      await request(app.getHttpServer()).post('/property-types').send(type2);
 
       const response = await request(app.getHttpServer())
         .get('/property-types')
@@ -120,7 +122,7 @@ describe('PropertyTypeController (integration)', () => {
       // Crear un tipo de propiedad
       const propertyTypeData = {
         name: 'Casa',
-        description: 'Vivienda unifamiliar'
+        description: 'Vivienda unifamiliar',
       };
 
       const createResponse = await request(app.getHttpServer())
@@ -152,7 +154,7 @@ describe('PropertyTypeController (integration)', () => {
       const propertyTypeData = {
         name: 'Casa',
         description: 'Vivienda unifamiliar',
-        hasBedrooms: true
+        hasBedrooms: true,
       };
 
       const createResponse = await request(app.getHttpServer())
@@ -165,7 +167,7 @@ describe('PropertyTypeController (integration)', () => {
       const updateData = {
         name: 'Casa Unifamiliar',
         description: 'Vivienda unifamiliar actualizada',
-        hasBathrooms: true
+        hasBathrooms: true,
       };
 
       const response = await request(app.getHttpServer())
@@ -183,17 +185,15 @@ describe('PropertyTypeController (integration)', () => {
       // Crear dos tipos de propiedad
       const type1 = {
         name: 'Casa',
-        description: 'Vivienda unifamiliar'
+        description: 'Vivienda unifamiliar',
       };
 
       const type2 = {
         name: 'Departamento',
-        description: 'Vivienda en edificio'
+        description: 'Vivienda en edificio',
       };
 
-      await request(app.getHttpServer())
-        .post('/property-types')
-        .send(type1);
+      await request(app.getHttpServer()).post('/property-types').send(type1);
 
       const createResponse = await request(app.getHttpServer())
         .post('/property-types')
@@ -214,7 +214,7 @@ describe('PropertyTypeController (integration)', () => {
       // Crear un tipo de propiedad
       const propertyTypeData = {
         name: 'Casa',
-        description: 'Vivienda unifamiliar'
+        description: 'Vivienda unifamiliar',
       };
 
       const createResponse = await request(app.getHttpServer())

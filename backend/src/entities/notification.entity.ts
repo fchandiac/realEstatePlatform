@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 import { Multimedia } from './multimedia.entity';
 
@@ -9,12 +18,12 @@ export enum NotificationType {
   AVISO_PAGO_VENCIDO = 'AVISO_PAGO_VENCIDO',
   CAMBIO_ESTADO_PUBLICACION = 'CAMBIO_ESTADO_PUBLICACION',
   CAMBIO_ESTADO_CONTRATO = 'CAMBIO_ESTADO_CONTRATO',
-  NUEVA_ASIGNACION_PROPIEDAD_AGENTE = 'NUEVA_ASIGNACION_PROPIEDAD_AGENTE'
+  NUEVA_ASIGNACION_PROPIEDAD_AGENTE = 'NUEVA_ASIGNACION_PROPIEDAD_AGENTE',
 }
 
 export enum NotificationStatus {
   SEND = 'SEND',
-  OPEN = 'OPEN'
+  OPEN = 'OPEN',
 }
 
 export interface NotificationTarget {
@@ -32,7 +41,7 @@ export class Notification {
 
   @Column({
     type: 'enum',
-    enum: NotificationType
+    enum: NotificationType,
   })
   type: NotificationType;
 
@@ -48,7 +57,7 @@ export class Notification {
   @Column({
     type: 'enum',
     enum: NotificationStatus,
-    default: NotificationStatus.SEND
+    default: NotificationStatus.SEND,
   })
   status: NotificationStatus;
 

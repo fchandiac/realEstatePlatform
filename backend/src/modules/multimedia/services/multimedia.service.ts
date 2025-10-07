@@ -3,8 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { Multimedia, MultimediaType, MultimediaFormat } from '../../../entities/multimedia.entity';
-import { MultimediaUploadMetadata, MultimediaResponse } from '../interfaces/multimedia.interface';
+import {
+  Multimedia,
+  MultimediaType,
+  MultimediaFormat,
+} from '../../../entities/multimedia.entity';
+import {
+  MultimediaUploadMetadata,
+  MultimediaResponse,
+} from '../interfaces/multimedia.interface';
 import { StaticFilesService } from './static-files.service';
 
 @Injectable()
@@ -27,6 +34,7 @@ export class MultimediaService {
       'web/logos',
       'web/staff',
       'web/partnerships',
+      'web/testimonials',
       // Propiedades
       'properties/images',
       'properties/videos',
@@ -48,28 +56,36 @@ export class MultimediaService {
       [MultimediaType.PARTNERSHIP]: 'web/partnerships',
       [MultimediaType.PROPERTY_IMG]: 'properties/images',
       [MultimediaType.PROPERTY_VIDEO]: 'properties/videos',
+      [MultimediaType.TESTIMONIAL_IMG]: 'web/testimonials',
     };
 
     return paths[type] || '';
   }
 
-  private generateUniqueFilename(originalName: string, type: MultimediaType): string {
+  private generateUniqueFilename(
+    originalName: string,
+    type: MultimediaType,
+  ): string {
     // Obtener la extensión del archivo original
     const extension = path.extname(originalName);
-    
+
     // Crear prefijo basado en el tipo
     const typePrefix = type.toLowerCase().replace('_', '-');
-    
+
     // Generar timestamp en formato YYYYMMDD_HHMMSS
     const now = new Date();
-    const timestamp = now.toISOString()
+    const timestamp = now
+      .toISOString()
       .replace(/[-:]/g, '') // Remover guiones y dos puntos
-      .replace('T', '_')    // Reemplazar T con underscore
-      .split('.')[0];       // Remover milisegundos
-    
+      .replace('T', '_') // Reemplazar T con underscore
+      .split('.')[0]; // Remover milisegundos
+
     // Generar string aleatorio de 8 caracteres
-    const randomString = Math.random().toString(36).substring(2, 10).toUpperCase();
-    
+    const randomString = Math.random()
+      .toString(36)
+      .substring(2, 10)
+      .toUpperCase();
+
     // Combinar todo: prefijo_tipo_timestamp_random.ext
     return `${typePrefix}_${timestamp}_${randomString}${extension}`;
   }
@@ -85,7 +101,10 @@ export class MultimediaService {
     await fs.mkdir(uploadDir, { recursive: true });
 
     // Generate unique filename
-    const uniqueFilename = this.generateUniqueFilename(file.originalname, metadata.type as MultimediaType);
+    const uniqueFilename = this.generateUniqueFilename(
+      file.originalname,
+      metadata.type as MultimediaType,
+    );
     const filePath = path.join(uploadDir, uniqueFilename);
 
     try {
@@ -99,13 +118,18 @@ export class MultimediaService {
       multimedia.description = metadata.description;
       multimedia.url = filePath;
       multimedia.userId = userId || undefined; // Ensure userId is undefined if not provided
-      multimedia.format = file.mimetype.startsWith('image') ? MultimediaFormat.IMG : MultimediaFormat.VIDEO; // Infer format
+      multimedia.format = file.mimetype.startsWith('image')
+        ? MultimediaFormat.IMG
+        : MultimediaFormat.VIDEO; // Infer format
       multimedia.filename = uniqueFilename; // Use the unique filename instead of original
       multimedia.fileSize = file.size;
 
       return await this.multimediaRepository.save(multimedia);
     } catch (error) {
-      throw new HttpException('Error uploading file', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'Error uploading file',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -119,7 +143,9 @@ export class MultimediaService {
   }
 
   async deleteFile(id: string): Promise<void> {
-    const multimedia = await this.multimediaRepository.findOne({ where: { id } });
+    const multimedia = await this.multimediaRepository.findOne({
+      where: { id },
+    });
     if (!multimedia) {
       throw new HttpException('File not found', HttpStatus.NOT_FOUND);
     }
@@ -137,6 +163,8 @@ export class MultimediaService {
   }
 
   private getFormatFromMimeType(mimeType: string): MultimediaFormat {
-    return mimeType.startsWith('image/') ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
+    return mimeType.startsWith('image/')
+      ? MultimediaFormat.IMG
+      : MultimediaFormat.VIDEO;
   }
 }
