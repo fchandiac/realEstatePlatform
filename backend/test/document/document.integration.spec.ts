@@ -25,16 +25,21 @@ describe('DocumentController (integration)', () => {
 
     dataSource = app.get(DataSource);
 
-    // Create a test user
+    // Create a test user (check if exists first)
     const userRepository = dataSource.getRepository(User);
-    const testUser = await userRepository.save({
-      email: 'test@example.com',
-      username: 'testuser',
-      password: 'hashedpassword', // In real scenario this would be hashed
-      role: 'ADMIN' as any,
-      status: 'ACTIVE' as any,
-    } as any);
-    adminUserId = testUser.id;
+    let testUser = await userRepository.findOne({
+      where: { username: 'testuser' },
+    });
+    if (!testUser) {
+      testUser = await userRepository.save({
+        email: 'test@example.com',
+        username: 'testuser',
+        password: 'hashedpassword', // In real scenario this would be hashed
+        role: 'ADMIN' as any,
+        status: 'ACTIVE' as any,
+      } as any);
+    }
+    adminUserId = testUser!.id;
 
     // Create a document type for testing
     const documentTypeRepository = dataSource.getRepository(DocumentType);

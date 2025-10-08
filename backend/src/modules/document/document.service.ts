@@ -2,13 +2,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Document } from '../../entities/document.entity';
-import { CreateDocumentDto, UpdateDocumentDto } from './dto/document.dto';
+import { CreateDocumentDto, UpdateDocumentDto, UploadDocumentDto } from './dto/document.dto';
+import { MultimediaService } from '../multimedia/services/multimedia.service';
+import { MultimediaType } from '../../entities/multimedia.entity';
+import type { Express } from 'express';
 
 @Injectable()
 export class DocumentService {
   constructor(
     @InjectRepository(Document)
     private readonly documentRepository: Repository<Document>,
+    private readonly multimediaService: MultimediaService,
   ) {}
 
   async create(createDocumentDto: CreateDocumentDto): Promise<Document> {
@@ -45,5 +49,34 @@ export class DocumentService {
   async softDelete(id: string): Promise<void> {
     const document = await this.findOne(id);
     await this.documentRepository.softDelete(id);
+  }
+
+  async uploadDocument(
+    file: Express.Multer.File,
+    uploadDocumentDto: UploadDocumentDto,
+  ): Promise<Document> {
+    // Subir el archivo usando el servicio de multimedia
+    const multimediaMetadata = {
+      type: MultimediaType.DOCUMENT,
+      seoTitle: uploadDocumentDto.seoTitle || uploadDocumentDto.title,
+    };
+
+    const multimedia = await this.multimediaService.uploadFile(
+      file,
+      multimediaMetadata,
+      uploadDocumentDto.uploadedById,
+    );
+
+    // Crear el documento con la referencia al multimedia
+    const createDocumentDto: CreateDocumentDto = {
+      title: uploadDocumentDto.title,
+      documentTypeId: uploadDocumentDto.documentTypeId,
+      multimediaId: multimedia.id,
+      uploadedById: uploadDocumentDto.uploadedById,
+      status: uploadDocumentDto.status,
+      notes: uploadDocumentDto.notes,
+    };
+
+    return await this.create(createDocumentDto);
   }
 }
