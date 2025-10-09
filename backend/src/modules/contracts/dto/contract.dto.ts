@@ -191,3 +191,29 @@ export class CloseContractDto {
   @Type(() => ContractDocumentDto)
   documents: ContractDocumentDto[];
 }
+
+export class UploadContractDocumentDto {
+  @IsNotEmpty()
+  @IsString()
+  title: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  documentTypeId: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  contractId: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  uploadedById: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @IsOptional()
+  @IsString()
+  seoTitle?: string;
+}

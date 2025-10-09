@@ -17,13 +17,18 @@ import {
   AddPaymentDto,
   AddPersonDto,
   CloseContractDto,
+  UploadContractDocumentDto,
 } from './dto/contract.dto';
+import { DocumentTypesService } from '../document-types/document-types.service';
+import { DocumentStatus } from '../../entities/document.entity';
+import type { Express } from 'express';
 
 @Injectable()
 export class ContractsService {
   constructor(
     @InjectRepository(Contract)
     private readonly contractRepository: Repository<Contract>,
+    private readonly documentTypesService: DocumentTypesService,
   ) {}
 
   async create(createContractDto: CreateContractDto): Promise<Contract> {
@@ -189,6 +194,67 @@ export class ContractsService {
       default:
         return [];
     }
+  }
+
+  async uploadContractDocument(
+    file: Express.Multer.File,
+    uploadContractDocumentDto: UploadContractDocumentDto,
+  ): Promise<any> {
+    // Verificar que el contrato existe
+    const contract = await this.findOne(uploadContractDocumentDto.contractId);
+
+    // Verificar que el tipo de documento existe y está disponible
+    const documentType = await this.documentTypesService.findOne(
+      uploadContractDocumentDto.documentTypeId,
+    );
+
+    if (!documentType.available) {
+      throw new BadRequestException(
+        'El tipo de documento no está disponible para uso',
+      );
+    }
+
+    // Subir el documento usando el servicio de tipos de documento
+    const uploadResult = await this.documentTypesService.uploadDocument(
+      file,
+      {
+        title: uploadContractDocumentDto.title,
+        documentTypeId: uploadContractDocumentDto.documentTypeId,
+        uploadedById: uploadContractDocumentDto.uploadedById,
+        status: DocumentStatus.UPLOADED,
+        notes: uploadContractDocumentDto.notes,
+        seoTitle: uploadContractDocumentDto.seoTitle,
+      },
+    );
+
+    // Actualizar el contrato con el documento subido
+    const contractDocuments = contract.documents || [];
+    const existingDocIndex = contractDocuments.findIndex(
+      (doc) => doc.documentTypeId === uploadContractDocumentDto.documentTypeId,
+    );
+
+    if (existingDocIndex >= 0) {
+      // Actualizar documento existente
+      contractDocuments[existingDocIndex].documentId = uploadResult.document.id;
+      contractDocuments[existingDocIndex].uploaded = true;
+    } else {
+      // Agregar nuevo documento
+      contractDocuments.push({
+        documentTypeId: uploadContractDocumentDto.documentTypeId,
+        documentId: uploadResult.document.id,
+        required: true, // Por defecto requerido para contratos
+        uploaded: true,
+      });
+    }
+
+    contract.documents = contractDocuments;
+    await this.contractRepository.save(contract);
+
+    return {
+      contract: contract,
+      document: uploadResult.document,
+      multimedia: uploadResult.multimedia,
+    };
   }
 
   private validateRequiredDocuments(

@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsOptional, IsString, IsBoolean } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsBoolean, IsUUID, IsEnum } from 'class-validator';
+import { DocumentStatus } from '../../../entities/document.entity';
 
 export class CreateDocumentTypeDto {
   @IsString()
@@ -26,4 +27,48 @@ export class UpdateDocumentTypeDto {
   @IsBoolean()
   @IsOptional()
   available?: boolean;
+}
+
+export class UploadFileDto {
+  @IsNotEmpty()
+  @IsString()
+  title: string;
+
+  @IsOptional()
+  @IsString()
+  seoTitle?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  uploadedById: string;
+}
+
+export class UploadDocumentDto {
+  @IsNotEmpty()
+  @IsString()
+  title: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  documentTypeId: string;
+
+  @IsNotEmpty()
+  @IsUUID()
+  uploadedById: string;
+
+  @IsOptional()
+  @IsEnum(DocumentStatus)
+  status?: DocumentStatus;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @IsOptional()
+  @IsString()
+  seoTitle?: string;
 }

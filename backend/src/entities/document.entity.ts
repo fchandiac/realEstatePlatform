@@ -14,6 +14,7 @@ import { User } from './user.entity';
 
 export enum DocumentStatus {
   PENDING = 'PENDING',
+  UPLOADED = 'UPLOADED',
   RECIBIDO = 'RECIBIDO',
   REJECTED = 'REJECTED',
 }

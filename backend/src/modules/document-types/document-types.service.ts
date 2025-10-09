@@ -9,13 +9,22 @@ import { DocumentType } from '../../entities/document-type.entity';
 import {
   CreateDocumentTypeDto,
   UpdateDocumentTypeDto,
+  UploadFileDto,
+  UploadDocumentDto,
 } from './dto/document-type.dto';
+import { MultimediaService } from '../multimedia/services/multimedia.service';
+import { DocumentService } from '../document/document.service';
+import { MultimediaType } from '../../entities/multimedia.entity';
+import { DocumentStatus } from '../../entities/document.entity';
+import type { Express } from 'express';
 
 @Injectable()
 export class DocumentTypesService {
   constructor(
     @InjectRepository(DocumentType)
     private readonly documentTypeRepository: Repository<DocumentType>,
+    private readonly multimediaService: MultimediaService,
+    private readonly documentService: DocumentService,
   ) {}
 
   async create(
@@ -90,5 +99,59 @@ export class DocumentTypesService {
     const documentType = await this.findOne(id);
     documentType.available = available;
     return await this.documentTypeRepository.save(documentType);
+  }
+
+  async uploadFile(
+    file: Express.Multer.File,
+    uploadFileDto: UploadFileDto,
+  ): Promise<any> {
+    // Subir el archivo usando el servicio de multimedia
+    const multimediaMetadata = {
+      type: MultimediaType.DOCUMENT,
+      seoTitle: uploadFileDto.seoTitle || uploadFileDto.title,
+      description: uploadFileDto.description,
+    };
+
+    const multimedia = await this.multimediaService.uploadFile(
+      file,
+      multimediaMetadata,
+      uploadFileDto.uploadedById,
+    );
+
+    return multimedia;
+  }
+
+  async uploadDocument(
+    file: Express.Multer.File,
+    uploadDocumentDto: UploadDocumentDto,
+  ): Promise<any> {
+    // Subir el archivo usando el servicio de multimedia
+    const multimediaMetadata = {
+      type: MultimediaType.DOCUMENT,
+      seoTitle: uploadDocumentDto.seoTitle || uploadDocumentDto.title,
+    };
+
+    const multimedia = await this.multimediaService.uploadFile(
+      file,
+      multimediaMetadata,
+      uploadDocumentDto.uploadedById,
+    );
+
+    // Crear el documento con la referencia al multimedia y estado UPLOADED
+    const createDocumentDto = {
+      title: uploadDocumentDto.title,
+      documentTypeId: uploadDocumentDto.documentTypeId,
+      multimediaId: multimedia.id,
+      uploadedById: uploadDocumentDto.uploadedById,
+      status: DocumentStatus.UPLOADED,
+      notes: uploadDocumentDto.notes,
+    };
+
+    const document = await this.documentService.create(createDocumentDto);
+
+    return {
+      document,
+      multimedia,
+    };
   }
 }

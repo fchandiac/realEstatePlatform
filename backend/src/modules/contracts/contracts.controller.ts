@@ -7,7 +7,10 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ContractsService } from './contracts.service';
 import {
   CreateContractDto,
@@ -15,9 +18,13 @@ import {
   AddPaymentDto,
   AddPersonDto,
   CloseContractDto,
+  UploadContractDocumentDto,
 } from './dto/contract.dto';
 import { ContractRole } from '../../entities/contract.entity';
+import { ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import type { Express } from 'express';
 
+@ApiTags('contracts')
 @Controller('contracts')
 export class ContractsController {
   constructor(private readonly contractsService: ContractsService) {}
@@ -79,5 +86,50 @@ export class ContractsController {
   async validateRequiredRoles(@Param('id') id: string) {
     const contract = await this.contractsService.findOne(id);
     return this.contractsService.validateRequiredRoles(contract);
+  }
+
+  @Post('upload-document')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+        title: {
+          type: 'string',
+        },
+        documentTypeId: {
+          type: 'string',
+          format: 'uuid',
+        },
+        contractId: {
+          type: 'string',
+          format: 'uuid',
+        },
+        uploadedById: {
+          type: 'string',
+          format: 'uuid',
+        },
+        notes: {
+          type: 'string',
+        },
+        seoTitle: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  uploadContractDocument(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() uploadContractDocumentDto: UploadContractDocumentDto,
+  ) {
+    return this.contractsService.uploadContractDocument(
+      file,
+      uploadContractDocumentDto,
+    );
   }
 }
