@@ -200,7 +200,6 @@ export class SeederFactory {
     return {
       text: faker.lorem.paragraph(),
       name: faker.person.fullName(),
-      multimediaUrl: faker.image.url(),
       createdAt: faker.date.past(),
       updatedAt: new Date()
     };

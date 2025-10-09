@@ -10,8 +10,8 @@ export class CreateTestimonialDto {
   name: string;
 
   @IsOptional()
-  @IsUUID()
-  multimediaId?: string;
+  @IsString()
+  multimediaUrl?: string;
 }
 
 export class UpdateTestimonialDto {
@@ -24,6 +24,6 @@ export class UpdateTestimonialDto {
   name?: string;
 
   @IsOptional()
-  @IsUUID()
-  multimediaId?: string;
+  @IsString()
+  multimediaUrl?: string;
 }

@@ -114,11 +114,6 @@ export class Property {
   @IsEnum(PropertyStatus)
   status: PropertyStatus;
 
-  @Column({ type: 'uuid' })
-  @IsNotEmpty()
-  @IsUUID()
-  creatorUserId: string;
-
   @Column({
     type: 'enum',
     enum: PropertyOperationType,
@@ -130,11 +125,6 @@ export class Property {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'creatorUserId' })
   creatorUser: User;
-
-  @Column({ type: 'uuid', nullable: true })
-  @IsOptional()
-  @IsUUID()
-  assignedAgentId?: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'assignedAgentId' })

@@ -31,22 +31,13 @@ export class Document {
   @JoinColumn({ name: 'documentTypeId' })
   documentType: DocumentType;
 
-  @Column()
-  documentTypeId: string;
-
   @ManyToOne(() => Multimedia, { nullable: true })
   @JoinColumn({ name: 'multimediaId' })
   multimedia?: Multimedia;
 
-  @Column({ nullable: true })
-  multimediaId?: string;
-
   @ManyToOne(() => User)
   @JoinColumn({ name: 'uploadedById' })
   uploadedBy: User;
-
-  @Column()
-  uploadedById: string;
 
   @Column({
     type: 'enum',

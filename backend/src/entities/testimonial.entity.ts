@@ -26,11 +26,6 @@ export class Testimonial {
   @IsString()
   name: string;
 
-  @Column({ type: 'uuid', nullable: true })
-  @IsOptional()
-  @IsUUID()
-  multimediaId?: string;
-
   @ManyToOne(() => Multimedia, { nullable: true })
   @JoinColumn({ name: 'multimediaId' })
   multimedia?: Multimedia;

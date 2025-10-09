@@ -9,6 +9,7 @@ import {
   Notification,
   NotificationStatus,
 } from '../../entities/notification.entity';
+import { User } from '../../entities/user.entity';
 import {
   CreateNotificationDto,
   UpdateNotificationDto,
@@ -74,7 +75,7 @@ export class NotificationsService {
     }
 
     notification.status = NotificationStatus.OPEN;
-    notification.viewerId = viewerId;
+    notification.viewer = { id: viewerId } as User;
 
     return await this.notificationRepository.save(notification);
   }

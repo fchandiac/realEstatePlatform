@@ -80,7 +80,7 @@ describe('UsersController (integration)', () => {
     // Limpiar datos de prueba
     if (userRepository) {
       await userRepository.delete({ email: 'admin.test@example.com' });
-      await userRepository.delete({ email: 'test.user@example.com' });
+      await userRepository.delete({ email: 'test.user.integration@example.com' });
     }
     await app.close();
   });
@@ -88,8 +88,8 @@ describe('UsersController (integration)', () => {
   describe('POST /users', () => {
     it('debe crear un nuevo usuario', async () => {
       const newUser = {
-        username: 'testuser',
-        email: 'test.user@example.com',
+        username: 'testuser_integration',
+        email: 'test.user.integration@example.com',
         password: 'Test123!',
         role: UserRole.COMMUNITY,
         permissions: [],
@@ -114,7 +114,7 @@ describe('UsersController (integration)', () => {
     it('debe fallar al crear un usuario con email duplicado', async () => {
       const duplicateUser = {
         username: 'testuser2',
-        email: 'test.user@example.com', // Email duplicado
+        email: 'test.user.integration@example.com', // Email duplicado
         password: 'Test123!',
         role: 'USER',
         status: 'ACTIVE',

@@ -45,12 +45,6 @@ export class Notification {
   })
   type: NotificationType;
 
-  @Column('uuid', { nullable: true })
-  multimediaId: string | null;
-
-  @Column('uuid', { nullable: true })
-  viewerId: string | null;
-
   @Column({ type: 'json', nullable: true })
   targetMails: string[];
 

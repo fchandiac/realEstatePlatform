@@ -159,7 +159,6 @@ describe('PropertyController (integration)', () => {
         description: 'A test property description',
         status: 'REQUEST',
         operationType: 'SALE',
-        creatorUserId: admin?.id, // Required field
         ownerId: admin?.id, // Required field
         priceCLP: 150000000, // Changed from price to priceCLP
         priceUF: 4285.71, // Added priceUF (approximately based on UF value)

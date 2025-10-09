@@ -171,6 +171,11 @@ export class AuditService {
       .groupBy('action')
       .getRawMany();
 
+    // Convert count to number
+    actionStats.forEach(stat => {
+      stat.count = parseInt(stat.count, 10);
+    });
+
     // Entity type breakdown
     const entityStats = await this.auditLogRepository
       .createQueryBuilder('audit')
@@ -178,6 +183,11 @@ export class AuditService {
       .where('audit.createdAt >= :dateFrom', { dateFrom })
       .groupBy('entityType')
       .getRawMany();
+
+    // Convert count to number
+    entityStats.forEach(stat => {
+      stat.count = parseInt(stat.count, 10);
+    });
 
     return {
       period: `${days} days`,

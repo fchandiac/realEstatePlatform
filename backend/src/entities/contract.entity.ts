@@ -55,12 +55,6 @@ export class Contract {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid')
-  userId: string;
-
-  @Column('uuid')
-  propertyId: string;
-
   @Column({
     type: 'enum',
     enum: ContractOperationType,

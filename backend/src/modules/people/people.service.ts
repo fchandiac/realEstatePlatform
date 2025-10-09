@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Person } from '../../entities/person.entity';
+import { User } from '../../entities/user.entity';
 import {
   CreatePersonDto,
   UpdatePersonDto,
@@ -115,25 +116,25 @@ export class PeopleService {
   async linkUser(id: string, linkUserDto: LinkUserDto): Promise<Person> {
     const person = await this.findOne(id);
 
-    if (person.userId) {
+    if (person.user) {
       throw new BadRequestException('La persona ya tiene un usuario vinculado');
     }
 
     // TODO: Validate that user exists and is not already linked
-    person.userId = linkUserDto.userId;
+    person.user = { id: linkUserDto.userId } as User;
     return await this.personRepository.save(person);
   }
 
   async unlinkUser(id: string): Promise<Person> {
     const person = await this.findOne(id);
 
-    if (!person.userId) {
+    if (!person.user) {
       throw new BadRequestException(
         'No existe usuario vinculado a esta persona',
       );
     }
 
-    person.userId = null;
+    person.user = undefined as any;
     return await this.personRepository.save(person);
   }
 }

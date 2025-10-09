@@ -62,18 +62,13 @@ describe('Contracts Document Upload (integration)', () => {
     const propertyRepository = dataSource.getRepository(Property);
     const testProperty = await propertyRepository.save({
       title: 'Test Property for Contract',
-      description: 'Property for testing contract document uploads',
-      address: 'Test Address 123',
-      city: 'Test City',
-      state: 'Test State',
-      zipCode: '12345',
+      description: 'Test property description',
       country: 'Test Country',
       price: 100000,
       bedrooms: 3,
       bathrooms: 2,
       area: 150,
       userId: adminUserId,
-      creatorUserId: adminUserId,
       status: 'PUBLISHED' as any,
       type: 'HOUSE' as any,
     });

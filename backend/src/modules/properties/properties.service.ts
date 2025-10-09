@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Property } from '../../entities/property.entity';
+import { User } from '../../entities/user.entity';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 
 @Injectable()
@@ -53,13 +54,13 @@ export class PropertiesService {
 
   async assignAgent(id: string, agentId: string): Promise<Property> {
     const property = await this.findOne(id);
-    property.assignedAgentId = agentId;
+    property.assignedAgent = { id: agentId } as User;
     return await this.propertyRepository.save(property);
   }
 
   async findByCreator(creatorUserId: string): Promise<Property[]> {
     return await this.propertyRepository.find({
-      where: { creatorUserId, deletedAt: IsNull() },
+      where: { creatorUser: { id: creatorUserId }, deletedAt: IsNull() },
       relations: ['creatorUser', 'assignedAgent'],
       order: { createdAt: 'DESC' },
     });
@@ -67,7 +68,7 @@ export class PropertiesService {
 
   async findByAgent(agentId: string): Promise<Property[]> {
     return await this.propertyRepository.find({
-      where: { assignedAgentId: agentId, deletedAt: IsNull() },
+      where: { assignedAgent: { id: agentId }, deletedAt: IsNull() },
       relations: ['creatorUser', 'assignedAgent'],
       order: { createdAt: 'DESC' },
     });

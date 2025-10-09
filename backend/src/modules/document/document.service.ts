@@ -4,7 +4,9 @@ import { Repository, IsNull } from 'typeorm';
 import { Document } from '../../entities/document.entity';
 import { CreateDocumentDto, UpdateDocumentDto, UploadDocumentDto } from './dto/document.dto';
 import { MultimediaService } from '../multimedia/services/multimedia.service';
-import { MultimediaType } from '../../entities/multimedia.entity';
+import { MultimediaType, Multimedia } from '../../entities/multimedia.entity';
+import { DocumentType } from '../../entities/document-type.entity';
+import { User } from '../../entities/user.entity';
 import type { Express } from 'express';
 
 @Injectable()
@@ -12,11 +14,50 @@ export class DocumentService {
   constructor(
     @InjectRepository(Document)
     private readonly documentRepository: Repository<Document>,
+    @InjectRepository(DocumentType)
+    private readonly documentTypeRepository: Repository<DocumentType>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Multimedia)
+    private readonly multimediaRepository: Repository<Multimedia>,
     private readonly multimediaService: MultimediaService,
   ) {}
 
   async create(createDocumentDto: CreateDocumentDto): Promise<Document> {
-    const document = this.documentRepository.create(createDocumentDto);
+    // Buscar las entidades relacionadas
+    const documentType = await this.documentTypeRepository.findOne({
+      where: { id: createDocumentDto.documentTypeId },
+    });
+    if (!documentType) {
+      throw new NotFoundException('Tipo de documento no encontrado');
+    }
+
+    const uploadedBy = await this.userRepository.findOne({
+      where: { id: createDocumentDto.uploadedById },
+    });
+    if (!uploadedBy) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    let multimedia: Multimedia | undefined;
+    if (createDocumentDto.multimediaId) {
+      const foundMultimedia = await this.multimediaRepository.findOne({
+        where: { id: createDocumentDto.multimediaId },
+      });
+      if (!foundMultimedia) {
+        throw new NotFoundException('Multimedia no encontrado');
+      }
+      multimedia = foundMultimedia;
+    }
+
+    // Crear el documento con las relaciones
+    const { documentTypeId, multimediaId, uploadedById, ...documentData } = createDocumentDto;
+    const document = this.documentRepository.create({
+      ...documentData,
+      documentType,
+      multimedia,
+      uploadedBy,
+    });
     return await this.documentRepository.save(document);
   }
 
@@ -42,7 +83,46 @@ export class DocumentService {
 
   async update(id: string, updateDocumentDto: UpdateDocumentDto): Promise<Document> {
     const document = await this.findOne(id);
-    Object.assign(document, updateDocumentDto);
+
+    // Actualizar campos directos
+    const { documentTypeId, multimediaId, uploadedById, ...directFields } = updateDocumentDto;
+    Object.assign(document, directFields);
+
+    // Actualizar relaciones si se proporcionan
+    if (documentTypeId) {
+      const documentType = await this.documentTypeRepository.findOne({
+        where: { id: documentTypeId },
+      });
+      if (!documentType) {
+        throw new NotFoundException('Tipo de documento no encontrado');
+      }
+      document.documentType = documentType;
+    }
+
+    if (uploadedById) {
+      const uploadedBy = await this.userRepository.findOne({
+        where: { id: uploadedById },
+      });
+      if (!uploadedBy) {
+        throw new NotFoundException('Usuario no encontrado');
+      }
+      document.uploadedBy = uploadedBy;
+    }
+
+    if (multimediaId !== undefined) {
+      if (multimediaId) {
+        const multimedia = await this.multimediaRepository.findOne({
+          where: { id: multimediaId },
+        });
+        if (!multimedia) {
+          throw new NotFoundException('Multimedia no encontrado');
+        }
+        document.multimedia = multimedia;
+      } else {
+        document.multimedia = undefined;
+      }
+    }
+
     return await this.documentRepository.save(document);
   }
 

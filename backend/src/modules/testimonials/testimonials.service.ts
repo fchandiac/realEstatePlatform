@@ -7,7 +7,7 @@ import {
   UpdateTestimonialDto,
 } from './dto/testimonial.dto';
 import { MultimediaService as UploadMultimediaService } from '../multimedia/services/multimedia.service';
-import { MultimediaType } from '../../entities/multimedia.entity';
+import { MultimediaType, Multimedia, MultimediaFormat } from '../../entities/multimedia.entity';
 import type { Express } from 'express';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class TestimonialsService {
     createTestimonialDto: CreateTestimonialDto,
     file?: Express.Multer.File,
   ): Promise<Testimonial> {
-    let multimediaId: string | undefined;
+    let multimedia: Multimedia | undefined;
 
     if (file) {
       const metadata = {
@@ -30,16 +30,14 @@ export class TestimonialsService {
         seoTitle: '',
         description: '',
       };
-      const multimedia = await this.uploadMultimediaService.uploadFile(
+      multimedia = await this.uploadMultimediaService.uploadFile(
         file,
         metadata,
         'system',
       ); // Assuming userId is 'system' for now
-      multimediaId = multimedia.id;
     }
 
-    const testimonialData = { ...createTestimonialDto, multimediaId };
-    const testimonial = this.testimonialRepository.create(testimonialData);
+    const testimonial = this.testimonialRepository.create({ ...createTestimonialDto, multimedia });
     return await this.testimonialRepository.save(testimonial);
   }
 

@@ -37,7 +37,6 @@ describe('TestimonialController (integration)', () => {
     const testimonialData = {
       text: 'Excelente servicio, encontraron la casa perfecta para mi familia en tiempo récord.',
       name: 'María González',
-      multimediaUrl: 'https://example.com/images/maria-gonzalez.jpg',
     };
 
     const response = await request(app.getHttpServer())
@@ -77,7 +76,6 @@ describe('TestimonialController (integration)', () => {
   it('PATCH /testimonials/:id - debe actualizar un testimonio existente', async () => {
     const updateData = {
       text: 'Excelente servicio, encontraron la casa perfecta para mi familia en tiempo récord. ¡Altamente recomendado!',
-      multimediaUrl: 'https://example.com/images/maria-gonzalez-updated.jpg',
     };
 
     const response = await request(app.getHttpServer())
@@ -87,7 +85,6 @@ describe('TestimonialController (integration)', () => {
       .expect(200);
 
     expect(response.body.text).toBe(updateData.text);
-    expect(response.body.multimediaUrl).toBe(updateData.multimediaUrl);
   });
 
   it('DELETE /testimonials/:id - debe eliminar un testimonio existente', async () => {

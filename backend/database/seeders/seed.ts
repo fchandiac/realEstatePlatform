@@ -93,8 +93,8 @@ async function seedDatabase() {
       Array.from({ length: 20 }, (_, i) => {
         const user = userRepository.create(SeederFactory.createRandomUser());
         if (i < people.length) {
-          // Update the person with the user's ID after the user is created
-          people[i].userId = user.id;
+          // Update the person with the user relation after the user is created
+          people[i].user = user;
         }
         return user;
       })
@@ -126,8 +126,8 @@ async function seedDatabase() {
         const randomAgent = agentUsers[Math.floor(Math.random() * agentUsers.length)];
         return propertyRepository.create({
           ...propertyData,
-          creatorUserId: randomAgent.id,
-          assignedAgentId: randomAgent.id
+          creatorUser: randomAgent,
+          assignedAgent: randomAgent
         });
       }));
       
@@ -143,8 +143,6 @@ async function seedDatabase() {
         
         return contractRepository.create({
           ...contractData,
-          propertyId: property.id,
-          userId: user.id,
           property: property,
           user: user,
           people: [{

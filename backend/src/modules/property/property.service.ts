@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Property } from '../../entities/property.entity';
+import { User } from '../../entities/user.entity';
 import { CreatePropertyDto } from './dto/property.dto';
 import { UpdatePropertyDto } from '../properties/dto/property.dto';
 
@@ -15,7 +16,7 @@ export class PropertyService {
   async create(createPropertyDto: CreatePropertyDto): Promise<Property> {
     const property = this.propertyRepository.create({
       ...createPropertyDto,
-      creatorUserId: createPropertyDto.ownerId,
+      creatorUser: { id: createPropertyDto.ownerId } as User,
     });
     return await this.propertyRepository.save(property);
   }

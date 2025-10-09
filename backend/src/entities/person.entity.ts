@@ -38,15 +38,6 @@ export class Person {
   @Column({ type: 'date', nullable: true })
   verificationRequest: Date;
 
-  @Column('uuid', { nullable: true })
-  dniCardFrontId: string;
-
-  @Column('uuid', { nullable: true })
-  dniCardRearId: string;
-
-  @Column('uuid', { nullable: true })
-  userId: string | null;
-
   @CreateDateColumn()
   createdAt: Date;
 
