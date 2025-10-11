@@ -9,6 +9,8 @@ import { UsersModule } from '../../src/modules/users/users.module';
 import { AuditModule } from '../../src/audit/audit.module';
 import { User } from '../../src/entities/user.entity';
 import { AuditLog } from '../../src/entities/audit-log.entity';
+import { Person } from '../../src/entities/person.entity';
+import { Multimedia } from '../../src/entities/multimedia.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -31,7 +33,7 @@ describe('AuthController (integration)', () => {
           username: process.env.DB_USERNAME,
           password: process.env.DB_PASSWORD,
           database: process.env.DB_DATABASE,
-          entities: [User, AuditLog],
+          entities: [User, AuditLog, Person, Multimedia],
           synchronize: true, // Solo para pruebas, no usar en producción
         }),
         TypeOrmModule.forFeature([User]),

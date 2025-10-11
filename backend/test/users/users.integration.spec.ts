@@ -11,6 +11,8 @@ import {
   UserStatus,
   Permission,
 } from '../../src/entities/user.entity';
+import { Person } from '../../src/entities/person.entity';
+import { Multimedia } from '../../src/entities/multimedia.entity';
 import { AuditLog } from '../../src/entities/audit-log.entity';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -19,6 +21,7 @@ import { AuditModule } from '../../src/audit/audit.module';
 describe('UsersController (integration)', () => {
   let app: INestApplication;
   let userRepository: Repository<User>;
+  let personRepository: Repository<Person>;
   let adminToken: string;
   let testUserId: string;
 
@@ -33,7 +36,7 @@ describe('UsersController (integration)', () => {
           username: process.env.DB_USERNAME,
           password: process.env.DB_PASSWORD,
           database: process.env.DB_DATABASE,
-          entities: [User, AuditLog],
+          entities: [User, Person, Multimedia, AuditLog],
           synchronize: true,
         }),
         TypeOrmModule.forFeature([User]),
@@ -49,6 +52,10 @@ describe('UsersController (integration)', () => {
 
     userRepository = moduleFixture.get<Repository<User>>(
       getRepositoryToken(User),
+    );
+
+    personRepository = moduleFixture.get<Repository<Person>>(
+      getRepositoryToken(Person),
     );
 
     // Crear un usuario admin para las pruebas
@@ -82,7 +89,14 @@ describe('UsersController (integration)', () => {
       await userRepository.delete({ email: 'admin.test@example.com' });
       await userRepository.delete({ email: 'test.user.integration@example.com' });
     }
-    await app.close();
+    if (personRepository) {
+      // Limpiar personas asociadas a usuarios de prueba
+      await personRepository.delete({ user: { email: 'admin.test@example.com' } });
+      await personRepository.delete({ user: { email: 'test.user.integration@example.com' } });
+    }
+    if (app) {
+      await app.close();
+    }
   });
 
   describe('POST /users', () => {
@@ -201,7 +215,7 @@ describe('UsersController (integration)', () => {
       const loginResponse = await request(app.getHttpServer())
         .post('/auth/sign-in')
         .send({
-          email: 'test.user@example.com',
+          email: 'test.user.integration@example.com',
           password: 'NewTest123!',
         })
         .expect(200);

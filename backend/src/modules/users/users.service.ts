@@ -15,6 +15,7 @@ import {
   UserRole,
   Permission,
 } from '../../entities/user.entity';
+import { Person } from '../../entities/person.entity';
 import {
   CreateUserDto,
   UpdateUserDto,
@@ -29,6 +30,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Person)
+    private readonly personRepository: Repository<Person>,
     @Inject(AuditService)
     private readonly auditService: AuditService,
   ) {}
@@ -48,18 +51,47 @@ export class UsersService {
       );
     }
 
-    const user = this.userRepository.create({
-      ...createUserDto,
-      status: UserStatus.ACTIVE,
-      role: createUserDto.role || UserRole.COMMUNITY,
-      permissions: createUserDto.permissions || [],
-      personalInfo: createUserDto.personalInfo || {},
-    });
+    // Use transaction to ensure both user and person are created together
+    const queryRunner = this.userRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    // Hash password using the entity method
-    await user.setPassword(createUserDto.password);
+    try {
+      // Create user
+      const user = this.userRepository.create({
+        ...createUserDto,
+        status: UserStatus.ACTIVE,
+        role: createUserDto.role || UserRole.COMMUNITY,
+        permissions: createUserDto.permissions || [],
+        personalInfo: createUserDto.personalInfo || {},
+      });
 
-    return await this.userRepository.save(user);
+      // Hash password using the entity method
+      await user.setPassword(createUserDto.password);
+
+      // Save user first to get the ID
+      const savedUser = await queryRunner.manager.save(User, user);
+
+      // Create associated person with blank data
+      const person = this.personRepository.create({
+        verified: false,
+        user: savedUser, // Link the person to the user
+      });
+
+      await queryRunner.manager.save(Person, person);
+
+      // Commit transaction
+      await queryRunner.commitTransaction();
+
+      return savedUser;
+    } catch (error) {
+      // Rollback transaction on error
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      // Release query runner
+      await queryRunner.release();
+    }
   }
 
   async findAll(): Promise<User[]> {

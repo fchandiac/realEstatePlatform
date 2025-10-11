@@ -48,9 +48,9 @@ export class Person {
   deletedAt: Date;
 
   // Relations
-  @OneToOne(() => User)
+  @OneToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user?: User;
 
   @ManyToOne(() => Multimedia)
   @JoinColumn({ name: 'dniCardFrontId' })
