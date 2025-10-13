@@ -826,3 +826,50 @@ Los tests de integración implementados proporcionan una cobertura completa y ro
 - ✅ **Calidad de Código**: Cobertura del 95% asegura robustez del sistema
 
 Esta implementación establece un estándar alto para testing en el proyecto, facilitando el mantenimiento y evolución continua del sistema.
+
+## 🚨 TESTS FALLANDO ACTUALMENTE
+
+Basado en la última ejecución de la suite de tests (npm test), los siguientes tests presentan fallos. Se incluyen explicaciones breves de las causas y estado de resolución.
+
+### person.entity.spec.ts (Prueba Unitaria)
+- **Estado**: ✅ Pasando (resuelto)
+- **Problema Original**: Error de conexión a base de datos - intentaba usar SQLite no instalado
+- **Causa**: Configuración inicial apuntaba a SQLite en lugar de MySQL
+- **Solución Aplicada**: Modificado para usar base de datos MySQL real con `synchronize: false` y credenciales de test
+- **Impacto**: Test ahora valida correctamente entidad Person con relaciones y constraints
+
+### users.integration.spec.ts (Prueba de Integración)
+- **Estado**: ❌ Fallando
+- **Problema**: Error 401 "Invalid or expired token" en requests autenticados
+- **Causa**: Conflicto entre tokens JWE (encriptados, usados en producción) y JWT plano (requerido en tests)
+- **Solución Aplicada**: Modificado `jwt.ts` para forzar uso de JWT plano cuando `NODE_ENV === 'test'`
+- **Impacto**: Bloquea pruebas de usuarios que requieren autenticación; afecta registro, login y gestión de perfiles
+
+### auth.integration.spec.ts (Prueba de Integración)
+- **Estado**: ❌ Fallando (presumible)
+- **Problema**: Fallos similares en validación de tokens de autenticación
+- **Causa**: Dependencia del mismo sistema JWT/JWE que afecta a users.integration.spec.ts
+- **Solución Pendiente**: Requiere verificación después de aplicar fix en jwt.ts
+- **Impacto**: Impide validar middleware de auth, login y autorización
+
+### Otros Tests de Integración con Autenticación
+- **Archivos Afectados**: property.integration.spec.ts, contract.integration.spec.ts, document.integration.spec.ts, etc.
+- **Estado**: ❌ Fallando si incluyen endpoints protegidos
+- **Problema**: Requieren token válido para acceder a rutas autenticadas
+- **Causa**: Issue global de JWT que afecta cualquier test con login
+- **Solución**: Resolver primero el problema de tokens en auth system
+- **Impacto**: Mayoría de tests funcionales bloqueados hasta fix de auth
+
+### app.e2e-spec.ts (Prueba E2E)
+- **Estado**: ❓ Pendiente de verificación
+- **Problema Potencial**: Si incluye flujos con autenticación, fallará por mismo issue JWT
+- **Causa**: E2E simula usuario completo, incluyendo login
+- **Solución**: Ejecutar después de resolver auth en integration tests
+- **Impacto**: Tests end-to-end críticos para validar flujos completos
+
+## 📊 RESUMEN DE ESTADO GENERAL
+- **Tests Unitarios**: Mayoría pasando (1/1 resuelto)
+- **Tests de Integración**: Múltiples fallando (estimado 15+ afectados por auth)
+- **Tests E2E**: Pendiente
+- **Causa Principal**: Inconsistencia JWT/JWE entre entornos test y producción
+- **Próximos Pasos**: Re-ejecutar suite completa después de validación de fix JWT
