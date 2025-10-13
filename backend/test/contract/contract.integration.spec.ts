@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { DataSource } from 'typeorm';
-import { User } from '../../src/entities/user.entity';
+import { User, UserRole, UserStatus } from '../../src/entities/user.entity';
 import { Property } from '../../src/entities/property.entity';
 import { Contract } from '../../src/entities/contract.entity';
 
@@ -40,11 +40,38 @@ describe('ContractController (integration)', () => {
     const userRepository = dataSource.getRepository(User);
     const propertyRepository = dataSource.getRepository(Property);
 
-    const user = await userRepository.findOne({ where: {} });
-    const property = await propertyRepository.findOne({ where: {} });
+    let user = await userRepository.findOne({ where: {} });
+    let property = await propertyRepository.findOne({ where: {} });
 
     expect(user).toBeDefined();
     expect(property).toBeDefined();
+    
+    // Create a user if none exists to make the test self-contained
+    if (!user) {
+      const unique = Date.now().toString();
+      user = userRepository.create({
+        username: `contract_user_${unique}`,
+        email: `contract_user_${unique}@example.com`,
+        password: 'x',
+        role: UserRole.COMMUNITY,
+        status: UserStatus.ACTIVE,
+      } as any) as any;
+      user = await userRepository.save(user as any);
+    }
+
+    // Create a property if none exists
+    if (!property) {
+      property = propertyRepository.create({
+        title: 'Test Property',
+        description: 'Property for contract test',
+        status: 'PUBLISHED',
+        operationType: 'SALE',
+        creatorUser: user,
+        priceCLP: 100000,
+        priceUF: 0,
+      } as any) as any;
+      property = await propertyRepository.save(property as any);
+    }
 
     const contractData = {
       userId: user!.id,

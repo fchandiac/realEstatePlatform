@@ -23,7 +23,7 @@ describe('PersonController (integration)', () => {
     dataSource = moduleFixture.get<DataSource>(DataSource);
 
     // Crear token JWT para autenticación
-    jwtToken = createJwtToken({
+    jwtToken = await createJwtToken({
       sub: '123',
       email: 'test@example.com',
       role: 'ADMIN',

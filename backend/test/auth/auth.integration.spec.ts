@@ -20,6 +20,7 @@ describe('AuthController (integration)', () => {
   jest.setTimeout(20000); // Aumenta el timeout global para conexiones lentas
   let app: INestApplication;
   let userRepository: Repository<User>;
+  let personRepository: Repository<Person>;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -50,12 +51,24 @@ describe('AuthController (integration)', () => {
     userRepository = moduleFixture.get<Repository<User>>(
       getRepositoryToken(User),
     );
+    personRepository = moduleFixture.get<Repository<Person>>(getRepositoryToken(Person));
   });
 
   afterAll(async () => {
-    // Limpia los usuarios de prueba
-    await userRepository.delete({ email: 'test.integration@example.com' });
-    await app.close();
+    // Limpia la persona asociada y luego el usuario de prueba para evitar errores de FK
+    try {
+      const user = await userRepository.findOne({ where: { email: 'test.integration@example.com' } });
+      if (user) {
+        // Eliminar person vinculada al user si existe
+        await personRepository.delete({ user: { id: user.id } } as any);
+        // Eliminar el usuario
+        await userRepository.delete({ id: user.id });
+      }
+    } catch (err) {
+      console.error('Error cleaning test user/person:', err);
+    } finally {
+      await app.close();
+    }
   });
 
   it('debe registrar y loguear un usuario real', async () => {

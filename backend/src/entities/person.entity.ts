@@ -33,7 +33,7 @@ export class Person {
   email: string;
 
   @Column({ default: false })
-  verified: boolean;
+  verified: boolean = false;
 
   @Column({ type: 'date', nullable: true })
   verificationRequest: Date;

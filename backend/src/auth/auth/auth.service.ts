@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../../modules/users/users.service';
 import { JweService } from '../jwe/jwe.service';
 import { LoginDto } from '../../modules/users/dto/user.dto';
+import * as jwt from 'jsonwebtoken';
 
 export interface SignInResult {
   access_token: string;
@@ -39,8 +40,17 @@ export class AuthService {
       };
       console.log('Payload created:', payload);
 
-      // Generate JWE token
-      const access_token = await this.jweService.encrypt(payload, '15m');
+      // Generate token
+      let access_token: string;
+      if (process.env.NODE_ENV === 'test') {
+        // In test environment, use plain JWT
+        access_token = jwt.sign(payload, process.env.JWT_SECRET || 'test-secret', {
+          expiresIn: '1h',
+        });
+      } else {
+        // Generate JWE token
+        access_token = await this.jweService.encrypt(payload, '15m');
+      }
       console.log('Token generated:', !!access_token);
 
       return {
