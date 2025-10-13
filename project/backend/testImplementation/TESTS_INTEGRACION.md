@@ -867,9 +867,39 @@ Basado en la última ejecución de la suite de tests (npm test), los siguientes 
 - **Solución**: Ejecutar después de resolver auth en integration tests
 - **Impacto**: Tests end-to-end críticos para validar flujos completos
 
-## 📊 RESUMEN DE ESTADO GENERAL
-- **Tests Unitarios**: Mayoría pasando (1/1 resuelto)
-- **Tests de Integración**: Múltiples fallando (estimado 15+ afectados por auth)
-- **Tests E2E**: Pendiente
-- **Causa Principal**: Inconsistencia JWT/JWE entre entornos test y producción
-- **Próximos Pasos**: Re-ejecutar suite completa después de validación de fix JWT
+## 🔧 Cambios recientes y recomendaciones
+
+En las últimas iteraciones se realizaron varios ajustes en la suite de tests de integración para
+hacerla más determinista y evitar errores de integridad referencial. Resumen de cambios que están
+implementados en el código y que conviene documentar aquí:
+
+- Añadido `await` al uso de helpers que generan JWT en tests (p.ej. `createJwtToken`) para evitar
+  asignar `Promise<string>` a variables `string`. Esto corrige fallos de tipos y ejecuciones asín-
+  cronas inesperadas.
+- Orden de limpieza en tests de Users/Auth: ahora se eliminan las entidades `Person` asociadas a
+  un `User` antes de borrar el propio `User` en los bloques `afterAll`/`afterEach`. Esto evita er-
+  rode de clave foránea (MySQL: ER_ROW_IS_REFERENCED) cuando los tests intentan eliminar usuarios
+  que todavía están referenciados por `people.userId`.
+- `Person.verified` inicializa por defecto a `false` en la entidad para reflejar el comportamiento
+  esperado en tests que crean personas sin solicitar verificación explícita.
+- Tests unitarios/entidad `person.entity.spec.ts`: ahora crean y persisten fixtures dependientes
+  (User y Multimedia) antes de guardar `Person`, y usan sufijos únicos (timestamp) para evitar
+  colisiones en campos únicos (username/email) entre ejecuciones.
+- Test `contract.integration.spec.ts` hecho autosuficiente: si faltan fixtures (user/property) el
+  test las crea dinámicamente para no depender de un orden específico de ejecución de tests.
+
+Recomendaciones y notas pendientes:
+
+- TypeORM emite una advertencia: "Warning: MySQL driver instance provided directly without spe-
+  cifying connectorPackage". Se recomienda fijar `connectorPackage: 'mysql2'` en la config de
+  TypeORM (DataSource / TypeOrmModule.forRoot) para evitar comportamientos inesperados de pars-
+  ing y eliminar ruido en los logs.
+- Evitar commitear archivos de entorno (`.env*`) y uploads en el repositorio. Si hay `.env.test`
+  en el repo, considerar su eliminación del control de versiones y la rotación de credenciales si
+  contienen secretos reales.
+- Mantener los tests autosuficientes: preferir que cada spec cree sus fixtures o use seeds cla-
+  ras en lugar de depender del orden de ejecución.
+
+Si se requiere, en esta documentación podemos añadir ejemplos concretos de cleanup (orden de
+operaciones en `afterAll`) y snippets para cerrar correctamente la aplicación (`await app.close()`)
+ y la conexión de TypeORM (`await dataSource.destroy()`).
