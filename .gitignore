@@ -1,0 +1,25 @@
+# Node
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Next.js build output
+/frontent/.next/
+/frontent/out/
+
+# frontent node modules and env
+/frontent/node_modules/
+/frontent/.env*
+
+# Optional: macOS
+.DS_Store
