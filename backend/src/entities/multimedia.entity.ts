@@ -5,7 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Property } from './property.entity';
 
 export enum MultimediaFormat {
   IMG = 'IMG',
@@ -59,6 +62,13 @@ export class Multimedia {
 
   @Column({ nullable: true })
   userId?: string;
+
+  @ManyToOne(() => Property, { nullable: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'propertyId' })
+  property?: Property;
+
+  @Column({ type: 'uuid', nullable: true })
+  propertyId?: string;
 
   @CreateDateColumn()
   createdAt: Date;

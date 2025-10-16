@@ -7,7 +7,7 @@ import {
   DeleteDateColumn,
   ManyToOne,
   JoinColumn,
-  Generated,
+  OneToMany,
 } from 'typeorm';
 import {
   IsNotEmpty,
@@ -35,6 +35,12 @@ import {
   RegionCommune,
   LeadEntry,
 } from '../common/interfaces/property.interfaces';
+import { Multimedia } from './multimedia.entity';
+
+export enum CurrencyPriceEnum {
+  CLP = 'CLP',
+  UF = 'UF',
+}
 
 @Entity('properties')
 export class Property {
@@ -90,17 +96,16 @@ export class Property {
   assignedAgentId?: string;
 
   // Pricing Information
-  @Column({ type: 'bigint', default: 0 })
+  @Column({ type: 'float', default: 0 })
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
-  priceCLP: number;
+  price: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Column({ type: 'enum', enum: CurrencyPriceEnum, default: CurrencyPriceEnum.CLP })
   @IsNotEmpty()
-  @IsNumber()
-  @Min(0)
-  priceUF: number;
+  @IsEnum(CurrencyPriceEnum)
+  currencyPrice: CurrencyPriceEnum;
 
   @Column({ type: 'bigint', nullable: true })
   @IsOptional()
@@ -247,11 +252,10 @@ export class Property {
   @IsString()
   zipCode?: string;
 
-  // Multimedia
-  @Column({ type: 'json', nullable: true })
+  // Multimedia (OneToMany relation to Multimedia table)
+  @OneToMany(() => Multimedia, (m) => m.property, { cascade: true })
   @IsOptional()
-  @IsArray()
-  multimedia?: MultimediaReference[];
+  multimedia?: Multimedia[];
 
   // Business Logic Fields
   @Column({ type: 'json', nullable: true })
