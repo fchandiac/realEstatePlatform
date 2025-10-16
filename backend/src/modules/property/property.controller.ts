@@ -10,8 +10,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
-import { CreatePropertyDto } from './dto/property.dto';
-import { UpdatePropertyDto } from '../properties/dto/property.dto';
+import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 
 @Controller('properties')
 export class PropertyController {

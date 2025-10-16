@@ -11,7 +11,7 @@ import { TestimonialsModule } from './modules/testimonials/testimonials.module';
 import { IdentitiesModule } from './modules/identities/identities.module';
 import { AboutUsModule } from './modules/about-us/about-us.module';
 import { UsersModule } from './modules/users/users.module';
-import { PropertiesModule } from './modules/properties/properties.module';
+import { PropertyModule } from './modules/property/property.module';
 import { ContractsModule } from './modules/contracts/contracts.module';
 import { PeopleModule } from './modules/people/people.module';
 import { MultimediaModule } from './modules/multimedia/multimedia.module';
@@ -40,7 +40,7 @@ import { DocumentModule } from './modules/document/document.module';
     IdentitiesModule,
     AboutUsModule,
     UsersModule,
-    PropertiesModule,
+    PropertyModule,
     ContractsModule,
     PeopleModule,
     MultimediaModule,

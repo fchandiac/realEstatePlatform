@@ -1,7 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { UserRole, UserStatus, Permission } from '../../src/entities/user.entity';
 import { ContractOperationType, ContractStatus } from '../../src/entities/contract.entity';
-import { PropertyStatus, PropertyOperationType } from '../../src/entities/property.entity';
+import { PropertyStatus } from '../../src/common/enums/property-status.enum';
+import { PropertyOperationType } from '../../src/common/enums/property-operation-type.enum';
 import * as bcrypt from 'bcrypt';
 import {
   PersonSeed,
@@ -66,7 +67,7 @@ export class SeederFactory {
       title: faker.lorem.words(3),
       description: faker.lorem.paragraph(),
       status: faker.helpers.arrayElement(Object.values(PropertyStatus)),
-      operation: faker.helpers.arrayElement(Object.values(PropertyOperationType)),
+      operationType: faker.helpers.arrayElement(Object.values(PropertyOperationType)),
       priceCLP: priceCLP,
       priceUF: Math.round((priceCLP / ufValue) * 100) / 100,
       seoTitle: faker.lorem.sentence(),
@@ -78,8 +79,8 @@ export class SeederFactory {
       landSquareMeters: faker.number.float({ min: 100, max: 1000, fractionDigits: 2 }),
       parkingSpaces: faker.number.int({ min: 0, max: 3 }),
       regionCommune: {
-        region: faker.location.state(),
-        communes: [faker.location.city()]
+        regionName: faker.location.state(),
+        communeName: faker.location.city()
       },
       latitude: faker.number.float({ min: -90, max: 90, fractionDigits: 6 }),
       longitude: faker.number.float({ min: -180, max: 180, fractionDigits: 6 }),
@@ -88,7 +89,7 @@ export class SeederFactory {
         type: faker.helpers.arrayElement(['IMAGE', 'VIDEO']),
         description: faker.lorem.sentence()
       })),
-      propertyRole: faker.helpers.arrayElement(['RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL'])
+      propertyType: faker.helpers.arrayElement(['RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL'])
     };
   }
 

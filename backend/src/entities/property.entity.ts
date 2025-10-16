@@ -7,6 +7,7 @@ import {
   DeleteDateColumn,
   ManyToOne,
   JoinColumn,
+  Generated,
 } from 'typeorm';
 import {
   IsNotEmpty,
@@ -17,85 +18,31 @@ import {
   IsUUID,
   ValidateNested,
   IsArray,
+  IsBoolean,
+  IsDate,
+  Min,
+  Max,
 } from 'class-validator';
-import { Min } from 'class-validator';
 import { Type } from 'class-transformer';
 import { User } from './user.entity';
-
-export enum PropertyStatus {
-  REQUEST = 'REQUEST',
-  PRE_APPROVED = 'PRE-APPROVED',
-  PUBLISHED = 'PUBLISHED',
-  INACTIVE = 'INACTIVE',
-  SOLD = 'SOLD',
-  RENTED = 'RENTED',
-}
-
-export enum PropertyOperationType {
-  SALE = 'SALE',
-  RENT = 'RENT',
-}
-
-export class RegionCommune {
-  @IsOptional()
-  @IsString()
-  region?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  communes?: string[];
-}
-
-export class MultimediaItem {
-  @IsOptional()
-  @IsUUID()
-  id?: string;
-
-  @IsOptional()
-  @IsString()
-  url?: string;
-
-  @IsOptional()
-  @IsString()
-  type?: string;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
-}
-
-export class PostRequest {
-  @IsOptional()
-  @IsString()
-  origin?: string;
-
-  @IsOptional()
-  @IsString()
-  phone?: string;
-
-  @IsOptional()
-  @IsString()
-  email?: string;
-
-  @IsOptional()
-  @IsString()
-  name?: string;
-
-  @IsOptional()
-  @IsString()
-  userType?: string;
-
-  @IsOptional()
-  @IsNumber()
-  valuationAmount?: number;
-}
+import { PropertyStatus } from '../common/enums/property-status.enum';
+import { PropertyOperationType } from '../common/enums/property-operation-type.enum';
+import {
+  MultimediaReference,
+  PostRequest,
+  ChangeHistoryEntry,
+  ViewEntry,
+  RegionCommune,
+  LeadEntry,
+} from '../common/interfaces/property.interfaces';
 
 @Entity('properties')
 export class Property {
   @PrimaryGeneratedColumn('uuid')
+  @IsUUID()
   id: string;
 
+  // Basic Information
   @Column({ type: 'varchar', length: 255 })
   @IsNotEmpty()
   @IsString()
@@ -109,6 +56,7 @@ export class Property {
   @Column({
     type: 'enum',
     enum: PropertyStatus,
+    default: PropertyStatus.REQUEST,
   })
   @IsNotEmpty()
   @IsEnum(PropertyStatus)
@@ -122,26 +70,57 @@ export class Property {
   @IsEnum(PropertyOperationType)
   operationType: PropertyOperationType;
 
+  // Users Relations
   @ManyToOne(() => User)
   @JoinColumn({ name: 'creatorUserId' })
   creatorUser: User;
+
+  @Column({ type: 'uuid', nullable: true })
+  @IsOptional()
+  @IsUUID()
+  creatorUserId?: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'assignedAgentId' })
   assignedAgent?: User;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'uuid', nullable: true })
+  @IsOptional()
+  @IsUUID()
+  assignedAgentId?: string;
+
+  // Pricing Information
+  @Column({ type: 'bigint', default: 0 })
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
   priceCLP: number;
 
-  @Column({ type: 'float', default: 0 })
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   @IsNotEmpty()
   @IsNumber()
   @Min(0)
   priceUF: number;
 
+  @Column({ type: 'bigint', nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  rentPriceCLP?: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  rentPriceUF?: number;
+
+  @Column({ type: 'bigint', nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  expenses?: number;
+
+  // SEO Information
   @Column({ type: 'varchar', length: 255, nullable: true })
   @IsOptional()
   @IsString()
@@ -152,89 +131,179 @@ export class Property {
   @IsString()
   seoDescription?: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'text', nullable: true })
   @IsOptional()
+  @IsString()
+  seoKeywords?: string;
+
+  // Publication Information
+  @Column({ type: 'datetime', nullable: true })
+  @IsOptional()
+  @IsDate()
   publicationDate?: Date;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'boolean', default: false })
   @IsOptional()
-  @IsNumber()
-  bathrooms?: number;
+  @IsBoolean()
+  isFeatured?: boolean;
 
-  @Column({ type: 'float', nullable: true })
+  @Column({ type: 'int', default: 0 })
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(10)
+  priority?: number;
+
+  // Physical Characteristics
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  @IsOptional()
+  @IsString()
+  propertyType?: string;
+
+  @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
   builtSquareMeters?: number;
 
-  @Column({ type: 'float', nullable: true })
+  @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
   @IsOptional()
   @IsNumber()
+  @Min(0)
   landSquareMeters?: number;
 
   @Column({ type: 'int', nullable: true })
   @IsOptional()
   @IsNumber()
+  @Min(0)
   bedrooms?: number;
 
   @Column({ type: 'int', nullable: true })
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  bathrooms?: number;
+
+  @Column({ type: 'int', nullable: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
   parkingSpaces?: number;
 
-  @Column({ type: 'json', nullable: true })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => RegionCommune)
-  regionCommune?: RegionCommune;
-
-  @Column({ type: 'float', nullable: true })
+  @Column({ type: 'int', nullable: true })
   @IsOptional()
   @IsNumber()
-  latitude?: number;
+  @Min(0)
+  floors?: number;
 
-  @Column({ type: 'float', nullable: true })
+  @Column({ type: 'int', nullable: true })
   @IsOptional()
   @IsNumber()
-  longitude?: number;
+  @Min(0)
+  constructionYear?: number;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'text', nullable: true })
   @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => MultimediaItem)
-  multimedia?: MultimediaItem[];
+  @IsString()
+  amenities?: string;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: 'text', nullable: true })
   @IsOptional()
-  changeHistory?: any;
+  @IsString()
+  nearbyServices?: string;
 
-  @Column({ type: 'json', nullable: true })
+  // Location Information
+  @Column({ type: 'varchar', length: 255, nullable: true })
   @IsOptional()
-  views?: any;
-
-  @Column({ type: 'json', nullable: true })
-  @IsOptional()
-  leads?: any;
+  @IsString()
+  address?: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   @IsOptional()
   @IsString()
-  propertyRole?: string;
+  city?: string;
 
-  @Column({
-    type: 'enum',
-    enum: PropertyOperationType,
-    nullable: true,
-  })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   @IsOptional()
-  @IsEnum(PropertyOperationType)
-  operation?: PropertyOperationType;
+  @IsString()
+  neighborhood?: string;
 
   @Column({ type: 'json', nullable: true })
   @IsOptional()
-  @ValidateNested()
-  @Type(() => PostRequest)
+  regionCommune?: RegionCommune;
+
+  @Column({ type: 'decimal', precision: 10, scale: 8, nullable: true })
+  @IsOptional()
+  @IsNumber()
+  latitude?: number;
+
+  @Column({ type: 'decimal', precision: 11, scale: 8, nullable: true })
+  @IsOptional()
+  @IsNumber()
+  longitude?: number;
+
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  @IsOptional()
+  @IsString()
+  zipCode?: string;
+
+  // Multimedia
+  @Column({ type: 'json', nullable: true })
+  @IsOptional()
+  @IsArray()
+  multimedia?: MultimediaReference[];
+
+  // Business Logic Fields
+  @Column({ type: 'json', nullable: true })
+  @IsOptional()
   postRequest?: PostRequest;
 
+  @Column({ type: 'json', nullable: true })
+  @IsOptional()
+  @IsArray()
+  changeHistory?: ChangeHistoryEntry[];
+
+  @Column({ type: 'json', nullable: true })
+  @IsOptional()
+  @IsArray()
+  views?: ViewEntry[];
+
+  @Column({ type: 'json', nullable: true })
+  @IsOptional()
+  @IsArray()
+  leads?: LeadEntry[];
+
+  // Statistics
+  @Column({ type: 'int', default: 0 })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  viewCount?: number;
+
+  @Column({ type: 'int', default: 0 })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  favoriteCount?: number;
+
+  @Column({ type: 'int', default: 0 })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  contactCount?: number;
+
+  // Internal Notes
+  @Column({ type: 'text', nullable: true })
+  @IsOptional()
+  @IsString()
+  internalNotes?: string;
+
+  @Column({ type: 'text', nullable: true })
+  @IsOptional()
+  @IsString()
+  rejectionReason?: string;
+
+  // Timestamps
   @CreateDateColumn()
   createdAt: Date;
 
@@ -243,4 +312,14 @@ export class Property {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  @Column({ type: 'datetime', nullable: true })
+  @IsOptional()
+  @IsDate()
+  publishedAt?: Date;
+
+  @Column({ type: 'datetime', nullable: true })
+  @IsOptional()
+  @IsDate()
+  lastModifiedAt?: Date;
 }

@@ -1,0 +1,8 @@
+export enum PropertyStatus {
+  REQUEST = "REQUEST",
+  PRE_APPROVED = "PRE-APPROVED", 
+  PUBLISHED = "PUBLISHED",
+  INACTIVE = "INACTIVE",
+  SOLD = "SOLD",
+  RENTED = "RENTED"
+}
