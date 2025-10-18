@@ -6,10 +6,13 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { User } from './user.entity';
 import { Property } from './property.entity';
+import { Document } from './document.entity';
+import { Payment } from './payment.entity';
+import { User } from './user.entity';
 
 export enum ContractOperationType {
   COMPRAVENTA = 'COMPRAVENTA',
@@ -28,7 +31,13 @@ export enum ContractRole {
   BUYER = 'BUYER',
   LANDLORD = 'LANDLORD',
   TENANT = 'TENANT',
+  NOTARY = 'NOTARY',
+  REGISTRAR = 'REGISTRAR',
+  WITNESS = 'WITNESS',
   GUARANTOR = 'GUARANTOR',
+  REPRESENTATIVE = 'REPRESENTATIVE',
+  PROMISSOR = 'PROMISSOR',
+  THIRD_PARTY = 'THIRD_PARTY',
   AGENT = 'AGENT',
 }
 
@@ -54,6 +63,12 @@ export interface ContractDocument {
 export class Contract {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column('uuid')
+  userId: string;
+
+  @Column('uuid')
+  propertyId: string;
 
   @Column({
     type: 'enum',

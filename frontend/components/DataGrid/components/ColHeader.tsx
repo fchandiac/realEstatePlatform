@@ -1,0 +1,182 @@
+'use client'
+import React from 'react';
+import type { DataGridColumn } from '../DataGrid';
+import IconButton from '../../IconButton/IconButton';
+import { TextField } from '../../TextField/TextField';
+import { useSearchParams, useRouter } from 'next/navigation';
+
+interface ColHeaderProps {
+  column: DataGridColumn;
+  computedStyle?: Record<string, any>;
+  filterMode?: boolean;
+}
+
+export const ColHeader: React.FC<ColHeaderProps> = ({ column, computedStyle, filterMode = false }) => {
+  const { headerName, headerAlign, align, width, flex, minWidth, maxWidth, field, filterable = true } = column;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Get current sort state from URL
+  const currentSort = searchParams.get('sort');
+  const currentSortField = searchParams.get('sortField');
+  const isThisColumnSorted = currentSortField === field;
+  
+  // Show sort icon only if sort parameters exist in URL
+  const shouldShowSortIcon = currentSort || currentSortField;
+
+  // Get current filter value for this column
+  const filtersParam = searchParams.get('filters') || '';
+  const currentFilters = parseFiltersFromUrl(filtersParam);
+  const filterValue = currentFilters[field] || '';
+
+  // Parse filters from URL format: "column1-value1,column2-value2"
+  function parseFiltersFromUrl(filtersParam: string): Record<string, string> {
+    if (!filtersParam) return {};
+    
+    const filters: Record<string, string> = {};
+    const filterPairs = filtersParam.split(',');
+    
+    filterPairs.forEach(pair => {
+      const [column, ...valueParts] = pair.split('-');
+      if (column && valueParts.length > 0) {
+        filters[column] = valueParts.join('-'); // Re-join in case value contains dashes
+      }
+    });
+    
+    return filters;
+  }
+
+  // Handle filter change
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    const params = new URLSearchParams(searchParams.toString());
+    
+    // Update filters parameter
+    const currentFilters = parseFiltersFromUrl(filtersParam);
+    
+    // Always set the filter value, even if empty
+    currentFilters[field] = value;
+    
+    // Build new filters string
+    const newFiltersString = Object.entries(currentFilters)
+      .map(([column, filterValue]) => `${column}-${filterValue}`)
+      .join(',');
+    
+    // Always keep filtration=true if it was set, only the button can remove it
+    const currentFiltration = searchParams.get('filtration');
+    if (currentFiltration === 'true') {
+      params.set('filters', newFiltersString);
+      params.set('filtration', 'true');
+    } else {
+      // If filtration was not active, don't set it
+      params.delete('filters');
+      params.delete('filtration');
+    }
+    
+    // Reset to page 1 when filtering
+    params.set('page', '1');
+    
+    router.replace(`?${params.toString()}`);
+  };
+
+  // Handle sort click - toggle between asc/desc if this column is active, or activate this column
+  const handleSortClick = () => {
+    if (!column.sortable) return;
+    
+    const params = new URLSearchParams(searchParams.toString());
+    
+    if (isThisColumnSorted) {
+      // If this column is already sorted, toggle the direction
+      const newDirection = currentSort === 'asc' ? 'desc' : 'asc';
+      params.set('sort', newDirection);
+      params.set('sortField', field);
+    } else {
+      // If this column is not sorted, activate it with ascending order
+      params.set('sort', 'asc');
+      params.set('sortField', field);
+    }
+    
+    params.set('page', '1');
+    router.replace(`?${params.toString()}`);
+  };
+
+  // Determine which icon to show and its color
+  let iconName: string;
+  let iconColor: string;
+  
+  if (isThisColumnSorted) {
+    // If this column is sorted, show the appropriate direction icon in primary color
+    iconName = currentSort === 'asc' ? 'arrow_upward_alt' : 'arrow_downward_alt';
+    iconColor = 'text-primary';
+  } else {
+    // If not sorted, show upward arrow in secondary color
+    iconName = 'arrow_upward_alt';
+    iconColor = 'text-secondary';
+  }
+
+  // Prefer explicit headerAlign; if missing, fall back to column.align so header matches cells
+  const actualHeaderAlign = headerAlign ?? align ?? 'left';
+
+  const headerStyle = {
+    ...(flex !== undefined ? { flex } : {}),
+    ...(width !== undefined ? { width } : {}),
+    ...(minWidth !== undefined ? { minWidth } : {}),
+    ...(maxWidth !== undefined ? { maxWidth } : {}),
+  };
+
+  return (
+    <div
+      className={`px-3 font-semibold text-xs text-gray-700 flex items-stretch ${actualHeaderAlign === 'center' ? 'text-center' : actualHeaderAlign === 'right' ? 'text-right' : 'text-left'}`}
+      style={{
+        backgroundColor: 'var(--color-background)',
+        height: '56px',
+        minHeight: '56px',
+        maxHeight: '56px',
+        ...headerStyle,
+        ...(computedStyle || {})
+      }}
+      data-test-id={`data-grid-column-header-${field}`}
+    >
+        <div className="flex items-center gap-2 w-full h-full relative">
+        {shouldShowSortIcon && column.sortable && (
+          <IconButton
+            icon={iconName}
+            variant="text"
+            title={isThisColumnSorted ? 
+              (currentSort === 'asc' ? 'Cambiar a descendente' : 'Cambiar a ascendente') : 
+              'Ordenar por esta columna'
+            }
+            onClick={handleSortClick}
+            className={iconColor}
+            style={{ fontSize: 16, width: 16, height: 16, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+            aria-hidden
+          />
+        )}
+        {filterMode && filterable ? (
+            <div className="relative w-full h-full flex-1 flex items-end">
+              {filterValue && (
+                <label
+                  className="absolute left-0 top-0 text-[10px] text-foreground bg-white px-0 pointer-events-none z-10 transition-all duration-200 text-left w-full"
+                  style={{lineHeight:1, transform: 'translateY(16px)'}}>
+                  {headerName}
+                </label>
+              )}
+              <input
+                type="text"
+                value={filterValue}
+                onChange={handleFilterChange}
+                placeholder={headerName}
+                className={`w-full text-xs h-[28px] bg-white outline-none p-0 ${filterValue ? 'text-secondary' : ''}`}
+                aria-label={headerName}
+                style={{ minWidth: 0, border: 'none' }}
+              />
+            </div>
+        ) : (
+          <span className="break-words leading-tight flex-1 h-full flex items-center">{headerName}</span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ColHeader;

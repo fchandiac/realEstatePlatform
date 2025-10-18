@@ -52,13 +52,13 @@ async function seedDatabase() {
         username: 'admin',
         email: 'admin@realestate.com',
         password: await bcrypt.hash('7890', 10),
-        role: UserRole.SUPERADMIN,
+        role: UserRole.ADMIN,
         status: UserStatus.ACTIVE,
         personalInfo: {
           firstName: 'Admin',
           lastName: 'User',
           phone: '+56 9 1234 5678',
-          avatar: 'https://ui-avatars.com/api/?name=Admin+User'
+          avatarUrl: 'https://ui-avatars.com/api/?name=Admin+User'
         },
         permissions: Object.values(Permission),
         lastLogin: new Date(),
@@ -79,7 +79,7 @@ async function seedDatabase() {
           firstName: 'Agent',
           lastName: 'User',
           phone: '+56 9 9876 5432',
-          avatar: 'https://ui-avatars.com/api/?name=Agent+User'
+          avatarUrl: 'https://ui-avatars.com/api/?name=Agent+User'
         },
         permissions: [Permission.MANAGE_PROPERTIES, Permission.ASSIGN_PROPERTY_AGENT],
         lastLogin: new Date(),

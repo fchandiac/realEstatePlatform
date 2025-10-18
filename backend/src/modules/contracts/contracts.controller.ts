@@ -9,6 +9,7 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ContractsService } from './contracts.service';
@@ -30,7 +31,7 @@ export class ContractsController {
   constructor(private readonly contractsService: ContractsService) {}
 
   @Post()
-  create(@Body() createContractDto: CreateContractDto) {
+  create(@Body(ValidationPipe) createContractDto: CreateContractDto) {
     return this.contractsService.create(createContractDto);
   }
 
@@ -47,7 +48,7 @@ export class ContractsController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateContractDto: UpdateContractDto,
+    @Body(ValidationPipe) updateContractDto: UpdateContractDto,
   ) {
     return this.contractsService.update(id, updateContractDto);
   }
@@ -68,12 +69,12 @@ export class ContractsController {
   }
 
   @Post(':id/payments')
-  addPayment(@Param('id') id: string, @Body() addPaymentDto: AddPaymentDto) {
+  addPayment(@Param('id') id: string, @Body(ValidationPipe) addPaymentDto: AddPaymentDto) {
     return this.contractsService.addPayment(id, addPaymentDto);
   }
 
   @Post(':id/people')
-  addPerson(@Param('id') id: string, @Body() addPersonDto: AddPersonDto) {
+  addPerson(@Param('id') id: string, @Body(ValidationPipe) addPersonDto: AddPersonDto) {
     return this.contractsService.addPerson(id, addPersonDto);
   }
 

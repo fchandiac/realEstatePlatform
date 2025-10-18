@@ -7,7 +7,6 @@ import { Contract } from '../../src/entities/contract.entity';
 import { DocumentType } from '../../src/entities/document-type.entity';
 import { User } from '../../src/entities/user.entity';
 import { Property } from '../../src/entities/property.entity';
-import { ContractOperationType } from '../../src/entities/contract.entity';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -79,9 +78,10 @@ describe('Contracts Document Upload (integration)', () => {
     const testContract = await contractRepository.save({
       userId: adminUserId,
       propertyId: testPropertyId,
-      operation: ContractOperationType.COMPRAVENTA,
+      operation: 'COMPRAVENTA',
+      status: 'IN_PROCESS',
       amount: 100000,
-      commissionPercent: 5,
+      commissionPercent: 0.05,
       commissionAmount: 5000,
       people: [
         {
@@ -90,7 +90,7 @@ describe('Contracts Document Upload (integration)', () => {
         },
       ],
       documents: [],
-    });
+    } as any);
     testContractId = testContract.id;
   });
 

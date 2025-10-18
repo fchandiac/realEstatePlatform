@@ -23,6 +23,7 @@ export class PropertyService {
     const property = this.propertyRepository.create({
       ...createPropertyDto,
       creatorUserId: creatorId || createPropertyDto.creatorUserId,
+      propertyTypeId: (createPropertyDto as any).propertyTypeId || (createPropertyDto as any).propertyType || undefined,
       status: createPropertyDto.status || PropertyStatus.REQUEST,
       createdAt: new Date(),
       lastModifiedAt: new Date(),
@@ -65,22 +66,25 @@ export class PropertyService {
       query.andWhere('property.status = :status', { status: filters.status });
     }
 
-    if (filters.propertyType) {
-      query.andWhere('property.propertyType = :propertyType', {
-        propertyType: filters.propertyType,
+    if (filters.propertyTypeId || filters.propertyType) {
+      const pTypeId = filters.propertyTypeId || filters.propertyType;
+      query.andWhere('property.propertyTypeId = :propertyTypeId', {
+        propertyTypeId: pTypeId,
       });
     }
 
     if (filters.city) {
-      query.andWhere('property.city = :city', { city: filters.city });
+      // city was removed from the model; accept region or commune instead
+      // keep backward compatibility: if 'city' provided, match against region or commune
+      query.andWhere('(property.region = :city OR property.commune = :city)', { city: filters.city });
     }
 
     if (filters.minPrice) {
-      query.andWhere('property.priceCLP >= :minPrice', { minPrice: filters.minPrice });
+      query.andWhere('property.price >= :minPrice', { minPrice: filters.minPrice });
     }
 
     if (filters.maxPrice) {
-      query.andWhere('property.priceCLP <= :maxPrice', { maxPrice: filters.maxPrice });
+      query.andWhere('property.price <= :maxPrice', { maxPrice: filters.maxPrice });
     }
 
     if (filters.bedrooms) {
@@ -100,8 +104,9 @@ export class PropertyService {
       const direction = filters.sortDirection || 'ASC';
       query.orderBy(`property.${filters.sortBy}`, direction);
     } else {
-      query.orderBy('property.priority', 'DESC')
-           .addOrderBy('property.isFeatured', 'DESC')
+      // priority removed from model; order by featured and creation date
+      query.orderBy('property.isFeatured', 'DESC')
+           .addOrderBy('property.publishedAt', 'DESC')
            .addOrderBy('property.createdAt', 'DESC');
     }
 
@@ -254,18 +259,9 @@ export class PropertyService {
 
   private validatePropertyData(dto: CreatePropertyDto): void {
     // Validate operation type and pricing
-    if (dto.operationType === PropertyOperationType.SALE && !dto.priceCLP && !dto.priceUF) {
-      throw new BadRequestException('Properties for sale must have either CLP or UF price');
-    }
-
-    if (dto.operationType === PropertyOperationType.RENT && !dto.rentPriceCLP && !dto.rentPriceUF) {
-      throw new BadRequestException('Properties for rent must have either CLP or UF rent price');
-    }
-
-    if (dto.operationType === PropertyOperationType.SALE_AND_RENT) {
-      if ((!dto.priceCLP && !dto.priceUF) || (!dto.rentPriceCLP && !dto.rentPriceUF)) {
-        throw new BadRequestException('Properties for sale and rent must have both sale and rent prices');
-      }
+    // Require a price for sale or rent operations
+    if ((dto.operationType === PropertyOperationType.SALE || dto.operationType === PropertyOperationType.RENT || dto.operationType === PropertyOperationType.SALE_AND_RENT) && (dto.price === undefined || dto.price === null)) {
+      throw new BadRequestException('Properties must include a price for the selected operation');
     }
 
     // Validate required fields based on status

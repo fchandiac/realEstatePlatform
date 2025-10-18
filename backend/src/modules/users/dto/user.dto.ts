@@ -8,12 +8,42 @@ import {
   IsArray,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import {
-  UserStatus,
-  UserRole,
-  Permission,
-  PersonalInfo,
-} from '../../../entities/user.entity';
+import { UserStatus, UserRole, Permission } from '../../../entities/user.entity';
+import { PersonalInfo } from '../../../common/interfaces/user.interfaces';
+
+export class PersonalInfoDto {
+  @IsOptional()
+  @IsString()
+  firstName?: string;
+
+  @IsOptional()
+  @IsString()
+  lastName?: string;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @IsOptional()
+  @IsString()
+  city?: string;
+
+  @IsOptional()
+  @IsString()
+  state?: string;
+
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
+}
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -39,7 +69,7 @@ export class CreateUserDto {
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => PersonalInfo)
+  @Type(() => PersonalInfoDto)
   personalInfo?: PersonalInfo;
 }
 
@@ -67,7 +97,7 @@ export class UpdateUserDto {
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => PersonalInfo)
+  @Type(() => PersonalInfoDto)
   personalInfo?: PersonalInfo;
 }
 

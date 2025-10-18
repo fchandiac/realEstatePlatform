@@ -159,33 +159,16 @@ describe('PropertyController (integration)', () => {
         description: 'A test property description',
         status: 'REQUEST',
         operationType: 'SALE',
-        ownerId: admin?.id, // Required field
-        priceCLP: 150000000, // Changed from price to priceCLP
-        priceUF: 4285.71, // Added priceUF (approximately based on UF value)
-        bathrooms: 2, // Changed from bathroomsQuantity
-        bedrooms: 3, // Changed from bedroomsQuantity
-        parkingSpaces: 1, // Changed from parkingQuantity
-        builtSquareMeters: 120, // Changed from constructedArea
-        landSquareMeters: 200, // Changed from totalArea
-        regionCommune: {
-          region: 'Test Region',
-          communes: ['Test Commune 1', 'Test Commune 2'],
-        },
-        multimedia: [
-          {
-            url: 'http://example.com/image1.jpg',
-            type: 'IMAGE',
-            description: 'Front view',
-          },
-        ],
-        postRequest: {
-          origin: 'WEB',
-          phone: '+56912345678',
-          email: 'test@example.com',
-          name: 'Test User',
-          userType: 'OWNER',
-          valuationAmount: 250000,
-        },
+        creatorUserId: admin?.id,
+        price: 150000000,
+        currencyPrice: 'CLP',
+        bathrooms: 2,
+        bedrooms: 3,
+        parkingSpaces: 1,
+        builtSquareMeters: 120,
+        landSquareMeters: 200,
+        region: 'Metropolitana',
+        commune: 'Santiago',
       };
 
       // Intentar crear una propiedad y capturar la respuesta incluso si falla
@@ -202,9 +185,8 @@ describe('PropertyController (integration)', () => {
       expect(response.body.title).toBe(newProperty.title);
       expect(response.body.status).toBe(newProperty.status);
       expect(response.body.operationType).toBe(newProperty.operationType);
-      expect(response.body.regionCommune).toEqual(newProperty.regionCommune);
-      expect(response.body.multimedia).toEqual(newProperty.multimedia);
-      expect(response.body.postRequest).toEqual(newProperty.postRequest);
+      expect(response.body.region).toBe(newProperty.region);
+      expect(response.body.commune).toBe(newProperty.commune);
 
       testPropertyId = response.body.id;
     });
@@ -246,22 +228,15 @@ describe('PropertyController (integration)', () => {
         description: 'Casa específica para venta solamente',
         status: 'PUBLISHED',
         operationType: 'SALE',
-        priceCLP: 200000000,
-        priceUF: 5714.29,
+        price: 200000000,
+        currencyPrice: 'CLP',
         bedrooms: 3,
         bathrooms: 2,
         builtSquareMeters: 150,
         landSquareMeters: 300,
         parkingSpaces: 2,
-        regionCommune: {
-          region: 'Metropolitana',
-          communes: ['Santiago', 'Providencia']
-        },
-        multimedia: [{
-          url: 'http://example.com/sale-house.jpg',
-          type: 'IMAGE',
-          description: 'Casa en venta'
-        }]
+        region: 'Metropolitana',
+        commune: 'Santiago',
       };
 
       const createResponse = await request(app.getHttpServer())
@@ -272,7 +247,7 @@ describe('PropertyController (integration)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/properties')
-        .query({ operation: 'VENTA' })
+        .query({ operationType: 'SALE' })
         .set('Authorization', `Bearer ${adminToken}`)
         .expect(200);
 
@@ -311,10 +286,8 @@ describe('PropertyController (integration)', () => {
         title: 'Updated Test Property',
         status: 'PUBLISHED',
         operationType: 'RENT',
-        regionCommune: {
-          region: 'Updated Region',
-          communes: ['Updated Commune'],
-        },
+        region: 'Updated Region',
+        commune: 'Updated Commune',
       };
 
       const response = await request(app.getHttpServer())
@@ -326,12 +299,13 @@ describe('PropertyController (integration)', () => {
       expect(response.body.title).toBe(updateData.title);
       expect(response.body.status).toBe(updateData.status);
       expect(response.body.operationType).toBe(updateData.operationType);
-      expect(response.body.regionCommune).toEqual(updateData.regionCommune);
+      expect(response.body.region).toBe(updateData.region);
+      expect(response.body.commune).toBe(updateData.commune);
     });
 
     it('debe fallar al actualizar con precio negativo', async () => {
       const invalidUpdate = {
-        priceCLP: -1000,
+        price: -1000,
       };
 
       await request(app.getHttpServer())

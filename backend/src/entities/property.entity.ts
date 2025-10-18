@@ -28,14 +28,15 @@ import { User } from './user.entity';
 import { PropertyStatus } from '../common/enums/property-status.enum';
 import { PropertyOperationType } from '../common/enums/property-operation-type.enum';
 import {
-  MultimediaReference,
   PostRequest,
   ChangeHistoryEntry,
   ViewEntry,
-  RegionCommune,
   LeadEntry,
 } from '../common/interfaces/property.interfaces';
 import { Multimedia } from './multimedia.entity';
+import { RegionEnum } from '../common/regions/regions.enum';
+import { ComunaEnum } from '../common/regions/comunas.enum';
+import { PropertyType } from './property-type.entity';
 
 export enum CurrencyPriceEnum {
   CLP = 'CLP',
@@ -107,23 +108,7 @@ export class Property {
   @IsEnum(CurrencyPriceEnum)
   currencyPrice: CurrencyPriceEnum;
 
-  @Column({ type: 'bigint', nullable: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  rentPriceCLP?: number;
-
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  rentPriceUF?: number;
-
-  @Column({ type: 'bigint', nullable: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  expenses?: number;
+  
 
   // SEO Information
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -152,18 +137,17 @@ export class Property {
   @IsBoolean()
   isFeatured?: boolean;
 
-  @Column({ type: 'int', default: 0 })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(10)
-  priority?: number;
+  
 
   // Physical Characteristics
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @ManyToOne(() => PropertyType, { nullable: true })
+  @JoinColumn({ name: 'propertyTypeId' })
+  propertyType?: PropertyType;
+
+  @Column({ type: 'uuid', nullable: true })
   @IsOptional()
-  @IsString()
-  propertyType?: string;
+  @IsUUID()
+  propertyTypeId?: string;
 
   @Column({ type: 'decimal', precision: 8, scale: 2, nullable: true })
   @IsOptional()
@@ -207,35 +191,18 @@ export class Property {
   @Min(0)
   constructionYear?: number;
 
-  @Column({ type: 'text', nullable: true })
-  @IsOptional()
-  @IsString()
-  amenities?: string;
-
-  @Column({ type: 'text', nullable: true })
-  @IsOptional()
-  @IsString()
-  nearbyServices?: string;
+  
 
   // Location Information
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'enum', enum: RegionEnum, nullable: true })
   @IsOptional()
-  @IsString()
-  address?: string;
+  @IsEnum(RegionEnum)
+  region?: RegionEnum;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'enum', enum: ComunaEnum, nullable: true })
   @IsOptional()
-  @IsString()
-  city?: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  @IsOptional()
-  @IsString()
-  neighborhood?: string;
-
-  @Column({ type: 'json', nullable: true })
-  @IsOptional()
-  regionCommune?: RegionCommune;
+  @IsEnum(ComunaEnum)
+  commune?: ComunaEnum;
 
   @Column({ type: 'decimal', precision: 10, scale: 8, nullable: true })
   @IsOptional()
@@ -247,10 +214,7 @@ export class Property {
   @IsNumber()
   longitude?: number;
 
-  @Column({ type: 'varchar', length: 20, nullable: true })
-  @IsOptional()
-  @IsString()
-  zipCode?: string;
+  
 
   // Multimedia (OneToMany relation to Multimedia table)
   @OneToMany(() => Multimedia, (m) => m.property, { cascade: true })

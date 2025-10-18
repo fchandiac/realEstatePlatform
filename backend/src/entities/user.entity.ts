@@ -5,6 +5,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import {
   IsNotEmpty,
@@ -12,10 +14,15 @@ import {
   IsOptional,
   IsEmail,
   IsEnum,
-  ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { PersonalInfo } from '../common/interfaces/user.interfaces';
 import * as bcrypt from 'bcrypt';
+import { Property } from './property.entity';
+import { Contract } from './contract.entity';
+import { Document } from './document.entity';
+import { Notification } from './notification.entity';
+import { Article } from './article.entity';
+import { Testimonial } from './testimonial.entity';
 
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
@@ -25,7 +32,6 @@ export enum UserStatus {
 }
 
 export enum UserRole {
-  SUPERADMIN = 'SUPERADMIN',
   ADMIN = 'ADMIN',
   AGENT = 'AGENT',
   COMMUNITY = 'COMMUNITY',
@@ -46,27 +52,6 @@ export enum Permission {
   MANAGE_TESTIMONIALS = 'MANAGE_TESTIMONIALS',
   VIEW_REPORTS = 'VIEW_REPORTS',
   SUPER_ADMIN = 'SUPER_ADMIN',
-}
-
-export class PersonalInfo {
-  @IsOptional()
-  @IsString()
-  firstName?: string;
-
-  @IsOptional()
-  @IsString()
-  lastName?: string;
-
-  @IsOptional()
-  @IsString()
-  phone?: string;
-
-  @IsOptional()
-  @IsString()
-  avatar?: string;
-
-  @IsOptional()
-  preferences?: any;
 }
 
 @Entity('users')
@@ -113,8 +98,6 @@ export class User {
 
   @Column({ type: 'json', nullable: true })
   @IsOptional()
-  @ValidateNested()
-  @Type(() => PersonalInfo)
   personalInfo?: PersonalInfo;
 
   @CreateDateColumn()
@@ -128,6 +111,36 @@ export class User {
 
   @Column({ type: 'timestamp', nullable: true })
   lastLogin?: Date;
+
+  // Relaciones navegables (OneToMany)
+  @OneToMany(() => Property, (p) => p.creatorUser)
+  createdProperties?: Property[];
+
+  @OneToMany(() => Property, (p) => p.assignedAgent)
+  assignedProperties?: Property[];
+
+  @OneToMany(() => Contract, (c) => c.user)
+  agentContracts?: Contract[];
+
+  // buyerContracts & sellerContracts are modeled via Contract.people JSON in the current schema,
+  // keep placeholder relations if in future Contract stores explicit buyerId/sellerId
+  @OneToMany(() => Contract, (c) => c.property)
+  buyerContracts?: Contract[];
+
+  @OneToMany(() => Contract, (c) => c.property)
+  sellerContracts?: Contract[];
+
+  @OneToMany(() => Document, (d) => d.uploadedBy)
+  uploadedDocuments?: Document[];
+
+  @OneToMany(() => Notification, (n) => n.viewer)
+  notifications?: Notification[];
+
+  @OneToMany(() => Article, (a) => a.id)
+  articles?: Article[];
+
+  @OneToMany(() => Testimonial, (t) => t.id)
+  testimonials?: Testimonial[];
 
   // Authentication methods
   async setPassword(plainPassword: string): Promise<void> {

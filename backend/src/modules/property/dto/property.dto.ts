@@ -16,13 +16,14 @@ import { Type } from 'class-transformer';
 import { PropertyStatus } from '../../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../../common/enums/property-operation-type.enum';
 import {
-  MultimediaReference,
   PostRequest,
-  RegionCommune,
   ChangeHistoryEntry,
   ViewEntry,
   LeadEntry,
 } from '../../../common/interfaces/property.interfaces';
+import { RegionEnum } from '../../../common/regions/regions.enum';
+import { ComunaEnum } from '../../../common/regions/comunas.enum';
+import { CurrencyPriceEnum } from '../../../entities/property.entity';
 
 export class CreatePropertyDto {
   @IsNotEmpty()
@@ -53,27 +54,11 @@ export class CreatePropertyDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  priceCLP?: number = 0;
+  price?: number = 0;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  priceUF?: number = 0;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  rentPriceCLP?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  rentPriceUF?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  expenses?: number;
+  @IsEnum(CurrencyPriceEnum)
+  currencyPrice?: CurrencyPriceEnum = CurrencyPriceEnum.CLP;
 
   // SEO Information
   @IsOptional()
@@ -106,8 +91,8 @@ export class CreatePropertyDto {
 
   // Physical Characteristics
   @IsOptional()
-  @IsString()
-  propertyType?: string;
+  @IsUUID()
+  propertyTypeId?: string;
 
   @IsOptional()
   @IsNumber()
@@ -155,19 +140,13 @@ export class CreatePropertyDto {
 
   // Location Information
   @IsOptional()
-  @IsString()
-  address?: string;
+  @IsOptional()
+  @IsEnum(RegionEnum)
+  region?: RegionEnum;
 
   @IsOptional()
-  @IsString()
-  city?: string;
-
-  @IsOptional()
-  @IsString()
-  neighborhood?: string;
-
-  @IsOptional()
-  regionCommune?: RegionCommune;
+  @IsEnum(ComunaEnum)
+  commune?: ComunaEnum;
 
   @IsOptional()
   @IsNumber()
@@ -184,7 +163,7 @@ export class CreatePropertyDto {
   // Complex Fields
   @IsOptional()
   @IsArray()
-  multimedia?: MultimediaReference[];
+  multimedia?: any[];
 
   @IsOptional()
   postRequest?: PostRequest;
@@ -252,27 +231,11 @@ export class UpdatePropertyDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  priceCLP?: number;
+  price?: number;
 
   @IsOptional()
-  @IsNumber()
-  @Min(0)
-  priceUF?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  rentPriceCLP?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  rentPriceUF?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  expenses?: number;
+  @IsEnum(CurrencyPriceEnum)
+  currencyPrice?: CurrencyPriceEnum;
 
   // SEO Information
   @IsOptional()
@@ -305,8 +268,8 @@ export class UpdatePropertyDto {
 
   // Physical Characteristics
   @IsOptional()
-  @IsString()
-  propertyType?: string;
+  @IsUUID()
+  propertyTypeId?: string;
 
   @IsOptional()
   @IsNumber()
@@ -366,7 +329,12 @@ export class UpdatePropertyDto {
   neighborhood?: string;
 
   @IsOptional()
-  regionCommune?: RegionCommune;
+  @IsEnum(RegionEnum)
+  region?: RegionEnum;
+
+  @IsOptional()
+  @IsEnum(ComunaEnum)
+  commune?: ComunaEnum;
 
   @IsOptional()
   @IsNumber()
@@ -383,7 +351,7 @@ export class UpdatePropertyDto {
   // Complex Fields
   @IsOptional()
   @IsArray()
-  multimedia?: MultimediaReference[];
+  multimedia?: any[];
 
   @IsOptional()
   postRequest?: PostRequest;

@@ -21,6 +21,14 @@ export class CreatePersonDto {
   @IsOptional()
   address?: string;
 
+  @IsString()
+  @IsOptional()
+  city?: string;
+
+  @IsString()
+  @IsOptional()
+  state?: string;
+
   @IsPhoneNumber()
   @IsOptional()
   phone?: string;

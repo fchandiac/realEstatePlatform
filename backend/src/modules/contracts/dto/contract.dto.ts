@@ -18,8 +18,6 @@ import {
   ContractStatus,
   ContractRole,
   ContractPerson,
-  ContractPayment,
-  ContractDocument,
 } from '../../../entities/contract.entity';
 
 export class ContractPersonDto {
@@ -74,6 +72,10 @@ export class CreateContractDto {
   @IsNotEmpty()
   operation: ContractOperationType;
 
+  @IsEnum(ContractStatus)
+  @IsOptional()
+  status?: ContractStatus;
+
   @IsNumber()
   @IsPositive()
   amount: number;
@@ -82,18 +84,14 @@ export class CreateContractDto {
   @IsPositive()
   commissionPercent: number;
 
-  @IsNumber()
-  @IsPositive()
-  commissionAmount: number;
+  @IsString()
+  @IsOptional()
+  description?: string;
 
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ContractPersonDto)
   people: ContractPersonDto[];
-
-  @IsDateString()
-  @IsOptional()
-  endDate?: string;
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -106,10 +104,6 @@ export class CreateContractDto {
   @Type(() => ContractDocumentDto)
   @IsOptional()
   documents?: ContractDocumentDto[];
-
-  @IsString()
-  @IsOptional()
-  description?: string;
 }
 
 export class UpdateContractDto {
@@ -117,24 +111,9 @@ export class UpdateContractDto {
   @IsOptional()
   status?: ContractStatus;
 
-  @IsDateString()
+  @IsString()
   @IsOptional()
-  endDate?: string;
-
-  @IsNumber()
-  @IsPositive()
-  @IsOptional()
-  amount?: number;
-
-  @IsNumber()
-  @IsPositive()
-  @IsOptional()
-  commissionPercent?: number;
-
-  @IsNumber()
-  @IsPositive()
-  @IsOptional()
-  commissionAmount?: number;
+  description?: string;
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -153,10 +132,6 @@ export class UpdateContractDto {
   @Type(() => ContractDocumentDto)
   @IsOptional()
   documents?: ContractDocumentDto[];
-
-  @IsString()
-  @IsOptional()
-  description?: string;
 }
 
 export class AddPaymentDto {

@@ -11,6 +11,7 @@ import {
   ContractStatus,
   ContractRole,
 } from '../../entities/contract.entity';
+import { Payment } from '../../entities/payment.entity';
 import {
   CreateContractDto,
   UpdateContractDto,
@@ -36,10 +37,18 @@ export class ContractsService {
     // For now, we'll assume they exist
 
     const contract = this.contractRepository.create({
-      ...createContractDto,
-      status: ContractStatus.IN_PROCESS,
-      commissionAmount:
-        (createContractDto.amount * createContractDto.commissionPercent) / 100,
+      operation: createContractDto.operation as ContractOperationType,
+      status: createContractDto.status || ContractStatus.IN_PROCESS,
+      amount: createContractDto.amount,
+      commissionPercent: createContractDto.commissionPercent,
+      commissionAmount: createContractDto.amount * createContractDto.commissionPercent,
+      description: createContractDto.description,
+      people: createContractDto.people as any[],
+      payments: createContractDto.payments as any[],
+      documents: createContractDto.documents as any[],
+      // set relations by id
+      property: createContractDto.propertyId ? ({ id: createContractDto.propertyId } as any) : undefined,
+      user: createContractDto.userId ? ({ id: createContractDto.userId } as any) : undefined,
     });
 
     return await this.contractRepository.save(contract);
@@ -71,11 +80,6 @@ export class ContractsService {
   ): Promise<Contract> {
     const contract = await this.findOne(id);
 
-    if (updateContractDto.commissionPercent !== undefined) {
-      updateContractDto.commissionAmount =
-        (contract.amount * updateContractDto.commissionPercent) / 100;
-    }
-
     Object.assign(contract, updateContractDto);
     return await this.contractRepository.save(contract);
   }
@@ -98,16 +102,16 @@ export class ContractsService {
       throw new BadRequestException('El contrato ya está cerrado o fallido');
     }
 
-    // Validate required roles
-    await this.validateRequiredRoles(contract);
+  // Validate required roles
+  await this.validateRequiredRoles(contract);
 
     // Validate required documents are uploaded
     this.validateRequiredDocuments(contract, closeContractDto.documents);
 
     contract.status = ContractStatus.CLOSED;
     contract.endDate = new Date(closeContractDto.endDate);
-    contract.documents = closeContractDto.documents;
 
+    // Do not assign DTO documents directly to relation; documents should already be uploaded via uploadContractDocument
     return await this.contractRepository.save(contract);
   }
 
@@ -121,6 +125,7 @@ export class ContractsService {
       throw new BadRequestException('El contrato ya está cerrado o fallido');
     }
 
+    // Mark as failed
     contract.status = ContractStatus.FAILED;
     contract.endDate = endDate;
 
@@ -143,7 +148,15 @@ export class ContractsService {
       contract.payments = [];
     }
 
-    contract.payments.push(payment);
+    // create a Payment partial and push; cascade will persist it
+    const paymentEntity: Partial<Payment> = {
+      amount: payment.amount,
+      date: payment.date,
+      description: payment.description,
+      contract: ({ id: contract.id } as any),
+    };
+
+    contract.payments.push(paymentEntity as Payment);
     return await this.contractRepository.save(contract);
   }
 
@@ -165,12 +178,12 @@ export class ContractsService {
 
   async getPeopleByRole(id: string, role: ContractRole): Promise<any[]> {
     const contract = await this.findOne(id);
-    return contract.people.filter((person) => person.role === role);
+    return (contract.people || []).filter((person) => person.role === role);
   }
 
   async validateRequiredRoles(contract: Contract): Promise<void> {
-    const requiredRoles = this.getRequiredRolesForOperation(contract.operation);
-    const existingRoles = contract.people.map((person) => person.role);
+    const requiredRoles = this.getRequiredRolesForOperation(contract.operation as any);
+    const existingRoles = (contract.people || []).map((person) => person.role);
 
     const missingRoles = requiredRoles.filter(
       (role) => !existingRoles.includes(role),
@@ -183,9 +196,7 @@ export class ContractsService {
     }
   }
 
-  private getRequiredRolesForOperation(
-    operation: ContractOperationType,
-  ): ContractRole[] {
+  private getRequiredRolesForOperation(operation: ContractOperationType): ContractRole[] {
     switch (operation) {
       case ContractOperationType.COMPRAVENTA:
         return [ContractRole.SELLER, ContractRole.BUYER];
@@ -228,26 +239,17 @@ export class ContractsService {
     );
 
     // Actualizar el contrato con el documento subido
-    const contractDocuments = contract.documents || [];
-    const existingDocIndex = contractDocuments.findIndex(
-      (doc) => doc.documentTypeId === uploadContractDocumentDto.documentTypeId,
+    // Add the uploaded Document entity to the contract.documents relation
+    contract.documents = contract.documents || [];
+
+    const existingDoc = contract.documents.find(
+      (d) => d.documentTypeId === uploadContractDocumentDto.documentTypeId,
     );
 
-    if (existingDocIndex >= 0) {
-      // Actualizar documento existente
-      contractDocuments[existingDocIndex].documentId = uploadResult.document.id;
-      contractDocuments[existingDocIndex].uploaded = true;
-    } else {
-      // Agregar nuevo documento
-      contractDocuments.push({
-        documentTypeId: uploadContractDocumentDto.documentTypeId,
-        documentId: uploadResult.document.id,
-        required: true, // Por defecto requerido para contratos
-        uploaded: true,
-      });
+    if (!existingDoc) {
+      contract.documents.push(uploadResult.document as any);
     }
 
-    contract.documents = contractDocuments;
     await this.contractRepository.save(contract);
 
     return {

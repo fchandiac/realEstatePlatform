@@ -1,15 +1,6 @@
-export interface MultimediaReference {
-  id: string;
-  fileName: string;
-  order: number;
-  isMain: boolean;
-  description?: string;
-  tags?: string[];
-  mediaType: 'image' | 'video' | 'document' | '360' | 'floor-plan';
-  uploadedAt: Date;
-  fileSize: number;
-  url?: string;
-}
+
+
+import { PostRequestStatus } from '../enums/post-request-status.enum';
 
 export interface PostRequest {
   requestedAt: Date;
@@ -18,7 +9,7 @@ export interface PostRequest {
   specifications?: string;
   budget?: number;
   notes?: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: PostRequestStatus;
   reviewedAt?: Date;
   reviewedBy?: string;
   rejectionReason?: string;
@@ -46,12 +37,6 @@ export interface ViewEntry {
   timeSpent?: number;
 }
 
-export interface RegionCommune {
-  regionId?: string;
-  regionName?: string;
-  communeId?: string;
-  communeName?: string;
-}
 
 export interface LeadEntry {
   timestamp: Date;

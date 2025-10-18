@@ -3,6 +3,9 @@ import { UserRole, UserStatus, Permission } from '../../src/entities/user.entity
 import { ContractOperationType, ContractStatus } from '../../src/entities/contract.entity';
 import { PropertyStatus } from '../../src/common/enums/property-status.enum';
 import { PropertyOperationType } from '../../src/common/enums/property-operation-type.enum';
+import { CurrencyPriceEnum } from '../../src/entities/property.entity';
+import { RegionEnum } from '../../src/common/regions/regions.enum';
+import { ComunaEnum } from '../../src/common/regions/comunas.enum';
 import * as bcrypt from 'bcrypt';
 import {
   PersonSeed,
@@ -51,7 +54,7 @@ export class SeederFactory {
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
         phone: faker.phone.number(),
-        avatar: faker.image.avatar()
+        avatarUrl: faker.image.avatar()
       },
       lastLogin: faker.date.past(),
       createdAt: faker.date.past(),
@@ -66,10 +69,11 @@ export class SeederFactory {
     return {
       title: faker.lorem.words(3),
       description: faker.lorem.paragraph(),
+      internalNotes: faker.lorem.paragraph(),
       status: faker.helpers.arrayElement(Object.values(PropertyStatus)),
       operationType: faker.helpers.arrayElement(Object.values(PropertyOperationType)),
-      priceCLP: priceCLP,
-      priceUF: Math.round((priceCLP / ufValue) * 100) / 100,
+      price: priceCLP,
+      currencyPrice: CurrencyPriceEnum.CLP,
       seoTitle: faker.lorem.sentence(),
       seoDescription: faker.lorem.paragraph(),
       publicationDate: faker.date.recent(),
@@ -78,18 +82,11 @@ export class SeederFactory {
       builtSquareMeters: faker.number.float({ min: 50, max: 500, fractionDigits: 2 }),
       landSquareMeters: faker.number.float({ min: 100, max: 1000, fractionDigits: 2 }),
       parkingSpaces: faker.number.int({ min: 0, max: 3 }),
-      regionCommune: {
-        regionName: faker.location.state(),
-        communeName: faker.location.city()
-      },
+      region: faker.helpers.arrayElement(Object.values(RegionEnum)),
+      commune: faker.helpers.arrayElement(Object.values(ComunaEnum)),
       latitude: faker.number.float({ min: -90, max: 90, fractionDigits: 6 }),
       longitude: faker.number.float({ min: -180, max: 180, fractionDigits: 6 }),
-      multimedia: Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => ({
-        url: faker.image.url(),
-        type: faker.helpers.arrayElement(['IMAGE', 'VIDEO']),
-        description: faker.lorem.sentence()
-      })),
-      propertyType: faker.helpers.arrayElement(['RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL'])
+      propertyType: { name: faker.helpers.arrayElement(['RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL']) }
     };
   }
 
@@ -99,14 +96,14 @@ export class SeederFactory {
       status: faker.helpers.arrayElement(Object.values(ContractStatus)),
       endDate: faker.date.future(),
       amount: faker.number.int({ min: 10000, max: 1000000 }),
-      commissionPercent: faker.number.float({ min: 1, max: 5, fractionDigits: 1 }),
+      commissionPercent: faker.number.float({ min: 0.01, max: 0.1, fractionDigits: 2 }),
       commissionAmount: faker.number.int({ min: 1000, max: 50000 }),
       payments: [],
       documents: [],
       people: [],
       description: faker.lorem.paragraph(),
       createdAt: faker.date.past(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
   }
 

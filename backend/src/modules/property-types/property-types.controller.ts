@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PropertyTypesService } from './property-types.service';
 import {
@@ -18,7 +19,7 @@ export class PropertyTypesController {
   constructor(private readonly propertyTypesService: PropertyTypesService) {}
 
   @Post()
-  create(@Body() createPropertyTypeDto: CreatePropertyTypeDto) {
+  create(@Body(ValidationPipe) createPropertyTypeDto: CreatePropertyTypeDto) {
     return this.propertyTypesService.create(createPropertyTypeDto);
   }
 
@@ -35,7 +36,7 @@ export class PropertyTypesController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updatePropertyTypeDto: UpdatePropertyTypeDto,
+    @Body(ValidationPipe) updatePropertyTypeDto: UpdatePropertyTypeDto,
   ) {
     return this.propertyTypesService.update(id, updatePropertyTypeDto);
   }

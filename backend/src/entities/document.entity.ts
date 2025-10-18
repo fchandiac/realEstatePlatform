@@ -11,6 +11,7 @@ import {
 import { DocumentType } from './document-type.entity';
 import { Multimedia } from './multimedia.entity';
 import { User } from './user.entity';
+import { Contract } from './contract.entity';
 
 export enum DocumentStatus {
   PENDING = 'PENDING',
@@ -31,13 +32,29 @@ export class Document {
   @JoinColumn({ name: 'documentTypeId' })
   documentType: DocumentType;
 
+  @Column({ type: 'uuid' })
+  documentTypeId: string;
+
   @ManyToOne(() => Multimedia, { nullable: true })
   @JoinColumn({ name: 'multimediaId' })
   multimedia?: Multimedia;
 
+  @Column({ type: 'uuid', nullable: true })
+  multimediaId?: string;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'uploadedById' })
   uploadedBy: User;
+
+  @Column({ type: 'uuid' })
+  uploadedById: string;
+
+  @ManyToOne(() => Contract, { nullable: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'contractId' })
+  contract?: Contract;
+
+  @Column({ type: 'uuid', nullable: true })
+  contractId?: string;
 
   @Column({
     type: 'enum',

@@ -30,6 +30,12 @@ export class Person {
   phone: string;
 
   @Column({ nullable: true })
+  city: string;
+
+  @Column({ nullable: true })
+  state: string;
+
+  @Column({ nullable: true })
   email: string;
 
   @Column({ default: false })
