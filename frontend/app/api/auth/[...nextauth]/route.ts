@@ -1,30 +1,108 @@
 import NextAuth from 'next-auth';
+import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { NextAuthOptions } from 'next-auth';
+import { env } from '@/lib/env';
+
+const backendBaseUrl = env.backendApiUrl;
+
+type BackendAuthResponse = {
+  access_token: string;
+  userId: string;
+  email: string;
+  role: string;
+  name: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+    name: string;
+  };
+};
 
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV !== 'production',
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      id: 'credentials',
+      name: 'Credenciales',
       credentials: {
-        username: { label: 'Username', type: 'text' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: 'Correo electrónico', type: 'email' },
+        password: { label: 'Contraseña', type: 'password' },
       },
       async authorize(credentials) {
-        // Demo: accept any username/password where username === password
-        if (!credentials) return null;
-        const { username, password } = credentials as any;
-        if (username && password && username === password) {
-          return { id: username, name: username, email: `${username}@example.com` };
+        if (!credentials?.email || !credentials.password) {
+          return null;
         }
-        return null;
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+
+        try {
+          const response = await fetch(`${backendBaseUrl}/auth/sign-in`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+            signal: controller.signal,
+          });
+
+          const payload = (await response.json().catch(() => null)) as
+            | BackendAuthResponse
+            | { message?: string }
+            | null;
+
+          if (!response.ok || !payload || !('access_token' in payload)) {
+            return null;
+          }
+
+          return {
+            id: payload.user?.id ?? payload.userId,
+            name: payload.user?.name ?? payload.name ?? payload.email,
+            email: payload.user?.email ?? payload.email,
+            role: payload.user?.role ?? payload.role,
+            accessToken: payload.access_token,
+          };
+        } catch (error) {
+          console.error('NextAuth authorize error', error);
+          return null;
+        } finally {
+          clearTimeout(timeout);
+        }
       },
     }),
   ],
-  session: { strategy: 'jwt' },
+  session: { strategy: 'jwt', maxAge: 60 * 60 },
   pages: {
-    signIn: '/auth/signin',
+    signIn: '/portal',
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.accessToken = (user as unknown as { accessToken?: string }).accessToken;
+        token.role = (user as unknown as { role?: string }).role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user = {
+          ...session.user,
+          id: typeof token.sub === 'string' ? token.sub : undefined,
+          role: typeof token.role === 'string' ? token.role : undefined,
+        } as typeof session.user & { id?: string; role?: string };
+      }
+
+      if (typeof token.accessToken === 'string') {
+        (session as typeof session & { accessToken?: string }).accessToken = token.accessToken;
+      }
+
+      return session;
+    },
   },
 };
 

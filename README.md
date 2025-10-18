@@ -31,3 +31,4 @@ Adjust environment variables and secrets as described in the respective subdirec
 - Required entries:
    - `NEXTAUTH_URL` — base URL that NextAuth should use (defaults to `http://localhost:3000` for local development).
    - `NEXTAUTH_SECRET` — strong random secret used to sign NextAuth tokens. Generate a unique value per environment.
+   - `AUTH_API_URL` — base URL for the NestJS backend (defaults to `http://localhost:3001`).

@@ -1,12 +1,152 @@
 "use client";
 
-import { SessionProvider } from "next-auth/react";
-import type { ReactNode } from "react";
+import {
+  SessionProvider,
+  signIn,
+  signOut,
+  useSession,
+} from "next-auth/react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  type ReactNode,
+} from "react";
+import { logoutAction } from "@/app/actions";
+
+type AuthContextUser = {
+  id?: string;
+  name?: string | null;
+  email?: string | null;
+  role?: string;
+};
+
+type LoginResult =
+  | { success: true }
+  | { success: false; error: string };
+
+type AuthContextValue = {
+  user: AuthContextUser | null;
+  status: "loading" | "authenticated" | "unauthenticated";
+  isAuthenticated: boolean;
+  accessToken?: string;
+  login: (email: string, password: string) => Promise<LoginResult>;
+  logout: (options?: { redirectTo?: string }) => Promise<void>;
+  refresh: () => Promise<void>;
+};
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+type AuthContextProviderProps = {
+  children: ReactNode;
+};
+
+function AuthContextProvider({ children }: AuthContextProviderProps) {
+  const { data: session, status, update } = useSession();
+
+  const accessToken = (session as (typeof session & { accessToken?: string }) | null)?.accessToken;
+
+  const login = useCallback<AuthContextValue["login"]>(
+    async (email, password) => {
+      try {
+        const result = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (!result || result.error) {
+          const errorMessage =
+            result?.error === "CredentialsSignin"
+              ? "Credenciales inválidas"
+              : result?.error ?? "No fue posible iniciar sesión";
+
+          return {
+            success: false,
+            error: errorMessage,
+          };
+        }
+
+        await update();
+        return { success: true };
+      } catch (error) {
+        console.error("AuthContext login error", error);
+        return {
+          success: false,
+          error: "Error de red o backend",
+        };
+      }
+    },
+    [update],
+  );
+
+  const logout = useCallback<AuthContextValue["logout"]>(
+    async (options) => {
+      const result = await logoutAction(accessToken ?? undefined);
+      if (!result.success) {
+        console.error(result.error);
+      }
+
+      const redirectTo = options?.redirectTo;
+      if (redirectTo) {
+        await signOut({ callbackUrl: redirectTo });
+        return;
+      }
+
+      await signOut({ redirect: false });
+      await update();
+    },
+    [accessToken, update],
+  );
+
+  const refresh = useCallback(async () => {
+    await update();
+  }, [update]);
+
+  const value = useMemo<AuthContextValue>(() => {
+    const authUser = session?.user
+      ? {
+          id: "id" in session.user ? (session.user as { id?: string }).id : undefined,
+          role:
+            "role" in session.user
+              ? (session.user as { role?: string }).role
+              : undefined,
+          name: session.user.name,
+          email: session.user.email,
+        }
+      : null;
+
+    return {
+      user: authUser,
+      status,
+      isAuthenticated: status === "authenticated",
+      accessToken,
+      login,
+      logout,
+      refresh,
+    };
+  }, [session, status, login, logout, refresh, accessToken]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
 
 interface ProvidersProps {
   children: ReactNode;
 }
 
 export function Providers({ children }: ProvidersProps) {
-  return <SessionProvider>{children}</SessionProvider>;
+  return (
+    <SessionProvider refetchOnWindowFocus={false}>
+      <AuthContextProvider>{children}</AuthContextProvider>
+    </SessionProvider>
+  );
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within AuthContextProvider");
+  }
+  return context;
 }

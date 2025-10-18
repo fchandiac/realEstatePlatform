@@ -22,6 +22,25 @@ import {
 } from './seeder.types';
 
 export class SeederFactory {
+  static createAdminUser(): UserSeed {
+    return {
+      username: 'admin',
+      email: 'admin@re.cl',
+      password: bcrypt.hashSync('7890', 10),
+      role: UserRole.ADMIN,
+      status: UserStatus.ACTIVE,
+      permissions: Object.values(Permission),
+      personalInfo: {
+        firstName: 'Admin',
+        lastName: 'User',
+        phone: '',
+        avatarUrl: ''
+      },
+      lastLogin: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+  }
   private static usedPropertyTypes = new Set<string>();
   private static usedDocumentTypes = new Set<string>();
   static createRandomPerson(): PersonSeed {

@@ -48,24 +48,9 @@ async function seedDatabase() {
     // Create admin user first
     console.log('Creating admin user...');
     const adminUser = await userRepository.save(
-      userRepository.create({
-        username: 'admin',
-        email: 'admin@realestate.com',
-        password: await bcrypt.hash('7890', 10),
-        role: UserRole.ADMIN,
-        status: UserStatus.ACTIVE,
-        personalInfo: {
-          firstName: 'Admin',
-          lastName: 'User',
-          phone: '+56 9 1234 5678',
-          avatarUrl: 'https://ui-avatars.com/api/?name=Admin+User'
-        },
-        permissions: Object.values(Permission),
-        lastLogin: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date()
-      })
+      userRepository.create(SeederFactory.createAdminUser())
     );
+    console.log('Admin user created:', adminUser);
 
     // Create at least one agent user
     const agentUser = await userRepository.save(

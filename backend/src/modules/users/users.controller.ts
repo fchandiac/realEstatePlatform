@@ -34,10 +34,6 @@ export class UsersController {
     return userResponse;
   }
 
-  @Post('login')
-  login(@Body(ValidationPipe) loginDto: LoginDto) {
-    return this.usersService.login(loginDto);
-  }
 
   @Get()
   findAll() {

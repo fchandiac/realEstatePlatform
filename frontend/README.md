@@ -1,5 +1,15 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Environment variables
+
+Create a `.env.local` file (or update it) before running the app. At a minimum you need to tell the frontend where the NestJS backend is located:
+
+```bash
+AUTH_API_URL=http://localhost:3000
+```
+
+If you run the Next.js app on a different port, remember to adjust `NEXTAUTH_URL` accordingly so NextAuth callbacks still work.
+
 ## Getting Started
 
 First, run the development server:

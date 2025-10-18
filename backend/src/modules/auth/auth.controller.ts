@@ -2,11 +2,12 @@ import {
   Controller,
   Post,
   Body,
-  UseInterceptors,
+  ValidationPipe,
   Headers,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from '../../modules/users/dto/user.dto';
+import { LoginDto } from '../users/dto/user.dto';
 import {
   Audit,
   AuditInterceptor,
@@ -20,13 +21,13 @@ export class AuthController {
 
   @Post('sign-in')
   @Audit(AuditAction.LOGIN, AuditEntityType.USER, 'User login attempt')
-  async signIn(@Body() loginDto: LoginDto) {
-    return await this.authService.signIn(loginDto);
+  async signIn(@Body(ValidationPipe) loginDto: LoginDto) {
+    return this.authService.signIn(loginDto);
   }
 
   @Post('sign-out')
   @Audit(AuditAction.LOGOUT, AuditEntityType.USER, 'User logout request')
   async signOut(@Headers('authorization') authorization?: string) {
-    return await this.authService.signOut(authorization);
+    return this.authService.signOut(authorization);
   }
 }

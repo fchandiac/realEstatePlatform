@@ -44,9 +44,13 @@ export class AuthService {
       let access_token: string;
       if (process.env.NODE_ENV === 'test') {
         // In test environment, use plain JWT
-        access_token = jwt.sign(payload, process.env.JWT_SECRET || 'test-secret', {
-          expiresIn: '1h',
-        });
+        access_token = jwt.sign(
+          payload,
+          process.env.JWT_SECRET || 'test-secret',
+          {
+            expiresIn: '1h',
+          },
+        );
       } else {
         // Generate JWE token
         access_token = await this.jweService.encrypt(payload, '15m');
@@ -67,9 +71,35 @@ export class AuthService {
         },
       };
     } catch (error) {
-      console.log('Error in signIn:', error.message);
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.log('Error in signIn:', message);
       // Re-throw with generic message for security
       throw new UnauthorizedException('Credenciales inválidas');
     }
+  }
+
+  async signOut(authorizationHeader?: string) {
+    if (!authorizationHeader) {
+      throw new UnauthorizedException('Token requerido para cerrar sesión');
+    }
+
+    const token = authorizationHeader.replace(/^Bearer\s+/i, '').trim();
+
+    if (!token) {
+      throw new UnauthorizedException('Token inválido');
+    }
+
+    try {
+      await this.jweService.decrypt(token);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.log('Error in signOut:', message);
+      throw new UnauthorizedException('Token inválido o expirado');
+    }
+
+    return {
+      success: true,
+      message: 'Sesión cerrada correctamente',
+    };
   }
 }

@@ -5,6 +5,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JweService } from '../../auth/jwe/jwe.service';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
+import { forwardRef } from '@nestjs/common';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -14,8 +18,10 @@ import { JweService } from '../../auth/jwe/jwe.service';
       secret: process.env.JWT_SECRET || 'test-secret',
       signOptions: { expiresIn: '1h' },
     }),
+  forwardRef(() => UsersModule),
   ],
-  providers: [JwtStrategy, JwtAuthGuard, JweService],
-  exports: [JwtModule, JwtAuthGuard],
+  providers: [JwtStrategy, JwtAuthGuard, JweService, AuthService],
+  controllers: [AuthController],
+  exports: [JwtModule, JwtAuthGuard, AuthService],
 })
 export class AuthModule {}
