@@ -17,6 +17,8 @@ export default function LoginForm({ onClose }: LoginFormProps) {
   const router = useRouter();
   const { login } = useAuth();
 
+  const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
@@ -24,11 +26,40 @@ export default function LoginForm({ onClose }: LoginFormProps) {
 
     try {
       const result = await login(email, password);
-      if (!result.success) {
-        setError(result.error);
+
+      // Support both our login return ({ success: true }) and NextAuth shape ({ ok: true })
+      const ok = (result as any)?.success === true || (result as any)?.ok === true;
+      if (!ok) {
+        const err = (result as any)?.error ?? "Credenciales inválidas";
+        setError(err);
         return;
       }
+
       if (onClose) onClose();
+
+      // Poll session until role appears (up to ~2s)
+      const maxAttempts = 10;
+      for (let i = 0; i < maxAttempts; i++) {
+        try {
+          const res = await fetch('/api/auth/session');
+          if (res.ok) {
+            const session = await res.json();
+            const role = session?.user?.role;
+            if (role) {
+              if (role === 'admin' || role === 'agent') {
+                router.push('/backOffice');
+                return;
+              }
+              break; // role present but not admin/agent
+            }
+          }
+        } catch (sessErr) {
+          // ignore and retry
+        }
+        await delay(200);
+      }
+
+      // fallback: refresh page
       router.refresh();
     } catch (unknownError) {
       console.error("Error en login", unknownError);

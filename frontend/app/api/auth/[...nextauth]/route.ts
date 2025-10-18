@@ -83,8 +83,8 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = (user as unknown as { accessToken?: string }).accessToken;
-        token.role = (user as unknown as { role?: string }).role;
+        token.accessToken = user.accessToken;
+        token.role = user.role; // Include role in token
       }
       return token;
     },

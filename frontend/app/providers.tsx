@@ -69,6 +69,13 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
         }
 
         await update();
+
+        // Check user role and redirect if necessary
+        const userRole = session?.user?.role;
+        if (userRole === "admin" || userRole === "agent") {
+          window.location.href = "/backoffice";
+        }
+
         return { success: true };
       } catch (error) {
         console.error("AuthContext login error", error);
@@ -78,7 +85,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
         };
       }
     },
-    [update],
+    [update, session],
   );
 
   const logout = useCallback<AuthContextValue["logout"]>(
