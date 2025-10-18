@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
+import { GridSaleQueryDto } from './dto/grid-sale.dto';
 
 @Controller('properties')
 export class PropertyController {
@@ -24,6 +25,11 @@ export class PropertyController {
   @Get()
   findAll(@Query() filters: any) {
     return this.propertyService.findAll(filters);
+  }
+
+  @Get('grid-sale')
+  gridSale(@Query(ValidationPipe) query: GridSaleQueryDto) {
+    return this.propertyService.gridSaleProperties(query);
   }
 
   @Get(':id')

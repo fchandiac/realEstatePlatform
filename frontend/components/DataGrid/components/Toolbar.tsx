@@ -3,8 +3,9 @@ import React from 'react';
 import IconButton from '../../IconButton/IconButton';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { DataGridColumn } from '../DataGrid';
-import { getAlertExcelUrl } from '@/app/actions/alerts';
-import { useAlert } from '@/app/hooks/useAlert';
+import { useAlert } from '@/app/contexts/AlertContext';
+
+// import { useAlert } from '@/app/hooks/useAlert';
 
 interface ToolbarProps {
   filterMode?: boolean;
@@ -12,9 +13,11 @@ interface ToolbarProps {
   // optional columns prop so toolbar can pick first column for sorting
   columns?: DataGridColumn[];
   title?: string;
+  excelUrl?: string; // absolute backend endpoint for excel export
+  excelFields?: string; // optional CSV of fields to request
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ filterMode = false, onToggleFilterMode, columns = [], title = '' }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ filterMode = false, onToggleFilterMode, columns = [], title = '', excelUrl, excelFields }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { showAlert } = useAlert();
@@ -43,6 +46,10 @@ const Toolbar: React.FC<ToolbarProps> = ({ filterMode = false, onToggleFilterMod
 
   const handleExportExcel = async () => {
     try {
+      if (!excelUrl) {
+        showAlert({ message: 'Exportación no disponible: falta URL de Excel', type: 'warning', duration: 4000 });
+        return;
+      }
       const sort = searchParams.get('sort') as 'asc' | 'desc' | undefined;
       const sortField = searchParams.get('sortField') || undefined;
       const search = searchParams.get('search') || undefined;
@@ -52,31 +59,18 @@ const Toolbar: React.FC<ToolbarProps> = ({ filterMode = false, onToggleFilterMod
       // Use the same filtration logic as the grid - if filtration=true in URL, apply filters
       const shouldApplyFilters = filtrationParam === 'true' && filters;
 
-      console.log('Excel Export Debug:', {
+      const url = new URL(excelUrl);
+      const params: Record<string, string | boolean | undefined> = {
+        fields: excelFields,
         sort,
         sortField,
         search,
-        filters,
-        filtrationParam,
-        shouldApplyFilters,
-        finalParams: {
-          fields: 'id,type,status,received_at,assignedUserNames',
-          sort,
-          sortField,
-          search,
-          ...(shouldApplyFilters && { filtration: true, filters }),
-        }
+        ...(shouldApplyFilters ? { filtration: true, filters } : {}),
+      };
+      Object.entries(params).forEach(([k, v]) => {
+        if (typeof v === 'string') url.searchParams.set(k, v);
+        if (typeof v === 'boolean') url.searchParams.set(k, v ? 'true' : 'false');
       });
-
-      const excelUrl = await getAlertExcelUrl({
-        fields: 'id,type,status,received_at,assignedUserNames',
-        sort,
-        sortField,
-        search,
-        ...(shouldApplyFilters && { filtration: true, filters }),
-      });
-
-      console.log('Final Excel URL:', excelUrl);
 
       // Generate filename with title, underscore, date and time in DD/MM/YYYY-HH:mm:ss format
       const now = new Date();
@@ -90,8 +84,8 @@ const Toolbar: React.FC<ToolbarProps> = ({ filterMode = false, onToggleFilterMod
       const filename = `${title}_${dateStr}.xlsx`;
 
       // Create a temporary link to trigger download
-      const link = document.createElement('a');
-      link.href = excelUrl;
+  const link = document.createElement('a');
+  link.href = url.toString();
       link.download = filename;
       document.body.appendChild(link);
       link.click();

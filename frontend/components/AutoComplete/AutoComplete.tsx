@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useRef, useEffect } from "react";
-import DropdownList from "@/app/components/DropdownList/DropdownList";
-import IconButton from "@/app/components/IconButton/IconButton";
+import DropdownList from "@/components/DropdownList/DropdownList";
+import IconButton from "@/components/IconButton/IconButton";
 
 export interface Option {
   id: number;
@@ -202,7 +202,7 @@ const AutoComplete = <T = Option,>({
         {filteredOptions.map((opt, idx) => (
           <li
             key={getValue(opt)}
-            className={require("@/app/components/DropdownList/DropdownList").dropdownOptionClass + (highlightedIndex === idx ? " bg-primary/30" : " text-neutral-700")}
+            className={require("@/components/DropdownList/DropdownList").dropdownOptionClass + (highlightedIndex === idx ? " bg-primary/30" : " text-neutral-700")}
             onMouseDown={() => handleSelect(opt)}
             onMouseEnter={() => setHighlightedIndex(idx)}
             data-test-id={`auto-complete-option-${getValue(opt)}`}

@@ -14,6 +14,7 @@ import {
   type ReactNode,
 } from "react";
 import { logoutAction } from "@/app/actions";
+import { AlertProvider } from "@/app/contexts/AlertContext";
 
 type AuthContextUser = {
   id?: string;
@@ -145,7 +146,11 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
   return (
     <SessionProvider refetchOnWindowFocus={false}>
-      <AuthContextProvider>{children}</AuthContextProvider>
+      <AuthContextProvider>
+        <AlertProvider>
+          {children}
+        </AlertProvider>
+      </AuthContextProvider>
     </SessionProvider>
   );
 }

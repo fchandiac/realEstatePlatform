@@ -1,9 +1,9 @@
 "use client"
 import React from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import IconButton from '@/app/components/IconButton/IconButton'
-import SimpleSelect from '@/app/components/Select/SimpleSelect'
-import type { Option } from '@/app/components/Select/SimpleSelect'
+import IconButton from '@/components/IconButton/IconButton'
+import SimpleSelect from '@/components/Select/SimpleSelect'
+import type { Option } from '@/components/Select/SimpleSelect'
 
 interface PaginationProps {
   total: number

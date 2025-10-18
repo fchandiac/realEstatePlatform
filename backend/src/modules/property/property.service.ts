@@ -15,6 +15,7 @@ import {
   ViewEntry,
   LeadEntry,
 } from '../../common/interfaces/property.interfaces';
+import { GridSaleQueryDto } from './dto/grid-sale.dto';
 
 @Injectable()
 export class PropertyService {
@@ -54,7 +55,6 @@ export class PropertyService {
       field: 'creation',
       previousValue: null,
       newValue: 'Created',
-      reason: 'Property created',
     };
 
     property.changeHistory = [historyEntry];
@@ -87,10 +87,14 @@ export class PropertyService {
       });
     }
 
+    if (filters.state) {
+      query.andWhere('property.state = :state', {
+        state: filters.state,
+      });
+    }
+
     if (filters.city) {
-      // city was removed from the model; accept region or commune instead
-      // keep backward compatibility: if 'city' provided, match against region or commune
-      query.andWhere('(property.region = :city OR property.commune = :city)', {
+      query.andWhere('property.city = :city', {
         city: filters.city,
       });
     }
@@ -192,7 +196,6 @@ export class PropertyService {
           field: key,
           previousValue: property[key],
           newValue: newValue,
-          reason: `Updated ${key}`,
         });
       }
     }
@@ -213,7 +216,6 @@ export class PropertyService {
     id: string,
     status: PropertyStatus,
     updatedBy?: string,
-    reason?: string,
   ): Promise<Property> {
     const property = await this.findOne(id, false);
 
@@ -223,7 +225,6 @@ export class PropertyService {
       field: 'status',
       previousValue: property.status,
       newValue: status,
-      reason: reason || `Status changed to ${status}`,
     };
 
     property.status = status;
@@ -243,16 +244,10 @@ export class PropertyService {
 
     const viewEntry: ViewEntry = {
       timestamp: new Date(),
-      sessionId: viewData.sessionId || 'anonymous',
       userId: viewData.userId,
-      ip: viewData.ip,
-      userAgent: viewData.userAgent,
-      platform: viewData.platform,
-      source: viewData.source,
     };
 
     property.views = [...(property.views || []), viewEntry];
-    property.viewCount = (property.viewCount || 0) + 1;
 
     await this.propertyRepository.save(property);
   }
@@ -264,7 +259,6 @@ export class PropertyService {
     leadData.status = leadData.status || 'new';
 
     property.leads = [...(property.leads || []), leadData];
-    property.contactCount = (property.contactCount || 0) + 1;
 
     await this.propertyRepository.save(property);
   }
@@ -279,7 +273,6 @@ export class PropertyService {
       field: 'deletion',
       previousValue: 'active',
       newValue: 'deleted',
-      reason: 'Property deleted',
     };
 
     property.changeHistory = [...(property.changeHistory || []), historyEntry];
@@ -318,4 +311,249 @@ export class PropertyService {
       // Add validation logic for operation type updates
     }
   }
+
+  // Grid for SALE properties compatible with DataGrid
+  async gridSaleProperties(query: GridSaleQueryDto) {
+    // Allowed fields and mappings
+    const availableFields = [
+      'id',
+      'title',
+      'status',
+      'operationType',
+      'typeName',
+      'characteristics',
+      'assignedAgentName',
+      'city',
+      'state',
+      'priceDisplay',
+      'price',
+      'currencyPrice',
+      'createdAt',
+      'updatedAt',
+    ];
+
+    const fieldMappings: Record<string, string> = {
+      id: 'p.id',
+      title: 'p.title',
+      status: 'p.status',
+      operationType: 'p.operationType',
+      typeName: 'pt.name AS typeName',
+      city: 'p.city',
+      state: 'p.state',
+      price: 'p.price',
+      currencyPrice: 'p.currencyPrice',
+      createdAt: 'p.createdAt',
+      updatedAt: 'p.updatedAt',
+      // characteristics and priceDisplay are derived post-query
+      // assignedAgentName is also derived using selected JSON personalInfo
+    };
+
+    const textSearchFields = [
+      'LOWER(p.title)',
+      'LOWER(pt.name)',
+      'LOWER(a.username)',
+      'LOWER(p.city)',
+      'LOWER(p.state)',
+    ];
+
+    // Parse fields
+    const requested = (query.fields || '')
+      .split(',')
+      .map((f) => f.trim())
+      .filter((f) => f);
+    const fields = requested.length
+      ? requested.filter((f) => availableFields.includes(f))
+      : availableFields;
+
+    if (fields.length === 0) {
+      if (query.pagination === 'true') {
+        return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 };
+      }
+      return [];
+    }
+
+    // Build select (raw) for non-derived fields
+    const rawSelects = fields
+      .filter((f) => !['characteristics', 'priceDisplay', 'assignedAgentName'].includes(f))
+      .map((f) => fieldMappings[f] || `p.${f}`);
+
+    // Always include needed base fields for derivations if requested
+    const needCharacteristics = fields.includes('characteristics');
+    const needPriceDisplay = fields.includes('priceDisplay');
+    if (needCharacteristics) {
+      rawSelects.push(
+        'p.bedrooms',
+        'p.bathrooms',
+        'p.landSquareMeters',
+        'p.builtSquareMeters',
+        'p.parkingSpaces',
+        'p.floors',
+      );
+    }
+    if (needPriceDisplay) {
+      rawSelects.push('p.price', 'p.currencyPrice');
+    }
+
+    // assignedAgentName derivation needs agent personalInfo and username
+    const needAgentName = fields.includes('assignedAgentName');
+    if (needAgentName) {
+      rawSelects.push('a.personalInfo AS assignedPersonalInfo');
+      rawSelects.push('a.username AS assignedUsername');
+    }
+
+    // Fallback: ensure id exists in selection for identity mapping
+    if (!rawSelects.find((s) => s.startsWith('p.id'))) rawSelects.unshift('p.id');
+
+    const qb = this.propertyRepository
+      .createQueryBuilder('p')
+      .leftJoin('p.propertyType', 'pt')
+      .leftJoin('p.assignedAgent', 'a')
+      .where('p.deletedAt IS NULL')
+      .andWhere('p.operationType = :op', { op: PropertyOperationType.SALE });
+
+    // Column filters
+    const filtration = query.filtration === 'true';
+    if (filtration && query.filters) {
+      const items = query.filters
+        .split(',')
+        .map((f) => f.trim())
+        .filter((f) => f.includes('-'))
+        .map((f) => {
+          const dash = f.indexOf('-');
+          return {
+            column: f.substring(0, dash).trim(),
+            value: decodeURIComponent(f.substring(dash + 1).trim()),
+          };
+        })
+        .filter((f) => f.column && f.value && availableFields.includes(f.column));
+
+      for (const f of items) {
+        const mapping = fieldMappings[f.column] || `p.${f.column}`;
+        const dbField = mapping.split(' AS ')[0];
+        const param = `%${f.value.toLowerCase()}%`;
+        qb.andWhere(`LOWER(${dbField}) LIKE :f_${f.column}`, {
+          [`f_${f.column}`]: param,
+        });
+      }
+    }
+
+    // Global search
+    if (query.search && query.search.trim() !== '') {
+      const needle = query.search.trim().toLowerCase();
+      const orExpr = textSearchFields
+        .map((f, idx) => `${f} LIKE :s${idx}`)
+        .join(' OR ');
+      const params = Object.fromEntries(
+        textSearchFields.map((_, idx) => [`s${idx}`, `%${needle}%`]),
+      );
+      qb.andWhere(`(${orExpr})`, params);
+    }
+
+    // Sorting
+    const sortDir = query.sort === 'desc' ? 'DESC' : 'ASC';
+    const sortField = query.sortField && availableFields.includes(query.sortField)
+      ? query.sortField
+      : undefined;
+    if (sortField) {
+      const mapping = fieldMappings[sortField] || `p.${sortField}`;
+      const dbField = mapping.split(' AS ')[0];
+      qb.orderBy(dbField, sortDir as 'ASC' | 'DESC');
+    } else {
+      qb.orderBy('p.publishedAt', 'DESC').addOrderBy('p.createdAt', 'DESC');
+    }
+
+    // Selects
+    qb.select(rawSelects);
+
+    // Pagination
+    const doPaginate = query.pagination === 'true';
+    let total = 0;
+    let page = Math.max(1, query.page || 1);
+    let limit = Math.min(Math.max(1, query.limit || 10), 100);
+
+    if (doPaginate) {
+      total = await qb.getCount();
+      const totalPages = Math.ceil(total / limit);
+      const offset = (page - 1) * limit;
+      qb.limit(limit).offset(offset);
+      const rows = await qb.getRawMany();
+      const data = rows.map((r: any) => this.mapGridRow(r, fields));
+      return { data, total, page, limit, totalPages };
+    }
+
+    const rows = await qb.getRawMany();
+    return rows.map((r: any) => this.mapGridRow(r, fields));
+  }
+
+  private mapGridRow(raw: any, fields: string[]) {
+    // Normalize aliases from getRawMany: use column names from mappings or fall back
+    const row: any = { ...raw };
+
+    // Derived: assignedAgentName from personalInfo or username
+    if (fields.includes('assignedAgentName')) {
+      let name = '';
+      const rawPI = row.assignedPersonalInfo;
+      try {
+        const pi = typeof rawPI === 'string' ? JSON.parse(rawPI) : rawPI;
+        const fn = (pi?.firstName || '').toString().trim();
+        const ln = (pi?.lastName || '').toString().trim();
+        name = `${fn} ${ln}`.trim();
+      } catch (_) {
+        // ignore JSON parse errors
+      }
+      if (!name) name = (row.assignedUsername || '').toString();
+      row.assignedAgentName = name.trim();
+    }
+
+    // Derived: characteristics
+    if (fields.includes('characteristics')) {
+      const parts: string[] = [];
+      const bedrooms = toInt(row.bedrooms);
+      const bathrooms = toInt(row.bathrooms);
+      const land = toNumber(row.landSquareMeters);
+      const built = toNumber(row.builtSquareMeters);
+      const parking = toInt(row.parkingSpaces);
+      const floors = toInt(row.floors);
+
+      if (bedrooms > 0) parts.push(`${bedrooms}D`);
+      if (bathrooms > 0) parts.push(`${bathrooms}B`);
+      if (isFiniteNumber(land) && land > 0) parts.push(`${Math.round(land)}m²T`);
+      if (isFiniteNumber(built) && built > 0) parts.push(`${Math.round(built)}m²C`);
+      if (parking > 0) parts.push(`${parking}E`);
+      if (floors > 0) parts.push(`${floors}P`);
+      row.characteristics = parts.join('/');
+    }
+
+    // Derived: priceDisplay
+    if (fields.includes('priceDisplay')) {
+      const price = toNumber(row.price);
+      const currency = row.currencyPrice;
+      row.priceDisplay = formatPrice(price, currency);
+    }
+
+    // Remove base fields used only for derivations if they were not explicitly requested
+    const baseFieldsForChar = ['bedrooms', 'bathrooms', 'landSquareMeters', 'builtSquareMeters', 'parkingSpaces', 'floors'];
+    for (const bf of baseFieldsForChar) {
+      if (!fields.includes(bf) && bf in row) delete row[bf];
+    }
+  if (!fields.includes('price') && 'price' in row) delete row.price;
+  if (!fields.includes('currencyPrice') && 'currencyPrice' in row) delete row.currencyPrice;
+  if (!fields.includes('assignedPersonalInfo') && 'assignedPersonalInfo' in row) delete row.assignedPersonalInfo;
+  if (!fields.includes('assignedUsername') && 'assignedUsername' in row) delete row.assignedUsername;
+
+    return row;
+  }
+
 }
+
+function toInt(v: any): number { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }
+function toNumber(v: any): number { const n = typeof v === 'number' ? v : parseFloat(v); return isNaN(n) ? 0 : n; }
+function isFiniteNumber(n: any): boolean { return typeof n === 'number' && isFinite(n); }
+function formatPrice(price: number, currency?: string): string {
+  if (!isFiniteNumber(price) || price <= 0) return '';
+  if (currency === 'UF') {
+    return `${new Intl.NumberFormat('es-CL').format(Math.round(price))} UF`;
+  }
+  return `$ ${new Intl.NumberFormat('es-CL').format(Math.round(price))}`;
+}
+

@@ -8,7 +8,7 @@ const menuItems = [
   {
     label: 'Propiedades',
     children: [
-      { label: 'Venta' },
+      { label: 'Venta', url: '/backOffice/properties/sales' },
       { label: 'Arriendo' },
       { label: 'Tipos de propiedad' },
       { label: 'Solicitudes de publicación' },

@@ -17,9 +17,11 @@ interface HeaderProps {
   columns?: DataGridColumn[];
   createForm?: React.ReactNode;
   screenWidth?: number;
+  excelUrl?: string;
+  excelFields?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, filterMode = false, onToggleFilterMode, columns = [], createForm, screenWidth = 1024 }) => {
+const Header: React.FC<HeaderProps> = ({ title, filterMode = false, onToggleFilterMode, columns = [], createForm, screenWidth = 1024, excelUrl, excelFields }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -70,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({ title, filterMode = false, onToggleFilt
         <div className="hidden sm:flex items-center gap-4">
           {/* Toolbar */}
           <div>
-            <Toolbar filterMode={filterMode} onToggleFilterMode={onToggleFilterMode} columns={columns} title={title} />
+            <Toolbar filterMode={filterMode} onToggleFilterMode={onToggleFilterMode} columns={columns} title={title} excelUrl={excelUrl} excelFields={excelFields} />
           </div>
           {/* Search field */}
           <div className="flex items-center">
@@ -94,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({ title, filterMode = false, onToggleFilt
       <div className="flex sm:hidden items-center justify-end gap-4 mt-3">
         {/* Toolbar */}
         <div>
-          <Toolbar columns={columns} title={title} />
+          <Toolbar columns={columns} title={title} excelUrl={excelUrl} excelFields={excelFields} />
         </div>
         {/* Search field */}
         <div className="flex items-center flex-1 max-w-xs">

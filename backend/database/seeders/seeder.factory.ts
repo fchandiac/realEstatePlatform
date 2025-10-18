@@ -84,7 +84,7 @@ export class SeederFactory {
   static createRandomProperty(): PropertySeed {
     const priceCLP = faker.number.int({ min: 50000000, max: 500000000 });
     const ufValue = 35000; // Valor aproximado de la UF
-    
+
     return {
       title: faker.lorem.words(3),
       description: faker.lorem.paragraph(),
@@ -101,11 +101,12 @@ export class SeederFactory {
       builtSquareMeters: faker.number.float({ min: 50, max: 500, fractionDigits: 2 }),
       landSquareMeters: faker.number.float({ min: 100, max: 1000, fractionDigits: 2 }),
       parkingSpaces: faker.number.int({ min: 0, max: 3 }),
-      region: faker.helpers.arrayElement(Object.values(RegionEnum)),
-      commune: faker.helpers.arrayElement(Object.values(ComunaEnum)),
+      state: faker.helpers.arrayElement(Object.values(RegionEnum)),
+      city: faker.helpers.arrayElement(Object.values(ComunaEnum)),
       latitude: faker.number.float({ min: -90, max: 90, fractionDigits: 6 }),
       longitude: faker.number.float({ min: -180, max: 180, fractionDigits: 6 }),
-      propertyType: { name: faker.helpers.arrayElement(['RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL']) }
+      propertyType: { name: faker.helpers.arrayElement(['RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL']) },
+      deletedAt: undefined // Soft delete column initialized as undefined
     };
   }
 

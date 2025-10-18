@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, useRef } from "react";
-import DropdownList from "@/app/components/DropdownList/DropdownList";
-import IconButton from "@/app/components/IconButton/IconButton";
+import DropdownList from "@/components/DropdownList/DropdownList";
+import IconButton from "@/components/IconButton/IconButton";
 
 export interface Option {
   id: number;
@@ -187,7 +187,7 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, value = null, onC
           <li
             key={opt.id}
             ref={el => { optionRefs.current[idx] = el; }}
-            className={require("@/app/components/DropdownList/DropdownList").dropdownOptionClass + 
+            className={require("@/components/DropdownList/DropdownList").dropdownOptionClass + 
               (highlightedIndex === idx ? " bg-secondary/30" : " text-neutral-700")}
             onMouseDown={() => { 
               setIsSelecting(true);

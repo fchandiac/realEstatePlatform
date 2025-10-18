@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from "react";
-import DropdownList from "@/app/components/DropdownList/DropdownList";
-import IconButton from "@/app/components/IconButton/IconButton";
+import DropdownList from "@/components/DropdownList/DropdownList";
+import IconButton from "@/components/IconButton/IconButton";
 
 export interface Option {
   id: number;
@@ -65,7 +65,7 @@ const SimpleSelect: React.FC<SimpleSelectProps> = ({
         {options.map(opt => (
           <li
             key={opt.id}
-            className={require("@/app/components/DropdownList/DropdownList").dropdownOptionClass + " text-neutral-700"}
+            className={require("@/components/DropdownList/DropdownList").dropdownOptionClass + " text-neutral-700"}
             onMouseDown={() => { onChange?.(opt.id); setOpen(false); }}
             data-test-id={`simple-select-option-${opt.id}`}
           >

@@ -2,9 +2,6 @@
 import React from 'react';
 import { DataGridStyles } from '../utils/columnStyles';
 import type { DataGridColumn } from '../DataGrid';
-import moment from 'moment';
-import 'moment/locale/es';
-import 'moment-timezone';
 
 interface CellProps {
   column: DataGridColumn;
@@ -65,12 +62,19 @@ const Cell: React.FC<CellProps> = ({ column, row, value, computedStyle, hoveredR
     );
   } else if (renderType === 'dateString' || column.type === 'date' || column.type === 'dateTime') {
     try {
-      const m = moment(value);
-      if (m.isValid()) {
+      const date = value instanceof Date ? value : new Date(value);
+      if (!isNaN(date.getTime())) {
         if (column.type === 'dateTime') {
-          cellContent = m.locale('es').tz('America/Santiago').format('DD/MM/YYYY HH:mm:ss');
+          cellContent = new Intl.DateTimeFormat('es-CL', {
+            dateStyle: 'short',
+            timeStyle: 'medium',
+            timeZone: 'America/Santiago',
+          }).format(date);
         } else {
-          cellContent = m.locale('es').tz('America/Santiago').format('DD/MM/YYYY');
+          cellContent = new Intl.DateTimeFormat('es-CL', {
+            dateStyle: 'short',
+            timeZone: 'America/Santiago',
+          }).format(date);
         }
       } else {
         cellContent = value;

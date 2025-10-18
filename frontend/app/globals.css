@@ -116,9 +116,9 @@ input:-webkit-autofill:active {
   --color-background: #ffffff;
   --color-foreground: #212121;
   --color-border: #c1c1c2;
-  --color-accent: #00345D;
-  --color-secondary: #CB973B;
-  --color-primary: #1365A5;
+  --color-accent: #C365B8;
+  --color-secondary: #463D96;
+  --color-primary: #212121;
 }
 
 @layer base {

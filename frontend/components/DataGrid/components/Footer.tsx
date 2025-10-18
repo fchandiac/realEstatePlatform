@@ -2,8 +2,8 @@
 import React from 'react';
 import Pagination from './Pagination';
 import { useScreenSize } from '../utils/columnStyles';
-import SimpleSelect from '@/app/components/Select/SimpleSelect';
-import type { Option } from '@/app/components/Select/SimpleSelect';
+import SimpleSelect from '@/components/Select/SimpleSelect';
+import type { Option } from '@/components/Select/SimpleSelect';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 interface FooterProps {

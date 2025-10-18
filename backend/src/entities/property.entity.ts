@@ -195,12 +195,12 @@ export class Property {
   @Column({ type: 'enum', enum: RegionEnum, nullable: true })
   @IsOptional()
   @IsEnum(RegionEnum)
-  region?: RegionEnum;
+  state?: RegionEnum; // Renamed from 'region'
 
   @Column({ type: 'enum', enum: ComunaEnum, nullable: true })
   @IsOptional()
   @IsEnum(ComunaEnum)
-  commune?: ComunaEnum;
+  city?: ComunaEnum; // Renamed from 'commune'
 
   @Column({ type: 'decimal', precision: 10, scale: 8, nullable: true })
   @IsOptional()
@@ -237,35 +237,11 @@ export class Property {
   @IsArray()
   leads?: LeadEntry[];
 
-  // Statistics
-  @Column({ type: 'int', default: 0 })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  viewCount?: number;
-
-  @Column({ type: 'int', default: 0 })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  favoriteCount?: number;
-
-  @Column({ type: 'int', default: 0 })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  contactCount?: number;
-
   // Internal Notes
   @Column({ type: 'text', nullable: true })
   @IsOptional()
   @IsString()
   internalNotes?: string;
-
-  @Column({ type: 'text', nullable: true })
-  @IsOptional()
-  @IsString()
-  rejectionReason?: string;
 
   // Timestamps
   @CreateDateColumn()
@@ -275,7 +251,7 @@ export class Property {
   updatedAt: Date;
 
   @DeleteDateColumn()
-  deletedAt?: Date;
+  deletedAt?: Date; // This is already configured as a soft delete column
 
   @Column({ type: 'datetime', nullable: true })
   @IsOptional()
@@ -286,4 +262,6 @@ export class Property {
   @IsOptional()
   @IsDate()
   lastModifiedAt?: Date;
+
+
 }

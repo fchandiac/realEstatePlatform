@@ -6,7 +6,7 @@ import Footer from './components/Footer';
 import { ColHeader } from './components/ColHeader';
 import { calculateColumnStyles, DataGridStyles, useScreenSize } from './utils/columnStyles';
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 export type DataGridColumnType =
   | 'string'
@@ -51,6 +51,9 @@ export interface DataGridProps {
   totalGeneral?: number;
   createForm?: React.ReactNode;
   ["data-test-id"]?: string;
+  excelUrl?: string; // Absolute URL for Excel export endpoint
+  excelFields?: string;
+  limit?: number;
 }
 
 const DataGrid: React.FC<DataGridProps> = ({
@@ -66,8 +69,12 @@ const DataGrid: React.FC<DataGridProps> = ({
   totalGeneral,
   createForm,
   ["data-test-id"]: dataTestId,
+  excelUrl,
+  excelFields,
+  limit = 25,
 }) => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [data, setData] = useState<any[]>(rows || []);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(totalRows || (rows ? rows.length : 0));
@@ -94,6 +101,16 @@ const DataGrid: React.FC<DataGridProps> = ({
     setFilterMode(filtration);
   }, [searchParams]);
 
+  // Inicializar limit en la URL si no está presente
+  useEffect(() => {
+    const currentLimit = searchParams.get('limit');
+    if (!currentLimit) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('limit', limit.toString());
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [searchParams, limit, router]);
+
   return (
     <div className={`${DataGridStyles.container} ${DataGridStyles.responsive.minWidth} ${DataGridStyles.responsive.mobileScroll}`} style={{ height: typeof height === 'number' ? `${height}px` : height, borderWidth: '1px' }} data-test-id={dataTestId || "data-grid-root"}>
       {/* Header */}
@@ -104,6 +121,8 @@ const DataGrid: React.FC<DataGridProps> = ({
         columns={columns}
         createForm={createForm}
         screenWidth={screenWidth}
+        excelUrl={excelUrl}
+        excelFields={excelFields}
       />
       {/* Scrollable container for columns header and body */}
       <div className={DataGridStyles.scrollContainer}>
@@ -127,7 +146,7 @@ const DataGrid: React.FC<DataGridProps> = ({
         <Body columns={columns} rows={loading ? [] : data} filterMode={filterMode} screenWidth={screenWidth} />
       </div>
       {/* Footer - siempre pegado abajo */}
-      <Footer total={totalRows || 0} totalGeneral={totalGeneral} />
+      <Footer total={totalRows || 0} totalGeneral={totalGeneral}/>
     </div>
   );
 };

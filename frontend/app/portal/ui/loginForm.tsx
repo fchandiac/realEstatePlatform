@@ -46,7 +46,7 @@ export default function LoginForm({ onClose }: LoginFormProps) {
             const session = await res.json();
             const role = session?.user?.role;
             if (role) {
-              if (role === 'admin' || role === 'agent') {
+              if (role === 'ADMIN' || role === 'AGENT') {
                 router.push('/backOffice');
                 return;
               }

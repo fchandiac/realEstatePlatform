@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Logo from '../Logo/Logo';
+// Logo removed from sidebar per request
 import { Button } from '../Button/Button';
 
 export interface SideBarMenuItem {
@@ -44,7 +44,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose 
     if (!url) return;
     try {
       router.push(url);
-    } catch (e) {
+    } catch {
       // noop
     }
     if (typeof onClose === 'function') onClose();
@@ -111,23 +111,25 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose 
       style={style}
       data-test-id="side-bar-root"
     >
-      <Logo className="w-[180px] h-[180px] mb-6" data-test-id="side-bar-logo" />
       <div className="mb-6 text-center">
         <div className="text-xl font-bold" data-test-id="side-bar-app-name">{APP_NAME}</div>
         <div className="text-sm opacity-70" data-test-id="side-bar-app-version">{APP_VERSION}</div>
       </div>
 
-      {user && (
-        <div className="w-full px-6 mb-6">
-          <div className="flex items-center border border-white rounded-lg px-3 py-2 gap-3" style={{ background: 'transparent', borderWidth: '0.3px' }}>
-            <span className="material-symbols-outlined text-white text-3xl">person</span>
-            <div className="flex flex-col min-w-0">
-              <span className="text-base font-bold truncate">{(user as any).userName}</span>
-              <span className="text-xs opacity-60 capitalize truncate">{ROLE_LABELS[(user as any).role as keyof typeof ROLE_LABELS] || (user as any).role}</span>
+      {user && (() => {
+        const u = user as unknown as { userName?: string; role?: string };
+        return (
+          <div className="w-full px-6 mb-6">
+            <div className="flex items-center border border-white rounded-lg px-3 py-2 gap-3" style={{ background: 'transparent', borderWidth: '0.3px' }}>
+              <span className="material-symbols-outlined text-white text-3xl">person</span>
+              <div className="flex flex-col min-w-0">
+                <span className="text-base font-bold truncate">{u.userName}</span>
+                <span className="text-xs opacity-60 capitalize truncate">{ROLE_LABELS[u.role as keyof typeof ROLE_LABELS] || u.role}</span>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       <nav className="w-full px-4 flex-1 mt-2">
         <ul className="flex flex-col gap-2 w-full">

@@ -2,37 +2,28 @@ import { PostRequestStatus } from '../enums/post-request-status.enum';
 
 export interface PostRequest {
   requestedAt: Date;
-  requestedBy: string;
-  platform?: string;
-  specifications?: string;
-  budget?: number;
+  requestedBy: string; // User ID of the requester
   notes?: string;
   status: PostRequestStatus;
-  reviewedAt?: Date;
-  reviewedBy?: string;
-  rejectionReason?: string;
 }
 
 export interface ChangeHistoryEntry {
   timestamp: Date;
-  changedBy: string;
+  changedBy: string; // User ID of the person who made the change
   field: string;
   previousValue: any;
   newValue: any;
-  reason?: string;
-  ip?: string;
-  userAgent?: string;
+}
+
+export enum UserType {
+  COMMUNITY = 'COMMUNITY',
+  ANONYMOUS = 'ANONYMOUS',
 }
 
 export interface ViewEntry {
   timestamp: Date;
   userId?: string;
-  sessionId: string;
-  ip?: string;
-  userAgent?: string;
-  platform?: string;
-  source?: string;
-  timeSpent?: number;
+  userType?: UserType; // Added userType field
 }
 
 export interface LeadEntry {
@@ -42,10 +33,7 @@ export interface LeadEntry {
     email?: string;
     phone?: string;
   };
-  source?: string;
   message?: string;
-  status: 'new' | 'contacted' | 'qualified' | 'converted' | 'closed';
-  assignedTo?: string;
-  followUpDate?: Date;
-  notes?: string;
+  userType?: UserType; // Added userType field
+  status?: string; // Added optional status field
 }
