@@ -41,6 +41,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const passwordToggleLabel = showPassword ? "Ocultar contraseña" : "Mostrar contraseña";
 
   // Función para formatear DNI chileno
   const formatDNI = (value: string): string => {
@@ -208,15 +209,29 @@ export const TextField: React.FC<TextFieldProps> = ({
             {...(type === "dni" || type === "currency" ? {} : props)}
           />
           {type === "password" && (
-            <span
-              className={`material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-base flex items-center justify-center cursor-pointer ${focused ? 'text-primary' : 'text-secondary'}`}
-              style={{ fontSize: 20, width: 20, height: 20, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-       
-              onClick={() => setShowPassword((prev) => !prev)}
-              tabIndex={0}
+            <button
+              type="button"
+              className={`absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${focused ? "text-primary" : "text-secondary"}`}
+              style={{ padding: 0 }}
+              onMouseDown={(event) => {
+                event.preventDefault();
+              }}
+              onClick={() => {
+                setShowPassword((prev) => !prev);
+                inputRef.current?.focus();
+              }}
+              aria-label={passwordToggleLabel}
+              aria-pressed={showPassword}
+              data-test-id="password-visibility-toggle"
             >
-              {showPassword ? "visibility_off" : "visibility"}
-            </span>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: 20, width: 20, height: 20, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                aria-hidden
+              >
+                {showPassword ? "visibility_off" : "visibility"}
+              </span>
+            </button>
           )}
         </div>
       )}

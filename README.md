@@ -24,3 +24,10 @@ All reusable UI building blocks live in `frontend/components/`. Before creating 
    - Frontend: `npm run dev` inside `frontend/`.
 
 Adjust environment variables and secrets as described in the respective subdirectories when deploying or running locally.
+
+### Environment configuration
+
+- Copy `frontend/.env.example` to `frontend/.env.local` and adjust the values as needed.
+- Required entries:
+   - `NEXTAUTH_URL` — base URL that NextAuth should use (defaults to `http://localhost:3000` for local development).
+   - `NEXTAUTH_SECRET` — strong random secret used to sign NextAuth tokens. Generate a unique value per environment.
