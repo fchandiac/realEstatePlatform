@@ -11,10 +11,10 @@ describe('EmailService - Mailtrap Testing (emails reales)', () => {
   beforeAll(async () => {
     // Crear cuenta temporal de Mailtrap usando Ethereal
     testAccount = await nodemailer.createTestAccount();
-    
+
     console.log('📧 Configuración de Testing SMTP:');
     console.log('   Host:', testAccount.smtp.host);
-    console.log('   Port:', testAccount.smtp.port);  
+    console.log('   Port:', testAccount.smtp.port);
     console.log('   User:', testAccount.user);
     console.log('   Pass:', testAccount.pass);
     console.log('');
@@ -32,11 +32,11 @@ describe('EmailService - Mailtrap Testing (emails reales)', () => {
           useValue: {
             get: (key: string) => {
               const config = {
-                'MAIL_HOST': testAccount.smtp.host,
-                'MAIL_PORT': testAccount.smtp.port,
-                'MAIL_USER': testAccount.user,
-                'MAIL_PASS': testAccount.pass,
-                'MAIL_FROM': 'Real Estate Platform <noreply@realestate.com>',
+                MAIL_HOST: testAccount.smtp.host,
+                MAIL_PORT: testAccount.smtp.port,
+                MAIL_USER: testAccount.user,
+                MAIL_PASS: testAccount.pass,
+                MAIL_FROM: 'Real Estate Platform <noreply@realestate.com>',
               };
               return config[key];
             },
@@ -55,30 +55,29 @@ describe('EmailService - Mailtrap Testing (emails reales)', () => {
   describe('✅ EmailService Funcionando - Templates Profesionales', () => {
     it('📧 Envío de Email de Bienvenida - Template Welcome', async () => {
       console.log('🎉 Enviando email de bienvenida profesional...');
-      
+
       const result = await service.sendWelcomeEmail(
         'felipe.chandia.cast@gmail.com',
         'Felipe Chandia',
-        'felipe.chandia.cast@gmail.com'
+        'felipe.chandia.cast@gmail.com',
       );
-      
+
       expect(result).toBeDefined();
       expect(result.messageId).toBeDefined();
-      
+
       const previewUrl = nodemailer.getTestMessageUrl(result);
-      
+
       console.log('✅ ¡Email de bienvenida enviado exitosamente!');
       console.log('📨 Message ID:', result.messageId);
       console.log('📧 Para: felipe.chandia.cast@gmail.com');
       console.log('📝 Asunto: ¡Bienvenido a Real Estate Platform!');
       console.log('🔗 Ver email: ', previewUrl);
       console.log('');
-      
     }, 30000);
 
     it('🏠 Notificación de Nueva Propiedad - Template Professional', async () => {
       console.log('🏡 Enviando notificación de nueva propiedad...');
-      
+
       const userData = {
         name: 'Felipe Chandia',
         email: 'felipe.chandia.cast@gmail.com',
@@ -92,23 +91,24 @@ describe('EmailService - Mailtrap Testing (emails reales)', () => {
         bathrooms: '3',
         parking: '2',
         location: 'Las Condes, Santiago',
-        description: 'Espectacular casa moderna con vista panorámica a la cordillera. Amplios espacios, acabados premium, cocina gourmet, jardín privado y ubicación privilegiada cerca de centros comerciales y colegios de prestigio.',
+        description:
+          'Espectacular casa moderna con vista panorámica a la cordillera. Amplios espacios, acabados premium, cocina gourmet, jardín privado y ubicación privilegiada cerca de centros comerciales y colegios de prestigio.',
         matchPercentage: '98',
         url: 'https://realestate.com/property/casa-exclusiva-las-condes-12345',
         scheduleUrl: 'https://realestate.com/schedule-viewing/12345',
       };
-      
+
       const result = await service.sendPropertyNotification(
         'felipe.chandia.cast@gmail.com',
         userData,
-        propertyData
+        propertyData,
       );
-      
+
       expect(result).toBeDefined();
       expect(result.messageId).toBeDefined();
-      
+
       const previewUrl = nodemailer.getTestMessageUrl(result);
-      
+
       console.log('✅ Notificación de propiedad enviada!');
       console.log('📨 Message ID:', result.messageId);
       console.log('🏡 Propiedad:', propertyData.title);
@@ -117,38 +117,37 @@ describe('EmailService - Mailtrap Testing (emails reales)', () => {
       console.log('🎯 Match:', propertyData.matchPercentage + '%');
       console.log('🔗 Ver email: ', previewUrl);
       console.log('');
-      
     }, 30000);
 
     it('🔐 Email de Recuperación de Contraseña - Template Seguro', async () => {
       console.log('🛡️ Enviando email de recuperación de contraseña...');
-      
-      const resetUrl = 'https://realestate.com/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9&user=felipe';
-      
+
+      const resetUrl =
+        'https://realestate.com/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9&user=felipe';
+
       const result = await service.sendPasswordRecovery(
         'felipe.chandia.cast@gmail.com',
         'Felipe Chandia',
         resetUrl,
-        '24 horas'
+        '24 horas',
       );
-      
+
       expect(result).toBeDefined();
       expect(result.messageId).toBeDefined();
-      
+
       const previewUrl = nodemailer.getTestMessageUrl(result);
-      
+
       console.log('✅ Email de recuperación enviado!');
       console.log('📨 Message ID:', result.messageId);
       console.log('🔐 Para: felipe.chandia.cast@gmail.com');
       console.log('⏰ Expiración: 24 horas');
       console.log('🔗 Ver email: ', previewUrl);
       console.log('');
-      
     }, 30000);
 
     it('📧 Email HTML Personalizado - Branding Completo', async () => {
       console.log('🎨 Enviando email con branding personalizado...');
-      
+
       const customEmailHtml = `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 650px; margin: 0 auto; background: #ffffff;">
           <!-- Header con gradiente -->
@@ -255,35 +254,37 @@ describe('EmailService - Mailtrap Testing (emails reales)', () => {
           </div>
         </div>
       `;
-      
+
       const result = await service.sendMail({
         to: 'felipe.chandia.cast@gmail.com',
-        subject: '🎉 Real Estate Platform - EmailService Completamente Funcional',
+        subject:
+          '🎉 Real Estate Platform - EmailService Completamente Funcional',
         html: customEmailHtml,
       });
-      
+
       expect(result).toBeDefined();
       expect(result.messageId).toBeDefined();
-      
+
       const previewUrl = nodemailer.getTestMessageUrl(result);
-      
+
       console.log('✅ Email personalizado enviado exitosamente!');
       console.log('📨 Message ID:', result.messageId);
-      console.log('🎨 Asunto: 🎉 Real Estate Platform - EmailService Completamente Funcional');
+      console.log(
+        '🎨 Asunto: 🎉 Real Estate Platform - EmailService Completamente Funcional',
+      );
       console.log('🔗 Ver email: ', previewUrl);
       console.log('');
-      
     }, 30000);
   });
 
   describe('📋 Validación Técnica', () => {
     it('⚙️ Configuración SMTP válida', () => {
       console.log('🔧 Validando configuración del servicio...');
-      
+
       const transporter = service['transporter'];
       expect(transporter).toBeDefined();
       expect(typeof transporter.sendMail).toBe('function');
-      
+
       console.log('✅ Transporter configurado correctamente');
       console.log('✅ Método sendMail disponible');
       console.log('✅ EmailService listo para usar');
@@ -291,23 +292,23 @@ describe('EmailService - Mailtrap Testing (emails reales)', () => {
 
     it('📄 Templates renderizando correctamente', async () => {
       console.log('🎨 Probando renderizado de templates...');
-      
+
       // Test del método renderTemplate
       const renderMethod = service['renderTemplate'];
-      
+
       const testVars = {
         userName: 'Felipe Test',
         userEmail: 'test@example.com',
         subject: 'Test Subject',
         currentDate: new Date().toLocaleDateString('es-ES'),
       };
-      
+
       const rendered = renderMethod.call(service, 'base', testVars);
-      
+
       expect(rendered).toContain('Felipe Test');
       expect(rendered).toContain('test@example.com');
       expect(rendered).toContain('Test Subject');
-      
+
       console.log('✅ Variables interpoladas correctamente');
       console.log('✅ Templates HTML funcionales');
       console.log('✅ Sistema de renderizado operativo');

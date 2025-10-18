@@ -103,12 +103,14 @@ export class Property {
   @Min(0)
   price: number;
 
-  @Column({ type: 'enum', enum: CurrencyPriceEnum, default: CurrencyPriceEnum.CLP })
+  @Column({
+    type: 'enum',
+    enum: CurrencyPriceEnum,
+    default: CurrencyPriceEnum.CLP,
+  })
   @IsNotEmpty()
   @IsEnum(CurrencyPriceEnum)
   currencyPrice: CurrencyPriceEnum;
-
-  
 
   // SEO Information
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -136,8 +138,6 @@ export class Property {
   @IsOptional()
   @IsBoolean()
   isFeatured?: boolean;
-
-  
 
   // Physical Characteristics
   @ManyToOne(() => PropertyType, { nullable: true })
@@ -191,8 +191,6 @@ export class Property {
   @Min(0)
   constructionYear?: number;
 
-  
-
   // Location Information
   @Column({ type: 'enum', enum: RegionEnum, nullable: true })
   @IsOptional()
@@ -213,8 +211,6 @@ export class Property {
   @IsOptional()
   @IsNumber()
   longitude?: number;
-
-  
 
   // Multimedia (OneToMany relation to Multimedia table)
   @OneToMany(() => Multimedia, (m) => m.property, { cascade: true })

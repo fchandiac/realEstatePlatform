@@ -12,7 +12,7 @@ describe('EmailService E2E - Ethereal Testing', () => {
   beforeAll(async () => {
     // Crear cuenta de testing con Ethereal
     testAccount = await nodemailer.createTestAccount();
-    
+
     console.log('🌐 Cuenta de testing Ethereal creada:');
     console.log('   User:', testAccount.user);
     console.log('   Pass:', testAccount.pass);
@@ -32,11 +32,11 @@ describe('EmailService E2E - Ethereal Testing', () => {
           useValue: {
             get: (key: string) => {
               const config = {
-                'MAIL_HOST': testAccount.smtp.host,
-                'MAIL_PORT': testAccount.smtp.port,
-                'MAIL_USER': testAccount.user,
-                'MAIL_PASS': testAccount.pass,
-                'MAIL_FROM': 'realestate@example.com',
+                MAIL_HOST: testAccount.smtp.host,
+                MAIL_PORT: testAccount.smtp.port,
+                MAIL_USER: testAccount.user,
+                MAIL_PASS: testAccount.pass,
+                MAIL_FROM: 'realestate@example.com',
               };
               return config[key];
             },
@@ -101,20 +101,23 @@ describe('EmailService E2E - Ethereal Testing', () => {
       console.log('📝 Asunto:', emailDto.subject);
 
       const result = await service.sendMail(emailDto);
-      
+
       expect(result).toBeDefined();
       expect(result.messageId).toBeDefined();
-      
+
       // Generar URL de previsualización de Ethereal
       const previewUrl = nodemailer.getTestMessageUrl(result);
-      
+
       console.log('✅ ¡Email enviado exitosamente con Ethereal!');
       console.log('📨 Message ID:', result.messageId);
       console.log('🔗 Ver email en:', previewUrl);
       console.log('');
-      console.log('📝 NOTA: Este es un servicio de testing, el email no llegó realmente a felipe.chandia.cast@gmail.com');
-      console.log('   Pero puedes ver cómo se vería abriendo el link de arriba');
-      
+      console.log(
+        '📝 NOTA: Este es un servicio de testing, el email no llegó realmente a felipe.chandia.cast@gmail.com',
+      );
+      console.log(
+        '   Pero puedes ver cómo se vería abriendo el link de arriba',
+      );
     }, 30000);
 
     it('should send property notification via Ethereal', async () => {
@@ -168,12 +171,12 @@ describe('EmailService E2E - Ethereal Testing', () => {
       console.log('🏠 Enviando notificación de propiedad...');
 
       const result = await service.sendMail(emailDto);
-      
+
       expect(result).toBeDefined();
       expect(result.messageId).toBeDefined();
-      
+
       const previewUrl = nodemailer.getTestMessageUrl(result);
-      
+
       console.log('✅ Notificación enviada!');
       console.log('📨 Message ID:', result.messageId);
       console.log('🔗 Ver email en:', previewUrl);
@@ -190,10 +193,10 @@ describe('EmailService E2E - Ethereal Testing', () => {
 
       const renderMethod = service['renderTemplate'];
       const rendered = renderMethod.call(service, templateVars);
-      
+
       expect(rendered).toContain('Test Subject');
       expect(rendered).toContain('<p>Test Body Content</p>');
-      
+
       console.log('✅ Template rendering funcionando correctamente');
     });
   });

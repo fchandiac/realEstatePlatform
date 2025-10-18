@@ -7,8 +7,12 @@ import {
   ValidateNested,
   IsArray,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { UserStatus, UserRole, Permission } from '../../../entities/user.entity';
+import { Type, Transform } from 'class-transformer';
+import {
+  UserStatus,
+  UserRole,
+  Permission,
+} from '../../../entities/user.entity';
 import { PersonalInfo } from '../../../common/interfaces/user.interfaces';
 
 export class PersonalInfoDto {
@@ -132,4 +136,15 @@ export class UpdatePermissionsDto {
   @IsArray()
   @IsEnum(Permission, { each: true })
   permissions: Permission[];
+}
+
+export class ListAdminUsersQueryDto {
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  search?: string;
+
+  @IsOptional()
+  @IsEnum(UserStatus)
+  status?: UserStatus;
 }

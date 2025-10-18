@@ -1,9 +1,13 @@
-import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
+import {
+  registerDecorator,
+  ValidationOptions,
+  ValidationArguments,
+} from 'class-validator';
 import { REGION_COMMUNES } from '../regions/regions.data';
 import { RegionEnum } from '../regions/regions.enum';
 
 export function IsValidRegionCommune(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isValidRegionCommune',
       target: object.constructor,
@@ -12,9 +16,12 @@ export function IsValidRegionCommune(validationOptions?: ValidationOptions) {
       validator: {
         validate(value: any, args: ValidationArguments) {
           if (!value) return true; // allow empty, use @IsNotEmpty if required
-          const { region, commune } = value as { region?: RegionEnum; commune?: string };
+          const { region, commune } = value as {
+            region?: RegionEnum;
+            commune?: string;
+          };
           if (!region || !commune) return false;
-          const communes = REGION_COMMUNES[region as RegionEnum];
+          const communes = REGION_COMMUNES[region];
           if (!communes) return false;
           return communes.includes(commune);
         },

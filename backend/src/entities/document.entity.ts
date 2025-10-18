@@ -26,7 +26,7 @@ export class Document {
   id: string;
 
   @Column()
-  title: string;  // Título del documento
+  title: string; // Título del documento
 
   @ManyToOne(() => DocumentType)
   @JoinColumn({ name: 'documentTypeId' })
@@ -64,7 +64,7 @@ export class Document {
   status: DocumentStatus;
 
   @Column({ nullable: true })
-  notes?: string;  // Notas adicionales
+  notes?: string; // Notas adicionales
 
   @CreateDateColumn()
   createdAt: Date;

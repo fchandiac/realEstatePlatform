@@ -27,24 +27,23 @@ describe('EmailService - Real Gmail Delivery to Felipe', () => {
   describe('Real Email Delivery Tests', () => {
     it('should send welcome email to felipe.chandia.cast@gmail.com', async () => {
       console.log('🎉 Enviando email de bienvenida...');
-      
+
       try {
         const result = await service.sendWelcomeEmail(
           'felipe.chandia.cast@gmail.com',
           'Felipe Chandia',
-          'felipe.chandia.cast@gmail.com'
+          'felipe.chandia.cast@gmail.com',
         );
-        
+
         expect(result).toBeDefined();
         expect(result.messageId).toBeDefined();
-        
+
         console.log('✅ Email de bienvenida enviado exitosamente!');
         console.log('📨 Message ID:', result.messageId);
         console.log('📧 Destinatario: felipe.chandia.cast@gmail.com');
         console.log('📝 Asunto: ¡Bienvenido a Real Estate Platform!');
         console.log('');
         console.log('🔍 Revisa tu bandeja de entrada en Gmail');
-        
       } catch (error) {
         console.error('❌ Error enviando email:', error.message);
         throw error;
@@ -53,7 +52,7 @@ describe('EmailService - Real Gmail Delivery to Felipe', () => {
 
     it('should send property notification to felipe.chandia.cast@gmail.com', async () => {
       console.log('🏠 Enviando notificación de nueva propiedad...');
-      
+
       const userData = {
         name: 'Felipe Chandia',
         email: 'felipe.chandia.cast@gmail.com',
@@ -67,22 +66,23 @@ describe('EmailService - Real Gmail Delivery to Felipe', () => {
         bathrooms: '3',
         parking: '2',
         location: 'Las Condes, Santiago',
-        description: 'Hermosa casa moderna con acabados de primera calidad, amplio jardín y excelente ubicación cerca de centros comerciales y colegios. Ideal para familias que buscan comodidad y estilo.',
+        description:
+          'Hermosa casa moderna con acabados de primera calidad, amplio jardín y excelente ubicación cerca de centros comerciales y colegios. Ideal para familias que buscan comodidad y estilo.',
         matchPercentage: '96',
         url: 'https://realestate.com/property/12345',
         scheduleUrl: 'https://realestate.com/schedule/12345',
       };
-      
+
       try {
         const result = await service.sendPropertyNotification(
           'felipe.chandia.cast@gmail.com',
           userData,
-          propertyData
+          propertyData,
         );
-        
+
         expect(result).toBeDefined();
         expect(result.messageId).toBeDefined();
-        
+
         console.log('✅ Notificación de propiedad enviada exitosamente!');
         console.log('📨 Message ID:', result.messageId);
         console.log('📧 Destinatario: felipe.chandia.cast@gmail.com');
@@ -90,7 +90,6 @@ describe('EmailService - Real Gmail Delivery to Felipe', () => {
         console.log('💰 Precio:', propertyData.price);
         console.log('');
         console.log('🔍 Revisa tu bandeja de entrada en Gmail');
-        
       } catch (error) {
         console.error('❌ Error enviando notificación:', error.message);
         throw error;
@@ -99,36 +98,39 @@ describe('EmailService - Real Gmail Delivery to Felipe', () => {
 
     it('should send password recovery email to felipe.chandia.cast@gmail.com', async () => {
       console.log('🔐 Enviando email de recuperación de contraseña...');
-      
-      const resetUrl = 'https://realestate.com/reset-password?token=abc123xyz789';
-      
+
+      const resetUrl =
+        'https://realestate.com/reset-password?token=abc123xyz789';
+
       try {
         const result = await service.sendPasswordRecovery(
           'felipe.chandia.cast@gmail.com',
           'Felipe Chandia',
           resetUrl,
-          '24 horas'
+          '24 horas',
         );
-        
+
         expect(result).toBeDefined();
         expect(result.messageId).toBeDefined();
-        
+
         console.log('✅ Email de recuperación enviado exitosamente!');
         console.log('📨 Message ID:', result.messageId);
         console.log('📧 Destinatario: felipe.chandia.cast@gmail.com');
         console.log('🔗 Reset URL:', resetUrl);
         console.log('');
         console.log('🔍 Revisa tu bandeja de entrada en Gmail');
-        
       } catch (error) {
-        console.error('❌ Error enviando email de recuperación:', error.message);
+        console.error(
+          '❌ Error enviando email de recuperación:',
+          error.message,
+        );
         throw error;
       }
     }, 30000);
 
     it('should send custom HTML email to felipe.chandia.cast@gmail.com', async () => {
       console.log('📄 Enviando email personalizado con HTML...');
-      
+
       const customHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px 8px 0 0; text-align: center;">
@@ -165,24 +167,23 @@ describe('EmailService - Real Gmail Delivery to Felipe', () => {
           </div>
         </div>
       `;
-      
+
       try {
         const result = await service.sendMail({
           to: 'felipe.chandia.cast@gmail.com',
           subject: '🧪 Test EmailService - HTML Personalizado',
           html: customHtml,
         });
-        
+
         expect(result).toBeDefined();
         expect(result.messageId).toBeDefined();
-        
+
         console.log('✅ Email personalizado enviado exitosamente!');
         console.log('📨 Message ID:', result.messageId);
         console.log('📧 Destinatario: felipe.chandia.cast@gmail.com');
         console.log('📝 Asunto: 🧪 Test EmailService - HTML Personalizado');
         console.log('');
         console.log('🔍 Revisa tu bandeja de entrada en Gmail');
-        
       } catch (error) {
         console.error('❌ Error enviando email personalizado:', error.message);
         throw error;
@@ -193,20 +194,23 @@ describe('EmailService - Real Gmail Delivery to Felipe', () => {
   describe('Configuration Validation', () => {
     it('should validate Gmail SMTP configuration', () => {
       const config = service['configService'];
-      
+
       console.log('⚙️ Validando configuración SMTP...');
       console.log('   Host:', config.get('MAIL_HOST'));
       console.log('   Port:', config.get('MAIL_PORT'));
       console.log('   User:', config.get('MAIL_USER'));
       console.log('   From:', config.get('MAIL_FROM'));
-      console.log('   Password configured:', config.get('MAIL_PASS') ? '✅ Sí' : '❌ No');
-      
+      console.log(
+        '   Password configured:',
+        config.get('MAIL_PASS') ? '✅ Sí' : '❌ No',
+      );
+
       expect(config.get('MAIL_HOST')).toBe('smtp.gmail.com');
       expect(config.get('MAIL_PORT')).toBe('587');
       expect(config.get('MAIL_USER')).toBe('felipe.chandia.dev@gmail.com');
       expect(config.get('MAIL_FROM')).toBe('felipe.chandia.dev@gmail.com');
       expect(config.get('MAIL_PASS')).toBeDefined();
-      
+
       console.log('✅ Configuración SMTP válida');
     });
   });

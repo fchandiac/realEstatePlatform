@@ -2,7 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Document } from '../../entities/document.entity';
-import { CreateDocumentDto, UpdateDocumentDto, UploadDocumentDto } from './dto/document.dto';
+import {
+  CreateDocumentDto,
+  UpdateDocumentDto,
+  UploadDocumentDto,
+} from './dto/document.dto';
 import { MultimediaService } from '../multimedia/services/multimedia.service';
 import { MultimediaType, Multimedia } from '../../entities/multimedia.entity';
 import { DocumentType } from '../../entities/document-type.entity';
@@ -51,7 +55,8 @@ export class DocumentService {
     }
 
     // Crear el documento con las relaciones
-    const { documentTypeId, multimediaId, uploadedById, ...documentData } = createDocumentDto;
+    const { documentTypeId, multimediaId, uploadedById, ...documentData } =
+      createDocumentDto;
     const document = this.documentRepository.create({
       ...documentData,
       documentType,
@@ -81,11 +86,15 @@ export class DocumentService {
     return document;
   }
 
-  async update(id: string, updateDocumentDto: UpdateDocumentDto): Promise<Document> {
+  async update(
+    id: string,
+    updateDocumentDto: UpdateDocumentDto,
+  ): Promise<Document> {
     const document = await this.findOne(id);
 
     // Actualizar campos directos
-    const { documentTypeId, multimediaId, uploadedById, ...directFields } = updateDocumentDto;
+    const { documentTypeId, multimediaId, uploadedById, ...directFields } =
+      updateDocumentDto;
     Object.assign(document, directFields);
 
     // Actualizar relaciones si se proporcionan

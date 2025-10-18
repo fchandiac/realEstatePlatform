@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsOptional, IsString, IsBoolean, IsUUID, IsEnum } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsBoolean,
+  IsUUID,
+  IsEnum,
+} from 'class-validator';
 import { DocumentStatus } from '../../../entities/document.entity';
 
 export class CreateDocumentTypeDto {

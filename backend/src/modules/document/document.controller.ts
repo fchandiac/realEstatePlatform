@@ -12,7 +12,11 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DocumentService } from './document.service';
-import { CreateDocumentDto, UpdateDocumentDto, UploadDocumentDto } from './dto/document.dto';
+import {
+  CreateDocumentDto,
+  UpdateDocumentDto,
+  UploadDocumentDto,
+} from './dto/document.dto';
 import { ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import type { Express } from 'express';
 

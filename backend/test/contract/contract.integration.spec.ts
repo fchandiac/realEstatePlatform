@@ -49,7 +49,7 @@ describe('ContractController (integration)', () => {
     expect(user).toBeDefined();
     expect(property).toBeDefined();
     expect(person).toBeDefined();
-    
+
     // Create a user if none exists to make the test self-contained
     if (!user) {
       const unique = Date.now().toString();
@@ -110,7 +110,9 @@ describe('ContractController (integration)', () => {
     expect(response.body.operation).toBe(contractData.operation);
     expect(response.body.status).toBe(contractData.status);
     expect(response.body.amount).toBe(contractData.amount);
-    expect(response.body.commissionPercent).toBe(contractData.commissionPercent);
+    expect(response.body.commissionPercent).toBe(
+      contractData.commissionPercent,
+    );
     expect(response.body.commissionAmount).toBe(12500000); // 5% of 250M
 
     testContractId = response.body.id;

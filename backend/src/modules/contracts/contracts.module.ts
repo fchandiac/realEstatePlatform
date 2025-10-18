@@ -9,7 +9,7 @@ import { DocumentTypesModule } from '../document-types/document-types.module';
 
 @Module({
   imports: [
-  TypeOrmModule.forFeature([Contract, Payment, Document]),
+    TypeOrmModule.forFeature([Contract, Payment, Document]),
     DocumentTypesModule,
   ],
   controllers: [ContractsController],

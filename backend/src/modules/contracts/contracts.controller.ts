@@ -69,12 +69,18 @@ export class ContractsController {
   }
 
   @Post(':id/payments')
-  addPayment(@Param('id') id: string, @Body(ValidationPipe) addPaymentDto: AddPaymentDto) {
+  addPayment(
+    @Param('id') id: string,
+    @Body(ValidationPipe) addPaymentDto: AddPaymentDto,
+  ) {
     return this.contractsService.addPayment(id, addPaymentDto);
   }
 
   @Post(':id/people')
-  addPerson(@Param('id') id: string, @Body(ValidationPipe) addPersonDto: AddPersonDto) {
+  addPerson(
+    @Param('id') id: string,
+    @Body(ValidationPipe) addPersonDto: AddPersonDto,
+  ) {
     return this.contractsService.addPerson(id, addPersonDto);
   }
 

@@ -5,7 +5,11 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Person } from './person.entity';
 import { User } from './user.entity';
-import { Multimedia, MultimediaFormat, MultimediaType } from './multimedia.entity';
+import {
+  Multimedia,
+  MultimediaFormat,
+  MultimediaType,
+} from './multimedia.entity';
 
 describe('Person Entity', () => {
   let repository: Repository<Person>;
@@ -26,13 +30,15 @@ describe('Person Entity', () => {
           entities: [Person, User, Multimedia],
           synchronize: false,
         }),
-  TypeOrmModule.forFeature([Person, User, Multimedia]),
+        TypeOrmModule.forFeature([Person, User, Multimedia]),
       ],
     }).compile();
 
     repository = module.get<Repository<Person>>(getRepositoryToken(Person));
     userRepository = module.get<Repository<User>>(getRepositoryToken(User));
-    multimediaRepository = module.get<Repository<Multimedia>>(getRepositoryToken(Multimedia));
+    multimediaRepository = module.get<Repository<Multimedia>>(
+      getRepositoryToken(Multimedia),
+    );
   });
 
   afterEach(async () => {
@@ -57,17 +63,34 @@ describe('Person Entity', () => {
 
   it('should handle relations', async () => {
     // Save related entities first to satisfy FK constraints
-  const uniqueSuffix = Date.now().toString();
-  const user: any = await userRepository.save(userRepository.create({ username: `u1_${uniqueSuffix}`, email: `u1_${uniqueSuffix}@example.com`, password: 'x' } as any));
+    const uniqueSuffix = Date.now().toString();
+    const user: any = await userRepository.save(
+      userRepository.create({
+        username: `u1_${uniqueSuffix}`,
+        email: `u1_${uniqueSuffix}@example.com`,
+        password: 'x',
+      } as any),
+    );
 
-  const multimedia: any = await multimediaRepository.save(multimediaRepository.create({ filename: 'f.jpg', url: '/tmp/f.jpg', fileSize: 123, format: MultimediaFormat.IMG, type: MultimediaType.DNI_FRONT } as any));
+    const multimedia: any = await multimediaRepository.save(
+      multimediaRepository.create({
+        filename: 'f.jpg',
+        url: '/tmp/f.jpg',
+        fileSize: 123,
+        format: MultimediaFormat.IMG,
+        type: MultimediaType.DNI_FRONT,
+      } as any),
+    );
 
     const person = new Person();
     person.user = user;
     person.dniCardFront = multimedia;
     person.dniCardRear = multimedia;
     await repository.save(person);
-    const saved = await repository.findOne({ where: { id: person.id }, relations: ['user', 'dniCardFront'] });
+    const saved = await repository.findOne({
+      where: { id: person.id },
+      relations: ['user', 'dniCardFront'],
+    });
     expect(saved).toBeDefined();
     expect(saved!.user).toBeDefined();
     expect(saved!.dniCardFront).toBeDefined();

@@ -1,5 +1,3 @@
-
-
 import { PostRequestStatus } from '../enums/post-request-status.enum';
 
 export interface PostRequest {
@@ -36,7 +34,6 @@ export interface ViewEntry {
   source?: string;
   timeSpent?: number;
 }
-
 
 export interface LeadEntry {
   timestamp: Date;

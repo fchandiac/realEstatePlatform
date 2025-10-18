@@ -63,13 +63,15 @@ describe('EmailService E2E - Real Email Sending', () => {
       console.log('📝 Asunto:', emailDto.subject);
 
       const result = await service.sendMail(emailDto);
-      
+
       expect(result).toBeDefined();
       expect(result.messageId).toBeDefined();
-      
+
       console.log('✅ ¡Correo enviado exitosamente!');
       console.log('📨 Message ID:', result.messageId);
-      console.log('📬 Revisa la bandeja de entrada de felipe.chandia.cast@gmail.com');
+      console.log(
+        '📬 Revisa la bandeja de entrada de felipe.chandia.cast@gmail.com',
+      );
     }, 30000); // 30 segundos timeout para operaciones de red
 
     it('should send notification email with template variables', async () => {
@@ -113,10 +115,10 @@ describe('EmailService E2E - Real Email Sending', () => {
       console.log('🏠 Enviando notificación de nueva propiedad...');
 
       const result = await service.sendMail(emailDto);
-      
+
       expect(result).toBeDefined();
       expect(result.messageId).toBeDefined();
-      
+
       console.log('✅ Notificación enviada exitosamente!');
       console.log('📨 Message ID:', result.messageId);
     }, 30000);
@@ -146,10 +148,10 @@ Sistema Real Estate Platform
       console.log('📝 Enviando correo de texto plano...');
 
       const result = await service.sendMail(emailDto);
-      
+
       expect(result).toBeDefined();
       expect(result.messageId).toBeDefined();
-      
+
       console.log('✅ Correo de texto plano enviado!');
       console.log('📨 Message ID:', result.messageId);
     }, 30000);
@@ -159,28 +161,31 @@ Sistema Real Estate Platform
     it('should have valid SMTP configuration from .env', () => {
       // Verifica que las variables de entorno estén configuradas
       const config = service['configService'];
-      
+
       expect(config.get('MAIL_HOST')).toBe('smtp.gmail.com');
       expect(config.get('MAIL_PORT')).toBe('587');
       expect(config.get('MAIL_USER')).toBe('felipe.chandia.dev@gmail.com');
       expect(config.get('MAIL_PASS')).toBeDefined();
       expect(config.get('MAIL_FROM')).toBe('felipe.chandia.dev@gmail.com');
-      
+
       console.log('📧 Configuración SMTP validada:');
       console.log('   Host:', config.get('MAIL_HOST'));
       console.log('   Port:', config.get('MAIL_PORT'));
       console.log('   User:', config.get('MAIL_USER'));
       console.log('   From:', config.get('MAIL_FROM'));
-      console.log('   Password configured:', config.get('MAIL_PASS') ? '✅' : '❌');
+      console.log(
+        '   Password configured:',
+        config.get('MAIL_PASS') ? '✅' : '❌',
+      );
     });
 
     it('should create transporter without errors', () => {
       // Verifica que el transporter se cree correctamente
       const transporter = service['transporter'];
-      
+
       expect(transporter).toBeDefined();
       expect(typeof transporter.sendMail).toBe('function');
-      
+
       console.log('✅ Transporter de nodemailer creado correctamente');
     });
   });

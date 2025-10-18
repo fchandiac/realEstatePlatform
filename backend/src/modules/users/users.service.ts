@@ -21,6 +21,7 @@ import {
   UpdateUserDto,
   LoginDto,
   ChangePasswordDto,
+  ListAdminUsersQueryDto,
 } from './dto/user.dto';
 import { AuditService } from '../../audit/audit.service';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
@@ -52,7 +53,8 @@ export class UsersService {
     }
 
     // Use transaction to ensure both user and person are created together
-    const queryRunner = this.userRepository.manager.connection.createQueryRunner();
+    const queryRunner =
+      this.userRepository.manager.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
@@ -99,6 +101,46 @@ export class UsersService {
       where: { deletedAt: IsNull() },
       order: { createdAt: 'DESC' },
     });
+  }
+
+  async findAdminUsers(filters: ListAdminUsersQueryDto): Promise<User[]> {
+    const { search, status } = filters;
+
+    const query = this.userRepository
+      .createQueryBuilder('user')
+      .where('user.role = :role', { role: UserRole.ADMIN })
+      .andWhere('user.deletedAt IS NULL')
+      .orderBy('user.createdAt', 'DESC');
+
+    if (status) {
+      query.andWhere('user.status = :status', { status });
+    }
+
+    if (search) {
+      const normalizedSearch = `%${search.toLowerCase()}%`;
+      query.andWhere(
+        `(
+          LOWER(user.username) LIKE :search
+          OR LOWER(user.email) LIKE :search
+          OR LOWER(JSON_UNQUOTE(JSON_EXTRACT(user.personalInfo, '$.firstName'))) LIKE :search
+          OR LOWER(JSON_UNQUOTE(JSON_EXTRACT(user.personalInfo, '$.lastName'))) LIKE :search
+          OR LOWER(TRIM(CONCAT(
+            COALESCE(JSON_UNQUOTE(JSON_EXTRACT(user.personalInfo, '$.firstName')), ''),
+            ' ',
+            COALESCE(JSON_UNQUOTE(JSON_EXTRACT(user.personalInfo, '$.lastName')), '')
+          ))) LIKE :search
+        )`,
+        { search: normalizedSearch },
+      );
+    }
+
+    const admins = await query.getMany();
+
+    admins.forEach((admin) => {
+      delete (admin as any).password;
+    });
+
+    return admins;
   }
 
   async findOne(id: string): Promise<User> {

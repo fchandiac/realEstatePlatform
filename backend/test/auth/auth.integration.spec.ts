@@ -51,13 +51,17 @@ describe('AuthController (integration)', () => {
     userRepository = moduleFixture.get<Repository<User>>(
       getRepositoryToken(User),
     );
-    personRepository = moduleFixture.get<Repository<Person>>(getRepositoryToken(Person));
+    personRepository = moduleFixture.get<Repository<Person>>(
+      getRepositoryToken(Person),
+    );
   });
 
   afterAll(async () => {
     // Limpia la persona asociada y luego el usuario de prueba para evitar errores de FK
     try {
-      const user = await userRepository.findOne({ where: { email: 'test.integration@example.com' } });
+      const user = await userRepository.findOne({
+        where: { email: 'test.integration@example.com' },
+      });
       if (user) {
         // Eliminar person vinculada al user si existe
         await personRepository.delete({ user: { id: user.id } } as any);

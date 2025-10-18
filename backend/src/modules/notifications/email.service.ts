@@ -24,15 +24,18 @@ export class EmailService {
     });
   }
 
-  private renderTemplate(templateName: string, vars: Record<string, string>): string {
+  private renderTemplate(
+    templateName: string,
+    vars: Record<string, string>,
+  ): string {
     const tplPath = join(__dirname, 'templates', `${templateName}.html`);
     let tpl = readFileSync(tplPath, 'utf8');
-    
+
     // Replace template variables
     Object.keys(vars).forEach((k) => {
       tpl = tpl.replace(new RegExp(`{{\\s*${k}\\s*}}`, 'g'), vars[k]);
     });
-    
+
     return tpl;
   }
 
@@ -48,13 +51,14 @@ export class EmailService {
       const templateVars = {
         subject: dto.subject || '',
         body: dto.text || '',
-        ...dto.templateVariables || {},
+        ...(dto.templateVariables || {}),
       };
       html = this.renderTemplate(templateName, templateVars);
     }
 
     const mailOptions: nodemailer.SendMailOptions = {
-      from: this.configService.get<string>('MAIL_FROM') || 'no-reply@example.com',
+      from:
+        this.configService.get<string>('MAIL_FROM') || 'no-reply@example.com',
       to: dto.to,
       subject: dto.subject,
       html,
@@ -68,52 +72,66 @@ export class EmailService {
 
   // Convenience methods for specific email types
   async sendWelcomeEmail(to: string, userName: string, userEmail: string) {
-    return this.sendMail({
-      to,
-      subject: '¡Bienvenido a Real Estate Platform!',
-      templateVariables: {
-        userName,
-        userEmail,
-        platformUrl: 'https://realestate.com',
-        currentDate: new Date().toLocaleDateString('es-ES'),
+    return this.sendMail(
+      {
+        to,
+        subject: '¡Bienvenido a Real Estate Platform!',
+        templateVariables: {
+          userName,
+          userEmail,
+          platformUrl: 'https://realestate.com',
+          currentDate: new Date().toLocaleDateString('es-ES'),
+        },
       },
-    }, 'welcome');
+      'welcome',
+    );
   }
 
   async sendPropertyNotification(to: string, userData: any, propertyData: any) {
-    return this.sendMail({
-      to,
-      subject: `🏡 Nueva Propiedad: ${propertyData.title}`,
-      templateVariables: {
-        userName: userData.name,
-        userEmail: userData.email,
-        propertyTitle: propertyData.title,
-        propertyPrice: propertyData.price,
-        propertySize: propertyData.size,
-        propertyBedrooms: propertyData.bedrooms,
-        propertyBathrooms: propertyData.bathrooms,
-        propertyParking: propertyData.parking,
-        propertyLocation: propertyData.location,
-        propertyDescription: propertyData.description,
-        matchPercentage: propertyData.matchPercentage || '95',
-        propertyUrl: propertyData.url || '#',
-        scheduleViewingUrl: propertyData.scheduleUrl || '#',
-        currentDate: new Date().toLocaleDateString('es-ES'),
+    return this.sendMail(
+      {
+        to,
+        subject: `🏡 Nueva Propiedad: ${propertyData.title}`,
+        templateVariables: {
+          userName: userData.name,
+          userEmail: userData.email,
+          propertyTitle: propertyData.title,
+          propertyPrice: propertyData.price,
+          propertySize: propertyData.size,
+          propertyBedrooms: propertyData.bedrooms,
+          propertyBathrooms: propertyData.bathrooms,
+          propertyParking: propertyData.parking,
+          propertyLocation: propertyData.location,
+          propertyDescription: propertyData.description,
+          matchPercentage: propertyData.matchPercentage || '95',
+          propertyUrl: propertyData.url || '#',
+          scheduleViewingUrl: propertyData.scheduleUrl || '#',
+          currentDate: new Date().toLocaleDateString('es-ES'),
+        },
       },
-    }, 'property-notification');
+      'property-notification',
+    );
   }
 
-  async sendPasswordRecovery(to: string, userName: string, resetUrl: string, expirationTime = '24 horas') {
-    return this.sendMail({
-      to,
-      subject: 'Recuperación de Contraseña - Real Estate Platform',
-      templateVariables: {
-        userName,
-        userEmail: to,
-        resetPasswordUrl: resetUrl,
-        expirationTime,
-        currentDate: new Date().toLocaleDateString('es-ES'),
+  async sendPasswordRecovery(
+    to: string,
+    userName: string,
+    resetUrl: string,
+    expirationTime = '24 horas',
+  ) {
+    return this.sendMail(
+      {
+        to,
+        subject: 'Recuperación de Contraseña - Real Estate Platform',
+        templateVariables: {
+          userName,
+          userEmail: to,
+          resetPasswordUrl: resetUrl,
+          expirationTime,
+          currentDate: new Date().toLocaleDateString('es-ES'),
+        },
       },
-    }, 'password-recovery');
+      'password-recovery',
+    );
   }
 }

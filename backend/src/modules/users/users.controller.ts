@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   HttpCode,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -18,6 +19,7 @@ import {
   ChangePasswordDto,
   AssignRoleDto,
   UpdatePermissionsDto,
+  ListAdminUsersQueryDto,
 } from './dto/user.dto';
 import { UserStatus, UserRole, Permission } from '../../entities/user.entity';
 import { JwtAuthGuard } from '../../modules/auth/guards/jwt-auth.guard';
@@ -34,10 +36,14 @@ export class UsersController {
     return userResponse;
   }
 
-
   @Get()
   findAll() {
     return this.usersService.findAll();
+  }
+
+  @Get('admins')
+  listAdmins(@Query(ValidationPipe) filters: ListAdminUsersQueryDto) {
+    return this.usersService.findAdminUsers(filters);
   }
 
   @Get(':id')

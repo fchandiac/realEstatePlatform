@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Property } from '../../entities/property.entity';
@@ -6,7 +10,11 @@ import { User } from '../../entities/user.entity';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 import { PropertyStatus } from '../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../common/enums/property-operation-type.enum';
-import { ChangeHistoryEntry, ViewEntry, LeadEntry } from '../../common/interfaces/property.interfaces';
+import {
+  ChangeHistoryEntry,
+  ViewEntry,
+  LeadEntry,
+} from '../../common/interfaces/property.interfaces';
 
 @Injectable()
 export class PropertyService {
@@ -15,7 +23,10 @@ export class PropertyService {
     private readonly propertyRepository: Repository<Property>,
   ) {}
 
-  async create(createPropertyDto: CreatePropertyDto, creatorId?: string): Promise<Property> {
+  async create(
+    createPropertyDto: CreatePropertyDto,
+    creatorId?: string,
+  ): Promise<Property> {
     // Validate business rules
     this.validatePropertyData(createPropertyDto);
 
@@ -23,7 +34,10 @@ export class PropertyService {
     const property = this.propertyRepository.create({
       ...createPropertyDto,
       creatorUserId: creatorId || createPropertyDto.creatorUserId,
-      propertyTypeId: (createPropertyDto as any).propertyTypeId || (createPropertyDto as any).propertyType || undefined,
+      propertyTypeId:
+        (createPropertyDto as any).propertyTypeId ||
+        (createPropertyDto as any).propertyType ||
+        undefined,
       status: createPropertyDto.status || PropertyStatus.REQUEST,
       createdAt: new Date(),
       lastModifiedAt: new Date(),
@@ -33,7 +47,7 @@ export class PropertyService {
     if (property.changeHistory) {
       property.changeHistory = [];
     }
-    
+
     const historyEntry: ChangeHistoryEntry = {
       timestamp: new Date(),
       changedBy: creatorId || 'system',
@@ -42,7 +56,7 @@ export class PropertyService {
       newValue: 'Created',
       reason: 'Property created',
     };
-    
+
     property.changeHistory = [historyEntry];
 
     return await this.propertyRepository.save(property);
@@ -76,27 +90,39 @@ export class PropertyService {
     if (filters.city) {
       // city was removed from the model; accept region or commune instead
       // keep backward compatibility: if 'city' provided, match against region or commune
-      query.andWhere('(property.region = :city OR property.commune = :city)', { city: filters.city });
+      query.andWhere('(property.region = :city OR property.commune = :city)', {
+        city: filters.city,
+      });
     }
 
     if (filters.minPrice) {
-      query.andWhere('property.price >= :minPrice', { minPrice: filters.minPrice });
+      query.andWhere('property.price >= :minPrice', {
+        minPrice: filters.minPrice,
+      });
     }
 
     if (filters.maxPrice) {
-      query.andWhere('property.price <= :maxPrice', { maxPrice: filters.maxPrice });
+      query.andWhere('property.price <= :maxPrice', {
+        maxPrice: filters.maxPrice,
+      });
     }
 
     if (filters.bedrooms) {
-      query.andWhere('property.bedrooms >= :bedrooms', { bedrooms: filters.bedrooms });
+      query.andWhere('property.bedrooms >= :bedrooms', {
+        bedrooms: filters.bedrooms,
+      });
     }
 
     if (filters.bathrooms) {
-      query.andWhere('property.bathrooms >= :bathrooms', { bathrooms: filters.bathrooms });
+      query.andWhere('property.bathrooms >= :bathrooms', {
+        bathrooms: filters.bathrooms,
+      });
     }
 
     if (filters.isFeatured !== undefined) {
-      query.andWhere('property.isFeatured = :isFeatured', { isFeatured: filters.isFeatured });
+      query.andWhere('property.isFeatured = :isFeatured', {
+        isFeatured: filters.isFeatured,
+      });
     }
 
     // Sorting
@@ -105,9 +131,10 @@ export class PropertyService {
       query.orderBy(`property.${filters.sortBy}`, direction);
     } else {
       // priority removed from model; order by featured and creation date
-      query.orderBy('property.isFeatured', 'DESC')
-           .addOrderBy('property.publishedAt', 'DESC')
-           .addOrderBy('property.createdAt', 'DESC');
+      query
+        .orderBy('property.isFeatured', 'DESC')
+        .addOrderBy('property.publishedAt', 'DESC')
+        .addOrderBy('property.createdAt', 'DESC');
     }
 
     // Pagination
@@ -122,7 +149,11 @@ export class PropertyService {
     return await query.getMany();
   }
 
-  async findOne(id: string, trackView: boolean = true, viewData?: any): Promise<Property> {
+  async findOne(
+    id: string,
+    trackView: boolean = true,
+    viewData?: any,
+  ): Promise<Property> {
     const property = await this.propertyRepository.findOne({
       where: { id, deletedAt: IsNull() },
       relations: ['creatorUser', 'assignedAgent'],
@@ -152,7 +183,7 @@ export class PropertyService {
 
     // Track changes for history
     const changes: ChangeHistoryEntry[] = [];
-    
+
     for (const [key, newValue] of Object.entries(updatePropertyDto)) {
       if (key in property && property[key] !== newValue) {
         changes.push({
@@ -179,10 +210,10 @@ export class PropertyService {
   }
 
   async updateStatus(
-    id: string, 
-    status: PropertyStatus, 
-    updatedBy?: string, 
-    reason?: string
+    id: string,
+    status: PropertyStatus,
+    updatedBy?: string,
+    reason?: string,
   ): Promise<Property> {
     const property = await this.findOne(id, false);
 
@@ -253,21 +284,30 @@ export class PropertyService {
 
     property.changeHistory = [...(property.changeHistory || []), historyEntry];
     await this.propertyRepository.save(property);
-    
+
     await this.propertyRepository.softDelete(id);
   }
 
   private validatePropertyData(dto: CreatePropertyDto): void {
     // Validate operation type and pricing
     // Require a price for sale or rent operations
-    if ((dto.operationType === PropertyOperationType.SALE || dto.operationType === PropertyOperationType.RENT || dto.operationType === PropertyOperationType.SALE_AND_RENT) && (dto.price === undefined || dto.price === null)) {
-      throw new BadRequestException('Properties must include a price for the selected operation');
+    if (
+      (dto.operationType === PropertyOperationType.SALE ||
+        dto.operationType === PropertyOperationType.RENT ||
+        dto.operationType === PropertyOperationType.SALE_AND_RENT) &&
+      (dto.price === undefined || dto.price === null)
+    ) {
+      throw new BadRequestException(
+        'Properties must include a price for the selected operation',
+      );
     }
 
     // Validate required fields based on status
     if (dto.status === PropertyStatus.PUBLISHED) {
       if (!dto.title || !dto.description) {
-        throw new BadRequestException('Published properties must have title and description');
+        throw new BadRequestException(
+          'Published properties must have title and description',
+        );
       }
     }
   }

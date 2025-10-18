@@ -8,7 +8,9 @@ describe('EmailService', () => {
   let service: EmailService;
 
   const sendMailMock = jest.fn().mockResolvedValue({ messageId: 'test-id' });
-  const createTransportMock = jest.fn().mockReturnValue({ sendMail: sendMailMock });
+  const createTransportMock = jest
+    .fn()
+    .mockReturnValue({ sendMail: sendMailMock });
 
   beforeAll(async () => {
     // Ensure nodemailer.createTransport is our mock when EmailService is constructed
@@ -41,11 +43,13 @@ describe('EmailService', () => {
       html: '<p>Hi</p>',
     });
 
-    expect(sendSpy).toHaveBeenCalledWith(expect.objectContaining({
-      to: 'test@example.com',
-      subject: 'Hello',
-      html: expect.stringContaining('<p>Hi</p>'),
-    }));
+    expect(sendSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'test@example.com',
+        subject: 'Hello',
+        html: expect.stringContaining('<p>Hi</p>'),
+      }),
+    );
 
     expect(result).toEqual({ messageId: 'test-id' });
   });

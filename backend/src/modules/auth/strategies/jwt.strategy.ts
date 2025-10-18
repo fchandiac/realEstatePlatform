@@ -26,7 +26,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
       if (process.env.NODE_ENV === 'test') {
         // In test environment, use plain JWT
-        decryptedPayload = jwt.verify(token, process.env.JWT_SECRET || 'test-secret');
+        decryptedPayload = jwt.verify(
+          token,
+          process.env.JWT_SECRET || 'test-secret',
+        );
       } else {
         // Decrypt the JWE token
         decryptedPayload = await this.jweService.decrypt(token);

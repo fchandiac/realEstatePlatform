@@ -7,7 +7,11 @@ import {
   UpdateTestimonialDto,
 } from './dto/testimonial.dto';
 import { MultimediaService as UploadMultimediaService } from '../multimedia/services/multimedia.service';
-import { MultimediaType, Multimedia, MultimediaFormat } from '../../entities/multimedia.entity';
+import {
+  MultimediaType,
+  Multimedia,
+  MultimediaFormat,
+} from '../../entities/multimedia.entity';
 import type { Express } from 'express';
 
 @Injectable()
@@ -37,7 +41,10 @@ export class TestimonialsService {
       ); // Assuming userId is 'system' for now
     }
 
-    const testimonial = this.testimonialRepository.create({ ...createTestimonialDto, multimedia });
+    const testimonial = this.testimonialRepository.create({
+      ...createTestimonialDto,
+      multimedia,
+    });
     return await this.testimonialRepository.save(testimonial);
   }
 

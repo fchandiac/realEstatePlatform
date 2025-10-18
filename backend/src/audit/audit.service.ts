@@ -172,7 +172,7 @@ export class AuditService {
       .getRawMany();
 
     // Convert count to number
-    actionStats.forEach(stat => {
+    actionStats.forEach((stat) => {
       stat.count = parseInt(stat.count, 10);
     });
 
@@ -185,7 +185,7 @@ export class AuditService {
       .getRawMany();
 
     // Convert count to number
-    entityStats.forEach(stat => {
+    entityStats.forEach((stat) => {
       stat.count = parseInt(stat.count, 10);
     });
 

@@ -37,18 +37,23 @@ export class ContractsService {
     // For now, we'll assume they exist
 
     const contract = this.contractRepository.create({
-      operation: createContractDto.operation as ContractOperationType,
+      operation: createContractDto.operation,
       status: createContractDto.status || ContractStatus.IN_PROCESS,
       amount: createContractDto.amount,
       commissionPercent: createContractDto.commissionPercent,
-      commissionAmount: createContractDto.amount * createContractDto.commissionPercent,
+      commissionAmount:
+        createContractDto.amount * createContractDto.commissionPercent,
       description: createContractDto.description,
       people: createContractDto.people as any[],
       payments: createContractDto.payments as any[],
       documents: createContractDto.documents as any[],
       // set relations by id
-      property: createContractDto.propertyId ? ({ id: createContractDto.propertyId } as any) : undefined,
-      user: createContractDto.userId ? ({ id: createContractDto.userId } as any) : undefined,
+      property: createContractDto.propertyId
+        ? ({ id: createContractDto.propertyId } as any)
+        : undefined,
+      user: createContractDto.userId
+        ? ({ id: createContractDto.userId } as any)
+        : undefined,
     });
 
     return await this.contractRepository.save(contract);
@@ -102,8 +107,8 @@ export class ContractsService {
       throw new BadRequestException('El contrato ya está cerrado o fallido');
     }
 
-  // Validate required roles
-  await this.validateRequiredRoles(contract);
+    // Validate required roles
+    await this.validateRequiredRoles(contract);
 
     // Validate required documents are uploaded
     this.validateRequiredDocuments(contract, closeContractDto.documents);
@@ -153,7 +158,7 @@ export class ContractsService {
       amount: payment.amount,
       date: payment.date,
       description: payment.description,
-      contract: ({ id: contract.id } as any),
+      contract: { id: contract.id } as any,
     };
 
     contract.payments.push(paymentEntity as Payment);
@@ -182,7 +187,9 @@ export class ContractsService {
   }
 
   async validateRequiredRoles(contract: Contract): Promise<void> {
-    const requiredRoles = this.getRequiredRolesForOperation(contract.operation as any);
+    const requiredRoles = this.getRequiredRolesForOperation(
+      contract.operation as any,
+    );
     const existingRoles = (contract.people || []).map((person) => person.role);
 
     const missingRoles = requiredRoles.filter(
@@ -196,7 +203,9 @@ export class ContractsService {
     }
   }
 
-  private getRequiredRolesForOperation(operation: ContractOperationType): ContractRole[] {
+  private getRequiredRolesForOperation(
+    operation: ContractOperationType,
+  ): ContractRole[] {
     switch (operation) {
       case ContractOperationType.COMPRAVENTA:
         return [ContractRole.SELLER, ContractRole.BUYER];
@@ -226,17 +235,14 @@ export class ContractsService {
     }
 
     // Subir el documento usando el servicio de tipos de documento
-    const uploadResult = await this.documentTypesService.uploadDocument(
-      file,
-      {
-        title: uploadContractDocumentDto.title,
-        documentTypeId: uploadContractDocumentDto.documentTypeId,
-        uploadedById: uploadContractDocumentDto.uploadedById,
-        status: DocumentStatus.UPLOADED,
-        notes: uploadContractDocumentDto.notes,
-        seoTitle: uploadContractDocumentDto.seoTitle,
-      },
-    );
+    const uploadResult = await this.documentTypesService.uploadDocument(file, {
+      title: uploadContractDocumentDto.title,
+      documentTypeId: uploadContractDocumentDto.documentTypeId,
+      uploadedById: uploadContractDocumentDto.uploadedById,
+      status: DocumentStatus.UPLOADED,
+      notes: uploadContractDocumentDto.notes,
+      seoTitle: uploadContractDocumentDto.seoTitle,
+    });
 
     // Actualizar el contrato con el documento subido
     // Add the uploaded Document entity to the contract.documents relation
@@ -247,7 +253,7 @@ export class ContractsService {
     );
 
     if (!existingDoc) {
-      contract.documents.push(uploadResult.document as any);
+      contract.documents.push(uploadResult.document);
     }
 
     await this.contractRepository.save(contract);

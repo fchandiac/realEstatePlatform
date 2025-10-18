@@ -253,9 +253,11 @@ describe('PropertyController (integration)', () => {
 
       expect(Array.isArray(response.body)).toBeTruthy();
       expect(response.body.length).toBeGreaterThan(0);
-      
+
       // Al menos una propiedad debe ser de tipo SALE
-      const saleProperties = response.body.filter(prop => prop.operationType === 'SALE');
+      const saleProperties = response.body.filter(
+        (prop) => prop.operationType === 'SALE',
+      );
       expect(saleProperties.length).toBeGreaterThan(0);
     });
   });
