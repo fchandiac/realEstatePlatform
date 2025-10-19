@@ -84,28 +84,49 @@ export class SeederFactory {
   static createRandomProperty(): PropertySeed {
     const priceCLP = faker.number.int({ min: 50000000, max: 500000000 });
     const ufValue = 35000; // Valor aproximado de la UF
+    const status = faker.helpers.arrayElement(Object.values(PropertyStatus));
+    const isPreApproved = status === PropertyStatus.PRE_APPROVED;
 
     return {
       title: faker.lorem.words(3),
       description: faker.lorem.paragraph(),
       internalNotes: faker.lorem.paragraph(),
-      status: faker.helpers.arrayElement(Object.values(PropertyStatus)),
+      status: status,
       operationType: faker.helpers.arrayElement(Object.values(PropertyOperationType)),
       price: priceCLP,
       currencyPrice: CurrencyPriceEnum.CLP,
       seoTitle: faker.lorem.sentence(),
       seoDescription: faker.lorem.paragraph(),
-      publicationDate: faker.date.recent(),
+      publicationDate: isPreApproved ? undefined : faker.date.recent(), // Pre-approved properties can't have publication date
       bathrooms: faker.number.int({ min: 1, max: 4 }),
       bedrooms: faker.number.int({ min: 1, max: 6 }),
       builtSquareMeters: faker.number.float({ min: 50, max: 500, fractionDigits: 2 }),
       landSquareMeters: faker.number.float({ min: 100, max: 1000, fractionDigits: 2 }),
       parkingSpaces: faker.number.int({ min: 0, max: 3 }),
+      floors: faker.helpers.maybe(() => faker.number.int({ min: 1, max: 10 }), { probability: 0.7 }), // Some null
+      constructionYear: faker.helpers.maybe(() => faker.number.int({ min: 1950, max: 2025 }), { probability: 0.8 }), // Some null
       state: faker.helpers.arrayElement(Object.values(RegionEnum)),
       city: faker.helpers.arrayElement(Object.values(ComunaEnum)),
       latitude: faker.number.float({ min: -90, max: 90, fractionDigits: 6 }),
       longitude: faker.number.float({ min: -180, max: 180, fractionDigits: 6 }),
-      propertyType: { name: faker.helpers.arrayElement(['RESIDENTIAL', 'COMMERCIAL', 'INDUSTRIAL']) },
+      // propertyType will be assigned in the seeder after property types are created
+      postRequest: faker.helpers.maybe(() => ({
+        message: faker.lorem.paragraph(),
+        contactInfo: {
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          phone: faker.phone.number()
+        },
+        requestedAt: faker.date.recent()
+      }), { probability: 0.3 }), // Some properties have post requests
+      isFeatured: faker.helpers.maybe(() => true, { probability: 0.2 }), // Some properties are featured
+      views: faker.helpers.maybe(() => 
+        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, () => ({
+          userId: faker.string.uuid(),
+          viewedAt: faker.date.recent(),
+          duration: faker.number.int({ min: 10, max: 300 }) // seconds
+        })), { probability: 0.4 }
+      ), // Some properties have view history
       deletedAt: undefined // Soft delete column initialized as undefined
     };
   }

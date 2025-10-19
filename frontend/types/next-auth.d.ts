@@ -23,5 +23,11 @@ declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
     accessToken?: string;
     role?: string;
+    user?: {
+      id?: string;
+      email?: string | null;
+      name?: string | null;
+      role?: string;
+    };
   }
 }

@@ -85,17 +85,33 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.accessToken = user.accessToken;
         token.role = user.role; // Include role in token
+        token.user = {
+          id: user.id,
+          email: user.email ?? undefined,
+          name: user.name ?? undefined,
+          role: user.role,
+        };
       }
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user = {
-          ...session.user,
-          id: typeof token.sub === 'string' ? token.sub : undefined,
-          role: typeof token.role === 'string' ? token.role : undefined,
-        } as typeof session.user & { id?: string; role?: string };
-      }
+      type TokenUser = {
+        id?: string;
+        email?: string | null;
+        name?: string | null;
+        role?: string;
+      };
+
+      const tokenWithUser = token as typeof token & { user?: TokenUser };
+      const enrichedUser = tokenWithUser.user;
+
+      session.user = {
+        ...(session.user ?? {}),
+        id: enrichedUser?.id ?? (typeof token.sub === 'string' ? token.sub : undefined),
+        email: enrichedUser?.email ?? session.user?.email,
+        name: enrichedUser?.name ?? session.user?.name,
+        role: enrichedUser?.role ?? (typeof token.role === 'string' ? token.role : undefined),
+      };
 
       if (typeof token.accessToken === 'string') {
         (session as typeof session & { accessToken?: string }).accessToken = token.accessToken;

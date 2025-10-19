@@ -1,5 +1,6 @@
 import { AppDataSource, initializeDataSource } from './seeder.config';
 import { SeederFactory } from './seeder.factory';
+import { faker } from '@faker-js/faker';
 import { Person } from '../../src/entities/person.entity';
 import { User, UserRole, UserStatus, Permission } from '../../src/entities/user.entity';
 import * as bcrypt from 'bcrypt';
@@ -109,10 +110,13 @@ async function seedDatabase() {
       Array.from({ length: 30 }, () => {
         const propertyData = SeederFactory.createRandomProperty();
         const randomAgent = agentUsers[Math.floor(Math.random() * agentUsers.length)];
+        const randomPropertyType = propertyTypes[Math.floor(Math.random() * propertyTypes.length)];
+        
         return propertyRepository.create({
           ...propertyData,
           creatorUser: randomAgent,
-          assignedAgent: randomAgent
+          assignedAgent: faker.helpers.maybe(() => randomAgent, { probability: 0.8 }), // Some properties have no assigned agent
+          propertyType: randomPropertyType
         });
       }));
       

@@ -15,7 +15,7 @@ interface LoginFormProps {
 
 export default function LoginForm({ onLogin, onRegister, loading = false }: LoginFormProps) {
 	const router = useRouter();
-	const [username, setUsername] = useState<string>('');
+	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const [showPassword, setShowPassword] = useState(false);
 	const [error, setError] = useState('');
@@ -24,7 +24,7 @@ export default function LoginForm({ onLogin, onRegister, loading = false }: Logi
 		e.preventDefault();
 		setError('');
 
-		if (!username || !password) {
+		if (!email || !password) {
 			setError('Por favor, completa todos los campos');
 			return;
 		}
@@ -32,23 +32,16 @@ export default function LoginForm({ onLogin, onRegister, loading = false }: Logi
 		try {
 			const res = await signIn('credentials', {
 				redirect: false,
-				userName: username,
-				pass: password,
+				email: email,
+				password: password,
 			});
-					if (res?.error) {
-						setError('Error al iniciar sesión. Verifica tus credenciales.');
-					} else {
-						// Obtener el usuario autenticado
-						const userRes = await fetch('/api/auth/session');
-						const session = await userRes.json();
-						if (session?.user?.role === 'admin') {
-							router.push('/admin');
-						} else if (session?.user?.role === 'operator') {
-							router.push('/operator');
-						} else {
-							router.refresh();
-						}
-					}
+
+			if (res?.error) {
+				setError('Error al iniciar sesión. Verifica tus credenciales.');
+			} else if (res?.ok) {
+				// Login exitoso, redirigir según el rol
+				router.push('/portal');
+			}
 		} catch (err) {
 			setError('Error al iniciar sesión. Verifica tus credenciales.');
 		}
@@ -75,14 +68,14 @@ export default function LoginForm({ onLogin, onRegister, loading = false }: Logi
 				<h2 className="text-xl font-bold text-center mb-2 text-white">Iniciar sesión</h2>
 			<div className="flex flex-col gap-3">
 				   <TextField
-					   label="Nombre de usuario"
-					   name="username"
-					   type="text"
-					   value={username}
-					   onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setUsername(e.target.value)}
-					   placeholder="Nombre de usuario"
+					   label="Correo electrónico"
+					   name="email"
+					   type="email"
+					   value={email}
+					   onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setEmail(e.target.value)}
+					   placeholder="tu@email.com"
 					   className=""
-							   data-test-id="login-username"
+							   data-test-id="login-email"
 				   />
 							<TextField
 								label="Contraseña"

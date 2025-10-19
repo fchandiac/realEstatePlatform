@@ -140,13 +140,12 @@ export class CreatePropertyDto {
 
   // Location Information
   @IsOptional()
-  @IsOptional()
   @IsEnum(RegionEnum)
-  region?: RegionEnum;
+  state?: RegionEnum;
 
   @IsOptional()
   @IsEnum(ComunaEnum)
-  commune?: ComunaEnum;
+  city?: ComunaEnum;
 
   @IsOptional()
   @IsNumber()
@@ -317,24 +316,12 @@ export class UpdatePropertyDto {
 
   // Location Information
   @IsOptional()
-  @IsString()
-  address?: string;
-
-  @IsOptional()
-  @IsString()
-  city?: string;
-
-  @IsOptional()
-  @IsString()
-  neighborhood?: string;
-
-  @IsOptional()
   @IsEnum(RegionEnum)
-  region?: RegionEnum;
+  state?: RegionEnum;
 
   @IsOptional()
   @IsEnum(ComunaEnum)
-  commune?: ComunaEnum;
+  city?: ComunaEnum;
 
   @IsOptional()
   @IsNumber()

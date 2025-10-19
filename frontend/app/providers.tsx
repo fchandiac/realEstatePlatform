@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  SessionProvider,
-  signIn,
-  signOut,
-  useSession,
-} from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import {
   createContext,
   useCallback,
@@ -14,7 +9,6 @@ import {
   type ReactNode,
 } from "react";
 import { logoutAction } from "@/app/actions";
-import { AlertProvider } from "@/app/contexts/AlertContext";
 
 type AuthContextUser = {
   id?: string;
@@ -43,7 +37,7 @@ type AuthContextProviderProps = {
   children: ReactNode;
 };
 
-function AuthContextProvider({ children }: AuthContextProviderProps) {
+export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const { data: session, status, update } = useSession();
 
   const accessToken = (session as (typeof session & { accessToken?: string }) | null)?.accessToken;
@@ -69,12 +63,15 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
           };
         }
 
-        await update();
+        const updatedSession = await update();
 
-        // Check user role and redirect if necessary
-        const userRole = session?.user?.role;
-        if (userRole === "admin" || userRole === "agent") {
-          window.location.href = "/backoffice";
+        const userRole =
+          updatedSession?.user && "role" in updatedSession.user
+            ? (updatedSession.user as { role?: string }).role
+            : undefined;
+
+        if (userRole === "ADMIN" || userRole === "AGENT") {
+          window.location.href = "/backOffice";
         }
 
         return { success: true };
@@ -86,7 +83,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
         };
       }
     },
-    [update, session],
+    [update],
   );
 
   const logout = useCallback<AuthContextValue["logout"]>(
@@ -137,22 +134,6 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
   }, [session, status, login, logout, refresh, accessToken]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-interface ProvidersProps {
-  children: ReactNode;
-}
-
-export function Providers({ children }: ProvidersProps) {
-  return (
-    <SessionProvider refetchOnWindowFocus={false}>
-      <AuthContextProvider>
-        <AlertProvider>
-          {children}
-        </AlertProvider>
-      </AuthContextProvider>
-    </SessionProvider>
-  );
 }
 
 export function useAuth() {

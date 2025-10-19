@@ -286,8 +286,7 @@ export class PropertyService {
     // Require a price for sale or rent operations
     if (
       (dto.operationType === PropertyOperationType.SALE ||
-        dto.operationType === PropertyOperationType.RENT ||
-        dto.operationType === PropertyOperationType.SALE_AND_RENT) &&
+        dto.operationType === PropertyOperationType.RENT) &&
       (dto.price === undefined || dto.price === null)
     ) {
       throw new BadRequestException(
@@ -314,6 +313,7 @@ export class PropertyService {
 
   // Grid for SALE properties compatible with DataGrid
   async gridSaleProperties(query: GridSaleQueryDto) {
+    console.log('gridSaleProperties called with query:', query);
     // Allowed fields and mappings
     const availableFields = [
       'id',
@@ -473,15 +473,19 @@ export class PropertyService {
 
     if (doPaginate) {
       total = await qb.getCount();
+      console.log('Total properties with operationType SALE:', total);
       const totalPages = Math.ceil(total / limit);
       const offset = (page - 1) * limit;
       qb.limit(limit).offset(offset);
       const rows = await qb.getRawMany();
+      console.log('Raw rows from query:', rows.length);
       const data = rows.map((r: any) => this.mapGridRow(r, fields));
+      console.log('Mapped data:', data.length);
       return { data, total, page, limit, totalPages };
     }
 
     const rows = await qb.getRawMany();
+    console.log('Raw rows from non-paginated query:', rows.length);
     return rows.map((r: any) => this.mapGridRow(r, fields));
   }
 
