@@ -39,7 +39,7 @@ export const ColHeader: React.FC<ColHeaderProps> = ({ column, computedStyle, fil
     filterPairs.forEach(pair => {
       const [column, ...valueParts] = pair.split('-');
       if (column && valueParts.length > 0) {
-        filters[column] = valueParts.join('-'); // Re-join in case value contains dashes
+        filters[column] = decodeURIComponent(valueParts.join('-')); // Decode to handle special chars
       }
     });
     
@@ -59,18 +59,16 @@ export const ColHeader: React.FC<ColHeaderProps> = ({ column, computedStyle, fil
     
     // Build new filters string
     const newFiltersString = Object.entries(currentFilters)
-      .map(([column, filterValue]) => `${column}-${filterValue}`)
+      .filter(([_, filterValue]) => filterValue.trim() !== '') // Remove empty filters
+      .map(([column, filterValue]) => `${column}-${encodeURIComponent(filterValue)}`)
       .join(',');
     
-    // Always keep filtration=true if it was set, only the button can remove it
-    const currentFiltration = searchParams.get('filtration');
-    if (currentFiltration === 'true') {
+    if (newFiltersString) {
       params.set('filters', newFiltersString);
-      params.set('filtration', 'true');
+      params.set('filtration', 'true'); // Activate filtration when there are filters
     } else {
-      // If filtration was not active, don't set it
       params.delete('filters');
-      params.delete('filtration');
+      params.delete('filtration'); // Deactivate if no filters
     }
     
     // Reset to page 1 when filtering

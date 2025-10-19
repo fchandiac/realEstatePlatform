@@ -51,6 +51,9 @@ export async function getSalePropertiesGrid(
     throw new Error('No hay una sesión activa para consultar propiedades.');
   }
 
+  console.log('[DEBUG] getSalePropertiesGrid - params.filters received:', params.filters);
+  console.log('[DEBUG] getSalePropertiesGrid - params.filtration:', params.filtration);
+
   const url = new URL(`${env.backendApiUrl}/properties/grid-sale`);
 
   // map boolean flags to 'true'|'false' strings
@@ -69,6 +72,8 @@ export async function getSalePropertiesGrid(
   if (typeof params.page === 'number') url.searchParams.set('page', String(params.page));
   if (typeof params.limit === 'number') url.searchParams.set('limit', String(params.limit));
 
+  console.log('[DEBUG] getSalePropertiesGrid - Final URL sent to backend:', url.toString());
+
   const response = await fetch(url.toString(), {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -76,6 +81,8 @@ export async function getSalePropertiesGrid(
     },
     cache: 'no-store',
   });
+
+  console.log('[DEBUG] getSalePropertiesGrid - Response status:', response.status);
 
   if (!response.ok) {
     let message = `Error ${response.status} al obtener propiedades en venta`;
@@ -86,5 +93,7 @@ export async function getSalePropertiesGrid(
     throw new Error(message);
   }
 
-  return (await response.json()) as SalePropertiesGridResponse;
+  const result = await response.json();
+  console.log('[DEBUG] getSalePropertiesGrid - Response data length:', Array.isArray(result) ? result.length : 'Not an array');
+  return result as SalePropertiesGridResponse;
 }

@@ -346,6 +346,7 @@ export class PropertyService {
       updatedAt: 'p.updatedAt',
       // characteristics and priceDisplay are derived post-query
       // assignedAgentName is also derived using selected JSON personalInfo
+      // Special: assignedAgentName will be handled in filter logic
     };
 
     const textSearchFields = [
@@ -411,8 +412,9 @@ export class PropertyService {
       .where('p.deletedAt IS NULL')
       .andWhere('p.operationType = :op', { op: PropertyOperationType.SALE });
 
-    // Column filters
+        // Column filters
     const filtration = query.filtration === 'true';
+    console.log('[DEBUG] gridSaleProperties - filtration enabled:', filtration);
     if (filtration && query.filters) {
       const items = query.filters
         .split(',')
@@ -427,13 +429,31 @@ export class PropertyService {
         })
         .filter((f) => f.column && f.value && availableFields.includes(f.column));
 
+      console.log('[DEBUG] gridSaleProperties - Parsed filter items:', items);
+
       for (const f of items) {
-        const mapping = fieldMappings[f.column] || `p.${f.column}`;
-        const dbField = mapping.split(' AS ')[0];
-        const param = `%${f.value.toLowerCase()}%`;
-        qb.andWhere(`LOWER(${dbField}) LIKE :f_${f.column}`, {
-          [`f_${f.column}`]: param,
-        });
+        if (f.column === 'assignedAgentName') {
+          // Filtrar por username o por nombre en personalInfo (JSON)
+          const param = `%${f.value.toLowerCase()}%`;
+          // Busca en username y en personalInfo (firstName, lastName)
+          qb.andWhere(
+            `(
+              LOWER(a.username) LIKE :f_assignedAgentName
+              OR LOWER(JSON_UNQUOTE(JSON_EXTRACT(a.personalInfo, '$.firstName'))) LIKE :f_assignedAgentName
+              OR LOWER(JSON_UNQUOTE(JSON_EXTRACT(a.personalInfo, '$.lastName'))) LIKE :f_assignedAgentName
+            )`,
+            { f_assignedAgentName: param }
+          );
+          console.log('[DEBUG] gridSaleProperties - Applying filter: assignedAgentName LIKE', param);
+        } else {
+          const mapping = fieldMappings[f.column] || `p.${f.column}`;
+          const dbField = mapping.split(' AS ')[0];
+          console.log(`[DEBUG] gridSaleProperties - Applying filter: ${f.column} LIKE '%${f.value}%' on field ${dbField}`);
+          const param = `%${f.value.toLowerCase()}%`;
+          qb.andWhere(`LOWER(${dbField}) LIKE :f_${f.column}`, {
+            [`f_${f.column}`]: param,
+          });
+        }
       }
     }
 

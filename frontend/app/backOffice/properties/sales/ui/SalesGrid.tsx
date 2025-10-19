@@ -30,15 +30,15 @@ function mapRow(row: any) {
 
 export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
   const columns: DataGridColumn[] = [
-    { field: 'title', headerName: 'Título', flex: 1.6, minWidth: 220 },
-    { field: 'status', headerName: 'Estado', width: 140 },
-    { field: 'operationType', headerName: 'Operación', width: 130, hide: true },
-    { field: 'typeName', headerName: 'Tipo', width: 160 },
-    { field: 'assignedAgentName', headerName: 'Agente', width: 180 },
-    { field: 'city', headerName: 'Ciudad', width: 150 },
-    { field: 'state', headerName: 'Región', width: 140, hide: true },
-    { field: 'price', headerName: 'Precio', type: 'number', renderType: 'currency', width: 140, align: 'right', headerAlign: 'right' },
-    { field: 'createdAt', headerName: 'Creado', type: 'date', renderType: 'dateString', width: 160 },
+    { field: 'title', headerName: 'Título', flex: 1.6, minWidth: 220, sortable: true, filterable: true },
+    { field: 'status', headerName: 'Estado', width: 140, sortable: true, filterable: true },
+    { field: 'operationType', headerName: 'Operación', width: 130, hide: true, sortable: true, filterable: true },
+    { field: 'typeName', headerName: 'Tipo', width: 160, sortable: true, filterable: true },
+    { field: 'assignedAgentName', headerName: 'Agente', width: 180, sortable: true, filterable: true },
+    { field: 'city', headerName: 'Ciudad', width: 150, sortable: true, filterable: true },
+    { field: 'state', headerName: 'Región', width: 140, hide: true, sortable: true, filterable: true },
+    { field: 'price', headerName: 'Precio', type: 'number', renderType: 'currency', width: 140, align: 'right', headerAlign: 'right', sortable: true, filterable: true },
+    { field: 'createdAt', headerName: 'Creado', type: 'date', renderType: 'dateString', width: 160, sortable: true, filterable: true },
   ];
 
   const excelEndpoint = `${env.backendApiUrl}/properties/grid-sale/excel`;
