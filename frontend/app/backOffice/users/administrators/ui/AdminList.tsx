@@ -12,15 +12,9 @@ export interface AdminListProps {
 
 const defaultEmptyMessage = 'No hay administradores para mostrar.';
 
-type AdminItem = AdministratorType & {
-    username?: string;
-    personalInfo?: {
-        firstName?: string | null;
-        lastName?: string | null;
-    } | null;
-};
 
-const getDisplayName = (admin: AdminItem): string => {
+
+const getDisplayName = (admin: AdministratorType): string => {
 
     const firstName = admin.personalInfo?.firstName?.trim() ?? '';
     const lastName = admin.personalInfo?.lastName?.trim() ?? '';

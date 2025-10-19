@@ -27,9 +27,9 @@ export default async function SalesPage({ searchParams }: PageProps) {
   const limit = parseInt(limitParam) || 25;
 
   const result = await getSalePropertiesGrid({ sort, sortField, search, filters, page, limit });
-  const rows = (result as any).rows ?? (result as any).data ?? [];
-  const totalRows = (result as any).totalRows ?? (result as any).total ?? rows.length;
-  console.log('SalesPage - fetched rows:', rows.length, 'totalRows:', totalRows);
+  const rows = Array.isArray(result) ? result : result.data ?? [];
+  const totalRows = Array.isArray(result) ? result.length : result.total ?? rows.length;
+
 
 
   return (

@@ -11,11 +11,28 @@ type SalesGridProps = {
   title?: string;
 };
 
+// Mapea los campos del backend a los esperados por el DataGrid
+function mapRow(row: any) {
+  return {
+    id: row.p_id ?? row.id,
+    title: row.p_title ?? row.title,
+    status: row.p_status ?? row.status,
+    operationType: row.p_operationType ?? row.operationType,
+    typeName: row.typeName,
+    assignedAgentName: row.assignedAgentName,
+    city: row.p_city ?? row.city,
+    state: row.p_state ?? row.state,
+    price: row.p_price ?? row.price,
+    createdAt: row.p_createdAt ?? row.createdAt,
+    // Puedes agregar más campos si los necesitas en el grid
+  };
+}
+
 export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
   const columns: DataGridColumn[] = [
     { field: 'title', headerName: 'Título', flex: 1.6, minWidth: 220 },
     { field: 'status', headerName: 'Estado', width: 140 },
-    { field: 'operationType', headerName: 'Operación', width: 130 },
+    { field: 'operationType', headerName: 'Operación', width: 130, hide: true },
     { field: 'typeName', headerName: 'Tipo', width: 160 },
     { field: 'assignedAgentName', headerName: 'Agente', width: 180 },
     { field: 'city', headerName: 'Ciudad', width: 150 },
@@ -38,12 +55,15 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
     'createdAt',
   ].join(',');
 
+  // Aplica el mapeo antes de pasar los datos al DataGrid
+  const mappedRows = rows.map(mapRow);
+
   return (
     <DataGrid
       title={'Propiedades en Venta'}
       columns={columns}
-      rows={rows}
-      totalRows={totalRows ?? rows.length}
+      rows={mappedRows}
+      totalRows={totalRows ?? mappedRows.length}
       height="70vh"
       data-test-id="sales-properties-grid"
       excelUrl={excelEndpoint}
