@@ -50,30 +50,34 @@ export const ColHeader: React.FC<ColHeaderProps> = ({ column, computedStyle, fil
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value;
     const params = new URLSearchParams(searchParams.toString());
-    
     // Update filters parameter
     const currentFilters = parseFiltersFromUrl(filtersParam);
-    
-    // Always set the filter value, even if empty
-    currentFilters[field] = value;
-    
+
+    if (value.trim() === '') {
+      // Remove this column's filter if input is empty
+      delete currentFilters[field];
+    } else {
+      // Set/update this column's filter
+      currentFilters[field] = value;
+    }
+
     // Build new filters string
     const newFiltersString = Object.entries(currentFilters)
-      .filter(([_, filterValue]) => filterValue.trim() !== '') // Remove empty filters
+      .filter(([_, filterValue]) => filterValue.trim() !== '')
       .map(([column, filterValue]) => `${column}-${encodeURIComponent(filterValue)}`)
       .join(',');
-    
+
     if (newFiltersString) {
       params.set('filters', newFiltersString);
-      params.set('filtration', 'true'); // Activate filtration when there are filters
+      params.set('filtration', 'true');
     } else {
       params.delete('filters');
-      params.delete('filtration'); // Deactivate if no filters
+      // NO eliminar filtration aquí: solo la Toolbar puede quitar filtration
+      params.set('filtration', 'true');
     }
-    
+
     // Reset to page 1 when filtering
     params.set('page', '1');
-    
     router.replace(`?${params.toString()}`);
   };
 
