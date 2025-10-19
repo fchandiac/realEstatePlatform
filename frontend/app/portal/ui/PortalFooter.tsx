@@ -4,6 +4,9 @@ import { Button } from "@/components/Button/Button";
 import IconButton from "@/components/Button/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
+import { faFacebook } from "@fortawesome/free-brands-svg-icons";
+import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
@@ -40,14 +43,12 @@ const PortalFooter: React.FC = () => (
         {/* Columna 2: Síguenos en redes sociales (vertical y alineado arriba) */}
         <div className="flex flex-col items-start md:items-end justify-start">
           <h3 className="text-lg font-semibold mb-4 text-background text-left md:text-right items-start">Síguenos en redes sociales</h3>
+    
           <div className="flex flex-row gap-4 justify-start md:justify-end items-start md:items-end">
             <a href="#" aria-label="Instagram" className="text-background hover:text-primary text-2xl"><FontAwesomeIcon icon={faInstagram} /></a>
-          </div>
-          <div className="flex flex-row gap-4 justify-start md:justify-end items-start md:items-end">
-            <a href="#" aria-label="Instagram" className="text-background hover:text-primary text-2xl">📸<span className="sr-only">Instagram</span></a>
-            <a href="#" aria-label="Facebook" className="text-background hover:text-primary text-2xl">📘<span className="sr-only">Facebook</span></a>
-            <a href="#" aria-label="LinkedIn" className="text-background hover:text-primary text-2xl">🔗<span className="sr-only">LinkedIn</span></a>
-            <a href="#" aria-label="YouTube" className="text-background hover:text-primary text-2xl">▶️<span className="sr-only">YouTube</span></a>
+            <a href="#" aria-label="Facebook" className="text-background hover:text-primary text-2xl"><FontAwesomeIcon icon={faFacebook} /></a>
+            <a href="#" aria-label="LinkedIn" className="text-background hover:text-primary text-2xl"><FontAwesomeIcon icon={faLinkedin} /></a>
+            <a href="#" aria-label="YouTube" className="text-background hover:text-primary text-2xl"><FontAwesomeIcon icon={faYoutube} /></a>
           </div>
         </div>
       </div>
