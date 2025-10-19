@@ -67,8 +67,9 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
       height="70vh"
       data-test-id="sales-properties-grid"
       excelUrl={excelEndpoint}
-      excelFields={excelFields}
       limit={25}
+      excelFields={excelFields}
+      
     />
   );
 }

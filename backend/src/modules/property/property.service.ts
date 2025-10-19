@@ -1,8 +1,5 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Property } from '../../entities/property.entity';
@@ -10,12 +7,9 @@ import { User } from '../../entities/user.entity';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 import { PropertyStatus } from '../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../common/enums/property-operation-type.enum';
-import {
-  ChangeHistoryEntry,
-  ViewEntry,
-  LeadEntry,
-} from '../../common/interfaces/property.interfaces';
+import { ChangeHistoryEntry, ViewEntry, LeadEntry } from '../../common/interfaces/property.interfaces';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
+import * as ExcelJS from 'exceljs';
 
 @Injectable()
 export class PropertyService {
@@ -23,6 +17,64 @@ export class PropertyService {
     @InjectRepository(Property)
     private readonly propertyRepository: Repository<Property>,
   ) {}
+
+  // ...existing methods...
+
+  // Exporta Excel para el grid de propiedades en venta
+  async exportSalePropertiesExcel(query: GridSaleQueryDto): Promise<Buffer> {
+    // Columnas del DataGrid de sale (deben coincidir con el frontend)
+    const columns = [
+      { key: 'id', header: 'ID' },
+      { key: 'title', header: 'Título' },
+      { key: 'status', header: 'Estado' },
+      { key: 'operationType', header: 'Operación' },
+      { key: 'typeName', header: 'Tipo' },
+      { key: 'assignedAgentName', header: 'Agente' },
+      { key: 'city', header: 'Ciudad' },
+      { key: 'state', header: 'Región' },
+      { key: 'price', header: 'Precio' },
+      { key: 'createdAt', header: 'Creado' },
+    ];
+
+    // Forzar siempre el parámetro fields para que gridSaleProperties devuelva todos los datos necesarios
+    const fields = columns.map(c => c.key).join(',');
+    const gridResult = await this.gridSaleProperties({ ...query, fields, pagination: 'false' });
+    const rows = Array.isArray(gridResult) ? gridResult : gridResult.data;
+
+    // Crear workbook y hoja
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('Propiedades en Venta');
+
+    // Definir columnas
+    sheet.columns = columns.map(col => ({ key: col.key, header: col.header, width: 22 }));
+
+    // Agregar filas
+    rows.forEach(row => {
+      const excelRow: Record<string, any> = {};
+      columns.forEach(col => {
+        excelRow[col.key] = row[col.key] ?? '';
+      });
+      sheet.addRow(excelRow);
+    });
+
+    // Estilo: bordes en todas las celdas
+    sheet.eachRow({ includeEmpty: true }, (row) => {
+      row.eachCell({ includeEmpty: true }, (cell) => {
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
+      });
+    });
+
+    // Generar buffer
+    const buffer = await workbook.xlsx.writeBuffer();
+    return Buffer.from(buffer);
+  }
+
+
 
   async create(
     createPropertyDto: CreatePropertyDto,
@@ -373,10 +425,16 @@ export class PropertyService {
       return [];
     }
 
-    // Build select (raw) for non-derived fields
+    // Build select (raw) for non-derived fields, usando alias exactos para cada campo
     const rawSelects = fields
       .filter((f) => !['characteristics', 'priceDisplay', 'assignedAgentName'].includes(f))
-      .map((f) => fieldMappings[f] || `p.${f}`);
+      .map((f) => {
+        // Si el mapping ya tiene un alias (AS ...), úsalo tal cual
+        if (fieldMappings[f] && fieldMappings[f].includes(' AS ')) return fieldMappings[f];
+        // Si es un campo directo, forzar alias igual al nombre esperado
+        if (fieldMappings[f]) return `${fieldMappings[f]} AS ${f}`;
+        return `p.${f} AS ${f}`;
+      });
 
     // Always include needed base fields for derivations if requested
     const needCharacteristics = fields.includes('characteristics');

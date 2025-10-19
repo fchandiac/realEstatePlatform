@@ -8,7 +8,9 @@ import {
   Delete,
   Query,
   ValidationPipe,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { PropertyService } from './property.service';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
@@ -18,6 +20,20 @@ import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 @Controller('properties')
 export class PropertyController {
   constructor(private readonly propertyService: PropertyService) {}
+
+  @Get('grid-sale/excel')
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Sale properties Excel exported')
+  async exportSaleGridExcel(
+    @Query(ValidationPipe) query: GridSaleQueryDto,
+    @Res() res: Response,
+  ) {
+    const buffer = await this.propertyService.exportSalePropertiesExcel(query);
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename="propiedades-en-venta.xlsx"',
+    });
+    res.send(buffer);
+  }
 
   @Post()
   @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Property created')
