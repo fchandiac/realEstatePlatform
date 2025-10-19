@@ -1,4 +1,7 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import FontAwesome from "@/components/FontAwesome/FontAwesome";
 
 const Wsp: React.FC = () => (
   <button
@@ -8,7 +11,7 @@ const Wsp: React.FC = () => (
     onClick={() => window.open('https://wa.me/56912345678', '_blank')}
   >
     {/* Simple inline emoji icon to avoid external fontawesome dependency */}
-    <span aria-hidden className="text-2xl">💬</span>
+       <FontAwesomeIcon icon={faWhatsapp} />
   </button>
 );
 
