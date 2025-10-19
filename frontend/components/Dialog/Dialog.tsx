@@ -94,9 +94,11 @@ const Dialog: React.FC<DialogProps> = ({ open, onClose, title, children, size = 
         data-test-id="dialog-content"
       >
         {title && title !== "" && (
-          <h2 className="title p-1 w-full" data-test-id="dialog-title">{title}</h2>
+
+            <h2 className="title p-1 w-full" data-test-id="dialog-title">{title}</h2>
+
         )}
-        <div className={`w-full ${scroll === 'paper' ? 'flex-1 overflow-y-auto' : ''}`}>
+        <div className={`w-full pt-2 ${scroll === 'paper' ? 'flex-1 overflow-y-auto' : ''}`}>
           {children}
         </div>
       </div>

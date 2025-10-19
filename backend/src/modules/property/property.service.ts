@@ -1,4 +1,5 @@
 
+
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
@@ -17,6 +18,66 @@ export class PropertyService {
     @InjectRepository(Property)
     private readonly propertyRepository: Repository<Property>,
   ) {}
+
+
+  /**
+   * Devuelve toda la información relevante de una propiedad, incluyendo relaciones y datos agregados.
+   */
+  async getFullProperty(id: string) {
+    // Obtener la propiedad con todas las relaciones relevantes
+    const property = await this.propertyRepository.findOne({
+      where: { id },
+      relations: [
+        'propertyType',      // Tipo de propiedad
+        'assignedAgent',     // Agente asignado
+        'multimedia',        // Imágenes, videos, documentos
+      ],
+    });
+
+    if (!property) throw new NotFoundException('Property not found');
+
+    // Datos agregados
+    const favoritesCount = await this.getFavoritesCount(id);
+    const leadsCount = await this.getLeadsCount(id);
+    const viewsCount = await this.getViewsCount(id);
+
+    // Retornar toda la información
+    return {
+      ...property,
+      favoritesCount,
+      leadsCount,
+      viewsCount,
+    };
+  }
+
+  /**
+   * Devuelve cuántas veces la propiedad ha sido marcada como favorita.
+   * Si tienes una tabla/relación de favoritos, ajusta el query.
+   */
+  async getFavoritesCount(propertyId: string): Promise<number> {
+    // Si tienes una relación property.favorites, ajusta aquí
+    // Ejemplo: contar favoritos en una tabla 'favorites' con propertyId
+    // Aquí se asume que no existe, así que retorna 0
+    return 0;
+  }
+
+  /**
+   * Devuelve cuántos leads/interesados tiene la propiedad.
+   */
+  async getLeadsCount(propertyId: string): Promise<number> {
+    const property = await this.propertyRepository.findOne({ where: { id: propertyId } });
+    if (!property || !property.leads) return 0;
+    return Array.isArray(property.leads) ? property.leads.length : 0;
+  }
+
+  /**
+   * Devuelve cuántas veces ha sido vista la propiedad.
+   */
+  async getViewsCount(propertyId: string): Promise<number> {
+    const property = await this.propertyRepository.findOne({ where: { id: propertyId } });
+    if (!property || !property.views) return 0;
+    return Array.isArray(property.views) ? property.views.length : 0;
+  }
 
   // ...existing methods...
 
@@ -86,6 +147,7 @@ export class PropertyService {
     // Create property with proper relationships
     const property = this.propertyRepository.create({
       ...createPropertyDto,
+  description: createPropertyDto.description ?? undefined,
       creatorUserId: creatorId || createPropertyDto.creatorUserId,
       propertyTypeId:
         (createPropertyDto as any).propertyTypeId ||
@@ -254,6 +316,9 @@ export class PropertyService {
 
     // Update property
     Object.assign(property, updatePropertyDto);
+    if ('description' in updatePropertyDto) {
+  property.description = updatePropertyDto.description ?? undefined;
+    }
     property.lastModifiedAt = new Date();
 
     // Add change history

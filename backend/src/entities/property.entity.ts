@@ -55,10 +55,10 @@ export class Property {
   @IsString()
   title: string;
 
-  @Column({ type: 'text' })
-  @IsNotEmpty()
+  @Column({ type: 'text', nullable: true })
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
 
   @Column({
     type: 'enum',

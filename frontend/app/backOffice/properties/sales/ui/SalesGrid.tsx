@@ -1,5 +1,6 @@
 'use client'
 import React from 'react';
+import SaleMoreButton from './SaleMoreButton';
 import DataGrid from '@/components/DataGrid/DataGridWrapper';
 import type { DataGridColumn } from '@/components/DataGrid/DataGrid';
 import { env } from '@/lib/env';
@@ -39,6 +40,14 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
     { field: 'state', headerName: 'Región', width: 140, hide: true, sortable: true, filterable: true },
     { field: 'price', headerName: 'Precio', type: 'number', renderType: 'currency', width: 140, align: 'right', headerAlign: 'right', sortable: true, filterable: true },
     { field: 'createdAt', headerName: 'Creado', type: 'date', renderType: 'dateString', width: 160, sortable: true, filterable: true },
+    {
+      field: 'actions',
+      headerName: 'Acciones',
+      width: 80,
+      sortable: false,
+      filterable: false,
+      actionComponent: ({ row }) => <SaleMoreButton property={row} />,
+    },
   ];
 
   const excelEndpoint = `${env.backendApiUrl}/properties/grid-sale/excel`;
@@ -64,7 +73,7 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
       columns={columns}
       rows={mappedRows}
       totalRows={totalRows ?? mappedRows.length}
-      height="70vh"
+      height="80vh"
       data-test-id="sales-properties-grid"
       excelUrl={excelEndpoint}
       limit={25}

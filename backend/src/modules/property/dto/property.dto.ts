@@ -30,9 +30,9 @@ export class CreatePropertyDto {
   @IsString()
   title: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
 
   @IsOptional()
   @IsEnum(PropertyStatus)

@@ -37,6 +37,7 @@ export class PropertyController {
 
   @Post()
   @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Property created')
+    // No changes needed; description is handled by DTOs in create and update endpoints.
   create(@Body(ValidationPipe) createPropertyDto: CreatePropertyDto) {
     return this.propertyService.create(createPropertyDto);
   }
@@ -59,8 +60,18 @@ export class PropertyController {
     return this.propertyService.findOne(id);
   }
 
+  /**
+   * Devuelve todos los detalles de la propiedad, incluyendo relaciones y datos agregados.
+   */
+  @Get(':id/full')
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Full property details viewed')
+  async getFullProperty(@Param('id') id: string) {
+    return await this.propertyService.getFullProperty(id);
+  }
+
   @Patch(':id')
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property updated')
+    // No changes needed; description is handled by DTOs in create and update endpoints.
   update(
     @Param('id') id: string,
     @Body(ValidationPipe) updatePropertyDto: UpdatePropertyDto,
