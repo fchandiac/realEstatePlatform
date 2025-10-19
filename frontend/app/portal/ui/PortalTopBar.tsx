@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import IconButton from "@/components/IconButton/IconButton";
 import { Button } from "@/components/Button/Button";
 import Dialog from "@/components/Dialog/Dialog";
-import LoginForm from "@/components/LoginForm/LoginForm";
-import RegisterForm from "@/components/RegisterForm/RegisterForm";
+import LoginForm from "./loginForm";
+import RegisterForm from "./RegisterForm";
 
 interface RegisterData {
   firstName: string;
@@ -133,11 +133,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
         title="Iniciar Sesión"
         size="sm"
       >
-        <LoginForm
-          onLogin={handleLogin}
-          onRegister={openRegisterDialog}
-          loading={loading}
-        />
+        <LoginForm />
       </Dialog>
 
       {/* Register Dialog */}
@@ -147,11 +143,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
         title="Crear Cuenta"
         size="md"
       >
-        <RegisterForm
-          onRegister={handleRegister}
-          onLogin={openLoginDialog}
-          loading={loading}
-        />
+        <RegisterForm />
       </Dialog>
     </div>
   );

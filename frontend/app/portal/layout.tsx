@@ -1,10 +1,4 @@
 "use client";
-
-import { useState, useCallback, useEffect, useMemo, useTransition } from "react";
-import Dialog from "@/components/Dialog/Dialog";
-import LoginForm from "./ui/LoginForm";
-import RegisterForm from "./ui/RegisterForm";
-import { useAuth } from "@/app/providers";
 import PortalTopBar from "./ui/PortalTopBar";
 import PortalFooter from "./ui/PortalFooter";
 import Wsp from "./ui/Wsp";
