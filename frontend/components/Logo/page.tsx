@@ -51,7 +51,7 @@ export default function LogoShowcase() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Tamaño:</label>
               <select
                 value={selectedSize}
-                onChange={(e) => setSelectedSize(e.target.value as any)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedSize(e.target.value as 'small' | 'medium' | 'large')}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="small">Pequeño (64x64)</option>
@@ -64,7 +64,7 @@ export default function LogoShowcase() {
               <label className="block text-sm font-medium text-gray-700 mb-2">Aspecto:</label>
               <select
                 value={selectedAspect}
-                onChange={(e) => setSelectedAspect(e.target.value as any)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedAspect(e.target.value as 'square' | 'wide' | 'tall')}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="square">Cuadrado (1:1)</option>
@@ -215,7 +215,7 @@ export default function LogoShowcase() {
               </div>
               <p className="text-sm text-gray-600">
                 Cuando la imagen no se puede cargar, el componente muestra
-                automáticamente un placeholder con el texto "Logo".
+                automáticamente un placeholder con el texto &quot;Logo&quot;.
               </p>
             </div>
 
@@ -460,7 +460,7 @@ function Header() {
               <ul className="text-sm text-green-700 space-y-1">
                 <li><strong>Loading:</strong> No tiene estado de carga específico</li>
                 <li><strong>Loaded:</strong> Imagen se muestra correctamente</li>
-                <li><strong>Error:</strong> Placeholder con texto "Logo" cuando falla</li>
+                <li><strong>Error:</strong> Placeholder con texto &quot;Logo&quot; cuando falla</li>
                 <li><strong>Custom:</strong> Acepta cualquier src personalizado</li>
                 <li><strong>Default:</strong> Usa /logo.svg si no se especifica src</li>
               </ul>

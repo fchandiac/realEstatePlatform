@@ -18,18 +18,7 @@ export default function TextFieldShowcase() {
     setValues(prev => ({ ...prev, [field]: e.target.value }));
   };
 
-  const formatCurrency = (input: string) => {
-    // Formato simple de moneda
-    const numeric = input.replace(/[^0-9.]/g, '');
-    return numeric ? `$${numeric}` : '';
-  };
-
-  const formatDNI = (input: string) => {
-    // Formato simple de DNI español
-    const cleaned = input.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
-    if (cleaned.length <= 8) return cleaned;
-    return cleaned.slice(0, 8) + cleaned.slice(8, 9);
-  };
+  // Removed unused helper functions (formatCurrency, formatDNI) to satisfy linter
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -233,11 +222,11 @@ export default function TextFieldShowcase() {
               <h3 className="text-lg font-medium text-gray-700 mb-3">Campo con Formato</h3>
               <pre className="bg-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
 {`<TextField
-  label="Precio"
+  label='Precio'
   value={price}
   onChange={(e) => setPrice(e.target.value)}
   formatFn={(input) => \`$\${input.replace(/[^0-9.]/g, '')}\`}
-  placeholder="$0.00"
+  placeholder='$0.00'
 />`}
               </pre>
             </div>

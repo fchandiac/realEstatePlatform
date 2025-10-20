@@ -12,7 +12,7 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
   return (
     <>
       <IconButton
-        icon="more_vert"
+        icon="more_horiz"
         variant="text"
         ariaLabel="Ver más detalles"
         onClick={() => setOpen(true)}

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect, useRef } from "react";
-import DropdownList from "@/components/DropdownList/DropdownList";
+import DropdownList, { dropdownOptionClass } from "@/components/DropdownList/DropdownList";
 import IconButton from "@/components/IconButton/IconButton";
 
 export interface Option {
@@ -118,7 +118,7 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, value = null, onC
         tabIndex={-1}
         aria-hidden="true"
       />
-      
+
       <div
         className={`block w-full min-w-[180px] rounded border-[1px] px-3 py-2 text-sm font-light text-foreground focus:outline-none transition-colors duration-200 border-border ${focused ? 'border-primary' : ''} ${value !== null && value !== undefined ? 'pr-16' : 'pr-10'} appearance-none cursor-pointer flex items-center`}
         tabIndex={0}
@@ -137,6 +137,7 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, value = null, onC
         aria-expanded={open}
         aria-required={required}
         aria-invalid={required && (value === null || value === undefined)}
+        aria-controls="select-list"
       >
         {selected ? (
           <span className="text-sm font-light text-foreground">{selected.label}</span>
@@ -187,8 +188,7 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, value = null, onC
           <li
             key={opt.id}
             ref={el => { optionRefs.current[idx] = el; }}
-            className={require("@/components/DropdownList/DropdownList").dropdownOptionClass + 
-              (highlightedIndex === idx ? " bg-secondary/30" : " text-neutral-700")}
+            className={dropdownOptionClass + (highlightedIndex === idx ? " bg-secondary/30" : " text-neutral-700")}
             onMouseDown={() => { 
               setIsSelecting(true);
               onChange?.(opt.id); 

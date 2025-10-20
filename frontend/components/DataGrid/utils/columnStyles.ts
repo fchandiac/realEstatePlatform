@@ -13,20 +13,19 @@ export interface ColumnStyle {
  * Hook personalizado para detectar tamaño de pantalla
  */
 export function useScreenSize() {
-  // En un entorno server-side, asumimos desktop
-  if (typeof window === 'undefined') {
-    return { width: 1024, height: 768, isMobile: false, isTablet: false, isDesktop: true };
-  }
-
-  const [screenSize, setScreenSize] = React.useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-    isMobile: window.innerWidth < 640,
-    isTablet: window.innerWidth >= 640 && window.innerWidth < 1024,
-    isDesktop: window.innerWidth >= 1024,
+  // Provide a SSR-safe initial state
+  const getInitial = () => ({
+    width: typeof window === 'undefined' ? 1024 : window.innerWidth,
+    height: typeof window === 'undefined' ? 768 : window.innerHeight,
+    isMobile: typeof window === 'undefined' ? false : window.innerWidth < 640,
+    isTablet: typeof window === 'undefined' ? false : (window.innerWidth >= 640 && window.innerWidth < 1024),
+    isDesktop: typeof window === 'undefined' ? true : window.innerWidth >= 1024,
   });
 
+  const [screenSize, setScreenSize] = React.useState(getInitial);
+
   React.useEffect(() => {
+    if (typeof window === 'undefined') return;
     const handleResize = () => {
       setScreenSize({
         width: window.innerWidth,

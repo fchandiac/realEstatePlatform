@@ -1,41 +1,25 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, ZoomControl, Marker, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import dynamic from 'next/dynamic';
+interface CreateLocationPickerMapProps {
+  center?: [number, number];
+  markerPosition?: [number, number] | null;
+  onLocationSelect?: (lat: number, lng: number) => void;
+}
+
+const CreateLocationPickerMap = dynamic(() => import('./CreateLocationPickerMap'), { ssr: false });
+// Cast to a typed React component when rendering to avoid prop-type mismatches
+const TypedCreateLocationPickerMap = CreateLocationPickerMap as unknown as React.ComponentType<CreateLocationPickerMapProps>;
 import { TextField } from '../TextField/TextField';
 
-// Crear icono personalizado con Material Symbols del proyecto
-const createCustomIcon = () => {
-  return L.divIcon({
-    html: `
-      <span class="material-symbols-outlined text-primary" style="
-        font-size: 24px;
-        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      ">location_on</span>
-    `,
-    className: 'custom-marker',
-    iconSize: [24, 24],
-    iconAnchor: [12, 24],
-  });
-};
+// Map rendering is handled by a client-only dynamically imported wrapper
 
 interface CreateLocationPickerProps {
   height?: string;
   onChange?: (coordinates: { lat: number; lng: number } | null) => void;
 }
 
-// Componente para manejar los clicks en el mapa
-const MapClickHandler: React.FC<{ onLocationSelect: (lat: number, lng: number) => void }> = ({ onLocationSelect }) => {
-  useMapEvents({
-    click: (e) => {
-      console.log('MapClickHandler - Click detectado en:', e.latlng);
-      const { lat, lng } = e.latlng;
-      onLocationSelect(lat, lng);
-    },
-  });
-  return null;
-};
+// (map click handler and view setter live in CreateLocationPickerMap)
 
 const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({ 
   height = '400px', 
@@ -204,35 +188,14 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
         </div>
       ) : (
         <div>
-          {/* <div className="mb-2 p-3 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-700">
-              📍 <strong>Instrucciones:</strong> Haz click en el mapa para seleccionar una nueva ubicación. 
-              {locationSource === 'auto' && ' La ubicación inicial se obtuvo automáticamente de tu dispositivo.'}
-              {locationSource === 'default' && ' Se está usando una ubicación por defecto (Santiago, Chile).'}
-              {locationSource === 'user' && ' Has seleccionado una nueva ubicación.'}
-            </p>
-          </div> */}
+      
           <div style={{ height, width: '100%', borderRadius: '0.375rem', overflow: 'hidden', cursor: 'crosshair' }}>
-            <MapContainer 
-              center={mapCenter} 
-              zoom={15} 
-              style={{ height: '100%', width: '100%' }}
-              zoomControl={false}
-              attributionControl={false}
-            >
-              <TileLayer 
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution=""
-              />
-              <ZoomControl position="topleft" />
-              <MapClickHandler onLocationSelect={handleLocationSelect} />
-              {markerPosition && (
-                <Marker 
-                  position={markerPosition} 
-                  icon={createCustomIcon()}
-                />
-              )}
-            </MapContainer>
+            <TypedCreateLocationPickerMap
+              key={updateKey}
+              center={mapCenter}
+              markerPosition={markerPosition}
+              onLocationSelect={handleLocationSelect}
+            />
           </div>
         </div>
       )}

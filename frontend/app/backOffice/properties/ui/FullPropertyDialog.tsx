@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Dialog from '@/components/Dialog/Dialog'
-import Tabs from '@/components/Showcase/LocationPickerShowcase' // Temporal: usa el showcase para tabs demo
+import Stepper from '@/components/Stepper/Stepper'
 import { TextField } from '@/components/TextField/TextField'
 import Select from '@/components/Select/Select'
 import AutoComplete from '@/components/AutoComplete/AutoComplete'
@@ -22,7 +22,7 @@ const ICONS = {
   calendar: 'calendar-alt',
 }
 
-const TABS = [
+const STEPS = [
   'Datos generales',
   'Ubicación',
   'Características',
@@ -42,7 +42,7 @@ interface FullPropertyDialogProps {
 }
 
 export default function FullPropertyDialog({ property, open, onClose, onSave, size = 'xl', scroll = 'body' }: FullPropertyDialogProps) {
-  const [tab, setTab] = useState(0)
+  const [step, setStep] = useState(0)
   const [form, setForm] = useState(property || {})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -80,9 +80,9 @@ export default function FullPropertyDialog({ property, open, onClose, onSave, si
     }
   }
 
-  // Renderiza cada tab
-  const renderTab = () => {
-    switch (tab) {
+  // Renderiza cada paso
+  const renderStep = () => {
+    switch (step) {
       case 0:
         return (
           <div className="grid grid-cols-1 gap-4">
@@ -189,29 +189,22 @@ export default function FullPropertyDialog({ property, open, onClose, onSave, si
   }
 
   return (
-    <Dialog open={open} onClose={onClose} title={form.title || 'Detalle de Propiedad'} size={size} scroll={scroll}>
+    <Dialog open={open} onClose={onClose} title={form.title || 'Crear propiedad'} size={size} scroll={scroll}>
       {loading && <DotProgress />}
-  {error && <Alert variant="error">{error}</Alert>}
-      <div className="flex flex-row gap-6">
-        <div className="flex flex-col gap-2 min-w-[180px]">
-          {TABS.map((label, idx) => (
-            <Button
-              key={label}
-              variant={tab === idx ? 'primary' : 'text'}
-              className={`w-full text-left ${tab === idx ? 'font-bold' : ''}`}
-              onClick={() => setTab(idx)}
-            >
-              {label}
-            </Button>
-          ))}
-        </div>
-        <div className="flex-1 min-w-0">
-          {renderTab()}
-        </div>
+      {error && <Alert variant="error">{error}</Alert>}
+      <Stepper steps={STEPS} activeStep={step} onStepChange={setStep} />
+      <div className="flex-1 min-w-0">
+        {renderStep()}
       </div>
       <div className="flex justify-end gap-2 mt-6">
-        <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-        <Button variant="primary" onClick={handleSave}>Guardar</Button>
+        {step > 0 && (
+          <Button variant="secondary" onClick={() => setStep(step - 1)}>Anterior</Button>
+        )}
+        {step < STEPS.length - 1 ? (
+          <Button variant="primary" onClick={() => setStep(step + 1)}>Siguiente</Button>
+        ) : (
+          <Button variant="primary" onClick={handleSave}>Guardar</Button>
+        )}
       </div>
     </Dialog>
   )

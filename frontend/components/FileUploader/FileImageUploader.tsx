@@ -19,27 +19,26 @@ export const FileImageUploader: React.FC<FileImageUploaderProps> = ({
   maxFiles = 5,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [previews, setPreviews] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
+
+  // Generate previews only for current files, avoid duplicates
+  const previews = files.map(file => URL.createObjectURL(file));
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
-    // Acumular archivos nuevos, evitando duplicados por nombre y tamaño
+    // Avoid duplicates by name and size
     const allFiles = [...files, ...selectedFiles];
     const uniqueFiles = Array.from(
       new Map(allFiles.map(f => [f.name + f.size, f])).values()
     ).slice(0, maxFiles);
     setFiles(uniqueFiles);
-    setPreviews(uniqueFiles.map(file => URL.createObjectURL(file)));
     onChange?.(uniqueFiles);
-    // Limpiar el input para permitir volver a subir el mismo archivo si se elimina
     if (inputRef.current) inputRef.current.value = "";
   };
 
   const handleRemove = (index: number) => {
     const newFiles = files.filter((_, i) => i !== index);
     setFiles(newFiles);
-    setPreviews(newFiles.map(file => URL.createObjectURL(file)));
     onChange?.(newFiles);
   };
 

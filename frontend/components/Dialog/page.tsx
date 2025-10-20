@@ -43,26 +43,33 @@ export default function DialogShowcase() {
             onClose={() => setBasicDialog(false)}
             title="Dialog Básico"
           >
-            <div className="space-y-4">
-              <p className="text-gray-600">
-                Este es un dialog básico con título y contenido simple.
-                Puedes cerrar este dialog haciendo clic en el overlay o en el botón de cerrar.
-              </p>
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={() => setBasicDialog(false)}
-                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={() => setBasicDialog(false)}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  Aceptar
-                </button>
+              <div className="mt-6 space-y-4">
+                <div className="p-4 bg-blue-50 rounded-lg">
+                  <h3 className="text-sm font-semibold text-blue-800 mb-2">Tamaño y opciones</h3>
+                  <p className="text-gray-600 mb-3">Puedes cerrar este dialog haciendo clic en el overlay o en el botón de cerrar.</p>
+                  <div className="grid grid-cols-2 gap-2 text-sm text-gray-700 mb-3">
+                    <div><strong>XS:</strong> min 320px, max 448px</div>
+                    <div><strong>SM:</strong> min 400px, max 512px</div>
+                    <div><strong>MD:</strong> min 480px, max 576px</div>
+                    <div><strong>LG:</strong> min 560px, max 672px</div>
+                    <div className="col-span-2"><strong>XL:</strong> min 640px, max 1024px</div>
+                  </div>
+                  <div className="flex justify-end gap-3">
+                    <button
+                      onClick={() => setBasicDialog(false)}
+                      className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={() => setBasicDialog(false)}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                      Aceptar
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
           </Dialog>
         </div>
 
@@ -306,8 +313,8 @@ export default function DialogShowcase() {
             scroll="paper"
           >
             <div className="space-y-4">
-              <p className="text-gray-600">
-                Este dialog tiene mucho contenido y usa scroll interno (scroll="paper").
+                <p className="text-gray-600">
+                Este dialog tiene mucho contenido y usa scroll interno (scroll=&quot;paper&quot;).
                 El contenido se desplaza dentro del dialog mientras el overlay permanece fijo.
               </p>
 

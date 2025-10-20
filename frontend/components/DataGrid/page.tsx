@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useCallback } from 'react';
 import DataGrid, { DataGridColumn } from './DataGrid';
 import Link from 'next/link';
 import { User } from './mocks/types';
@@ -20,9 +20,8 @@ const userColumns: DataGridColumn[] = [
 export default function DataGridShowcase() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filterMode, setFilterMode] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [filterMode, setFilterMode] = useState<boolean>(false);
 
   // Estados para filtros
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,24 +37,8 @@ export default function DataGridShowcase() {
   }, []);
 
   // Aplicar filtros cuando cambien
-  useEffect(() => {
-    applyFilters();
-  }, [allUsers, searchTerm, sortField, sortDirection, roleFilter, statusFilter, departmentFilter]);
-
-  const loadUsers = async () => {
-    try {
-      setLoading(true);
-      const result = await fetchUsers();
-      setAllUsers(result.data);
-    } catch (error) {
-      console.error('Error loading users:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Función para aplicar filtros localmente
-  const applyFilters = () => {
+  // Memoize applyFilters to avoid missing dependency warnings
+  const applyFilters = useCallback(() => {
     let filtered = [...allUsers];
 
     // Filtro de búsqueda
@@ -87,9 +70,9 @@ export default function DataGridShowcase() {
 
     // Ordenamiento
     if (sortField) {
-      filtered.sort((a, b) => {
-        const aValue = (a as any)[sortField];
-        const bValue = (b as any)[sortField];
+      filtered.sort((a: User, b: User) => {
+        const aValue = (a as any)[sortField as keyof User];
+        const bValue = (b as any)[sortField as keyof User];
 
         if (typeof aValue === 'string' && typeof bValue === 'string') {
           return sortDirection === 'asc'
@@ -106,7 +89,25 @@ export default function DataGridShowcase() {
     }
 
     setUsers(filtered);
+  }, [allUsers, searchTerm, sortField, sortDirection, roleFilter, statusFilter, departmentFilter]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
+
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+      const result = await fetchUsers();
+      setAllUsers(result.data);
+    } catch (error) {
+      console.error('Error loading users:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // applyFilters is memoized above with useCallback
 
   // Función para manejar ordenamiento
   const handleSort = (field: string) => {
@@ -180,9 +181,9 @@ export default function DataGridShowcase() {
   const columnsWithActions: DataGridColumn[] = [
     ...userColumns.map(col => ({
       ...col,
-      renderCell: col.sortable ? (params: any) => (
+      renderCell: col.sortable ? (params: { value?: unknown }) => (
         <div className="flex items-center justify-between">
-          <span>{params.value}</span>
+          <span>{String(params.value ?? '')}</span>
           <button
             onClick={() => handleSort(col.field)}
             className="ml-2 text-gray-400 hover:text-gray-600"
@@ -200,16 +201,16 @@ export default function DataGridShowcase() {
       width: 200,
       sortable: false,
       align: 'center',
-      renderCell: (params) => (
+      renderCell: (params: { row: User }) => (
         <div className="flex gap-2">
           <button
-            onClick={() => handleUpdateUser(params.row as User)}
+            onClick={() => handleUpdateUser(params.row)}
             className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
             Actualizar
           </button>
           <button
-            onClick={() => handleDeleteUser(params.row as User)}
+            onClick={() => handleDeleteUser(params.row)}
             className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
           >
             Eliminar

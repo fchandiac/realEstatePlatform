@@ -97,3 +97,42 @@ export async function getSalePropertiesGrid(
   console.log('[DEBUG] getSalePropertiesGrid - Response data length:', Array.isArray(result) ? result.length : 'Not an array');
   return result as SalePropertiesGridResponse;
 }
+
+export async function getSalePropertiesCountSale(): Promise<number> {
+  const session = await getServerSession(authOptions);
+  const accessToken = session?.accessToken;
+  if (!accessToken) throw new Error('No hay sesión activa');
+  const res = await fetch(`${env.backendApiUrl}/properties/count-sale`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+    cache: 'no-store',
+  });
+  if (!res.ok) throw new Error('Error al obtener el total de propiedades en venta');
+  const data = await res.json();
+  return data.total;
+}
+
+export async function getSalePropertiesCountPublished(): Promise<number> {
+  const session = await getServerSession(authOptions);
+  const accessToken = session?.accessToken;
+  if (!accessToken) throw new Error('No hay sesión activa');
+  const res = await fetch(`${env.backendApiUrl}/properties/count-published`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+    cache: 'no-store',
+  });
+  if (!res.ok) throw new Error('Error al obtener el total de propiedades publicadas');
+  const data = await res.json();
+  return data.total;
+}
+
+export async function getSalePropertiesCountFeatured(): Promise<number> {
+  const session = await getServerSession(authOptions);
+  const accessToken = session?.accessToken;
+  if (!accessToken) throw new Error('No hay sesión activa');
+  const res = await fetch(`${env.backendApiUrl}/properties/count-featured`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+    cache: 'no-store',
+  });
+  if (!res.ok) throw new Error('Error al obtener el total de propiedades destacadas');
+  const data = await res.json();
+  return data.total;
+}

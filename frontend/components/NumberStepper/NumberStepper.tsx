@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
 interface NumberStepperProps {
   label: string;
@@ -32,7 +32,6 @@ export const NumberStepper: React.FC<NumberStepperProps> = ({
   disabled = false,
   ...props
 }) => {
-  const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Función para validar y formatear el valor
@@ -92,15 +91,7 @@ export const NumberStepper: React.FC<NumberStepperProps> = ({
     }
   };
 
-  // Manejar enfoque del input
-  const handleFocus = () => {
-    setFocused(true);
-  };
-
-  // Manejar desenfoque del input
-  const handleBlur = () => {
-    setFocused(false);
-  };
+  // focus handlers removed (not used) to satisfy linter
 
   // Estilos base similares a TextField
   const baseInputClasses = `
@@ -160,8 +151,6 @@ export const NumberStepper: React.FC<NumberStepperProps> = ({
           type="number"
           value={value}
           onChange={handleInputChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           min={min}
           max={max}
           step={allowFloat ? step : step}

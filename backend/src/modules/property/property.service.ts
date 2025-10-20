@@ -1,5 +1,4 @@
 
-
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
@@ -18,6 +17,33 @@ export class PropertyService {
     @InjectRepository(Property)
     private readonly propertyRepository: Repository<Property>,
   ) {}
+
+  /**
+   * Devuelve el total de propiedades en venta
+   */
+  async countSaleProperties(): Promise<number> {
+    return await this.propertyRepository.count({
+      where: { operationType: PropertyOperationType.SALE, deletedAt: IsNull() },
+    });
+  }
+
+  /**
+   * Devuelve el total de propiedades publicadas
+   */
+  async countPublishedProperties(): Promise<number> {
+    return await this.propertyRepository.count({
+      where: { status: PropertyStatus.PUBLISHED, deletedAt: IsNull() },
+    });
+  }
+
+  /**
+   * Devuelve el total de propiedades destacadas
+   */
+  async countFeaturedProperties(): Promise<number> {
+    return await this.propertyRepository.count({
+      where: { isFeatured: true, deletedAt: IsNull() },
+    });
+  }
 
 
   /**
@@ -147,7 +173,8 @@ export class PropertyService {
     // Create property with proper relationships
     const property = this.propertyRepository.create({
       ...createPropertyDto,
-  description: createPropertyDto.description ?? undefined,
+      description: createPropertyDto.description ?? undefined,
+      address: createPropertyDto.address ?? undefined,
       creatorUserId: creatorId || createPropertyDto.creatorUserId,
       propertyTypeId:
         (createPropertyDto as any).propertyTypeId ||
@@ -317,7 +344,10 @@ export class PropertyService {
     // Update property
     Object.assign(property, updatePropertyDto);
     if ('description' in updatePropertyDto) {
-  property.description = updatePropertyDto.description ?? undefined;
+      property.description = updatePropertyDto.description ?? undefined;
+    }
+    if ('address' in updatePropertyDto) {
+      property.address = updatePropertyDto.address ?? undefined;
     }
     property.lastModifiedAt = new Date();
 

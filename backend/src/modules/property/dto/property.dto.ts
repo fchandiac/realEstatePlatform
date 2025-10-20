@@ -148,6 +148,10 @@ export class CreatePropertyDto {
   city?: ComunaEnum;
 
   @IsOptional()
+  @IsString()
+  address?: string;
+
+  @IsOptional()
   @IsNumber()
   latitude?: number;
 
@@ -322,6 +326,10 @@ export class UpdatePropertyDto {
   @IsOptional()
   @IsEnum(ComunaEnum)
   city?: ComunaEnum;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
 
   @IsOptional()
   @IsNumber()

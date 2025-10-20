@@ -1,10 +1,12 @@
 'use client'
 import React from 'react';
 import SaleMoreButton from './SaleMoreButton';
+import { useState } from 'react';
 import DataGrid from '@/components/DataGrid/DataGridWrapper';
 import type { DataGridColumn } from '@/components/DataGrid/DataGrid';
 import { env } from '@/lib/env';
 import type { SalePropertyGridRow } from '@/app/actions/properties';
+import CreateProperty from '../../ui/CreateProperty';
 
 type SalesGridProps = {
   rows: SalePropertyGridRow[];
@@ -30,6 +32,9 @@ function mapRow(row: any) {
 }
 
 export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
+  const [openCreate, setOpenCreate] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createError, setCreateError] = useState('');
   const columns: DataGridColumn[] = [
     { field: 'title', headerName: 'Título', flex: 1.6, minWidth: 220, sortable: true, filterable: true },
     { field: 'status', headerName: 'Estado', width: 140, sortable: true, filterable: true },
@@ -42,8 +47,8 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
     { field: 'createdAt', headerName: 'Creado', type: 'date', renderType: 'dateString', width: 160, sortable: true, filterable: true },
     {
       field: 'actions',
-      headerName: 'Acciones',
-      width: 80,
+      headerName: '',
+      width: 10,
       sortable: false,
       filterable: false,
       actionComponent: ({ row }) => <SaleMoreButton property={row} />,
@@ -68,17 +73,22 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
   const mappedRows = rows.map(mapRow);
 
   return (
-    <DataGrid
-      title={'Propiedades en Venta'}
-      columns={columns}
-      rows={mappedRows}
-      totalRows={totalRows ?? mappedRows.length}
-      height="80vh"
-      data-test-id="sales-properties-grid"
-      excelUrl={excelEndpoint}
-      limit={25}
-      excelFields={excelFields}
-      
-    />
+    <>
+      <DataGrid
+        title={'Propiedades en Venta'}
+        columns={columns}
+        rows={mappedRows}
+        totalRows={totalRows ?? mappedRows.length}
+        height="70vh"
+        data-test-id="sales-properties-grid"
+        excelUrl={excelEndpoint}
+        limit={25}
+        excelFields={excelFields}
+        createForm={<CreateProperty />}
+      />
+    </>
   );
 }
+
+
+

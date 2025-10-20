@@ -202,6 +202,11 @@ export class Property {
   @IsEnum(ComunaEnum)
   city?: ComunaEnum; // Renamed from 'commune'
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  @IsOptional()
+  @IsString()
+  address?: string;
+
   @Column({ type: 'decimal', precision: 10, scale: 8, nullable: true })
   @IsOptional()
   @IsNumber()

@@ -1,3 +1,4 @@
+
 import {
   Controller,
   Get,
@@ -83,5 +84,32 @@ export class PropertyController {
   @Audit(AuditAction.DELETE, AuditEntityType.PROPERTY, 'Property deleted')
   remove(@Param('id') id: string) {
     return this.propertyService.remove(id);
+  }
+
+    /**
+   * Total de propiedades en venta
+   */
+  @Get('count-sale')
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Count sale properties')
+  async countSaleProperties() {
+    return { total: await this.propertyService.countSaleProperties() };
+  }
+
+  /**
+   * Total de propiedades publicadas
+   */
+  @Get('count-published')
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Count published properties')
+  async countPublishedProperties() {
+    return { total: await this.propertyService.countPublishedProperties() };
+  }
+
+  /**
+   * Total de propiedades destacadas
+   */
+  @Get('count-featured')
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Count featured properties')
+  async countFeaturedProperties() {
+    return { total: await this.propertyService.countFeaturedProperties() };
   }
 }
