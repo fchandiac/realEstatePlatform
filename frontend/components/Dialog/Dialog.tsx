@@ -1,5 +1,46 @@
 import React, { useState, useEffect } from 'react';
 
+interface ResponsiveWidth {
+  xs?: string | number;
+  sm?: string | number;
+  md?: string | number;
+  lg?: string | number;
+  xl?: string | number;
+}
+
+interface ResponsiveBehavior {
+  xs?: {
+    center?: boolean;
+    position?: 'center' | 'top';
+    marginX?: string;
+    marginY?: string;
+  };
+  sm?: {
+    center?: boolean;
+    position?: 'center' | 'top';
+    marginX?: string;
+    marginY?: string;
+  };
+  md?: {
+    center?: boolean;
+    position?: 'center' | 'top';
+    marginX?: string;
+    marginY?: string;
+  };
+  lg?: {
+    center?: boolean;
+    position?: 'center' | 'top';
+    marginX?: string;
+    marginY?: string;
+  };
+  xl?: {
+    center?: boolean;
+    position?: 'center' | 'top';
+    marginX?: string;
+    marginY?: string;
+  };
+}
+
 interface DialogProps {
   open: boolean;
   onClose: () => void;
@@ -11,6 +52,12 @@ interface DialogProps {
   maxWidth?: number | string;
   // Enable full width behavior on xs (overrides size presets)
   fullWidthOnXs?: boolean;
+  // Enable full width on all screens
+  fullWidth?: boolean;
+  // Minimum width for the dialog
+  minWidth?: number | string;
+  // Responsive width configuration per breakpoint
+  responsiveWidth?: ResponsiveWidth;
   // Custom classes for xs margins (defaults used if not provided)
   xsMarginX?: string;
   xsMarginY?: string;
@@ -18,8 +65,24 @@ interface DialogProps {
   xlMarginX?: string;
   // Whether the dialog centers vertically (on sm+) or sticks to top
   centerOnScreen?: boolean;
+  // Responsive behavior configuration
+  responsiveBehavior?: ResponsiveBehavior;
   // scroll behavior: 'body' keeps page scrollable; 'paper' enables internal scroller
   scroll?: 'body' | 'paper';
+  // Height control props
+  height?: number | string;
+  maxHeight?: number | string;
+  minHeight?: number | string;
+  // Animation duration in milliseconds
+  animationDuration?: number;
+  // Overflow behavior
+  overflowBehavior?: 'visible' | 'hidden' | 'auto';
+  // Z-index override
+  zIndex?: number;
+  // Disable closing on backdrop click
+  disableBackdropClick?: boolean;
+  // Make dialog persistent (no ESC or backdrop close)
+  persistent?: boolean;
   // Extra classes for outer content wrapper
   className?: string;
   // Inline style forwarded to dialog content (useful for child-specific widths)
@@ -43,11 +106,23 @@ const Dialog: React.FC<DialogProps> = ({
   size = 'md',
   maxWidth,
   fullWidthOnXs = true,
+  fullWidth = false,
+  minWidth,
+  responsiveWidth,
   xsMarginX = 'mx-4',
   xsMarginY = 'my-2',
   xlMarginX = 'xl:mx-[200px]',
   centerOnScreen = false,
+  responsiveBehavior,
   scroll = 'paper',
+  height,
+  maxHeight,
+  minHeight,
+  animationDuration = 200,
+  overflowBehavior = 'auto',
+  zIndex = 50,
+  disableBackdropClick = false,
+  persistent = false,
   className = '',
   contentStyle,
   allowOverflowX = false,
