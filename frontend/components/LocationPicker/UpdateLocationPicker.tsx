@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, ZoomControl, Marker, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
+import L, { LeafletMouseEvent } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { TextField } from '../TextField/TextField';
 
@@ -29,7 +29,7 @@ interface UpdateLocationPickerProps {
 // Componente para manejar los clicks en el mapa
 const MapClickHandler: React.FC<{ onLocationSelect: (lat: number, lng: number) => void }> = ({ onLocationSelect }) => {
   useMapEvents({
-    click: (e) => {
+    click: (e: LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
       onLocationSelect(lat, lng);
     },

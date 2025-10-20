@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Enable standalone output for production deployments
+  output: 'standalone',
   /* other config options here */
 };
 

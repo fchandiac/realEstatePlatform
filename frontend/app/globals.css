@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @font-face {
   font-family: 'Material Symbols Outlined';
@@ -65,62 +67,6 @@ input:-webkit-autofill:active {
   font-display: swap;
 }
 
-
-
-/* @theme {
-  --color-background: #ffffff;
-  --color-foreground: #4e4f5d;
-  --color-border: #c1c1c2;
-  --color-accent: #151623;
-  --color-secondary: #bbbbc2;
-  --color-primary: #5d5d69;
-
-  --color-secondary: #16a34a;
-} */
-
-/* --color-background: #ffffff;
-  --color-foreground: #151623;
-  --color-border: #5d5d69;
-  --color-accent: #212121;
-  --color-secondary: #A9A9A9;
-  --color-primary: #7e57c2; */
-/* --color-neutral: #e5e5e7; */
-
-
-
-/* --color-background: #ffffff;
-  --color-foreground: #212121;
-  --color-border: #e5e5e7;
-  --color-neutral: #e5e5e7;
-  --color-accent: #151623;
-  --color-secondary: #bbbbc2;
-  --color-primary: #263238; */
-
-/* 'info': '#2196F3',
-        'warning': '#FFC107',
-        'error': '#F44336',
-      }, */
-
-
-@theme {
-
-
-  --color-neutral: #F3F4F6;
-
-  --color-success: #4CAF50;
-  --color-info: #2196F3;
-  --color-warning: #FFC107;
-  --color-error: #F44336;
-  --color-muted: #6b7280;
-
-  --color-background: #ffffff;
-  --color-foreground: #131615;
-  --color-border: #c1c1c2;
-  --color-accent: #1351AE;
-  --color-secondary:  #d46a2f;
-  --color-primary:#242629;
-}
-
 @layer base {
   body {
     font-family: "Inter", "System UI", sans-serif;
@@ -165,7 +111,7 @@ input:-webkit-autofill:active {
   }
 
   .btn-text {
-    @apply text-primary bg-transparent font-light rounded-sm text-sm px-4 py-2 text-center hover:scale-120;
+    @apply text-primary bg-transparent font-light rounded-sm text-sm px-4 py-2 text-center hover:scale-110;
     min-width: max-content;
     white-space: nowrap;
     /* Efecto click */
@@ -195,7 +141,7 @@ input:-webkit-autofill:active {
   }
 
   .btn-pill-outlined {
-    @apply border-1 border-primary text-primary bg-transparent font-light rounded-full text-base px-6 py-2 text-center transition-colors duration-200;
+    @apply border border-primary text-primary bg-transparent font-light rounded-full text-base px-6 py-2 text-center transition-colors duration-200;
     min-width: max-content;
     white-space: nowrap;
   }
@@ -215,30 +161,6 @@ input:-webkit-autofill:active {
   input::placeholder,
   textarea::placeholder {
     @apply text-muted opacity-70;
-  }
-
-  .font-light {
-    @apply font-light;
-  }
-
-  .font-regular {
-    @apply font-normal;
-  }
-
-  .font-medium {
-    @apply font-medium;
-  }
-
-  .font-bold {
-    @apply font-bold;
-  }
-
-  .font-black {
-    @apply font-black;
-  }
-
-  .font-thin {
-    @apply font-thin;
   }
 
 
