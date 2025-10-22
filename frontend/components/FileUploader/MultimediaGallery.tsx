@@ -1,6 +1,5 @@
 "use client";
 import React, { useRef, useState } from 'react';
-import { Button } from '../Button/Button';
 import IconButton from '../IconButton/IconButton';
 
 interface MultimediaFile {
@@ -76,28 +75,21 @@ export const MultimediaGallery: React.FC<MultimediaGalleryProps> = ({
 
   return (
     <div className="flex flex-col gap-4 w-full" data-test-id="multimedia-gallery-root">
-      <div className="flex gap-2">
-        <Button
-          variant="secondary"
-          type="button"
+      {/* Botón único para subir multimedia en la parte superior izquierda */}
+      <div className="flex justify-start">
+        <IconButton
+          icon="add"
+          variant="containedSecondary"
           onClick={() => inputRef.current?.click()}
-          style={{ width: 'fit-content' }}
-        >
-          Subir imágenes
-        </Button>
-        <Button
-          variant="secondary"
-          type="button"
-          onClick={() => {
-            if (inputRef.current) {
-              inputRef.current.accept = 'video/*';
-              inputRef.current.click();
-            }
+          aria-label="Agregar multimedia"
+          style={{
+            borderRadius: '50%',
+            minWidth: 40,
+            minHeight: 40,
+            width: 40,
+            height: 40
           }}
-          style={{ width: 'fit-content' }}
-        >
-          Subir videos
-        </Button>
+        />
       </div>
 
       <input
@@ -180,13 +172,9 @@ export const MultimediaGallery: React.FC<MultimediaGalleryProps> = ({
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">📁</div>
           <p>No hay archivos multimedia</p>
-          <p className="text-sm">Haz clic en "Subir imágenes" o "Subir videos" para agregar archivos</p>
+          <p className="text-sm">Haz clic en el botón + para agregar archivos</p>
         </div>
       )}
-
-      <small className="text-xs text-gray-500">
-        Los archivos se subirán a: <b>{uploadPath}</b>
-      </small>
 
       {/* Modal de previsualización */}
       {selectedFile && (
