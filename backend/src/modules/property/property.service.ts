@@ -9,6 +9,8 @@ import { PropertyStatus } from '../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../common/enums/property-operation-type.enum';
 import { ChangeHistoryEntry, ViewEntry, LeadEntry } from '../../common/interfaces/property.interfaces';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
+import { GetFullPropertyDto } from './dto/get-full-property.dto';
+import { plainToClass } from 'class-transformer';
 import * as ExcelJS from 'exceljs';
 
 @Injectable()
@@ -49,14 +51,15 @@ export class PropertyService {
   /**
    * Devuelve toda la información relevante de una propiedad, incluyendo relaciones y datos agregados.
    */
-  async getFullProperty(id: string) {
+  async getFullProperty(id: string): Promise<GetFullPropertyDto> {
     // Obtener la propiedad con todas las relaciones relevantes
     const property = await this.propertyRepository.findOne({
       where: { id },
       relations: [
-        'propertyType',      // Tipo de propiedad
-        'assignedAgent',     // Agente asignado
-        'multimedia',        // Imágenes, videos, documentos
+        'creatorUser',      // Usuario creador
+        'assignedAgent',    // Agente asignado
+        'propertyType',     // Tipo de propiedad
+        'multimedia',       // Imágenes, videos, documentos
       ],
     });
 
@@ -67,13 +70,16 @@ export class PropertyService {
     const leadsCount = await this.getLeadsCount(id);
     const viewsCount = await this.getViewsCount(id);
 
-    // Retornar toda la información
-    return {
+    // Crear objeto con datos agregados
+    const fullProperty = {
       ...property,
       favoritesCount,
       leadsCount,
       viewsCount,
     };
+
+    // Transformar a DTO
+    return plainToClass(GetFullPropertyDto, fullProperty, { excludeExtraneousValues: true });
   }
 
   /**

@@ -15,6 +15,7 @@ import { Response } from 'express';
 import { PropertyService } from './property.service';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
+import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { Audit } from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 
@@ -66,7 +67,7 @@ export class PropertyController {
    */
   @Get(':id/full')
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Full property details viewed')
-  async getFullProperty(@Param('id') id: string) {
+  async getFullProperty(@Param('id') id: string): Promise<GetFullPropertyDto> {
     return await this.propertyService.getFullProperty(id);
   }
 

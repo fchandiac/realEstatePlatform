@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import IconButton from '@/components/IconButton/IconButton';
-import FullPropertyDialog from '../../ui/FullPropertyDialog';
+import FullProperty from '../../ui/FullProperty';
+import Dialog from '@/components/Dialog/Dialog';
 
 interface SaleMoreButtonProps {
   property: any;
@@ -19,12 +20,17 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
         data-test-id="sale-more-btn"
       />
       {open && (
-        <FullPropertyDialog
-          property={property}
-          open={open}
-          onClose={() => setOpen(false)}
-          onSave={async () => setOpen(false)}
-        />
+        <Dialog 
+          open={open} 
+          onClose={() => setOpen(false)} 
+          title="Detalles de la Propiedad" 
+          size="custom"
+          maxWidth="1400px"
+          height="700px"
+          maxHeight="90vh"
+        >
+            <FullProperty property={property} />
+        </Dialog>
       )}
     </>
   );
