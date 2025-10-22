@@ -35,6 +35,7 @@ const Body: React.FC<BodyProps> = ({ columns = [], rows = [], filterMode = false
                 computedStyle={computedStyles[colIndex]}
                 hoveredRowId={hoveredRowId}
                 onHoverRow={setHoveredRowId}
+                isFirstRow={rowIndex === 0}
                 isLastRow={rowIndex === rows.length - 1}
               />
             );
