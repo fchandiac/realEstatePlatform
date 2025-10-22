@@ -146,7 +146,7 @@ export const DataGridStyles = {
   headerCell: 'px-3 py-2 text-sm font-medium text-gray-700 border-r border-gray-200 last:border-r-0',
 
   // Celdas del body (desde Cell.tsx)
-  bodyCell: 'px-3 py-1 text-sm text-gray-900 border-b border-gray-200 bg-background whitespace-pre-line break-words min-h-[22px] flex-auto',
+  bodyCell: 'px-3 py-1 text-sm text-gray-900 border-b border-gray-200 border-r border-gray-200 bg-background whitespace-pre-line break-words min-h-[22px] flex-auto last:border-r-0',
 
   // Responsive breakpoints
   responsive: {
