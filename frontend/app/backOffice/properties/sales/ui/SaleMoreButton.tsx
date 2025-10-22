@@ -18,6 +18,13 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
         ariaLabel="Ver más detalles"
         onClick={() => setOpen(true)}
         data-test-id="sale-more-btn"
+        style={{
+          minWidth: 32,
+          minHeight: 32,
+          width: 32,
+          height: 32,
+          padding: 4
+        }}
       />
       {open && (
         <Dialog 
