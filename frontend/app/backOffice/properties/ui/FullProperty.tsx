@@ -76,7 +76,7 @@ interface FullPropertyDialogProps {
 }
 
 const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) => {
-  const [activeSection, setActiveSection] = useState('basic');
+  const [activeSection, setActiveSection] = useState('multimedia');
 
   // Usar datos reales si se pasan, sino mock
   const currentProperty = property || mockProperty;
