@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { TextField } from '@/components/TextField/TextField';
 import MultimediaGallery from '@/components/FileUploader/MultimediaGallery';
+import IconButton from '@/components/IconButton/IconButton';
 
 // Mock data basado en el objeto JSON proporcionado
 const mockProperty = {
@@ -141,7 +142,26 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
       case 'multimedia':
         return (
           <div>
-            <h4 className="font-semibold mb-4">Multimedia de la Propiedad</h4>
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="font-semibold">Multimedia de la Propiedad</h4>
+              <IconButton
+                icon="add"
+                variant="containedSecondary"
+                onClick={() => {
+                  // Trigger file input click from MultimediaGallery
+                  const fileInput = document.getElementById('multimedia-file-input') as HTMLInputElement;
+                  fileInput?.click();
+                }}
+                aria-label="Agregar multimedia"
+                style={{
+                  borderRadius: '50%',
+                  minWidth: 40,
+                  minHeight: 40,
+                  width: 40,
+                  height: 40
+                }}
+              />
+            </div>
             <MultimediaGallery
               uploadPath="/uploads/properties"
               onChange={(files) => {

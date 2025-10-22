@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState } from 'react';
 import IconButton from '../IconButton/IconButton';
+import FontAwesome from '../FontAwesome/FontAwesome';
 
 interface MultimediaFile {
   file: File;
@@ -75,25 +76,9 @@ export const MultimediaGallery: React.FC<MultimediaGalleryProps> = ({
 
   return (
     <div className="flex flex-col gap-4 w-full" data-test-id="multimedia-gallery-root">
-      {/* Botón único para subir multimedia en la parte superior izquierda */}
-      <div className="flex justify-start">
-        <IconButton
-          icon="add"
-          variant="containedSecondary"
-          onClick={() => inputRef.current?.click()}
-          aria-label="Agregar multimedia"
-          style={{
-            borderRadius: '50%',
-            minWidth: 40,
-            minHeight: 40,
-            width: 40,
-            height: 40
-          }}
-        />
-      </div>
-
       <input
         ref={inputRef}
+        id="multimedia-file-input"
         type="file"
         accept="image/jpeg,image/png,video/mp4"
         multiple
@@ -130,8 +115,9 @@ export const MultimediaGallery: React.FC<MultimediaGalleryProps> = ({
               )}
 
               {/* Overlay con tipo de archivo */}
-              <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                {multimediaFile.type === 'image' ? '📷' : '🎥'}
+              <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                <FontAwesome icon={multimediaFile.type === 'image' ? 'camera' : 'video'} size="xs" />
+                <span>{multimediaFile.type === 'image' ? 'IMG' : 'VID'}</span>
               </div>
 
               {/* Botón de eliminar */}
