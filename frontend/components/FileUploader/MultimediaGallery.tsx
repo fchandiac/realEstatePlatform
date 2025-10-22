@@ -95,7 +95,7 @@ export const MultimediaGallery: React.FC<MultimediaGalleryProps> = ({
       <input
         ref={inputRef}
         type="file"
-        accept="image/*,video/*"
+        accept="image/jpeg,image/png,video/mp4"
         multiple
         style={{ display: 'none' }}
         onChange={handleFileChange}
@@ -172,7 +172,6 @@ export const MultimediaGallery: React.FC<MultimediaGalleryProps> = ({
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">📁</div>
           <p>No hay archivos multimedia</p>
-          <p className="text-sm">Haz clic en el botón + para agregar archivos</p>
         </div>
       )}
 
