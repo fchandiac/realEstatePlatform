@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef, useState } from 'react';
 import IconButton from '../IconButton/IconButton';
-import FontAwesome from '../FontAwesome/FontAwesome';
 
 interface MultimediaFile {
   file: File;
@@ -115,9 +114,10 @@ export const MultimediaGallery: React.FC<MultimediaGalleryProps> = ({
               )}
 
               {/* Overlay con tipo de archivo */}
-              <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
-                <FontAwesome icon={multimediaFile.type === 'image' ? 'camera' : 'video'} size="xs" />
-                <span>{multimediaFile.type === 'image' ? 'IMG' : 'VID'}</span>
+              <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded">
+                <span className="material-symbols-outlined text-sm">
+                  {multimediaFile.type === 'image' ? 'photo_camera' : 'videocam'}
+                </span>
               </div>
 
               {/* Botón de eliminar */}

@@ -142,8 +142,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
       case 'multimedia':
         return (
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <h4 className="font-semibold">Multimedia de la Propiedad</h4>
+            <div className="flex items-center gap-3 mb-4">
               <IconButton
                 icon="add"
                 variant="containedSecondary"
@@ -161,6 +160,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
                   height: 40
                 }}
               />
+              <h4 className="font-semibold">Multimedia de la Propiedad</h4>
             </div>
             <MultimediaGallery
               uploadPath="/uploads/properties"
