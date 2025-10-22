@@ -49,6 +49,8 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
       field: 'actions',
       headerName: '',
       width: 10,
+      minWidth: 80,
+      maxWidth: 120,
       sortable: false,
       filterable: false,
       actionComponent: ({ row }) => <SaleMoreButton property={row} />,
