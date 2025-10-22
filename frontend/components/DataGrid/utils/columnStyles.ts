@@ -142,7 +142,7 @@ export const DataGridStyles = {
   scrollContainer: 'flex-1 overflow-auto',
 
   // Headers de columna
-  headerRow: 'flex w-full border-b border-gray-300',
+  headerRow: 'flex w-full',
   headerCell: 'px-3 py-2 text-sm font-medium text-gray-700 border-r border-gray-200 last:border-r-0',
 
   // Celdas del body (desde Cell.tsx)

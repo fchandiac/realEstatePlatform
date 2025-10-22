@@ -127,7 +127,7 @@ const DataGrid: React.FC<DataGridProps> = ({
       {/* Scrollable container for columns header and body */}
       <div className={DataGridStyles.scrollContainer}>
         {/* Column Headers Row */}
-        <div className={`${DataGridStyles.headerRow} sticky top-0 z-10 bg-background`}>
+        <div className={`${DataGridStyles.headerRow} sticky top-0 z-10 bg-background border-b-2 border-gray-300`}>
           {columns.filter((c) => !c.hide).map((column, i) => {
             const columnStyles = calculateColumnStyles(columns, screenWidth);
             const style = columnStyles[i];
