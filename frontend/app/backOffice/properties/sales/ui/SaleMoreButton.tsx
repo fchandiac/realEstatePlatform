@@ -11,7 +11,7 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <>
+    <div className="flex-shrink-0 w-fit">
       <IconButton
         icon="more_horiz"
         variant="text"
@@ -32,7 +32,7 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
             <FullProperty property={property} />
         </Dialog>
       )}
-    </>
+    </div>
   );
 };
 
