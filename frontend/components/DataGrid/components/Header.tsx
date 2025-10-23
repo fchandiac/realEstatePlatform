@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ title, filterMode = false, onToggleFilt
   // Calcular estilos computados para las columnas usando utilidad centralizada
   const computedStyles = calculateColumnStyles(columns, screenWidth);
 
-
+  // border-b border-gray-300 bg-gray-100
   return (
     <div className="w-full px-4 py-4" data-test-id="data-grid-header">
       {/* Primera fila: Add button + Title + (Toolbar + Search en desktop) */}

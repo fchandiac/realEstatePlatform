@@ -33,9 +33,7 @@ const Cell: React.FC<CellProps> = ({ column, row, value, computedStyle, hoveredR
       <div
         className={`${DataGridStyles.bodyCell}
           ${actualAlign === 'center' ? 'text-center' : actualAlign === 'right' ? 'text-right' : 'text-left'}
-          ${hoveredRowId !== null && (row.id ?? row._id ?? row.key ?? row.index) === hoveredRowId ? 'bg-secondary/20' : ''}
-          ${isFirstRow ? 'border-b-2 border-gray-300' : ''}
-          ${isLastRow ? 'border-b-0' : ''}`}
+          ${hoveredRowId !== null && (row.id ?? row._id ?? row.key ?? row.index) === hoveredRowId ? 'bg-secondary/20' : ''}`}
         style={{ ...cellStyle, ...(computedStyle || {}) }}
         onMouseEnter={() => onHoverRow?.(row.id ?? row._id ?? row.key ?? row.index)}
         onMouseLeave={() => onHoverRow?.(null)}
@@ -93,9 +91,7 @@ const Cell: React.FC<CellProps> = ({ column, row, value, computedStyle, hoveredR
     <div
       className={`${DataGridStyles.bodyCell}
         ${actualAlign === 'center' ? 'text-center' : actualAlign === 'right' ? 'text-right' : 'text-left'}
-        ${hoveredRowId !== null && (row.id ?? row._id ?? row.key ?? row.index) === hoveredRowId ? 'bg-secondary/20' : ''}
-        ${isFirstRow ? 'border-b-2 border-gray-300' : ''}
-        ${isLastRow ? 'border-b-0' : ''}`}
+        ${hoveredRowId !== null && (row.id ?? row._id ?? row.key ?? row.index) === hoveredRowId ? 'bg-secondary/20' : ''}`}
       style={{ ...cellStyle, ...(computedStyle || {}) }}
       onMouseEnter={() => onHoverRow?.(row.id ?? row._id ?? row.key ?? row.index)}
       onMouseLeave={() => onHoverRow?.(null)}

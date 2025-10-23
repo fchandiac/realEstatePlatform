@@ -128,7 +128,7 @@ export const ColHeader: React.FC<ColHeaderProps> = ({ column, computedStyle, fil
 
   return (
     <div
-      className={`px-3 font-semibold text-xs text-gray-700 flex items-stretch ${actualHeaderAlign === 'center' ? 'text-center' : actualHeaderAlign === 'right' ? 'text-right' : 'text-left'}`}
+      className={`px-3 border-b font-semibold text-xs text-gray-700 flex items-stretch ${actualHeaderAlign === 'center' ? 'text-center' : actualHeaderAlign === 'right' ? 'text-right' : 'text-left'}`}
       style={{
         backgroundColor: 'var(--color-background)',
         height: '56px',

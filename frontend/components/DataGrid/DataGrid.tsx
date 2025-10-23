@@ -114,7 +114,7 @@ const DataGrid: React.FC<DataGridProps> = ({
   return (
     <div className={`${DataGridStyles.container} ${DataGridStyles.responsive.minWidth} ${DataGridStyles.responsive.mobileScroll}`} style={{ height: typeof height === 'number' ? `${height}px` : height, borderWidth: '1px' }} data-test-id={dataTestId || "data-grid-root"}>
       {/* Header */}
-      <Header 
+      <Header
         title={title ?? ''} 
         filterMode={filterMode} 
         onToggleFilterMode={toggleFilterMode}
@@ -125,9 +125,14 @@ const DataGrid: React.FC<DataGridProps> = ({
         excelFields={excelFields}
       />
       {/* Scrollable container for columns header and body */}
-      <div className={DataGridStyles.scrollContainer}>
+      <div className={`${DataGridStyles.scrollContainer} relative`}>
         {/* Column Headers Row */}
-        <div className={`${DataGridStyles.headerRow} sticky top-0 z-10 bg-background`}>
+        <div 
+          className={`${DataGridStyles.headerRow} sticky top-0 z-10 bg-background`}
+          style={{
+            minWidth: 'max-content'
+          }}
+        >
           {columns.filter((c) => !c.hide).map((column, i) => {
             const columnStyles = calculateColumnStyles(columns, screenWidth);
             const style = columnStyles[i];
