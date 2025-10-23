@@ -17,6 +17,7 @@ import { listAgents } from '@/app/actions/users';
 const steps: StepperStep[] = [
   {
     title: 'Datos generales',
+    description: 'Información básica de la propiedad como título, descripción y tipo de operación',
     fields: [
       { name: 'title', label: 'Título', type: 'text', required: true },
       { name: 'description', label: 'Descripción', type: 'textarea', rows: 3 },
@@ -28,6 +29,7 @@ const steps: StepperStep[] = [
   },
   {
     title: 'Ubicación',
+    description: 'Define la ubicación geográfica de tu propiedad con dirección y coordenadas',
     fields: [
       { name: 'state', label: 'Estado', type: 'select', options: [] },
       { name: 'city', label: 'Ciudad', type: 'select', options: [] },
@@ -37,6 +39,7 @@ const steps: StepperStep[] = [
   },
   {
     title: 'Características',
+    description: 'Detalles físicos y características específicas de la propiedad',
     fields: [
       { name: 'bedrooms', label: 'Dormitorios', type: 'number' },
       { name: 'bathrooms', label: 'Baños', type: 'number' },
@@ -49,6 +52,7 @@ const steps: StepperStep[] = [
   },
   {
     title: 'Precio y publicación',
+    description: 'Configuración de precio, moneda y detalles de publicación',
     fields: [
       { name: 'price', label: 'Precio', type: 'currency' },
       { name: 'currencyPrice', label: 'Moneda', type: 'select', options: [ { id: 1, label: 'CLP' }, { id: 2, label: 'UF' } ] },
@@ -58,6 +62,7 @@ const steps: StepperStep[] = [
   },
   {
     title: 'SEO',
+    description: 'Optimización para motores de búsqueda y metadatos',
     fields: [
       { name: 'seoTitle', label: 'Título SEO', type: 'text' },
       { name: 'seoDescription', label: 'Descripción SEO', type: 'textarea', rows: 3 },
@@ -65,12 +70,14 @@ const steps: StepperStep[] = [
   },
   {
     title: 'Multimedia',
+    description: 'Imágenes y videos que acompañarán la publicación',
     fields: [
       { name: 'multimedia', label: 'Imágenes y videos', type: 'text' }, // Puedes reemplazar por un uploader custom si lo necesitas
     ],
   },
   {
     title: 'Internos',
+    description: 'Notas y comentarios internos para el equipo',
     fields: [
       { name: 'internalNotes', label: 'Notas internas', type: 'textarea', rows: 2 },
     ],
@@ -330,22 +337,54 @@ export default function CreateProperty({ open, onClose, onSave }: CreateProperty
     </div>
   );
 
-  // Stepper visual
+  // Stepper visual mejorado
   const renderStepper = () => (
-    <div className="flex items-center justify-center gap-2 mt-4 mb-2">
-      {steps.map((step, idx) => (
-        <button
-          key={step.title}
-          type="button"
-          className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-150
-            ${activeStep === idx ? 'bg-primary border-primary text-white' : 'bg-background border-secondary text-secondary'}
-            ${idx < activeStep ? 'opacity-70' : ''}`}
-          onClick={() => setActiveStep(idx)}
-          aria-label={`Ir a paso ${step.title}`}
-        >
-          {idx + 1}
-        </button>
-      ))}
+    <div className="w-full">
+      {/* Círculos del stepper - alineados a la izquierda y más pequeños */}
+      <div className="flex items-center justify-start gap-2 mb-6">
+        {steps.map((step, idx) => (
+          <button
+            key={step.title}
+            type="button"
+            className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-150 text-xs
+              ${activeStep === idx 
+                ? 'bg-primary border-primary text-white' 
+                : idx < activeStep 
+                ? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed opacity-60' 
+                : 'bg-background border-secondary text-secondary hover:bg-muted'
+              }`}
+            onClick={() => setActiveStep(idx)}
+            aria-label={`Ir a paso ${step.title}`}
+            disabled={idx < activeStep}
+          >
+            {idx + 1}
+          </button>
+        ))}
+      </div>
+
+      {/* Card del paso activo - 100% del ancho */}
+      <div className="w-full mb-6">
+        <div className="bg-muted/20 rounded-lg p-4 border border-border">
+          <div className="flex items-start gap-4">
+            {/* Número del paso */}
+            <div className="flex-shrink-0">
+              <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-lg">
+                {activeStep + 1}
+              </div>
+            </div>
+            
+            {/* Título y descripción */}
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                {steps[activeStep].title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {steps[activeStep].description}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 
@@ -371,12 +410,9 @@ export default function CreateProperty({ open, onClose, onSave }: CreateProperty
 
   return (
     <div className="w-full max-w-3xl mx-auto flex flex-col h-full">
-      {/* Header fijo - Stepper y título */}
+      {/* Header fijo - Stepper mejorado */}
       <div className="flex-shrink-0">
         {renderStepper()}
-        <h2 className="text-lg font-semibold text-primary mt-2 mb-4 text-center">
-          {steps[activeStep].title}
-        </h2>
         {error && <Alert variant="error" className="mb-4">{error}</Alert>}
       </div>
       

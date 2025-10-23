@@ -5,6 +5,7 @@ interface CreateLocationPickerMapProps {
   center?: [number, number];
   markerPosition?: [number, number] | null;
   onLocationSelect?: (lat: number, lng: number) => void;
+  shouldSetView?: boolean;
 }
 
 const CreateLocationPickerMap = dynamic(() => import('./CreateLocationPickerMap'), { ssr: false });
@@ -32,6 +33,7 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
   const [isUserSelected, setIsUserSelected] = useState(false);
   const [locationSource, setLocationSource] = useState<'auto' | 'user' | 'default'>('auto');
   const [updateKey, setUpdateKey] = useState(0); // Para forzar re-render
+  const [shouldCenterMap, setShouldCenterMap] = useState(true); // Controlar centrado automático
 
   // Obtener ubicación actual del usuario automáticamente al cargar
   useEffect(() => {
@@ -59,6 +61,7 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
             setMarkerPosition(userLocation);
             setIsLoading(false);
             setLocationSource('auto');
+            setShouldCenterMap(true); // Permitir centrado para ubicación inicial
 
             console.log('CreateLocationPicker - ✅ Ubicación obtenida del navegador:', newCoords, `Precisión: ${accuracy}m`);
             if (onChange) {
@@ -83,6 +86,7 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
                 setMarkerPosition(systemLocationArr);
                 setIsLoading(false);
                 setLocationSource('auto');
+                setShouldCenterMap(true); // Permitir centrado para ubicación inicial
 
                 console.log('CreateLocationPicker - ✅ Ubicación obtenida del sistema:', systemCoords, `Fuente: ${systemLocation.source}`);
                 if (onChange) {
@@ -103,6 +107,7 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
             setMarkerPosition(defaultLocation);
             setIsLoading(false);
             setLocationSource('default');
+            setShouldCenterMap(true); // Permitir centrado para ubicación inicial
 
             console.log('CreateLocationPicker - ⚠️ Usando ubicación por defecto:', defaultCoords);
             if (onChange) {
@@ -129,6 +134,7 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
             setMarkerPosition(systemLocationArr);
             setIsLoading(false);
             setLocationSource('auto');
+            setShouldCenterMap(true); // Permitir centrado para ubicación inicial
 
             console.log('CreateLocationPicker - ✅ Ubicación obtenida del sistema:', systemCoords);
             if (onChange) {
@@ -149,6 +155,7 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
         setMarkerPosition(defaultLocation);
         setIsLoading(false);
         setLocationSource('default');
+        setShouldCenterMap(true); // Permitir centrado para ubicación inicial
 
         console.log('CreateLocationPicker - ⚠️ Usando ubicación por defecto:', defaultCoords);
         if (onChange) {
@@ -167,7 +174,8 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
     console.log('CreateLocationPicker - Actualizando estado con:', newCoords);
     setCurrentCoordinates(newCoords);
     setMarkerPosition([lat, lng]);
-    setMapCenter([lat, lng]); // Centrar el mapa en la nueva ubicación
+    // NO centrar el mapa automáticamente al seleccionar nueva ubicación
+    setShouldCenterMap(false); // Desactivar centrado automático tras click del usuario
     setIsUserSelected(true);
     setLocationSource('user');
     setUpdateKey(prev => prev + 1); // Forzar re-render
@@ -189,12 +197,21 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
       ) : (
         <div>
       
-          <div style={{ height, width: '100%', borderRadius: '0.375rem', overflow: 'hidden', cursor: 'crosshair' }}>
+          <div 
+            style={{ 
+              height, 
+              width: '100%', 
+              borderRadius: '0.375rem', 
+              overflow: 'hidden'
+            }}
+            className="cursor-crosshair hover:cursor-pointer"
+          >
             <TypedCreateLocationPickerMap
               key={updateKey}
               center={mapCenter}
               markerPosition={markerPosition}
               onLocationSelect={handleLocationSelect}
+              shouldSetView={shouldCenterMap}
             />
           </div>
         </div>

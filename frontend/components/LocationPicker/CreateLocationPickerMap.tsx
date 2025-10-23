@@ -23,20 +23,29 @@ const MapClickHandler = ({ onLocationSelect }) => {
   return null;
 };
 
-const MapViewSetter = ({ center }) => {
+const MapViewSetter = ({ center, shouldSetView = true }) => {
   const map = useMap();
   React.useEffect(() => {
-    try { map.setView(center, 15); } catch (e) {}
-  }, [center, map]);
+    // Solo actualizar vista si está habilitado (para ubicación inicial)
+    if (shouldSetView) {
+      try { map.setView(center, 15); } catch (e) {}
+    }
+  }, [center, map, shouldSetView]);
   return null;
 };
 
-export default function CreateLocationPickerMap({ center = [-33.45, -70.6667], markerPosition = null, onLocationSelect }) {
+export default function CreateLocationPickerMap({ center = [-33.45, -70.6667], markerPosition = null, onLocationSelect, shouldSetView = false }) {
   return (
-    <MapContainer center={center} zoom={15} style={{ height: '100%', width: '100%' }} zoomControl={false} attributionControl={false}>
+    <MapContainer 
+      center={center} 
+      zoom={15} 
+      style={{ height: '100%', width: '100%', cursor: 'crosshair' }} 
+      zoomControl={false} 
+      attributionControl={false}
+    >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <ZoomControl position="topleft" />
-      <MapViewSetter center={center} />
+      <MapViewSetter center={center} shouldSetView={shouldSetView} />
       <MapClickHandler onLocationSelect={onLocationSelect} />
       {markerPosition ? (<Marker position={markerPosition} icon={createCustomIcon()} />) : null}
     </MapContainer>
