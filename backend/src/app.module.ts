@@ -21,7 +21,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuditModule } from './audit/audit.module';
 import { DocumentModule } from './modules/document/document.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
-import { ConfigModule as CustomConfigModule } from './modules/config/config.module';
+// import { ConfigModule as CustomConfigModule } from './modules/config/config.module';
 
 @Module({
   imports: [
@@ -51,7 +51,7 @@ import { ConfigModule as CustomConfigModule } from './modules/config/config.modu
     AuditModule,
     DocumentModule,
     AnalyticsModule,
-    CustomConfigModule,
+    // CustomConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -25,6 +25,7 @@ import {
 } from './dto/user.dto';
 import { AuditService } from '../../audit/audit.service';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
+import { UserFavoriteData } from '../../common/interfaces/user-favorites.interface';
 
 @Injectable()
 export class UsersService {
@@ -416,5 +417,54 @@ export class UsersService {
     });
 
     return { data, total, page, limit };
+  }
+
+  /**
+   * Lista las propiedades favoritas de un usuario
+   */
+  async getUserFavorites(userId: string): Promise<UserFavoriteData[]> {
+    const user = await this.findOne(userId);
+    return user.favoriteProperties || [];
+  }
+
+  /**
+   * Verifica si una propiedad es favorita para cualquier usuario y devuelve detalles
+   */
+  async checkPropertyFavorite(propertyId: string): Promise<{
+    isFavorite: boolean;
+    favorites: Array<{
+      userId: string;
+      userName: string;
+      userEmail: string;
+      favoriteData: UserFavoriteData;
+    }>;
+  }> {
+    // Buscar todos los usuarios que tienen esta propiedad como favorita
+    const users = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.deletedAt IS NULL')
+      .andWhere('JSON_CONTAINS(user.favoriteProperties, :propertyId, "$.propertyId")', {
+        propertyId: JSON.stringify(propertyId)
+      })
+      .getMany();
+
+    const favorites = users.map(user => {
+      // Encontrar el favorito específico para esta propiedad
+      const favoriteData = user.favoriteProperties?.find(
+        fav => fav.propertyId === propertyId
+      );
+
+      return {
+        userId: user.id,
+        userName: user.name,
+        userEmail: user.email,
+        favoriteData: favoriteData!
+      };
+    });
+
+    return {
+      isFavorite: favorites.length > 0,
+      favorites
+    };
   }
 }

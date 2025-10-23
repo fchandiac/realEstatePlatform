@@ -48,10 +48,10 @@ const steps: StepperStep[] = [
 		fields: [
 			{ name: 'bedrooms', label: 'Dormitorios', type: 'number' },
 			{ name: 'bathrooms', label: 'Baños', type: 'number' },
-			{ name: 'builtSquareMeters', label: 'Metros construidos', type: 'number' },
-			{ name: 'landSquareMeters', label: 'Metros terreno', type: 'number' },
 			{ name: 'parkingSpaces', label: 'Estacionamientos', type: 'number' },
 			{ name: 'floors', label: 'Pisos', type: 'number' },
+			{ name: 'builtSquareMeters', label: 'Metros construidos', type: 'number', required: true },
+			{ name: 'landSquareMeters', label: 'Metros terreno', type: 'number', required: true },
 			{ name: 'constructionYear', label: 'Año construcción', type: 'number' },
 		],
 	},
@@ -107,6 +107,8 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 	const [loadingOptions, setLoadingOptions] = useState(true);
 	const [filteredComunas, setFilteredComunas] = useState<Array<{ id: string; label: string }>>([]);
 
+	const numericFields = ['bedrooms', 'bathrooms', 'parkingSpaces', 'floors', 'builtSquareMeters', 'landSquareMeters', 'constructionYear'];
+
 	// Inicializar form con operationType si viene definido
 	useEffect(() => {
 		if (operationType) {
@@ -151,8 +153,16 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 	}, []);
 
 	const handleChange = (field: string, value: any) => {
-		console.log(`Field changed: ${field}, Value:`, value); // Depurar cambios en el campo
-		setForm(prev => ({ ...prev, [field]: value }));
+		let processedValue = value;
+		if (numericFields.includes(field)) {
+			const num = parseFloat(value);
+			if (isNaN(num)) {
+				console.warn(`Invalid number for ${field}: ${value}`);
+				return;
+			}
+			processedValue = num;
+		}
+		setForm(prev => ({ ...prev, [field]: processedValue }));
 
 		if (field === 'state') {
 			if (!value) {
@@ -188,6 +198,21 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 				setError('Completa los campos obligatorios');
 				setLoading(false);
 				return;
+			}
+			// Validar campos numéricos
+			const numericFields = ['builtSquareMeters', 'landSquareMeters', 'parkingSpaces', 'floors', 'bedrooms', 'bathrooms', 'constructionYear'];
+			for (const field of numericFields) {
+				const num = parseFloat(form[field]);
+				if (isNaN(num) || num < 0) {
+					setError(`El campo ${field} debe tener un valor válido`);
+					setLoading(false);
+					return;
+				}
+				if (field === 'constructionYear' && (num < 1800 || num > new Date().getFullYear())) {
+					setError(`El año de construcción debe estar entre 1800 y ${new Date().getFullYear()}`);
+					setLoading(false);
+					return;
+				}
 			}
 			await onSave(form);
 			setLoading(false);
@@ -245,9 +270,6 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 					// Implementación igual a FullProperty
 					return (
 						<div key={`${field.name}-${idx}`}>
-							<label className="block text-sm font-medium text-foreground mb-2">
-								{field.label}
-							</label>
 							<div className="flex items-center gap-3 mb-4">
 								<IconButton
 									icon="add"
@@ -267,14 +289,16 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 									}}
 								/>
 							</div>
-							<MultimediaGallery
-								uploadPath="/uploads/properties"
-								onChange={(files) => {
-									console.log('Archivos multimedia seleccionados:', files);
-									handleChange(field.name, files);
-								}}
-								maxFiles={20}
-							/>
+							<div style={{ minHeight: '400px' }}>
+								<MultimediaGallery
+									uploadPath="/uploads/properties"
+									onChange={(files) => {
+										console.log('Archivos multimedia seleccionados:', files);
+										handleChange(field.name, files);
+									}}
+									maxFiles={20}
+								/>
+							</div>
 						</div>
 					);
 				}
@@ -309,21 +333,20 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 									key={field.name}
 									label={field.label || 'Campo'}
 									type="datePicker"
-									value={form[field.name] || ''}
+									value={form[field.name]?.toString() || ''}
 									onChange={e => handleChange(field.name, e.target.value)}
 									required={field.required}
 								/>
 							);
 						} else {
 							return (
-								<NumberStepper
+								<TextField
 									key={field.name}
 									label={field.label || 'Campo'}
-									value={form[field.name] || 0}
-									onChange={value => handleChange(field.name, value)}
-									min={0}
-									max={field.name === 'floors' ? 50 : 9999}
-									step={field.name.includes('SquareMeters') ? 0.1 : 1}
+									type="number"
+									value={form[field.name]?.toString() || '0'}
+									onChange={e => handleChange(field.name, e.target.value)}
+									required={field.required}
 								/>
 							);
 						}
@@ -387,32 +410,51 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 	// Stepper visual mejorado
 	const renderStepper = () => (
 		<div className="w-full">
-			{/* Círculos del stepper - alineados a la izquierda y más pequeños */}
-			<div className="flex items-center justify-start gap-2 mb-6">
-				{steps.map((step, idx) => (
-					<button
-						key={`${step.title}-${idx}`}
-						type="button"
-						className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-150 text-xs
-							${activeStep === idx 
-								? 'bg-primary border-primary text-white' 
-								: idx < activeStep 
-								? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed opacity-60' 
-								: 'bg-background border-secondary text-secondary hover:bg-muted'
-							}`}
-						onClick={() => setActiveStep(idx)}
-						aria-label={`Ir a paso ${step.title}`}
-						disabled={idx < activeStep}
-					>
-						{idx + 1}
-					</button>
-				))}
-			</div>
+			{/* Círculos del stepper y botones en la misma fila */}
+			<div className="flex items-center justify-between gap-2 mb-6">
+				{/* Círculos del stepper - alineados a la izquierda */}
+				<div className="flex items-center gap-2">
+					{steps.map((step, idx) => (
+						<button
+							key={`${step.title}-${idx}`}
+							type="button"
+							className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-150 text-xs
+								${activeStep === idx 
+									? 'bg-primary border-primary text-white' 
+									: idx < activeStep 
+									? 'bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed opacity-60' 
+									: 'bg-background border-secondary text-secondary hover:bg-muted'
+								}`}
+							onClick={() => setActiveStep(idx)}
+							aria-label={`Ir a paso ${step.title}`}
+							disabled={idx < activeStep}
+						>
+							{idx + 1}
+						</button>
+					))}
+				</div>
 
-			{/* Card del paso activo - 100% del ancho */}
-			<div className="w-full mb-6">
-				<div className="rounded-lg p-4">
-					<div className="flex items-start gap-4">
+				{/* Botones de navegación alineados a la derecha */}
+				<div className="flex items-center gap-2">
+					{activeStep > 0 && (
+						<Button variant="secondary" onClick={() => setActiveStep(activeStep - 1)}>
+							Atrás
+						</Button>
+					)}
+					{activeStep < steps.length - 1 ? (
+						<Button variant="primary" onClick={() => setActiveStep(activeStep + 1)}>
+							Siguiente
+						</Button>
+					) : (
+						<Button variant="primary" onClick={handleSubmit} loading={loading}>
+							Guardar
+						</Button>
+					)}
+				</div>
+			</div>			{/* Card del paso activo - 100% del ancho */}
+			<div className="w-full">
+				<div className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg">
+					<div className="flex items-center gap-4">
 						{/* Título y descripción */}
 						<div className="flex-1">
 							<h3 className="text-lg font-semibold text-foreground mb-2">
@@ -456,7 +498,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 	);
 
 	return (
-		<div className="w-full max-w-3xl mx-auto flex flex-col h-full">
+		<div className="w-full max-w-3xl lg:w-[800px] xl:w-[800px] mx-auto flex flex-col h-full">
 			{/* Header fijo - Stepper mejorado */}
 			<div className="flex-shrink-0">
 				{renderStepper()}
@@ -468,9 +510,8 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 				{renderFields(steps[activeStep].fields)}
 			</div>
 			
-			{/* Footer fijo - Botones de navegación */}
-			<div className="flex-shrink-0 mt-4 pt-4">
-				{renderNavButtons()}
+			{/* Footer fijo - Solo loading si es necesario */}
+			<div className="flex-shrink-0">
 				{loading && (
 					<div className="flex justify-center mt-2">
 						<DotProgress />

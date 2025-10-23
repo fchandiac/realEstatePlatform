@@ -16,6 +16,7 @@ import {
   IsEnum,
 } from 'class-validator';
 import { PersonalInfo } from '../common/interfaces/user.interfaces';
+import { UserFavoriteData } from '../common/interfaces/user-favorites.interface';
 import * as bcrypt from 'bcrypt';
 import { Property } from './property.entity';
 import { Contract } from './contract.entity';
@@ -99,6 +100,10 @@ export class User {
   @Column({ type: 'json', nullable: true })
   @IsOptional()
   personalInfo?: PersonalInfo;
+
+  @Column({ type: 'json', nullable: true })
+  @IsOptional()
+  favoriteProperties?: UserFavoriteData[];
 
   @CreateDateColumn()
   createdAt: Date;

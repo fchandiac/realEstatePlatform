@@ -166,6 +166,7 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
             open={true}
             onClose={() => {}}
             onSave={handleCreateSave}
+            size="lg"
           />
         }
       
