@@ -12,6 +12,7 @@ import { DocumentType } from './document-type.entity';
 import { Multimedia } from './multimedia.entity';
 import { User } from './user.entity';
 import { Contract } from './contract.entity';
+import { Payment } from './payment.entity';
 
 export enum DocumentStatus {
   PENDING = 'PENDING',
@@ -55,6 +56,13 @@ export class Document {
 
   @Column({ type: 'uuid', nullable: true })
   contractId?: string;
+
+  @ManyToOne(() => Payment, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'paymentId' })
+  payment?: Payment;
+
+  @Column({ type: 'uuid', nullable: true })
+  paymentId?: string;
 
   @Column({
     type: 'enum',

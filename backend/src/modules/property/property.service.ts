@@ -12,12 +12,14 @@ import { GridSaleQueryDto } from './dto/grid-sale.dto';
 import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { plainToClass } from 'class-transformer';
 import * as ExcelJS from 'exceljs';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class PropertyService {
   constructor(
     @InjectRepository(Property)
     private readonly propertyRepository: Repository<Property>,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   /**
@@ -328,6 +330,7 @@ export class PropertyService {
     updatedBy?: string,
   ): Promise<Property> {
     const property = await this.findOne(id, false);
+    const oldAssignedAgentId = property.assignedAgentId;
 
     // Validate update data
     this.validatePropertyUpdate(updatePropertyDto);
@@ -362,7 +365,25 @@ export class PropertyService {
       property.changeHistory = [...(property.changeHistory || []), ...changes];
     }
 
-    return await this.propertyRepository.save(property);
+    const savedProperty = await this.propertyRepository.save(property);
+
+    // Send notification for agent assignment
+    if (updatePropertyDto.assignedAgentId && oldAssignedAgentId !== updatePropertyDto.assignedAgentId) {
+      try {
+        // Load the assigned agent
+        const agent = await this.propertyRepository.manager.findOne(User, {
+          where: { id: updatePropertyDto.assignedAgentId },
+        });
+        if (agent) {
+          await this.notificationsService.notifyAgentAssigned(savedProperty, agent);
+        }
+      } catch (error) {
+        // Log error but don't fail the operation
+        console.error('Failed to send agent assignment notification:', error);
+      }
+    }
+
+    return savedProperty;
   }
 
   async updateStatus(
@@ -371,6 +392,7 @@ export class PropertyService {
     updatedBy?: string,
   ): Promise<Property> {
     const property = await this.findOne(id, false);
+    const oldStatus = property.status;
 
     const historyEntry: ChangeHistoryEntry = {
       timestamp: new Date(),
@@ -389,7 +411,19 @@ export class PropertyService {
       property.publishedAt = new Date();
     }
 
-    return await this.propertyRepository.save(property);
+    const savedProperty = await this.propertyRepository.save(property);
+
+    // Send notification for status change
+    if (oldStatus !== status) {
+      try {
+        await this.notificationsService.notifyPropertyStatusChange(savedProperty, oldStatus, status);
+      } catch (error) {
+        // Log error but don't fail the operation
+        console.error('Failed to send property status change notification:', error);
+      }
+    }
+
+    return savedProperty;
   }
 
   async addView(id: string, viewData: any = {}): Promise<void> {

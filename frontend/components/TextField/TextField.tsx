@@ -192,7 +192,11 @@ export const TextField: React.FC<TextFieldProps> = ({
         <div className="relative">
           <input
             ref={inputRef}
-            type={type === "password" ? (showPassword ? "text" : "password") : (type === "dni" || type === "currency" ? "text" : type)}
+            type={
+              type === "password" ? (showPassword ? "text" : "password") : 
+              type === "datePicker" ? "number" :
+              (type === "dni" || type === "currency" ? "text" : type)
+            }
             name={name}
             value={value}
             onFocus={() => setFocused(true)}
@@ -200,13 +204,18 @@ export const TextField: React.FC<TextFieldProps> = ({
             onChange={type === "dni" ? handleDNIChange : type === "currency" ? handleCurrencyChange : onChange}
             className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${(endIcon || type === "password") ? " pr-10" : " pr-3"} ${contrastInput} z-0`}
             style={{ backgroundColor: "var(--color-background)", ...(props.style || {}) }}
-            placeholder={shrink || !showPlaceholder ? "" : (placeholder ?? label) + (required ? ' *' : '')}
+            placeholder={
+              type === "datePicker" ? `Ej: ${new Date().getFullYear()}` :
+              (shrink || !showPlaceholder ? "" : (placeholder ?? label) + (required ? ' *' : ''))
+            }
             required={required}
             readOnly={readOnly}
             autoComplete="off"
-            maxLength={type === "dni" ? 12 : undefined}
+            min={type === "datePicker" ? "1800" : undefined}
+            max={type === "datePicker" ? new Date().getFullYear().toString() : undefined}
+            maxLength={type === "dni" ? 12 : type === "datePicker" ? 4 : undefined}
             data-test-id={props["data-test-id"]}
-            {...(type === "dni" || type === "currency" ? {} : props)}
+            {...(type === "dni" || type === "currency" || type === "datePicker" ? {} : props)}
           />
           {type === "password" && (
             <button

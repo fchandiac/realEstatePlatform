@@ -139,4 +139,22 @@ export class ContractsController {
       uploadContractDocumentDto,
     );
   }
+
+  @Post('payments/:paymentId/documents/:documentId/associate')
+  associateDocumentToPayment(
+    @Param('paymentId') paymentId: string,
+    @Param('documentId') documentId: string,
+  ) {
+    return this.contractsService.associateDocumentToPayment(paymentId, documentId);
+  }
+
+  @Get('payments/:paymentId/documents')
+  getPaymentDocuments(@Param('paymentId') paymentId: string) {
+    return this.contractsService.getPaymentDocuments(paymentId);
+  }
+
+  @Get('payments/:paymentId/validate')
+  validatePaymentWithDocuments(@Param('paymentId') paymentId: string) {
+    return this.contractsService.validatePaymentWithDocuments(paymentId);
+  }
 }

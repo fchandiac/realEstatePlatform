@@ -22,6 +22,7 @@ import {
 } from './dto/contract.dto';
 import { DocumentTypesService } from '../document-types/document-types.service';
 import { DocumentStatus } from '../../entities/document.entity';
+import { Document as DocumentEntity } from '../../entities/document.entity';
 import type { Express } from 'express';
 
 @Injectable()
@@ -277,5 +278,136 @@ export class ContractsService {
         'Faltan documentos obligatorios para cerrar el contrato',
       );
     }
+  }
+
+  async associateDocumentToPayment(
+    paymentId: string,
+    documentId: string,
+  ): Promise<{ payment: Payment; document: DocumentEntity }> {
+    // Verificar que el pago existe
+    const payment = await this.contractRepository.manager.findOne(Payment, {
+      where: { id: paymentId },
+      relations: ['contract'],
+    });
+
+    if (!payment) {
+      throw new NotFoundException('Pago no encontrado');
+    }
+
+    // Verificar que el documento existe
+    const document = await this.contractRepository.manager.findOne(DocumentEntity, {
+      where: { id: documentId },
+      relations: ['contract'],
+    });
+
+    if (!document) {
+      throw new NotFoundException('Documento no encontrado');
+    }
+
+    // Verificar que ambos pertenecen al mismo contrato (opcional, pero recomendado)
+    if (payment.contractId !== document.contractId) {
+      throw new BadRequestException(
+        'El pago y el documento deben pertenecer al mismo contrato',
+      );
+    }
+
+    // Asociar el documento al pago
+    document.paymentId = paymentId;
+    document.payment = payment;
+
+    // Guardar el documento actualizado
+    const updatedDocument = await this.contractRepository.manager.save(DocumentEntity, document);
+
+    // Recargar el pago con sus documentos asociados
+    const updatedPayment = await this.contractRepository.manager.findOne(Payment, {
+      where: { id: paymentId },
+      relations: ['documents', 'contract'],
+    });
+
+    if (!updatedPayment) {
+      throw new NotFoundException('Error al recargar el pago');
+    }
+
+    return {
+      payment: updatedPayment,
+      document: updatedDocument,
+    };
+  }
+
+  async getPaymentDocuments(paymentId: string): Promise<DocumentEntity[]> {
+    const payment = await this.contractRepository.manager.findOne(Payment, {
+      where: { id: paymentId },
+      relations: ['documents'],
+    });
+
+    if (!payment) {
+      throw new NotFoundException('Pago no encontrado');
+    }
+
+    return payment.documents || [];
+  }
+
+  async validatePaymentWithDocuments(paymentId: string): Promise<{
+    payment: Payment;
+    documents: DocumentEntity[];
+    isValid: boolean;
+    missingDocuments: string[];
+  }> {
+    const payment = await this.contractRepository.manager.findOne(Payment, {
+      where: { id: paymentId },
+      relations: ['documents', 'contract'],
+    });
+
+    if (!payment) {
+      throw new NotFoundException('Pago no encontrado');
+    }
+
+    const documents = payment.documents || [];
+    const contract = payment.contract;
+
+    // Definir documentos requeridos según el tipo de operación y monto
+    const requiredDocumentTypes = this.getRequiredDocumentsForPayment(
+      contract.operation,
+      payment.amount,
+    );
+
+    const existingDocumentTypes = documents.map(doc => doc.documentType?.name || 'Unknown');
+    const missingDocuments = requiredDocumentTypes.filter(
+      requiredType => !existingDocumentTypes.includes(requiredType)
+    );
+
+    const isValid = missingDocuments.length === 0;
+
+    return {
+      payment,
+      documents,
+      isValid,
+      missingDocuments,
+    };
+  }
+
+  private getRequiredDocumentsForPayment(
+    operation: ContractOperationType,
+    amount: number,
+  ): string[] {
+    const baseDocuments = ['Comprobante de Pago'];
+
+    // Documentos adicionales según el tipo de operación
+    switch (operation) {
+      case ContractOperationType.COMPRAVENTA:
+        baseDocuments.push('Escritura de Venta');
+        if (amount > 10000000) { // Para montos altos
+          baseDocuments.push('Certificado de Avalúo');
+        }
+        break;
+      case ContractOperationType.ARRIENDO:
+        baseDocuments.push('Contrato de Arriendo');
+        if (amount > 500000) { // Para arriendos caros
+          baseDocuments.push('Certificado de Crédito');
+        }
+        break;
+    }
+
+    return baseDocuments;
   }
 }

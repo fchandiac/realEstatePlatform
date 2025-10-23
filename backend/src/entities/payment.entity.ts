@@ -7,8 +7,10 @@ import {
   ManyToOne,
   JoinColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Contract } from './contract.entity';
+import { Document } from './document.entity';
 
 @Entity('payments')
 export class Payment {
@@ -30,6 +32,9 @@ export class Payment {
 
   @Column({ type: 'uuid' })
   contractId: string;
+
+  @OneToMany(() => Document, (document) => document.payment, { cascade: true })
+  documents?: Document[];
 
   @CreateDateColumn()
   createdAt: Date;

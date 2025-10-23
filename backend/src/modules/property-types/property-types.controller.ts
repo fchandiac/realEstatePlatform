@@ -28,6 +28,11 @@ export class PropertyTypesController {
     return this.propertyTypesService.findAll();
   }
 
+  @Get('minimal')
+  findAllMinimal() {
+    return this.propertyTypesService.findAllMinimal();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.propertyTypesService.findOne(id);

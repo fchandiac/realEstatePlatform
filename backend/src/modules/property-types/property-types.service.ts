@@ -41,6 +41,14 @@ export class PropertyTypesService {
     });
   }
 
+  async findAllMinimal(): Promise<{ id: string; name: string }[]> {
+    const propertyTypes = await this.propertyTypeRepository.find({
+      select: ['id', 'name'],
+      where: { deletedAt: IsNull() },
+    });
+    return propertyTypes;
+  }
+
   async findOne(id: string): Promise<PropertyType> {
     const propertyType = await this.propertyTypeRepository.findOne({
       where: { id, deletedAt: IsNull() },

@@ -20,6 +20,8 @@ import { PropertyTypesModule } from './modules/property-types/property-types.mod
 import { AuthModule } from './modules/auth/auth.module';
 import { AuditModule } from './audit/audit.module';
 import { DocumentModule } from './modules/document/document.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { ConfigModule as CustomConfigModule } from './modules/config/config.module';
 
 @Module({
   imports: [
@@ -48,6 +50,8 @@ import { DocumentModule } from './modules/document/document.module';
     AuthModule,
     AuditModule,
     DocumentModule,
+    AnalyticsModule,
+    CustomConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],

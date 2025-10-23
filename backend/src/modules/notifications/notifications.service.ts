@@ -8,8 +8,11 @@ import { Repository, IsNull } from 'typeorm';
 import {
   Notification,
   NotificationStatus,
+  NotificationType,
 } from '../../entities/notification.entity';
 import { User } from '../../entities/user.entity';
+import { Property } from '../../entities/property.entity';
+import { PropertyStatus } from '../../common/enums/property-status.enum';
 import {
   CreateNotificationDto,
   UpdateNotificationDto,
@@ -87,5 +90,36 @@ export class NotificationsService {
     return allNotifications.filter((notification) =>
       notification.targetUserIds.includes(userId),
     );
+  }
+
+  // Property-related notification methods
+  async notifyPropertyStatusChange(
+    property: Property,
+    oldStatus: PropertyStatus,
+    newStatus: PropertyStatus,
+  ): Promise<Notification> {
+    const targetUserIds: string[] = [];
+    if (property.creatorUserId) {
+      targetUserIds.push(property.creatorUserId);
+    }
+    if (property.assignedAgentId) {
+      targetUserIds.push(property.assignedAgentId);
+    }
+
+    const createDto: CreateNotificationDto = {
+      targetUserIds,
+      type: NotificationType.CAMBIO_ESTADO_PUBLICACION,
+    };
+
+    return await this.create(createDto);
+  }
+
+  async notifyAgentAssigned(property: Property, agent: User): Promise<Notification> {
+    const createDto: CreateNotificationDto = {
+      targetUserIds: [agent.id],
+      type: NotificationType.NUEVA_ASIGNACION_PROPIEDAD_AGENTE,
+    };
+
+    return await this.create(createDto);
   }
 }
