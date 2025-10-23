@@ -97,15 +97,24 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
     switch (activeSection) {
       case 'basic':
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <TextField label="Título" value={currentProperty.title || ''} onChange={() => {}} readOnly />
-            <TextField label="Descripción" value={currentProperty.description || ''} onChange={() => {}} rows={3} readOnly />
-            <TextField label="Estado" value={currentProperty.status || ''} onChange={() => {}} readOnly />
-            <TextField label="Tipo de Operación" value={currentProperty.operationType || ''} onChange={() => {}} readOnly />
-            <TextField label="Tipo Propiedad" value={currentProperty.propertyType?.name || ''} onChange={() => {}} readOnly />
-            <TextField label="Creador" value={currentProperty.creatorUser?.personalInfo?.firstName + ' ' + currentProperty.creatorUser?.personalInfo?.lastName || ''} onChange={() => {}} readOnly />
-            <TextField label="Email Creador" value={currentProperty.creatorUser?.email || ''} onChange={() => {}} readOnly />
-            <TextField label="Agente Asignado" value={currentProperty.assignedAgent?.personalInfo?.firstName + ' ' + currentProperty.assignedAgent?.personalInfo?.lastName || 'Ninguno'} onChange={() => {}} readOnly />
+          <div className="space-y-4">
+            {/* Título - ancho completo */}
+            <div className="w-full">
+              <TextField label="Título" value={currentProperty.title || ''} onChange={() => {}} readOnly />
+            </div>
+            {/* Descripción - ancho completo */}
+            <div className="w-full">
+              <TextField label="Descripción" value={currentProperty.description || ''} onChange={() => {}} rows={3} readOnly />
+            </div>
+            {/* Otros campos en grid de 2 columnas */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <TextField label="Estado" value={currentProperty.status || ''} onChange={() => {}} readOnly />
+              <TextField label="Tipo de Operación" value={currentProperty.operationType || ''} onChange={() => {}} readOnly />
+              <TextField label="Tipo Propiedad" value={currentProperty.propertyType?.name || ''} onChange={() => {}} readOnly />
+              <TextField label="Creador" value={currentProperty.creatorUser?.personalInfo?.firstName + ' ' + currentProperty.creatorUser?.personalInfo?.lastName || ''} onChange={() => {}} readOnly />
+              <TextField label="Email Creador" value={currentProperty.creatorUser?.email || ''} onChange={() => {}} readOnly />
+              <TextField label="Agente Asignado" value={currentProperty.assignedAgent?.personalInfo?.firstName + ' ' + currentProperty.assignedAgent?.personalInfo?.lastName || 'Ninguno'} onChange={() => {}} readOnly />
+            </div>
           </div>
         );
       case 'price':
@@ -160,7 +169,6 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
                   height: 40
                 }}
               />
-              <h4 className="font-semibold">Multimedia de la Propiedad</h4>
             </div>
             <MultimediaGallery
               uploadPath="/uploads/properties"

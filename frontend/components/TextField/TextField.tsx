@@ -179,12 +179,12 @@ export const TextField: React.FC<TextFieldProps> = ({
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           onChange={onChange}
-          className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] pr-4 py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${contrastInput}`}
+          className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] pr-4 py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${contrastInput} z-0`}
           placeholder={shrink || !showPlaceholder ? "" : (placeholder ?? label) + (required ? ' *' : '')}
           required={required}
           readOnly={readOnly}
           autoComplete="off"
-          style={{ resize: 'none', ...props.style }}
+          style={{ backgroundColor: "var(--color-background)", resize: 'none', ...(props.style || {}) }}
           data-test-id={props["data-test-id"]}
           {...props}
         />
@@ -198,7 +198,7 @@ export const TextField: React.FC<TextFieldProps> = ({
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onChange={type === "dni" ? handleDNIChange : type === "currency" ? handleCurrencyChange : onChange}
-            className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${(endIcon || type === "password") ? " pr-10" : " pr-3"} ${contrastInput}`}
+            className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${(endIcon || type === "password") ? " pr-10" : " pr-3"} ${contrastInput} z-0`}
             style={{ backgroundColor: "var(--color-background)", ...(props.style || {}) }}
             placeholder={shrink || !showPlaceholder ? "" : (placeholder ?? label) + (required ? ' *' : '')}
             required={required}
@@ -240,8 +240,8 @@ export const TextField: React.FC<TextFieldProps> = ({
         <style>{`input.${placeholderClassRef.current}::placeholder, textarea.${placeholderClassRef.current}::placeholder { color: ${placeholderColor} }`}</style>
       )}
   <label
-    className={`absolute left-3 top-0 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs rounded-t-md ${contrastLabel}${shrink ? " -translate-y-2 scale-90 opacity-100" : " opacity-0"}`}
-  style={labelStyle ?? (variante === "contrast" ? { backgroundColor: "var(--color-foreground)", color: "var(--color-background)" } : { backgroundColor: "var(--color-background)", color: "var(--color-foreground)" })}
+    className={`absolute left-3 top-0 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs rounded-t-md ${contrastLabel} z-10 ${shrink ? " -translate-y-2 scale-90 opacity-100" : " opacity-0"}`}
+    style={{ ...(labelStyle || {}), backgroundColor: "var(--color-background)", color: labelStyle?.color || "var(--color-foreground)", zIndex: 10 }}
     onClick={() => inputRef.current?.focus()}
     data-test-id="text-field-label"
   >
