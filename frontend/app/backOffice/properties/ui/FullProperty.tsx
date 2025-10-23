@@ -430,7 +430,6 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
     <div className="flex h-96">
       {/* Sidebar */}
       <div className="w-64 border-r border-gray-300 p-4">
-        <h3 className="font-semibold mb-4">Secciones</h3>
         <div className="space-y-2">
           {sections.map((section) => (
             <button

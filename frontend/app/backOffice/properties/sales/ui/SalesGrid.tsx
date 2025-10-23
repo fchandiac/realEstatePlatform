@@ -32,9 +32,29 @@ function mapRow(row: any) {
 }
 
 export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
-  const [openCreate, setOpenCreate] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
-  const [createError, setCreateError] = useState('');
+
+  const handleCreateSave = async (propertyData: any) => {
+    setCreateLoading(true);
+    try {
+      // Lógica de guardado de la propiedad
+      console.log('Guardando propiedad:', propertyData);
+      
+      // Aquí irían las llamadas para guardar la propiedad
+      // const result = await createProperty(propertyData);
+      // if (result.success) {
+      //   // El DataGrid cierra automáticamente el dialog al completar onSave
+      //   router.refresh();
+      // }
+      
+    } catch (error) {
+      console.error('Error creando propiedad:', error);
+      // En caso de error, el dialog permanece abierto para mostrar el error
+    } finally {
+      setCreateLoading(false);
+    }
+  };
+
   const columns: DataGridColumn[] = [
     { field: 'title', headerName: 'Título', flex: 1.6, minWidth: 220, sortable: true, filterable: true },
     { field: 'status', headerName: 'Estado', width: 140, sortable: true, filterable: true },
@@ -84,6 +104,13 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
         excelUrl={excelEndpoint}
         limit={25}
         excelFields={excelFields}
+        createForm={
+          <CreateProperty
+            open={true}
+            onClose={() => {}}
+            onSave={handleCreateSave}
+          />
+        }
       
    
       />
