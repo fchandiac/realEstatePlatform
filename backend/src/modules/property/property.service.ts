@@ -497,9 +497,9 @@ export class PropertyService {
       currencyPrice: 'p.currencyPrice',
       createdAt: 'p.createdAt',
       updatedAt: 'p.updatedAt',
+      // assignedAgentName should sort by agent username
+      assignedAgentName: 'a.username',
       // characteristics and priceDisplay are derived post-query
-      // assignedAgentName is also derived using selected JSON personalInfo
-      // Special: assignedAgentName will be handled in filter logic
     };
 
     const textSearchFields = [
