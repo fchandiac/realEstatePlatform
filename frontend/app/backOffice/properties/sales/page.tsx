@@ -29,7 +29,7 @@ export default async function SalesPage({ searchParams }: PageProps) {
   const page = parseInt(pageParam) || 1;
   const limit = parseInt(limitParam) || 25;
 
-  const result = await getSalePropertiesGrid({ sort, sortField, search, filters, filtration, page, limit });
+  const result = await getSalePropertiesGrid({ sort, sortField, search, filters, filtration, page, limit, pagination: true });
   const rows = Array.isArray(result) ? result : result.data ?? [];
   const totalRows = Array.isArray(result) ? result.length : result.total ?? rows.length;
 
