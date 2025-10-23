@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dialog from '@/components/Dialog/Dialog';
 import StepperBaseForm, { StepperStep } from '@/components/BaseForm/StepperBaseForm';
 import { TextField } from '@/components/TextField/TextField';
@@ -11,6 +11,8 @@ import { Button } from '@/components/Button/Button';
 import Alert from '@/components/Alert/Alert';
 import DotProgress from '@/components/DotProgress/DotProgress';
 import FontAwesome from '@/components/FontAwesome/FontAwesome';
+import { getPropertyTypes } from '@/app/actions/propertyTypes';
+import { listAgents } from '@/app/actions/users';
 
 const steps: StepperStep[] = [
   {
@@ -18,7 +20,7 @@ const steps: StepperStep[] = [
     fields: [
       { name: 'title', label: 'Título', type: 'text', required: true },
       { name: 'description', label: 'Descripción', type: 'textarea', rows: 3 },
-      { name: 'status', label: 'Estado', type: 'select', required: true, options: [ { id: 1, label: 'Publicado' }, { id: 2, label: 'Arriendo' }, { id: 3, label: 'Venta' } ] },
+      { name: 'status', label: 'Estado publicación', type: 'select', required: true, options: [ { id: 1, label: 'Publicado' }, { id: 2, label: 'Inactivo' } ] },
       { name: 'operationType', label: 'Operación', type: 'select', required: true, options: [ { id: 1, label: 'Venta' }, { id: 2, label: 'Arriendo' } ] },
       { name: 'propertyTypeId', label: 'Tipo de propiedad', type: 'select', options: [] },
       { name: 'assignedAgentId', label: 'Agente asignado', type: 'autocomplete', options: [] },
@@ -87,6 +89,41 @@ export default function CreateProperty({ open, onClose, onSave }: CreateProperty
   const [form, setForm] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [propertyTypes, setPropertyTypes] = useState<Array<{ id: number; label: string }>>([]);
+  const [agents, setAgents] = useState<Array<{ id: number; label: string }>>([]);
+  const [loadingOptions, setLoadingOptions] = useState(true);
+
+  // Load options when component mounts
+  useEffect(() => {
+    const loadOptions = async () => {
+      setLoadingOptions(true);
+      try {
+        // Load property types
+        const propertyTypesResult = await getPropertyTypes();
+        const formattedPropertyTypes = propertyTypesResult.map((pt) => ({
+          id: parseInt(pt.id) || 0,
+          label: pt.name
+        }));
+        setPropertyTypes(formattedPropertyTypes);
+
+        // Load agents
+        const agentsResult = await listAgents({ limit: 100 });
+        if (agentsResult.success && agentsResult.data) {
+          const formattedAgents = agentsResult.data.data.map((agent) => ({
+            id: parseInt(agent.id) || 0,
+            label: `${agent.personalInfo?.firstName || ''} ${agent.personalInfo?.lastName || ''} (${agent.username})`.trim()
+          }));
+          setAgents(formattedAgents);
+        }
+      } catch (error) {
+        console.error('Error loading options:', error);
+      } finally {
+        setLoadingOptions(false);
+      }
+    };
+
+    loadOptions();
+  }, []);
 
   const handleChange = (field: string, value: any) => {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -113,19 +150,31 @@ export default function CreateProperty({ open, onClose, onSave }: CreateProperty
   // Custom stepper state
   const [activeStep, setActiveStep] = useState(0);
 
-  // Example options for Select/AutoComplete
-  const exampleOptions = [
-    { id: 1, label: 'Ejemplo 1' },
-    { id: 2, label: 'Ejemplo 2' },
-    { id: 3, label: 'Ejemplo 3' },
-  ];
+  // Helper to get options for each field
+  const getFieldOptions = (fieldName: string) => {
+    switch (fieldName) {
+      case 'propertyTypeId':
+        return propertyTypes;
+      case 'assignedAgentId':
+        return agents;
+      default:
+        return [];
+    }
+  };
 
   // Helper to render fields for current step
   const renderFields = (fields: any[]) => (
-    <div className="flex flex-col gap-4 mt-6">
+    <div className="flex flex-col gap-4">
+      {loadingOptions && (
+        <div className="flex justify-center py-4">
+          <DotProgress />
+          <span className="ml-2 text-sm text-secondary">Cargando opciones...</span>
+        </div>
+      )}
       {fields.map((field, idx) => {
-        // Provide example options if none
-        const options = field.options && field.options.length > 0 ? field.options : exampleOptions;
+        // Get field-specific options or use field.options as fallback
+        const fieldOptions = getFieldOptions(field.name);
+        const options = fieldOptions.length > 0 ? fieldOptions : (field.options || []);
         if (field.name === 'multimedia') {
           // Custom multimedia upload and gallery UI
           const files = form[field.name] || [];
@@ -302,7 +351,7 @@ export default function CreateProperty({ open, onClose, onSave }: CreateProperty
 
   // Navigation buttons
   const renderNavButtons = () => (
-    <div className="flex justify-end items-center gap-2 mt-8">
+    <div className="flex justify-end items-center gap-2">
       {activeStep > 0 && (
         <Button variant="secondary" onClick={() => setActiveStep(activeStep - 1)}>
           Atrás
@@ -321,15 +370,29 @@ export default function CreateProperty({ open, onClose, onSave }: CreateProperty
   );
 
   return (
-    <div className="w-full max-w-3xl mx-auto h-[800px] flex flex-col relative bg-background">
-      <div className="flex flex-col flex-1">
+    <div className="w-full max-w-3xl mx-auto flex flex-col h-full">
+      {/* Header fijo - Stepper y título */}
+      <div className="flex-shrink-0">
         {renderStepper()}
-        <h2 className="text-lg font-semibold text-primary mt-2 mb-2 text-center">{steps[activeStep].title}</h2>
-        {error && <Alert variant="error" className="mb-2">{error}</Alert>}
+        <h2 className="text-lg font-semibold text-primary mt-2 mb-4 text-center">
+          {steps[activeStep].title}
+        </h2>
+        {error && <Alert variant="error" className="mb-4">{error}</Alert>}
+      </div>
+      
+      {/* Contenido scrolleable */}
+      <div className="flex-1 overflow-y-auto px-1">
         {renderFields(steps[activeStep].fields)}
-        <div className="flex-1" />
+      </div>
+      
+      {/* Footer fijo - Botones de navegación */}
+      <div className="flex-shrink-0 mt-4 pt-4 border-t border-border">
         {renderNavButtons()}
-        {loading && <DotProgress className="absolute bottom-4 right-4" />}
+        {loading && (
+          <div className="flex justify-center mt-2">
+            <DotProgress />
+          </div>
+        )}
       </div>
     </div>
   );

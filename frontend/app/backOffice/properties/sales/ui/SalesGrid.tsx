@@ -2,10 +2,13 @@
 import React from 'react';
 import SaleMoreButton from './SaleMoreButton';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import DataGrid from '@/components/DataGrid/DataGridWrapper';
 import type { DataGridColumn } from '@/components/DataGrid/DataGrid';
 import { env } from '@/lib/env';
 import type { SalePropertyGridRow } from '@/app/actions/properties';
+import { createProperty, type CreatePropertyDto } from '@/app/actions/properties';
+import { uploadPropertyMultimedia } from '@/app/actions/multimedia';
 import CreateProperty from '../../ui/CreateProperty';
 
 type SalesGridProps = {
@@ -33,23 +36,77 @@ function mapRow(row: any) {
 
 export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
   const [createLoading, setCreateLoading] = useState(false);
+  const router = useRouter();
 
   const handleCreateSave = async (propertyData: any) => {
     setCreateLoading(true);
     try {
-      // Lógica de guardado de la propiedad
       console.log('Guardando propiedad:', propertyData);
       
-      // Aquí irían las llamadas para guardar la propiedad
-      // const result = await createProperty(propertyData);
-      // if (result.success) {
-      //   // El DataGrid cierra automáticamente el dialog al completar onSave
-      //   router.refresh();
-      // }
+      // Transform form data to CreatePropertyDto format
+      const createData: CreatePropertyDto = {
+        title: propertyData.title,
+        description: propertyData.description,
+        price: parseFloat(propertyData.price) || 0,
+        currencyPrice: propertyData.currencyPrice === 1 ? 'CLP' : 'UF',
+        operationType: propertyData.operationType === 1 ? 'SALE' : 'RENT',
+        propertyTypeId: propertyData.propertyTypeId?.toString(),
+        assignedAgentId: propertyData.assignedAgentId?.toString(),
+        isPublished: propertyData.status === 1,
+        isFeatured: false,
+        publicDescription: propertyData.seoDescription,
+        privateNotes: propertyData.internalNotes,
+        location: {
+          city: propertyData.city,
+          region: propertyData.state,
+          address: propertyData.address,
+          coordinates: propertyData.location ? {
+            latitude: propertyData.location.lat || propertyData.location.latitude,
+            longitude: propertyData.location.lng || propertyData.location.longitude,
+          } : undefined,
+        },
+        characteristics: {
+          bedrooms: parseInt(propertyData.bedrooms) || undefined,
+          bathrooms: parseInt(propertyData.bathrooms) || undefined,
+          builtArea: parseInt(propertyData.builtSquareMeters) || undefined,
+          totalArea: parseInt(propertyData.landSquareMeters) || undefined,
+          parkingSpaces: parseInt(propertyData.parkingSpaces) || undefined,
+          floors: parseInt(propertyData.floors) || undefined,
+          yearBuilt: parseInt(propertyData.constructionYear) || undefined,
+        },
+      };
+
+      // Create the property
+      const result = await createProperty(createData);
+      
+      if (result.success && result.data) {
+        console.log('Propiedad creada exitosamente:', result.data);
+        
+        // Upload multimedia files if any
+        if (propertyData.multimedia && propertyData.multimedia.length > 0) {
+          const multimediaResult = await uploadPropertyMultimedia(
+            result.data.id,
+            propertyData.multimedia,
+            'IMAGE' // Default to IMAGE, could be enhanced to detect video files
+          );
+          
+          if (multimediaResult.success) {
+            console.log('Multimedia subida exitosamente:', multimediaResult.data);
+          } else {
+            console.warn('Error subiendo multimedia:', multimediaResult.error);
+          }
+        }
+        
+        // Refresh the page to show new property
+        router.refresh();
+      } else {
+        throw new Error(result.error || 'Error desconocido al crear la propiedad');
+      }
       
     } catch (error) {
       console.error('Error creando propiedad:', error);
-      // En caso de error, el dialog permanece abierto para mostrar el error
+      // Re-throw the error to keep the dialog open and show error message
+      throw error;
     } finally {
       setCreateLoading(false);
     }
