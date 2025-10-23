@@ -136,3 +136,43 @@ export async function getSalePropertiesCountFeatured(): Promise<number> {
   const data = await res.json();
   return data.total;
 }
+
+export async function listPropertyTypes(): Promise<{
+  success: boolean;
+  data?: Array<{ id: string; name: string }>;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' };
+    }
+
+    const url = `${env.backendApiUrl}/property-types`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return { 
+        success: false, 
+        error: errorData?.message || `HTTP ${response.status}` 
+      };
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error listing property types:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    };
+  }
+}

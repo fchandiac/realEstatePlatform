@@ -24,12 +24,21 @@ export type BackendAdministrator = {
 
 export async function listAdministrators(
 	params: ListAdministratorsParams = {},
-): Promise<BackendAdministrator[]> {
+): Promise<{
+  success: boolean;
+  data?: {
+    data: BackendAdministrator[];
+    total: number;
+    page: number;
+    limit: number;
+  };
+  error?: string;
+}> {
 	const session = await getServerSession(authOptions);
 	const accessToken = session?.accessToken;
 
 	if (!accessToken) {
-		throw new Error('No hay una sesión activa para consultar administradores.');
+		return { success: false, error: 'No hay una sesión activa para consultar administradores.' };
 	}
 
 	const url = new URL(`${env.backendApiUrl}/users/admins`);
@@ -52,12 +61,121 @@ export async function listAdministrators(
 			| { message?: string }
 			| null;
 
-		throw new Error(
-			payload?.message ??
-				`Error ${response.status} al obtener la lista de administradores`,
-		);
+		return {
+			success: false,
+			error: payload?.message ?? `Error ${response.status} al obtener la lista de administradores`,
+		};
 	}
 
-	return (await response.json()) as BackendAdministrator[];
+	const data = await response.json();
+	return { success: true, data: { data, total: data.length, page: 1, limit: data.length } };
+}
+
+export async function listAdminsAgents(params: {
+	search?: string;
+	page?: number;
+	limit?: number;
+} = {}): Promise<{
+  success: boolean;
+  data?: {
+    data: BackendAdministrator[];
+    total: number;
+    page: number;
+    limit: number;
+  };
+  error?: string;
+}> {
+	try {
+		const session = await getServerSession(authOptions);
+		if (!session?.accessToken) {
+			return { success: false, error: 'No authenticated' };
+		}
+
+		const searchParams = new URLSearchParams();
+		if (params.search) searchParams.set('search', params.search);
+		if (params.page) searchParams.set('page', params.page.toString());
+		if (params.limit) searchParams.set('limit', params.limit.toString());
+
+		const url = `${env.backendApiUrl}/users/admins-agents?${searchParams.toString()}`;
+		
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Authorization': `Bearer ${session.accessToken}`,
+				'Content-Type': 'application/json',
+			},
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => null);
+			return { 
+				success: false, 
+				error: errorData?.message || `HTTP ${response.status}` 
+			};
+		}
+
+		const data = await response.json();
+		return { success: true, data };
+	} catch (error) {
+		console.error('Error listing admins and agents:', error);
+		return { 
+			success: false, 
+			error: error instanceof Error ? error.message : 'Unknown error' 
+		};
+	}
+}
+
+export async function listAgents(params: {
+	search?: string;
+	page?: number;
+	limit?: number;
+} = {}): Promise<{
+  success: boolean;
+  data?: {
+    data: BackendAdministrator[];
+    total: number;
+    page: number;
+    limit: number;
+  };
+  error?: string;
+}> {
+	try {
+		const session = await getServerSession(authOptions);
+		if (!session?.accessToken) {
+			return { success: false, error: 'No authenticated' };
+		}
+
+		const searchParams = new URLSearchParams();
+		if (params.search) searchParams.set('search', params.search);
+		if (params.page) searchParams.set('page', params.page.toString());
+		if (params.limit) searchParams.set('limit', params.limit.toString());
+
+		const url = `${env.backendApiUrl}/users/agents?${searchParams.toString()}`;
+		
+		const response = await fetch(url, {
+			method: 'GET',
+			headers: {
+				'Authorization': `Bearer ${session.accessToken}`,
+				'Content-Type': 'application/json',
+			},
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => null);
+			return { 
+				success: false, 
+				error: errorData?.message || `HTTP ${response.status}` 
+			};
+		}
+
+		const data = await response.json();
+		return { success: true, data };
+	} catch (error) {
+		console.error('Error listing agents:', error);
+		return { 
+			success: false, 
+			error: error instanceof Error ? error.message : 'Unknown error' 
+		};
+	}
 }
 

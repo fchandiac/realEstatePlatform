@@ -339,4 +339,82 @@ export class UsersService {
 
     return user;
   }
+
+  async listAdminsAgents(params: {
+    search?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<{ data: User[]; total: number; page: number; limit: number }> {
+    const { search, page = 1, limit = 10 } = params;
+
+    const queryBuilder = this.userRepository
+      .createQueryBuilder('user')
+      .where('user.deletedAt IS NULL')
+      .andWhere('user.role IN (:...roles)', { roles: [UserRole.ADMIN, UserRole.AGENT] })
+      .orderBy('user.personalInfo->>"$.firstName"', 'ASC');
+
+    if (search) {
+      const normalizedSearch = `%${search.toLowerCase()}%`;
+      queryBuilder.andWhere(
+        `(
+          LOWER(JSON_UNQUOTE(JSON_EXTRACT(user.personalInfo, '$.firstName'))) LIKE :search
+          OR LOWER(JSON_UNQUOTE(JSON_EXTRACT(user.personalInfo, '$.lastName'))) LIKE :search
+          OR LOWER(user.username) LIKE :search
+          OR LOWER(user.email) LIKE :search
+        )`,
+        { search: normalizedSearch }
+      );
+    }
+
+    const [data, total] = await queryBuilder
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    // Remove password from results
+    data.forEach((user) => {
+      delete (user as any).password;
+    });
+
+    return { data, total, page, limit };
+  }
+
+  async listAgents(params: {
+    search?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<{ data: User[]; total: number; page: number; limit: number }> {
+    const { search, page = 1, limit = 10 } = params;
+
+    const queryBuilder = this.userRepository
+      .createQueryBuilder('user')
+      .where('user.deletedAt IS NULL')
+      .andWhere('user.role = :role', { role: UserRole.AGENT })
+      .orderBy('user.personalInfo->>"$.firstName"', 'ASC');
+
+    if (search) {
+      const normalizedSearch = `%${search.toLowerCase()}%`;
+      queryBuilder.andWhere(
+        `(
+          LOWER(JSON_UNQUOTE(JSON_EXTRACT(user.personalInfo, '$.firstName'))) LIKE :search
+          OR LOWER(JSON_UNQUOTE(JSON_EXTRACT(user.personalInfo, '$.lastName'))) LIKE :search
+          OR LOWER(user.username) LIKE :search
+          OR LOWER(user.email) LIKE :search
+        )`,
+        { search: normalizedSearch }
+      );
+    }
+
+    const [data, total] = await queryBuilder
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    // Remove password from results
+    data.forEach((user) => {
+      delete (user as any).password;
+    });
+
+    return { data, total, page, limit };
+  }
 }

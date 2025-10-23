@@ -1,9 +1,55 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField } from '@/components/TextField/TextField';
+import Select from '@/components/Select/Select';
 import MultimediaGallery from '@/components/FileUploader/MultimediaGallery';
 import IconButton from '@/components/IconButton/IconButton';
+import { listPropertyTypes } from '@/app/actions/properties';
+import { listAdminsAgents } from '@/app/actions/users';
+
+// Enums copiados del backend
+interface PropertyStatus {
+  value: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | 'PENDING_REVIEW';
+  label: string;
+}
+
+interface OperationType {
+  value: 'SALE' | 'RENT' | 'SALE_RENT';
+  label: string;
+}
+
+interface PropertyType {
+  id: string;
+  name: string;
+}
+
+interface User {
+  id: string;
+  username: string;
+  email: string;
+  role?: string;
+  personalInfo?: {
+    firstName?: string | null;
+    lastName?: string | null;
+    phone?: string | null;
+    avatarUrl?: string | null;
+  } | null;
+}
+
+// Datos estáticos para status y tipos de operación
+const PROPERTY_STATUSES: PropertyStatus[] = [
+  { value: 'DRAFT', label: 'Borrador' },
+  { value: 'PUBLISHED', label: 'Publicado' },
+  { value: 'ARCHIVED', label: 'Archivado' },
+  { value: 'PENDING_REVIEW', label: 'Pendiente de Revisión' }
+];
+
+const OPERATION_TYPES: OperationType[] = [
+  { value: 'SALE', label: 'Venta' },
+  { value: 'RENT', label: 'Arriendo' },
+  { value: 'SALE_RENT', label: 'Venta y Arriendo' }
+];
 
 // Mock data basado en el objeto JSON proporcionado
 const mockProperty = {
@@ -77,10 +123,49 @@ interface FullPropertyDialogProps {
 }
 
 const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) => {
-  const [activeSection, setActiveSection] = useState('multimedia');
+  const [activeSection, setActiveSection] = useState('basic');
+  const [formData, setFormData] = useState(property || mockProperty);
+  const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
+  const [availableUsers, setAvailableUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Usar datos reales si se pasan, sino mock
-  const currentProperty = property || mockProperty;
+  // Cargar datos necesarios al montar el componente
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        // Cargar tipos de propiedad y usuarios en paralelo
+        const [typesResult, usersResult] = await Promise.all([
+          listPropertyTypes(),
+          listAdminsAgents({})
+        ]);
+
+        if (typesResult.success) {
+          setPropertyTypes(typesResult.data || []);
+        }
+
+        if (usersResult.success) {
+          setAvailableUsers(usersResult.data?.data || []);
+        }
+      } catch (error) {
+        console.error('Error cargando datos:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  const handleInputChange = (field: string, value: any) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Usar datos del formData
+  const currentProperty = formData;
 
   const sections = [
     { id: 'basic', label: 'Información Básica' },
@@ -97,23 +182,131 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
     switch (activeSection) {
       case 'basic':
         return (
-          <div className="space-y-4">
-            {/* Título - ancho completo */}
+          <div className="space-y-6">
+            {/* Título - ancho completo y EDITABLE */}
             <div className="w-full">
-              <TextField label="Título" value={currentProperty.title || ''} onChange={() => {}} readOnly />
+              <TextField 
+                label="Título" 
+                value={currentProperty.title || ''} 
+                onChange={(e) => handleInputChange('title', e.target.value)}
+                required
+              />
             </div>
+            
             {/* Descripción - ancho completo */}
             <div className="w-full">
-              <TextField label="Descripción" value={currentProperty.description || ''} onChange={() => {}} rows={3} readOnly />
+              <TextField 
+                label="Descripción" 
+                value={currentProperty.description || ''} 
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                rows={3} 
+              />
             </div>
-            {/* Otros campos en grid de 2 columnas */}
+
+            {/* Grid de campos principales */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <TextField label="Estado" value={currentProperty.status || ''} onChange={() => {}} readOnly />
-              <TextField label="Tipo de Operación" value={currentProperty.operationType || ''} onChange={() => {}} readOnly />
-              <TextField label="Tipo Propiedad" value={currentProperty.propertyType?.name || ''} onChange={() => {}} readOnly />
-              <TextField label="Creador" value={currentProperty.creatorUser?.personalInfo?.firstName + ' ' + currentProperty.creatorUser?.personalInfo?.lastName || ''} onChange={() => {}} readOnly />
-              <TextField label="Email Creador" value={currentProperty.creatorUser?.email || ''} onChange={() => {}} readOnly />
-              <TextField label="Agente Asignado" value={currentProperty.assignedAgent?.personalInfo?.firstName + ' ' + currentProperty.assignedAgent?.personalInfo?.lastName || 'Ninguno'} onChange={() => {}} readOnly />
+              {/* Estado - TextField por ahora hasta arreglar Select */}
+              <TextField
+                label="Estado"
+                value={PROPERTY_STATUSES.find(s => s.value === currentProperty.status)?.label || currentProperty.status || ''}
+                onChange={() => {}}
+                readOnly
+              />
+
+              {/* Tipo de Operación - TextField por ahora */}
+              <TextField
+                label="Tipo de Operación"
+                value={OPERATION_TYPES.find(t => t.value === currentProperty.operationType)?.label || currentProperty.operationType || ''}
+                onChange={() => {}}
+                readOnly
+              />
+
+              {/* Tipo de Propiedad - TextField por ahora */}
+              <TextField
+                label="Tipo de Propiedad"
+                value={currentProperty.propertyType?.name || ''}
+                onChange={() => {}}
+                readOnly
+              />
+
+              {/* Agente Asignado - TextField con formato mejorado */}
+              <TextField
+                label="Agente Asignado"
+                value={
+                  currentProperty.assignedAgent 
+                    ? `${currentProperty.assignedAgent.personalInfo?.firstName} ${currentProperty.assignedAgent.personalInfo?.lastName} - ${currentProperty.assignedAgent.role === 'ADMIN' ? 'Administrador' : 'Agente'}`
+                    : 'Ninguno'
+                }
+                onChange={() => {}}
+                readOnly
+              />
+            </div>
+
+            {/* Sección del Perfil del Creador */}
+            <div className="border-t pt-6 mt-6">
+              <h4 className="text-lg font-semibold mb-4 text-foreground">Perfil del Creador</h4>
+              {currentProperty.creatorUser ? (
+                <div className="space-y-4">
+                  {/* Información del avatar y nombre */}
+                  <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
+                    {currentProperty.creatorUser.personalInfo?.avatarUrl && (
+                      <img
+                        src={currentProperty.creatorUser.personalInfo.avatarUrl}
+                        alt="Avatar del creador"
+                        className="w-16 h-16 rounded-full object-cover border-2 border-border"
+                      />
+                    )}
+                    <div>
+                      <h5 className="font-medium text-lg">
+                        {currentProperty.creatorUser.personalInfo?.firstName} {currentProperty.creatorUser.personalInfo?.lastName}
+                      </h5>
+                      <p className="text-muted-foreground">@{currentProperty.creatorUser.username}</p>
+                    </div>
+                  </div>
+
+                  {/* Detalles del creador en grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <TextField 
+                      label="Nombre" 
+                      value={currentProperty.creatorUser.personalInfo?.firstName || ''} 
+                      onChange={() => {}} 
+                      readOnly 
+                    />
+                    <TextField 
+                      label="Apellido" 
+                      value={currentProperty.creatorUser.personalInfo?.lastName || ''} 
+                      onChange={() => {}} 
+                      readOnly 
+                    />
+                    <TextField 
+                      label="Email" 
+                      value={currentProperty.creatorUser.email || ''} 
+                      onChange={() => {}} 
+                      readOnly 
+                    />
+                    <TextField 
+                      label="Teléfono" 
+                      value={currentProperty.creatorUser.personalInfo?.phone || ''} 
+                      onChange={() => {}} 
+                      readOnly 
+                    />
+                    <TextField 
+                      label="Nombre de Usuario" 
+                      value={currentProperty.creatorUser.username || ''} 
+                      onChange={() => {}} 
+                      readOnly 
+                    />
+                    <TextField 
+                      label="ID Usuario" 
+                      value={currentProperty.creatorUser.id || ''} 
+                      onChange={() => {}} 
+                      readOnly 
+                    />
+                  </div>
+                </div>
+              ) : (
+                <p className="text-muted-foreground">No hay información del creador disponible</p>
+              )}
             </div>
           </div>
         );
