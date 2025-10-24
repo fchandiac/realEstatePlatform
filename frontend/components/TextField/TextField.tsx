@@ -161,7 +161,8 @@ export const TextField: React.FC<TextFieldProps> = ({
   : "bg-background text-foreground";
 
   return (
-  <div className={`relative ${className}`} data-test-id="text-field-root"> 
+    <div className="relative pt-5 pb-1">
+      <div className={`relative ${className}`} data-test-id="text-field-root"> 
       {typeof startIcon === 'string' && startIcon.length > 0 && (
         <span
           className="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-xl text-secondary pointer-events-none flex items-center justify-center z-10"
@@ -266,6 +267,7 @@ export const TextField: React.FC<TextFieldProps> = ({
           {endIcon}
         </span>
       )}
+    </div>
     </div>
   );
 };

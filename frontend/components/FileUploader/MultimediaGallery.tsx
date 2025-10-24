@@ -156,7 +156,12 @@ export const MultimediaGallery: React.FC<MultimediaGalleryProps> = ({
 
       {files.length === 0 && (
         <div className="text-center py-8 text-gray-500">
-          <div className="text-4xl mb-2">📁</div>
+          <span
+            className="material-symbols-outlined"
+            style={{ fontSize: '5rem', marginBottom: '0.5rem' }}
+          >
+            perm_media
+          </span>
           <p>No hay archivos multimedia</p>
         </div>
       )}

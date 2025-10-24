@@ -97,7 +97,8 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, value = null, onC
   }, [highlightedIndex, open]);
 
   return (
-    <div className="relative w-full" data-test-id={props["data-test-id"] || "select-root"}>
+    <div className="relative pt-5 pb-1">
+      <div className="relative w-full" data-test-id={props["data-test-id"] || "select-root"}>
       {/* Input oculto para validación HTML nativa */}
       <input
         type="text"
@@ -215,6 +216,7 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, value = null, onC
           </li>
         ))}
       </DropdownList>
+    </div>
     </div>
   );
 }

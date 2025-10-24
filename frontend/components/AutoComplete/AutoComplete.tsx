@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useRef, useEffect } from "react";
-import DropdownList from "@/components/DropdownList/DropdownList";
+import DropdownList, { dropdownOptionClass } from "@/components/DropdownList/DropdownList";
 import IconButton from "@/components/IconButton/IconButton";
 
 export interface Option {
@@ -21,17 +21,17 @@ interface AutoCompleteProps<T = Option> {
   ["data-test-id"]?: string;
 }
 
-const AutoComplete = <T = Option,>({ 
-  options, 
-  label, 
-  placeholder, 
-  value = null, 
-  onChange, 
-  name, 
-  required, 
+const AutoComplete = <T = Option,>({
+  options,
+  label,
+  placeholder,
+  value = null,
+  onChange,
+  name,
+  required,
   getOptionLabel,
   getOptionValue,
-  ...props 
+  ...props
 }: AutoCompleteProps<T>) => {
   // Helper functions with defaults for backward compatibility
   const defaultGetOptionLabel = (option: T): string => {
@@ -134,19 +134,19 @@ const AutoComplete = <T = Option,>({
   };
 
   return (
-  <div className="relative w-full" data-test-id={props["data-test-id"] || "auto-complete-root"}>
+    <div className="relative w-full" data-test-id={props["data-test-id"] || "auto-complete-root"}>
       <input
         ref={inputRef}
         type="text"
         value={inputValue}
         onFocus={() => { setFocused(true); setOpen(true); setIsNavigating(false); }}
-        onBlur={() => { 
-          setFocused(false); 
+        onBlur={() => {
+          setFocused(false);
           handleValidation();
           if (!isNavigating) {
-            setTimeout(() => setOpen(false), 150); 
+            setTimeout(() => setOpen(false), 150);
           }
-          setHighlightedIndex(-1); 
+          setHighlightedIndex(-1);
         }}
         onChange={e => { setInputValue(e.target.value); setOpen(true); setHighlightedIndex(-1); }}
         className={`block w-full min-w-[180px] rounded border-[1px] px-3 py-2 text-sm font-light text-foreground focus:outline-none transition-colors duration-200 border-border ${focused ? 'border-primary' : ''} ${value ? 'pr-16' : 'pr-10'}`}
@@ -171,7 +171,7 @@ const AutoComplete = <T = Option,>({
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
-      
+
       {value && (
         <IconButton
           icon="close_small"
@@ -184,7 +184,7 @@ const AutoComplete = <T = Option,>({
           tabIndex={-1}
         />
       )}
-      
+
       <IconButton
         icon="arrow_drop_down"
         variant="text"
@@ -202,7 +202,7 @@ const AutoComplete = <T = Option,>({
         {filteredOptions.map((opt, idx) => (
           <li
             key={getValue(opt)}
-            className={require("@/components/DropdownList/DropdownList").dropdownOptionClass + (highlightedIndex === idx ? " bg-primary/30" : " text-neutral-700")}
+            className={dropdownOptionClass + (highlightedIndex === idx ? " bg-primary/30" : " text-neutral-700")}
             onMouseDown={() => handleSelect(opt)}
             onMouseEnter={() => setHighlightedIndex(idx)}
             data-test-id={`auto-complete-option-${getValue(opt)}`}

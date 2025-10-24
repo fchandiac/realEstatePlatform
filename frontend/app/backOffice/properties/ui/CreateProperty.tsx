@@ -82,7 +82,7 @@ const steps: StepperStep[] = [
 		title: 'Internos',
 		description: 'Notas y comentarios internos para el equipo',
 		fields: [
-			{ name: 'internalNotes', label: 'Notas internas', type: 'textarea', rows: 2 },
+			{ name: 'internalNotes', label: 'Notas internas', type: 'textarea', rows: 6 },
 		],
 	},
 ];
@@ -154,7 +154,8 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 
 	const handleChange = (field: string, value: any) => {
 		let processedValue = value;
-		if (numericFields.includes(field)) {
+		// Parse numeric fields that come from TextField type="number"
+		if (['builtSquareMeters', 'landSquareMeters', 'constructionYear'].includes(field)) {
 			const num = parseFloat(value);
 			if (isNaN(num)) {
 				console.warn(`Invalid number for ${field}: ${value}`);
@@ -162,6 +163,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			}
 			processedValue = num;
 		}
+		console.log(`Field changed: ${field}, Value:`, processedValue); // Depurar cambios en el campo
 		setForm(prev => ({ ...prev, [field]: processedValue }));
 
 		if (field === 'state') {
@@ -202,11 +204,23 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			// Validar campos numéricos
 			const numericFields = ['builtSquareMeters', 'landSquareMeters', 'parkingSpaces', 'floors', 'bedrooms', 'bathrooms', 'constructionYear'];
 			for (const field of numericFields) {
-				const num = parseFloat(form[field]);
-				if (isNaN(num) || num < 0) {
-					setError(`El campo ${field} debe tener un valor válido`);
-					setLoading(false);
-					return;
+				let num;
+				if (['builtSquareMeters', 'landSquareMeters', 'constructionYear'].includes(field)) {
+					// Estos campos vienen como string de TextField type="number"
+					num = parseFloat(form[field]);
+					if (isNaN(num) || num < 0) {
+						setError(`El campo ${field} debe tener un valor válido`);
+						setLoading(false);
+						return;
+					}
+				} else {
+					// Estos campos vienen como number de NumberStepper
+					num = form[field];
+					if (num === undefined || num === null || num < 0) {
+						setError(`El campo ${field} debe tener un valor válido`);
+						setLoading(false);
+						return;
+					}
 				}
 				if (field === 'constructionYear' && (num < 1800 || num > new Date().getFullYear())) {
 					setError(`El año de construcción debe estar entre 1800 y ${new Date().getFullYear()}`);
@@ -249,169 +263,410 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 	};
 
 	// Helper to render fields for current step
-	const renderFields = (fields: any[]) => (
-		<div className="flex flex-col gap-4 mt-4">
-			{loadingOptions && (
-				<div className="flex justify-center py-4">
-					<DotProgress />
-					<span className="ml-2 text-sm text-secondary">Cargando opciones...</span>
-				</div>
-			)}
-			{fields.map((field, idx) => {
-				// Ocultar operationType si viene como prop
+	const renderFields = (fields: any[]) => {
+		// Special handling for step 2 (location) - combine state and city in same row
+		if (activeStep === 1) {
+			const renderedFields: React.JSX.Element[] = [];
+			let i = 0;
+
+			while (i < fields.length) {
+				const field = fields[i];
+
+				// Skip operationType if provided as prop
 				if (field.name === 'operationType' && operationType) {
-					return null;
+					i++;
+					continue;
 				}
 
-				// Get field-specific options or use field.options as fallback
-				const fieldOptions = getFieldOptions(field.name);
-				const options = fieldOptions.length > 0 ? fieldOptions : (field.options || []);
-				if (field.name === 'multimedia') {
-					// Implementación igual a FullProperty
-					return (
-						<div key={`${field.name}-${idx}`}>
-							<div className="flex items-center gap-3 mb-4">
-								<IconButton
-									icon="add"
-									variant="containedSecondary"
-									onClick={() => {
-										// Trigger file input click from MultimediaGallery
-										const fileInput = document.getElementById('multimedia-file-input') as HTMLInputElement;
-										fileInput?.click();
-									}}
-									aria-label="Agregar multimedia"
-									style={{
-										borderRadius: '50%',
-										minWidth: 40,
-										minHeight: 40,
-										width: 40,
-										height: 40
-									}}
+				// Check if current field is 'state' and next is 'city'
+				if (field.name === 'state' && i + 1 < fields.length && fields[i + 1].name === 'city') {
+					// Render state and city in same row
+					const stateField = field;
+					const cityField = fields[i + 1];
+
+					const stateOptions = [...getFieldOptions(stateField.name)];
+					const cityOptions = [...getFieldOptions(cityField.name)];
+
+					renderedFields.push(
+						<div key={`state-city-row`} className="flex gap-4">
+							<div className="flex-1">
+								<AutoComplete
+									options={stateOptions}
+									label={stateField.label || 'Buscar'}
+									placeholder={stateField.label || 'Buscar'}
+									value={form[stateField.name] || null}
+									onChange={(val: any) => handleChange(stateField.name, val)}
 								/>
 							</div>
-							<div style={{ minHeight: '400px' }}>
-								<MultimediaGallery
-									uploadPath="/uploads/properties"
-									onChange={(files) => {
-										console.log('Archivos multimedia seleccionados:', files);
-										handleChange(field.name, files);
-									}}
-									maxFiles={20}
+							<div className="flex-1">
+								<AutoComplete
+									options={cityOptions}
+									label={cityField.label || 'Buscar'}
+									placeholder={cityField.label || 'Buscar'}
+									value={form[cityField.name] || null}
+									onChange={(val: any) => handleChange(cityField.name, val)}
 								/>
 							</div>
 						</div>
 					);
-				}
-				// Otros campos
-				switch (field.type) {
-					case 'text':
-						return (
-							<TextField
-								key={field.name}
-								label={field.label || 'Campo'}
-								placeholder={field.label || 'Campo'}
-								value={form[field.name] || ''}
-								required={field.required}
-								onChange={e => handleChange(field.name, e.target.value)}
-							/>
+					i += 2; // Skip both fields
+				} else {
+					// Render single field normally
+					const fieldOptions = getFieldOptions(field.name);
+					const options = fieldOptions.length > 0 ? fieldOptions : (field.options || []);
+
+					if (field.name === 'multimedia') {
+						renderedFields.push(
+							<div key={`${field.name}-${i}`}>
+								<div className="flex items-center justify-end gap-3 mb-4">
+									<IconButton
+										icon="add"
+										variant="containedSecondary"
+										onClick={() => {
+											const fileInput = document.getElementById('multimedia-file-input') as HTMLInputElement;
+											fileInput?.click();
+										}}
+										aria-label="Agregar multimedia"
+										className="w-12 h-12 rounded-full flex items-center justify-center"
+									/>
+								</div>
+								<div style={{ minHeight: '400px' }}>
+									<MultimediaGallery
+										uploadPath="/uploads/properties"
+										onChange={(files) => {
+											console.log('Archivos multimedia seleccionados:', files);
+											handleChange(field.name, files);
+										}}
+										maxFiles={20}
+									/>
+								</div>
+							</div>
 						);
-					case 'textarea':
-						return (
-							<TextField
-								key={field.name}
-								label={field.label || 'Campo'}
-								value={form[field.name] || ''}
-								required={field.required}
-								rows={field.rows}
-								onChange={e => handleChange(field.name, e.target.value)}
-							/>
-						);
-					case 'number':
-						if (field.name === 'constructionYear') {
-							return (
-								<TextField
-									key={field.name}
-									label={field.label || 'Campo'}
-									type="datePicker"
-									value={form[field.name]?.toString() || ''}
-									onChange={e => handleChange(field.name, e.target.value)}
-									required={field.required}
-								/>
-							);
-						} else {
-							return (
-								<TextField
-									key={field.name}
-									label={field.label || 'Campo'}
-									type="number"
-									value={form[field.name]?.toString() || '0'}
-									onChange={e => handleChange(field.name, e.target.value)}
-									required={field.required}
-								/>
+					} else {
+						let fieldElement: React.JSX.Element | null = null;
+
+						switch (field.type) {
+							case 'text':
+								fieldElement = (
+									<TextField
+										label={field.label || 'Campo'}
+										placeholder={field.label || 'Campo'}
+										value={form[field.name] || ''}
+										required={field.required}
+										onChange={e => handleChange(field.name, e.target.value)}
+									/>
+								);
+								break;
+							case 'textarea':
+								fieldElement = (
+									<TextField
+										label={field.label || 'Campo'}
+										value={form[field.name] || ''}
+										required={field.required}
+										rows={field.rows}
+										onChange={e => handleChange(field.name, e.target.value)}
+									/>
+								);
+								break;
+							case 'autocomplete':
+								fieldElement = (
+									<AutoComplete
+										options={options}
+										label={field.label || 'Buscar'}
+										placeholder={field.label || 'Buscar'}
+										value={form[field.name] || null}
+										onChange={(val: any) => handleChange(field.name, val)}
+									/>
+								);
+								break;
+							case 'location':
+								fieldElement = (
+									<CreateLocationPicker
+										onChange={val => handleChange(field.name, val)}
+									/>
+								);
+								break;
+							default:
+								fieldElement = null;
+						}
+
+						if (fieldElement) {
+							renderedFields.push(
+								<div key={`${field.name}-${i}`}>
+									{fieldElement}
+								</div>
 							);
 						}
-					case 'select':
-						return (
-							<Select
-								key={field.name}
-								options={options}
-								placeholder={field.label || 'Selecciona'}
-								value={form[field.name] || null}
-								required={field.required}
-								onChange={val => handleChange(field.name, val)}
-							/>
-						);
-					case 'autocomplete':
-						return (
-							<AutoComplete
-								key={field.name}
-								options={options}
-								label={field.label || 'Buscar'}
-								placeholder={field.label || 'Buscar'}
-								value={form[field.name] || null}
-								onChange={val => handleChange(field.name, val)}
-							/>
-						);
-					case 'location':
-						return (
-							<CreateLocationPicker
-								key={field.name}
-								// No value prop, just onChange
-								onChange={val => handleChange(field.name, val)}
-							/>
-						);
-					case 'currency':
-						return (
-							<TextField
-								key={field.name}
-								label={field.label || 'Precio'}
-								placeholder={field.label || 'Precio'}
-								type="currency"
-								value={form[field.name] || ''}
-								onChange={e => handleChange(field.name, e.target.value)}
-							/>
-						);
-					case 'file':
-						return (
-							<FileImageUploader
-								key={field.name}
-								uploadPath="/uploads/properties"
-								onChange={val => handleChange(field.name, val)}
-								label={field.label || 'Imágenes'}
-							/>
-						);
-					default:
-						return null;
+					}
+					i++;
 				}
-			})}
-		</div>
-	);
+			}
+
+			return (
+				<div className="flex flex-col gap-4 h-full overflow-y-auto px-1">
+					{loadingOptions && (
+						<div className="flex justify-center py-4">
+							<DotProgress />
+						</div>
+					)}
+					{renderedFields}
+				</div>
+			);
+		}
+
+		// Special handling for step 3 (characteristics) - use NumberStepper for numeric fields
+		if (activeStep === 2) {
+			return (
+				<div className="flex flex-col gap-4 h-full overflow-y-auto px-1">
+					{loadingOptions && (
+						<div className="flex justify-center py-4">
+							<DotProgress />
+						</div>
+					)}
+					{fields.map((field, idx) => {
+						// Skip operationType if provided as prop
+						if (field.name === 'operationType' && operationType) {
+							return null;
+						}
+
+						// Use NumberStepper for bedrooms, bathrooms, parkingSpaces, floors
+						// Use TextField type="number" for builtSquareMeters, landSquareMeters, constructionYear
+						if (['bedrooms', 'bathrooms', 'parkingSpaces', 'floors'].includes(field.name)) {
+							return (
+								<div key={`${field.name}-${idx}`}>
+									<NumberStepper
+										label={field.label || 'Campo'}
+										value={form[field.name] || 0}
+										onChange={(value) => handleChange(field.name, value)}
+										min={0}
+										max={field.name === 'floors' ? 50 : 20}
+										step={1}
+										required={field.required}
+									/>
+								</div>
+							);
+						} else if (['builtSquareMeters', 'landSquareMeters', 'constructionYear'].includes(field.name)) {
+							return (
+								<div key={`${field.name}-${idx}`}>
+									<TextField
+										label={field.label || 'Campo'}
+										type="number"
+										value={form[field.name]?.toString() || ''}
+										onChange={e => handleChange(field.name, e.target.value)}
+										required={field.required}
+									/>
+								</div>
+							);
+						}
+
+						// Default rendering for other fields
+						const fieldOptions = getFieldOptions(field.name);
+						const options = fieldOptions.length > 0 ? fieldOptions : (field.options || []);
+
+						switch (field.type) {
+							case 'number':
+								if (field.name === 'constructionYear') {
+									return (
+										<NumberStepper
+											key={`${field.name}-${idx}`}
+											label={field.label || 'Campo'}
+											value={form[field.name] || 0}
+											onChange={(value) => handleChange(field.name, value)}
+											min={1800}
+											max={new Date().getFullYear()}
+											step={1}
+											required={field.required}
+										/>
+									);
+								} else {
+									return (
+										<TextField
+											key={`${field.name}-${idx}`}
+											label={field.label || 'Campo'}
+											type="number"
+											value={form[field.name]?.toString() || '0'}
+											onChange={e => handleChange(field.name, e.target.value)}
+											required={field.required}
+										/>
+									);
+								}
+							case 'text':
+								return (
+									<TextField
+										key={`${field.name}-${idx}`}
+										label={field.label || 'Campo'}
+										placeholder={field.label || 'Campo'}
+										value={form[field.name] || ''}
+										required={field.required}
+										onChange={e => handleChange(field.name, e.target.value)}
+									/>
+								);
+							default:
+								return null;
+						}
+					})}
+				</div>
+			);
+		}
+
+		// Default rendering for other steps
+		return (
+			<div className="flex flex-col gap-4 h-full overflow-y-auto px-1">
+				{loadingOptions && (
+					<div className="flex justify-center py-4">
+						<DotProgress />
+					</div>
+				)}
+				{fields.map((field, idx) => {
+					// Ocultar operationType si viene como prop
+					if (field.name === 'operationType' && operationType) {
+						return null;
+					}
+
+					// Get field-specific options or use field.options as fallback
+					const fieldOptions = getFieldOptions(field.name);
+					const options = fieldOptions.length > 0 ? fieldOptions : (field.options || []);
+					if (field.name === 'multimedia') {
+						// Implementación igual a FullProperty
+						return (
+							<div key={`${field.name}-${idx}`}>
+								<div className="flex items-center justify-end gap-3 mb-4">
+									<IconButton
+										icon="add"
+										variant="containedSecondary"
+										onClick={() => {
+											// Trigger file input click from MultimediaGallery
+											const fileInput = document.getElementById('multimedia-file-input') as HTMLInputElement;
+											fileInput?.click();
+										}}
+										aria-label="Agregar multimedia"
+										className="w-12 h-12 rounded-full flex items-center justify-center"
+									/>
+								</div>
+								<div style={{ minHeight: '400px' }}>
+									<MultimediaGallery
+										uploadPath="/uploads/properties"
+										onChange={(files) => {
+											console.log('Archivos multimedia seleccionados:', files);
+											handleChange(field.name, files);
+										}}
+										maxFiles={20}
+									/>
+								</div>
+							</div>
+						);
+					}
+					// Otros campos
+					switch (field.type) {
+						case 'text':
+							return (
+								<TextField
+									key={`${field.name}-${idx}`}
+									label={field.label || 'Campo'}
+									placeholder={field.label || 'Campo'}
+									value={form[field.name] || ''}
+									required={field.required}
+									onChange={e => handleChange(field.name, e.target.value)}
+								/>
+							);
+						case 'textarea':
+							return (
+								<TextField
+									key={`${field.name}-${idx}`}
+									label={field.label || 'Campo'}
+									value={form[field.name] || ''}
+									required={field.required}
+									rows={field.rows}
+									onChange={e => handleChange(field.name, e.target.value)}
+								/>
+							);
+						case 'number':
+							if (field.name === 'constructionYear') {
+								return (
+									<TextField
+										key={`${field.name}-${idx}`}
+										label={field.label || 'Campo'}
+										type="datePicker"
+										value={form[field.name]?.toString() || ''}
+										onChange={e => handleChange(field.name, e.target.value)}
+										required={field.required}
+									/>
+								);
+							} else {
+								return (
+									<TextField
+										key={`${field.name}-${idx}`}
+										label={field.label || 'Campo'}
+										type="number"
+										value={form[field.name]?.toString() || '0'}
+										onChange={e => handleChange(field.name, e.target.value)}
+										required={field.required}
+									/>
+								);
+							}
+						case 'select':
+							return (
+								<Select
+									key={`${field.name}-${idx}`}
+									options={options}
+									placeholder={field.label || 'Selecciona'}
+									value={form[field.name] || null}
+									required={field.required}
+									onChange={(val: any) => handleChange(field.name, val)}
+								/>
+							);
+						case 'autocomplete':
+							return (
+								<AutoComplete
+									key={`${field.name}-${idx}`}
+									options={options}
+									label={field.label || 'Buscar'}
+									placeholder={field.label || 'Buscar'}
+									value={form[field.name] || null}
+									onChange={(val: any) => handleChange(field.name, val)}
+								/>
+							);
+						case 'location':
+							return (
+								<CreateLocationPicker
+									key={`${field.name}-${idx}`}
+									// No value prop, just onChange
+									onChange={val => handleChange(field.name, val)}
+								/>
+							);
+						case 'currency':
+							return (
+								<TextField
+									key={`${field.name}-${idx}`}
+									label={field.label || 'Precio'}
+									placeholder={field.label || 'Precio'}
+									type="currency"
+									value={form[field.name] || ''}
+									onChange={e => handleChange(field.name, e.target.value)}
+								/>
+							);
+						case 'file':
+							return (
+								<FileImageUploader
+									key={`${field.name}-${idx}`}
+									uploadPath="/uploads/properties"
+									onChange={val => handleChange(field.name, val)}
+									label={field.label || 'Imágenes'}
+								/>
+							);
+						default:
+							return null;
+					}
+				})}
+			</div>
+		);
+	};
 
 	// Stepper visual mejorado
 	const renderStepper = () => (
 		<div className="w-full">
 			{/* Círculos del stepper y botones en la misma fila */}
-			<div className="flex items-center justify-between gap-2 mb-6">
+			<div className="flex items-center justify-between gap-2 mb-3">
 				{/* Círculos del stepper - alineados a la izquierda */}
 				<div className="flex items-center gap-2">
 					{steps.map((step, idx) => (
@@ -446,21 +701,21 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 							Siguiente
 						</Button>
 					) : (
-						<Button variant="primary" onClick={handleSubmit} loading={loading}>
-							Guardar
+						<Button variant="primary" onClick={handleSubmit} disabled={loading}>
+							{loading ? 'Guardando...' : 'Guardar'}
 						</Button>
 					)}
 				</div>
 			</div>			{/* Card del paso activo - 100% del ancho */}
-			<div className="w-full">
+			<div className="w-full mb-3">
 				<div className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg">
 					<div className="flex items-center gap-4">
 						{/* Título y descripción */}
 						<div className="flex-1">
-							<h3 className="text-lg font-semibold text-foreground mb-2">
+							<h3 className="text-lg font-semibold text-foreground mb-1">
 								{steps[activeStep].title}
 							</h3>
-							<p className="text-sm text-muted-foreground leading-relaxed">
+							<p className="text-xs text-muted-foreground leading-relaxed">
 								{steps[activeStep].description}
 							</p>
 						</div>
@@ -490,34 +745,32 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 					Siguiente
 				</Button>
 			) : (
-				<Button variant="primary" onClick={handleSubmit} loading={loading}>
-					Guardar
+				<Button variant="primary" onClick={handleSubmit} disabled={loading}>
+					{loading ? 'Guardando...' : 'Guardar'}
 				</Button>
 			)}
 		</div>
 	);
 
 	return (
-		<div className="w-full max-w-3xl lg:w-[800px] xl:w-[800px] mx-auto flex flex-col h-full">
+		<div className="w-full max-w-3xl lg:w-[800px] xl:w-[800px] mx-auto flex flex-col h-full min-h-[600px] relative">
 			{/* Header fijo - Stepper mejorado */}
 			<div className="flex-shrink-0">
 				{renderStepper()}
 				{error && <Alert variant="error" className="mb-4">{error}</Alert>}
 			</div>
 			
-			{/* Contenido scrolleable */}
-			<div className="flex-1 overflow-y-auto px-1">
+			{/* Contenido con altura fija - cada step maneja su propio scroll */}
+			<div className="flex-1 min-h-0">
 				{renderFields(steps[activeStep].fields)}
 			</div>
 			
-			{/* Footer fijo - Solo loading si es necesario */}
-			<div className="flex-shrink-0">
-				{loading && (
-					<div className="flex justify-center mt-2">
-						<DotProgress />
-					</div>
-				)}
-			</div>
+			{/* Loading centrado absolutamente */}
+			{loading && (
+				<div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+					<DotProgress />
+				</div>
+			)}
 		</div>
 	);
 }
