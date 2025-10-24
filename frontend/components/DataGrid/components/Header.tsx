@@ -119,6 +119,7 @@ const Header: React.FC<HeaderProps> = ({ title, filterMode = false, onToggleFilt
           open={isCreateModalOpen} 
           onClose={() => setIsCreateModalOpen(false)} 
           size="xl"
+          hideActions={true}
         >
           {createForm}
         </Dialog>

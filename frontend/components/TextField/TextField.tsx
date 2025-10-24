@@ -181,7 +181,7 @@ export const TextField: React.FC<TextFieldProps> = ({
           onBlur={() => setFocused(false)}
           onChange={onChange}
           className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] pr-4 py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${contrastInput} z-0`}
-          placeholder={shrink || !showPlaceholder ? "" : (placeholder ?? label) + (required ? ' *' : '')}
+          placeholder={shrink || !showPlaceholder ? "" : (placeholder ?? label)}
           required={required}
           readOnly={readOnly}
           autoComplete="off"
@@ -207,7 +207,7 @@ export const TextField: React.FC<TextFieldProps> = ({
             style={{ backgroundColor: "var(--color-background)", ...(props.style || {}) }}
             placeholder={
               type === "datePicker" ? `Ej: ${new Date().getFullYear()}` :
-              (shrink || !showPlaceholder ? "" : (placeholder ?? label) + (required ? ' *' : ''))
+              (shrink || !showPlaceholder ? "" : (placeholder ?? label))
             }
             required={required}
             readOnly={readOnly}
@@ -243,6 +243,21 @@ export const TextField: React.FC<TextFieldProps> = ({
               </span>
             </button>
           )}
+        </div>
+      )}
+      {/* Placeholder personalizado para campos requeridos */}
+      {required && !shrink && showPlaceholder && (
+        <div
+          className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-sm font-light text-gray-400 transition-opacity duration-300 ${shrink ? 'opacity-0' : 'opacity-100'}`}
+          style={{ 
+            backgroundColor: "var(--color-background)",
+            paddingLeft: startIcon ? '36px' : '12px',
+            paddingRight: (endIcon || type === "password") ? '40px' : '12px'
+          }}
+          onClick={() => inputRef.current?.focus()}
+        >
+          {type === "datePicker" ? `Ej: ${new Date().getFullYear()}` : (placeholder ?? label)}
+          <span className="text-red-500 ml-1">*</span>
         </div>
       )}
       {/* Inject scoped placeholder style if requested */}

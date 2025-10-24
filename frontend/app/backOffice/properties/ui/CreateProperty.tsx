@@ -50,8 +50,8 @@ const steps: StepperStep[] = [
 			{ name: 'bathrooms', label: 'Baños', type: 'number' },
 			{ name: 'parkingSpaces', label: 'Estacionamientos', type: 'number' },
 			{ name: 'floors', label: 'Pisos', type: 'number' },
-			{ name: 'builtSquareMeters', label: 'Metros construidos', type: 'number', required: true },
-			{ name: 'landSquareMeters', label: 'Metros terreno', type: 'number', required: true },
+			{ name: 'builtSquareMeters', label: 'Metros construidos', type: 'number' },
+			{ name: 'landSquareMeters', label: 'Metros terreno', type: 'number' },
 			{ name: 'constructionYear', label: 'Año construcción', type: 'number' },
 		],
 	},
@@ -59,8 +59,8 @@ const steps: StepperStep[] = [
 		title: 'Precio',
 		description: 'Configuración de precio y moneda de la propiedad',
 		fields: [
-			{ name: 'price', label: 'Precio', type: 'currency', required: true },
-			{ name: 'currencyPrice', label: 'Moneda', type: 'select', required: true, options: [] },
+			{ name: 'price', label: 'Precio', type: 'currency' },
+			{ name: 'currencyPrice', label: 'Moneda', type: 'select', options: [] },
 		],
 	},
 	{
@@ -305,10 +305,6 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 					if (isNaN(num) || num < 1800 || num > new Date().getFullYear()) {
 						errors.push(`${field.label} debe estar entre 1800 y ${new Date().getFullYear()}`);
 					}
-				}
-				
-				if (field.name === 'price' && !value) {
-					errors.push(`${field.label} es obligatorio`);
 				}
 			}
 		}
@@ -860,6 +856,15 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			{/* Header fijo - Stepper mejorado */}
 			<div className="flex-shrink-0">
 				{renderStepper()}
+			</div>
+			
+			{/* Contenido con altura fija - cada step maneja su propio scroll */}
+			<div className="flex-1 min-h-0">
+				{renderFields(steps[activeStep].fields)}
+			</div>
+			
+			{/* Alertas de error abajo del contenido */}
+			<div className="flex-shrink-0 mt-4">
 				{error && <Alert variant="error" className="mb-4">{error}</Alert>}
 				{stepErrors[activeStep] && stepErrors[activeStep].length > 0 && (
 					<Alert variant="error" className="mb-4">
@@ -871,11 +876,6 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 						</ul>
 					</Alert>
 				)}
-			</div>
-			
-			{/* Contenido con altura fija - cada step maneja su propio scroll */}
-			<div className="flex-1 min-h-0">
-				{renderFields(steps[activeStep].fields)}
 			</div>
 			
 			{/* Loading centrado absolutamente */}

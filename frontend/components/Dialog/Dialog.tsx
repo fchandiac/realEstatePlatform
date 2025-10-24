@@ -101,6 +101,10 @@ interface DialogProps {
   contentStyle?: React.CSSProperties;
   // When true, allow children to overflow horizontally
   allowOverflowX?: boolean;
+  // Actions to display in the footer
+  actions?: React.ReactNode;
+  // Hide the actions area (useful when actions are handled internally by children)
+  hideActions?: boolean;
 }
 
 const presetSizeClasses: Record<'sm' | 'md' | 'lg' | 'xl', string> = {
@@ -144,6 +148,8 @@ const Dialog: React.FC<DialogProps> = ({
   className = '',
   contentStyle,
   allowOverflowX = false,
+  actions,
+  hideActions = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
@@ -306,6 +312,13 @@ const Dialog: React.FC<DialogProps> = ({
         >
           {children}
         </div>
+
+        {/* Actions area - conditionally rendered */}
+        {!hideActions && actions && (
+          <div className="w-full pt-4 border-t border-gray-200 mt-4" data-test-id="dialog-actions">
+            {actions}
+          </div>
+        )}
       </div>
     </div>
   );
