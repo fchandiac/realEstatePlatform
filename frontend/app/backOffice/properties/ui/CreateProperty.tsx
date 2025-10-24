@@ -168,6 +168,15 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 		console.log(`Field changed: ${field}, Value:`, processedValue); // Depurar cambios en el campo
 		setForm(prev => ({ ...prev, [field]: processedValue }));
 
+		// Clear step errors when a required field is filled
+		if (stepErrors[activeStep] && stepErrors[activeStep].length > 0) {
+			const currentStep = steps[activeStep];
+			const fieldConfig = currentStep.fields.find(f => f.name === field);
+			if (fieldConfig?.required && value !== undefined && value !== null && value !== '') {
+				setStepErrors(prev => ({ ...prev, [activeStep]: [] }));
+			}
+		}
+
 		if (field === 'state') {
 			if (!value) {
 				console.warn('State cleared, resetting comunas');
@@ -195,6 +204,25 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 	};
 
 	const handleSubmit = async () => {
+		// Validate all steps before submitting
+		let allStepsValid = true;
+		const allErrors: Record<number, string[]> = {};
+
+		for (let i = 0; i < steps.length; i++) {
+			const stepValid = validateStep(i);
+			if (!stepValid) {
+				allStepsValid = false;
+				allErrors[i] = stepErrors[i] || [];
+			}
+		}
+
+		if (!allStepsValid) {
+			setStepErrors(allErrors);
+			setError('Completa todos los campos obligatorios antes de guardar');
+			setLoading(false);
+			return;
+		}
+
 		setLoading(true);
 		setError(null);
 		try {
@@ -231,6 +259,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 				}
 			}
 			await onSave(form);
+			setStepErrors({}); // Clear all step errors on success
 			setLoading(false);
 			onClose();
 		} catch (e) {
@@ -239,8 +268,66 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 		}
 	};
 
+	const [stepErrors, setStepErrors] = useState<Record<number, string[]>>({});
+
 	// Custom stepper state
 	const [activeStep, setActiveStep] = useState(0);
+
+	const validateStep = (stepIndex: number): boolean => {
+		const currentStep = steps[stepIndex];
+		const errors: string[] = [];
+		
+		// Skip operationType validation if provided as prop
+		const fieldsToValidate = currentStep.fields.filter(field => 
+			!(field.name === 'operationType' && operationType)
+		);
+
+		for (const field of fieldsToValidate) {
+			if (field.required) {
+				const value = form[field.name];
+				
+				// Check if field is empty
+				if (value === undefined || value === null || value === '') {
+					errors.push(`${field.label} es obligatorio`);
+					continue;
+				}
+				
+				// Special validations for specific field types
+				if (field.name === 'builtSquareMeters' || field.name === 'landSquareMeters') {
+					const num = parseFloat(value);
+					if (isNaN(num) || num <= 0) {
+						errors.push(`${field.label} debe ser un número mayor a 0`);
+					}
+				}
+				
+				if (field.name === 'constructionYear') {
+					const num = parseFloat(value);
+					if (isNaN(num) || num < 1800 || num > new Date().getFullYear()) {
+						errors.push(`${field.label} debe estar entre 1800 y ${new Date().getFullYear()}`);
+					}
+				}
+				
+				if (field.name === 'price' && !value) {
+					errors.push(`${field.label} es obligatorio`);
+				}
+			}
+		}
+		
+		setStepErrors(prev => ({ ...prev, [stepIndex]: errors }));
+		return errors.length === 0;
+	};
+
+	const handleNextStep = () => {
+		if (validateStep(activeStep)) {
+			setActiveStep(activeStep + 1);
+		}
+	};
+
+	const handlePrevStep = () => {
+		setActiveStep(activeStep - 1);
+		// Clear errors when going back
+		setStepErrors(prev => ({ ...prev, [activeStep]: [] }));
+	};
 
 	// Helper to get options for each field
 	const getFieldOptions = (fieldName: string) => {
@@ -708,12 +795,12 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 				{/* Botones de navegación alineados a la derecha */}
 				<div className="flex items-center gap-2">
 					{activeStep > 0 && (
-						<Button variant="secondary" onClick={() => setActiveStep(activeStep - 1)}>
+						<Button variant="secondary" onClick={handlePrevStep}>
 							Atrás
 						</Button>
 					)}
 					{activeStep < steps.length - 1 ? (
-						<Button variant="primary" onClick={() => setActiveStep(activeStep + 1)}>
+						<Button variant="primary" onClick={handleNextStep}>
 							Siguiente
 						</Button>
 					) : (
@@ -774,6 +861,16 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			<div className="flex-shrink-0">
 				{renderStepper()}
 				{error && <Alert variant="error" className="mb-4">{error}</Alert>}
+				{stepErrors[activeStep] && stepErrors[activeStep].length > 0 && (
+					<Alert variant="error" className="mb-4">
+						<div className="font-semibold mb-2">Campos obligatorios faltantes:</div>
+						<ul className="list-disc list-inside space-y-1">
+							{stepErrors[activeStep].map((errorMsg, idx) => (
+								<li key={idx} className="text-sm">{errorMsg}</li>
+							))}
+						</ul>
+					</Alert>
+				)}
 			</div>
 			
 			{/* Contenido con altura fija - cada step maneja su propio scroll */}
