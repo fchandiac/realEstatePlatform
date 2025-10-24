@@ -161,7 +161,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   : "bg-background text-foreground";
 
   return (
-    <div className="relative pt-5 pb-1">
+    <div className="relative w-full pt-2">
       <div className={`relative ${className}`} data-test-id="text-field-root"> 
       {typeof startIcon === 'string' && startIcon.length > 0 && (
         <span
@@ -221,8 +221,8 @@ export const TextField: React.FC<TextFieldProps> = ({
           {type === "password" && (
             <button
               type="button"
-              className={`absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-transparent transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${focused ? "text-primary" : "text-secondary"}`}
-              style={{ padding: 0 }}
+              className={`absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 hover:bg-primary/10 active:scale-95 ${focused ? "text-primary" : "text-secondary"} ${showPassword ? "bg-primary/10 text-primary" : "bg-transparent"}`}
+              style={{ padding: 0, zIndex: 10 }}
               onMouseDown={(event) => {
                 event.preventDefault();
               }}
@@ -249,12 +249,13 @@ export const TextField: React.FC<TextFieldProps> = ({
       {placeholderColor && placeholderClassRef.current && (
         <style>{`input.${placeholderClassRef.current}::placeholder, textarea.${placeholderClassRef.current}::placeholder { color: ${placeholderColor} }`}</style>
       )}
-  <label
-    className={`absolute left-3 top-0 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs rounded-t-md ${contrastLabel} z-10 ${shrink ? " -translate-y-2 scale-90 opacity-100" : " opacity-0"}`}
-    style={{ ...(labelStyle || {}), backgroundColor: "var(--color-background)", color: labelStyle?.color || "var(--color-foreground)", zIndex: 10 }}
-    onClick={() => inputRef.current?.focus()}
-    data-test-id="text-field-label"
-  >
+      <label
+        className={`absolute left-3 -top-1 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs text-foreground` +
+          (shrink ? " -translate-y-1 scale-90 opacity-100" : " opacity-0")}
+        style={{ backgroundColor: "var(--color-background)" }}
+        onClick={() => inputRef.current?.focus()}
+        data-test-id="text-field-label"
+      >
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>

@@ -12,7 +12,7 @@ import Alert from '@/components/Alert/Alert';
 import DotProgress from '@/components/DotProgress/DotProgress';
 import FontAwesome from '@/components/FontAwesome/FontAwesome';
 import { getPropertyTypesMinimal } from '@/app/actions/propertyTypesMinimal';
-import { listAgents, listAdminsAgents } from '@/app/actions/users';
+import { listAdminsAgents } from '@/app/actions/users';
 import { getRegiones, getComunas, getComunasByRegion } from '@/app/actions/commons';
 import { PROPERTY_STATUSES, OPERATION_TYPES, CURRENCY_TYPES } from '@/app/constants';
 import NumberStepper from '@/components/NumberStepper/NumberStepper';
@@ -101,7 +101,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [propertyTypes, setPropertyTypes] = useState<Array<{ id: string; label: string }>>([]);
-	const [agents, setAgents] = useState<Array<{ id: number; label: string }>>([]);
+	const [agents, setAgents] = useState<Array<{ id: string; label: string }>>([]);
 	const [regiones, setRegiones] = useState<Array<{ id: string; label: string }>>([]);
 	const [comunas, setComunas] = useState<Array<{ id: string; label: string }>>([]);
 	const [loadingOptions, setLoadingOptions] = useState(true);
@@ -128,8 +128,10 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 				// Load administrators and agents
 				const usersResult = await listAdminsAgents({ limit: 100 });
 				if (usersResult.success && usersResult.data) {
-					const formattedUsers = usersResult.data.data.map((user: any) => ({
-						id: parseInt(user.id) || 0,
+					// Handle both response formats: direct array or { data: array, ... }
+					const usersArray = Array.isArray(usersResult.data) ? usersResult.data : usersResult.data.data || [];
+					const formattedUsers = usersArray.map((user: any) => ({
+						id: user.id,
 						label: `${user.personalInfo?.firstName || ''} ${user.personalInfo?.lastName || ''} (${user.username || ''})`.trim()
 					}));
 					setAgents(formattedUsers);
@@ -268,6 +270,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 		if (activeStep === 1) {
 			const renderedFields: React.JSX.Element[] = [];
 			let i = 0;
+			let keyIndex = 0;
 
 			while (i < fields.length) {
 				const field = fields[i];
@@ -288,7 +291,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 					const cityOptions = [...getFieldOptions(cityField.name)];
 
 					renderedFields.push(
-						<div key={`state-city-row`} className="flex gap-4">
+						<div key={`state-city-row-${keyIndex}`} className="flex gap-4">
 							<div className="flex-1">
 								<AutoComplete
 									options={stateOptions}
@@ -310,6 +313,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 						</div>
 					);
 					i += 2; // Skip both fields
+					keyIndex++;
 				} else {
 					// Render single field normally
 					const fieldOptions = getFieldOptions(field.name);
@@ -317,7 +321,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 
 					if (field.name === 'multimedia') {
 						renderedFields.push(
-							<div key={`${field.name}-${i}`}>
+							<div key={`${field.name}-${keyIndex}`}>
 								<div className="flex items-center justify-end gap-3 mb-4">
 									<IconButton
 										icon="add"
@@ -392,18 +396,19 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 
 						if (fieldElement) {
 							renderedFields.push(
-								<div key={`${field.name}-${i}`}>
+								<div key={`${field.name}-${keyIndex}`} className="w-full">
 									{fieldElement}
 								</div>
 							);
 						}
 					}
 					i++;
+					keyIndex++;
 				}
 			}
 
 			return (
-				<div className="flex flex-col gap-4 h-full overflow-y-auto px-1">
+				<div className="flex flex-col gap-1 h-full overflow-y-auto px-1">
 					{loadingOptions && (
 						<div className="flex justify-center py-4">
 							<DotProgress />
@@ -417,7 +422,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 		// Special handling for step 3 (characteristics) - use NumberStepper for numeric fields
 		if (activeStep === 2) {
 			return (
-				<div className="flex flex-col gap-4 h-full overflow-y-auto px-1">
+				<div className="flex flex-col gap-1 h-full overflow-y-auto px-1">
 					{loadingOptions && (
 						<div className="flex justify-center py-4">
 							<DotProgress />
@@ -433,7 +438,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 						// Use TextField type="number" for builtSquareMeters, landSquareMeters, constructionYear
 						if (['bedrooms', 'bathrooms', 'parkingSpaces', 'floors'].includes(field.name)) {
 							return (
-								<div key={`${field.name}-${idx}`}>
+								<div key={`${field.name}-${idx}`} className="w-full">
 									<NumberStepper
 										label={field.label || 'Campo'}
 										value={form[field.name] || 0}
@@ -447,7 +452,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 							);
 						} else if (['builtSquareMeters', 'landSquareMeters', 'constructionYear'].includes(field.name)) {
 							return (
-								<div key={`${field.name}-${idx}`}>
+								<div key={`${field.name}-${idx}`} className="w-full">
 									<TextField
 										label={field.label || 'Campo'}
 										type="number"
@@ -467,39 +472,42 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 							case 'number':
 								if (field.name === 'constructionYear') {
 									return (
-										<NumberStepper
-											key={`${field.name}-${idx}`}
-											label={field.label || 'Campo'}
-											value={form[field.name] || 0}
-											onChange={(value) => handleChange(field.name, value)}
-											min={1800}
-											max={new Date().getFullYear()}
-											step={1}
-											required={field.required}
-										/>
+										<div key={`${field.name}-${idx}`} className="w-full">
+											<NumberStepper
+												label={field.label || 'Campo'}
+												value={form[field.name] || 0}
+												onChange={(value) => handleChange(field.name, value)}
+												min={1800}
+												max={new Date().getFullYear()}
+												step={1}
+												required={field.required}
+											/>
+										</div>
 									);
 								} else {
 									return (
-										<TextField
-											key={`${field.name}-${idx}`}
-											label={field.label || 'Campo'}
-											type="number"
-											value={form[field.name]?.toString() || '0'}
-											onChange={e => handleChange(field.name, e.target.value)}
-											required={field.required}
-										/>
+										<div key={`${field.name}-${idx}`} className="w-full">
+											<TextField
+												label={field.label || 'Campo'}
+												type="number"
+												value={form[field.name]?.toString() || '0'}
+												onChange={e => handleChange(field.name, e.target.value)}
+												required={field.required}
+											/>
+										</div>
 									);
 								}
 							case 'text':
 								return (
-									<TextField
-										key={`${field.name}-${idx}`}
-										label={field.label || 'Campo'}
-										placeholder={field.label || 'Campo'}
-										value={form[field.name] || ''}
-										required={field.required}
-										onChange={e => handleChange(field.name, e.target.value)}
-									/>
+									<div key={`${field.name}-${idx}`} className="w-full">
+										<TextField
+											label={field.label || 'Campo'}
+											placeholder={field.label || 'Campo'}
+											value={form[field.name] || ''}
+											required={field.required}
+											onChange={e => handleChange(field.name, e.target.value)}
+										/>
+									</div>
 								);
 							default:
 								return null;
@@ -511,7 +519,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 
 		// Default rendering for other steps
 		return (
-			<div className="flex flex-col gap-4 h-full overflow-y-auto px-1">
+			<div className="flex flex-col gap-1 h-full overflow-y-auto px-1">
 				{loadingOptions && (
 					<div className="flex justify-center py-4">
 						<DotProgress />
@@ -560,99 +568,107 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 					switch (field.type) {
 						case 'text':
 							return (
-								<TextField
-									key={`${field.name}-${idx}`}
-									label={field.label || 'Campo'}
-									placeholder={field.label || 'Campo'}
-									value={form[field.name] || ''}
-									required={field.required}
-									onChange={e => handleChange(field.name, e.target.value)}
-								/>
+								<div key={`${field.name}-${idx}`} className="w-full">
+									<TextField
+										label={field.label || 'Campo'}
+										placeholder={field.label || 'Campo'}
+										value={form[field.name] || ''}
+										required={field.required}
+										onChange={e => handleChange(field.name, e.target.value)}
+									/>
+								</div>
 							);
 						case 'textarea':
 							return (
-								<TextField
-									key={`${field.name}-${idx}`}
-									label={field.label || 'Campo'}
-									value={form[field.name] || ''}
-									required={field.required}
-									rows={field.rows}
-									onChange={e => handleChange(field.name, e.target.value)}
-								/>
+								<div key={`${field.name}-${idx}`} className="w-full">
+									<TextField
+										label={field.label || 'Campo'}
+										value={form[field.name] || ''}
+										required={field.required}
+										rows={field.rows}
+										onChange={e => handleChange(field.name, e.target.value)}
+									/>
+								</div>
 							);
 						case 'number':
 							if (field.name === 'constructionYear') {
 								return (
-									<TextField
-										key={`${field.name}-${idx}`}
-										label={field.label || 'Campo'}
-										type="datePicker"
-										value={form[field.name]?.toString() || ''}
-										onChange={e => handleChange(field.name, e.target.value)}
-										required={field.required}
-									/>
+									<div key={`${field.name}-${idx}`} className="w-full">
+										<TextField
+											label={field.label || 'Campo'}
+											type="datePicker"
+											value={form[field.name]?.toString() || ''}
+											onChange={e => handleChange(field.name, e.target.value)}
+											required={field.required}
+										/>
+									</div>
 								);
 							} else {
 								return (
-									<TextField
-										key={`${field.name}-${idx}`}
-										label={field.label || 'Campo'}
-										type="number"
-										value={form[field.name]?.toString() || '0'}
-										onChange={e => handleChange(field.name, e.target.value)}
-										required={field.required}
-									/>
+									<div key={`${field.name}-${idx}`} className="w-full">
+										<TextField
+											label={field.label || 'Campo'}
+											type="number"
+											value={form[field.name]?.toString() || '0'}
+											onChange={e => handleChange(field.name, e.target.value)}
+											required={field.required}
+										/>
+									</div>
 								);
 							}
 						case 'select':
 							return (
-								<Select
-									key={`${field.name}-${idx}`}
-									options={options}
-									placeholder={field.label || 'Selecciona'}
-									value={form[field.name] || null}
-									required={field.required}
-									onChange={(val: any) => handleChange(field.name, val)}
-								/>
+								<div key={`${field.name}-${idx}`} className="w-full">
+									<Select
+										options={options}
+										placeholder={field.label || 'Selecciona'}
+										value={form[field.name] || null}
+										required={field.required}
+										onChange={(val: any) => handleChange(field.name, val)}
+									/>
+								</div>
 							);
 						case 'autocomplete':
 							return (
-								<AutoComplete
-									key={`${field.name}-${idx}`}
-									options={options}
-									label={field.label || 'Buscar'}
-									placeholder={field.label || 'Buscar'}
-									value={form[field.name] || null}
-									onChange={(val: any) => handleChange(field.name, val)}
-								/>
+								<div key={`${field.name}-${idx}`} className="w-full">
+									<AutoComplete
+										options={options}
+										label={field.label || 'Buscar'}
+										placeholder={field.label || 'Buscar'}
+										value={form[field.name] || null}
+										onChange={(val: any) => handleChange(field.name, val)}
+									/>
+								</div>
 							);
 						case 'location':
 							return (
-								<CreateLocationPicker
-									key={`${field.name}-${idx}`}
-									// No value prop, just onChange
-									onChange={val => handleChange(field.name, val)}
-								/>
+								<div key={`${field.name}-${idx}`} className="w-full">
+									<CreateLocationPicker
+										onChange={val => handleChange(field.name, val)}
+									/>
+								</div>
 							);
 						case 'currency':
 							return (
-								<TextField
-									key={`${field.name}-${idx}`}
-									label={field.label || 'Precio'}
-									placeholder={field.label || 'Precio'}
-									type="currency"
-									value={form[field.name] || ''}
-									onChange={e => handleChange(field.name, e.target.value)}
-								/>
+								<div key={`${field.name}-${idx}`} className="w-full">
+									<TextField
+										label={field.label || 'Precio'}
+										placeholder={field.label || 'Precio'}
+										type="currency"
+										value={form[field.name] || ''}
+										onChange={e => handleChange(field.name, e.target.value)}
+									/>
+								</div>
 							);
 						case 'file':
 							return (
-								<FileImageUploader
-									key={`${field.name}-${idx}`}
-									uploadPath="/uploads/properties"
-									onChange={val => handleChange(field.name, val)}
-									label={field.label || 'Imágenes'}
-								/>
+								<div key={`${field.name}-${idx}`} className="w-full">
+									<FileImageUploader
+										uploadPath="/uploads/properties"
+										onChange={val => handleChange(field.name, val)}
+										label={field.label || 'Imágenes'}
+									/>
+								</div>
 							);
 						default:
 							return null;
@@ -709,7 +725,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			</div>			{/* Card del paso activo - 100% del ancho */}
 			<div className="w-full mb-3">
 				<div className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg">
-					<div className="flex items-center gap-4">
+					<div className="flex items-center gap-1">
 						{/* Título y descripción */}
 						<div className="flex-1">
 							<h3 className="text-lg font-semibold text-foreground mb-1">
