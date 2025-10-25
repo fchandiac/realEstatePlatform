@@ -222,6 +222,11 @@ export class Property {
   @IsOptional()
   multimedia?: Multimedia[];
 
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  @IsOptional()
+  @IsString()
+  mainImageUrl?: string;
+
   // Business Logic Fields
   @Column({ type: 'json', nullable: true })
   @IsOptional()

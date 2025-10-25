@@ -18,7 +18,8 @@ import {
   TestimonialSeed,
   AboutUsSeed,
   ArticleSeed,
-  MultimediaSeed
+  MultimediaSeed,
+  IdentitySeed
 } from './seeder.types';
 
 export class SeederFactory {
@@ -266,6 +267,47 @@ export class SeederFactory {
       createdAt: faker.date.past(),
       updatedAt: new Date(),
       deletedAt: null
+    };
+  }
+
+  static createRandomIdentity(): IdentitySeed {
+    const socialMedia = {
+      instagram: {
+        url: faker.helpers.maybe(() => `https://instagram.com/${faker.internet.username()}`, { probability: 0.7 }),
+        available: faker.datatype.boolean()
+      },
+      facebook: {
+        url: faker.helpers.maybe(() => `https://facebook.com/${faker.internet.username()}`, { probability: 0.6 }),
+        available: faker.datatype.boolean()
+      },
+      linkedin: {
+        url: faker.helpers.maybe(() => `https://linkedin.com/in/${faker.internet.username()}`, { probability: 0.5 }),
+        available: faker.datatype.boolean()
+      },
+      youtube: {
+        url: faker.helpers.maybe(() => `https://youtube.com/channel/${faker.string.uuid()}`, { probability: 0.4 }),
+        available: faker.datatype.boolean()
+      }
+    };
+
+    const partnerships = Array.from({ length: faker.number.int({ min: 0, max: 3 }) }, () => ({
+      name: faker.company.name(),
+      description: faker.lorem.paragraph(),
+      logoUrl: faker.helpers.maybe(() => `uploads/web/partnerships/${faker.system.fileName()}.png`, { probability: 0.8 })
+    }));
+
+    return {
+      name: faker.company.name(),
+      address: faker.location.streetAddress(),
+      phone: `+56 9 ${faker.string.numeric(4)} ${faker.string.numeric(4)}`,
+      mail: faker.internet.email(),
+      businessHours: 'Lunes a Viernes: 9:00 - 18:00\nSábado: 9:00 - 13:00\nDomingo: Cerrado',
+      urlLogo: faker.helpers.maybe(() => `uploads/web/logos/${faker.system.fileName()}.png`, { probability: 0.9 }),
+      socialMedia: socialMedia,
+      partnerships: partnerships.length > 0 ? partnerships : undefined,
+      createdAt: faker.date.past(),
+      updatedAt: new Date(),
+      deletedAt: undefined
     };
   }
 }

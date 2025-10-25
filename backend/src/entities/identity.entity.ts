@@ -58,7 +58,7 @@ export class Partnership {
 
   @IsOptional()
   @IsString()
-  multimediaUrl?: string;
+  logoUrl?: string;
 }
 
 @Entity('identities')
@@ -90,6 +90,11 @@ export class Identity {
   @IsNotEmpty()
   @IsString()
   businessHours: string;
+
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  @IsOptional()
+  @IsString()
+  urlLogo?: string;
 
   @Column({ type: 'json', nullable: true })
   @IsOptional()

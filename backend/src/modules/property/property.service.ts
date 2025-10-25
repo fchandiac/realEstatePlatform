@@ -6,6 +6,7 @@ import { Property } from '../../entities/property.entity';
 import { User } from '../../entities/user.entity';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 import { CreatePropertyDto as NewCreatePropertyDto } from './dto/create-property.dto';
+import { UpdateMainImageDto } from './dto/create-property.dto';
 import { PropertyStatus } from '../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../common/enums/property-operation-type.enum';
 import { ChangeHistoryEntry, ViewEntry, LeadEntry } from '../../common/interfaces/property.interfaces';
@@ -902,6 +903,15 @@ export class PropertyService {
   private parsePrice(priceString: string): number {
     // Convertir formato currency (ej: "1.500.000") a número
     return parseFloat(priceString.replace(/\./g, '').replace(',', '.'));
+  }
+
+  async updateMainImage(id: string, mainImageUrl: string): Promise<Property> {
+    const property = await this.propertyRepository.findOne({ where: { id } });
+    if (!property) {
+      throw new NotFoundException('Property not found');
+    }
+    property.mainImageUrl = mainImageUrl;
+    return this.propertyRepository.save(property);
   }
 
   // ===== FIN DEL NUEVO MÉTODO =====

@@ -13,8 +13,10 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { PropertyService } from './property.service';
+import { Property } from '../../entities/property.entity';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 import { CreatePropertyDto as CreatePropertyPayloadDto } from './dto/create-property.dto';
+import { UpdateMainImageDto } from './dto/create-property.dto';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
 import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { Audit } from '../../common/interceptors/audit.interceptor';
@@ -112,5 +114,14 @@ export class PropertyController {
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Count featured properties')
   async countFeaturedProperties() {
     return { total: await this.propertyService.countFeaturedProperties() };
+  }
+
+  @Patch(':id/main-image')
+  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Main image updated')
+  async updateMainImage(
+    @Param('id') id: string,
+    @Body(new ValidationPipe({ transform: true })) dto: UpdateMainImageDto,
+  ): Promise<Property> {
+    return this.propertyService.updateMainImage(id, dto.mainImageUrl);
   }
 }

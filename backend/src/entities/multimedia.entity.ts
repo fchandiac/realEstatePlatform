@@ -26,6 +26,7 @@ export enum MultimediaType {
   PARTNERSHIP = 'PARTNERSHIP',
   DOCUMENT = 'DOCUMENT',
   TESTIMONIAL_IMG = 'TESTIMONIAL_IMG',
+  SLIDER = 'SLIDER',
 }
 
 @Entity('multimedia')

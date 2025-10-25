@@ -9,7 +9,9 @@ import {
   ValidationPipe,
   UseGuards,
   UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { IdentitiesService } from './identities.service';
 import { CreateIdentityDto, UpdateIdentityDto } from './dto/identity.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -25,8 +27,21 @@ export class IdentitiesController {
 
   @Post()
   @Audit(AuditAction.CREATE, AuditEntityType.IDENTITY, 'Identity created')
-  create(@Body(ValidationPipe) createIdentityDto: CreateIdentityDto) {
-    return this.identitiesService.create(createIdentityDto);
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'logo', maxCount: 1 },
+      { name: 'partnershipLogos', maxCount: 10 },
+    ]),
+  )
+  create(
+    @Body(ValidationPipe) createIdentityDto: CreateIdentityDto,
+    @UploadedFiles()
+    files?: {
+      logo?: Express.Multer.File[];
+      partnershipLogos?: Express.Multer.File[];
+    },
+  ) {
+    return this.identitiesService.create(createIdentityDto, files);
   }
 
   @Get()
@@ -49,11 +64,22 @@ export class IdentitiesController {
 
   @Patch(':id')
   @Audit(AuditAction.UPDATE, AuditEntityType.IDENTITY, 'Identity updated')
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'logo', maxCount: 1 },
+      { name: 'partnershipLogos', maxCount: 10 },
+    ]),
+  )
   update(
     @Param('id') id: string,
     @Body(ValidationPipe) updateIdentityDto: UpdateIdentityDto,
+    @UploadedFiles()
+    files?: {
+      logo?: Express.Multer.File[];
+      partnershipLogos?: Express.Multer.File[];
+    },
   ) {
-    return this.identitiesService.update(id, updateIdentityDto);
+    return this.identitiesService.update(id, updateIdentityDto, files);
   }
 
   @Delete(':id')

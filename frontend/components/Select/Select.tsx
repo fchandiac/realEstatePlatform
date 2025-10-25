@@ -4,15 +4,15 @@ import DropdownList, { dropdownOptionClass } from "@/components/DropdownList/Dro
 import IconButton from "@/components/IconButton/IconButton";
 
 export interface Option {
-  id: number;
+  id: string | number;
   label: string;
 }
 
 interface SelectProps {
   options: Option[];
   placeholder: string;
-  value?: number | null;
-  onChange?: (id: number | null) => void;
+  value?: string | number | null;
+  onChange?: (id: string | number | null) => void;
   required?: boolean;
   name?: string;
   ["data-test-id"]?: string;

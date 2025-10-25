@@ -110,7 +110,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 					options={field.options || []}
 					placeholder={field.label}
 					value={values[field.name]}
-					onChange={(id: number | null) => onChange(field.name, id)}
+					onChange={(id: string | number | null) => onChange(field.name, id)}
 					required={field.required}
 					data-test-id={`select-${field.name}`}
 				/>

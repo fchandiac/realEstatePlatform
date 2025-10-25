@@ -5,9 +5,15 @@ import { IdentitiesService } from './identities.service';
 import { IdentitiesController } from './identities.controller';
 import { AuthModule } from '../auth/auth.module';
 import { AuditModule } from '../../audit/audit.module';
+import { MultimediaModule } from '../multimedia/multimedia.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Identity]), AuthModule, AuditModule],
+  imports: [
+    TypeOrmModule.forFeature([Identity]),
+    AuthModule,
+    AuditModule,
+    MultimediaModule,
+  ],
   controllers: [IdentitiesController],
   providers: [IdentitiesService],
   exports: [IdentitiesService],

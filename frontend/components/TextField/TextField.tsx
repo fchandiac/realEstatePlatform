@@ -181,7 +181,7 @@ export const TextField: React.FC<TextFieldProps> = ({
           onBlur={() => setFocused(false)}
           onChange={onChange}
           className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] pr-4 py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${contrastInput} z-0`}
-          placeholder={shrink || !showPlaceholder ? "" : (placeholder ?? label)}
+          placeholder={required ? "" : (shrink || !showPlaceholder ? "" : (placeholder ?? label))}
           required={required}
           readOnly={readOnly}
           autoComplete="off"
@@ -207,7 +207,7 @@ export const TextField: React.FC<TextFieldProps> = ({
             style={{ backgroundColor: "var(--color-background)", ...(props.style || {}) }}
             placeholder={
               type === "datePicker" ? `Ej: ${new Date().getFullYear()}` :
-              (shrink || !showPlaceholder ? "" : (placeholder ?? label))
+              (required ? "" : (shrink || !showPlaceholder ? "" : (placeholder ?? label)))
             }
             required={required}
             readOnly={readOnly}

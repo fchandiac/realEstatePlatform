@@ -142,7 +142,7 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 					options={field.options || []}
 					placeholder={field.label}
 					value={values[field.name]}
-					onChange={(id: number | null) => handleChange(field.name, id)}
+					onChange={(id: string | number | null) => handleChange(field.name, id)}
 				/>
 			) : field.type === "autocomplete" ? (
 				<AutoComplete

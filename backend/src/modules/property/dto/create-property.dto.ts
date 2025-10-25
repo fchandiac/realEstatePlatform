@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNumber, IsObject, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsObject, IsArray, ValidateNested, IsNotEmpty } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
 export class CreatePropertyLocationDto {
@@ -170,8 +170,19 @@ export class CreatePropertyDto {
   @Type(() => CreatePropertyMultimediaDto)
   multimedia?: CreatePropertyMultimediaDto[];
 
+  // Imagen principal
+  @IsOptional()
+  @IsString()
+  mainImageUrl?: string;
+
   // Internos
   @IsOptional()
   @IsString()
   internalNotes?: string;
+}
+
+export class UpdateMainImageDto {
+  @IsString()
+  @IsNotEmpty()
+  mainImageUrl: string;
 }

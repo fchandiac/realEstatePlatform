@@ -9,6 +9,8 @@ interface FileImageUploaderProps {
   label?: string;
   accept?: string;
   maxFiles?: number;
+  aspectRatio?: 'square' | 'video' | 'auto';
+  buttonType?: 'icon' | 'normal';
 }
 
 export const FileImageUploader: React.FC<FileImageUploaderProps> = ({
@@ -17,6 +19,8 @@ export const FileImageUploader: React.FC<FileImageUploaderProps> = ({
   label = 'Selecciona imágenes',
   accept = 'image/*',
   maxFiles = 5,
+  aspectRatio = 'auto',
+  buttonType = 'icon',
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -55,16 +59,29 @@ export const FileImageUploader: React.FC<FileImageUploaderProps> = ({
           onChange={handleFileChange}
         />
       </label>
-      <Button variant="secondary" type="button" onClick={() => inputRef.current?.click()} style={{ width: 'fit-content' }}>
-        Subir imágenes
-      </Button>
+      {buttonType === 'icon' ? (
+        <IconButton
+          icon="add"
+          variant="containedSecondary"
+          onClick={() => inputRef.current?.click()}
+          ariaLabel="Subir imágenes"
+        />
+      ) : (
+        <Button variant="secondary" type="button" onClick={() => inputRef.current?.click()}>
+          Subir imágenes
+        </Button>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full" style={{ flexWrap: 'nowrap' }}>
         {previews.map((url, idx) => (
           <div key={idx} style={{ position: 'relative', display: 'inline-block', flex: '0 0 auto' }}>
             <img
               src={url}
               alt={`preview-${idx}`}
-              className="w-full h-28 sm:h-32 md:h-36 object-cover rounded-lg shadow"
+              className={`w-full object-cover rounded-lg shadow ${
+                aspectRatio === 'square' ? 'aspect-square' :
+                aspectRatio === 'video' ? 'aspect-video' :
+                'h-28 sm:h-32 md:h-36'
+              }`}
             />
             <IconButton
               aria-label="Eliminar imagen"
@@ -76,7 +93,6 @@ export const FileImageUploader: React.FC<FileImageUploaderProps> = ({
           </div>
         ))}
       </div>
-      <small className="text-xs text-gray-500">Las imágenes seleccionadas se subirán a: <b>{uploadPath}</b></small>
     </div>
   );
 };

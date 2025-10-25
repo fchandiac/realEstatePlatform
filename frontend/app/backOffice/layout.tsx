@@ -36,10 +36,10 @@ const menuItems = [
     children: [
       { label: 'Slider' },
       { label: 'Sobre nosotros' },
-      { label: 'Blog' },
       { label: 'Testimonios' },
       { label: 'Nuestro Equipo' },
-      { label: 'Artículos' },
+      { label: 'Artículos de blog' },
+      { label: 'Identidad de la empresa', url: '/backOffice/cms/identity' },
     ],
   },
   { label: 'Reportes' },

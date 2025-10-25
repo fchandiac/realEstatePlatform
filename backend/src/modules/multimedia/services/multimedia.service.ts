@@ -58,6 +58,7 @@ export class MultimediaService {
       [MultimediaType.PROPERTY_VIDEO]: 'properties/videos',
       [MultimediaType.TESTIMONIAL_IMG]: 'web/testimonials',
       [MultimediaType.DOCUMENT]: 'documents',
+      [MultimediaType.SLIDER]: 'web/sliders',
     };
 
     return paths[type] || '';

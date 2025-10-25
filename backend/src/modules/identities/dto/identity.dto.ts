@@ -30,6 +30,10 @@ export class CreateIdentityDto {
   businessHours: string;
 
   @IsOptional()
+  @IsString()
+  urlLogo?: string;
+
+  @IsOptional()
   @ValidateNested()
   @Type(() => SocialMedia)
   socialMedia?: SocialMedia;
@@ -60,6 +64,10 @@ export class UpdateIdentityDto {
   @IsOptional()
   @IsString()
   businessHours?: string;
+
+  @IsOptional()
+  @IsString()
+  urlLogo?: string;
 
   @IsOptional()
   @ValidateNested()

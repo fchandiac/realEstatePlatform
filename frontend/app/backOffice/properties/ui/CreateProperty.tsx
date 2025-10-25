@@ -31,8 +31,8 @@ const steps: StepperStep[] = [
 		fields: [
 			{ name: 'title', label: 'Título', type: 'text', required: true },
 			{ name: 'description', label: 'Descripción', type: 'textarea', rows: 3 },
-			{ name: 'status', label: 'Estado publicación', type: 'autocomplete', required: true },
-			{ name: 'operationType', label: 'Operación', type: 'autocomplete', required: true },
+			{ name: 'status', label: 'Estado publicación', type: 'select', required: true },
+			{ name: 'operationType', label: 'Operación', type: 'select', required: true },
 			{ name: 'propertyTypeId', label: 'Tipo de propiedad', type: 'autocomplete', options: [] },
 			{ name: 'assignedAgentId', label: 'Agente asignado', type: 'autocomplete', options: [] },
 		],
@@ -41,8 +41,8 @@ const steps: StepperStep[] = [
 		title: 'Ubicación',
 		description: 'Define la ubicación geográfica de tu propiedad con dirección y coordenadas',
 		fields: [
-			{ name: 'state', label: 'Región', type: 'autocomplete', options: [], required: true },
-			{ name: 'city', label: 'Comuna', type: 'autocomplete', options: [], required: true },
+			{ name: 'state', label: 'Región', type: 'autocomplete' },
+			{ name: 'city', label: 'Comuna', type: 'autocomplete' },
 			{ name: 'address', label: 'Dirección', type: 'text' },
 			{ name: 'location', label: 'Ubicación', type: 'location' },
 		],
@@ -64,8 +64,8 @@ const steps: StepperStep[] = [
 		title: 'Precio',
 		description: 'Configuración de precio y moneda de la propiedad',
 		fields: [
-			{ name: 'price', label: 'Precio', type: 'currency' },
-			{ name: 'currencyPrice', label: 'Moneda', type: 'autocomplete', options: [] },
+			{ name: 'price', label: 'Precio', type: 'currency', required: true },
+			{ name: 'currencyPrice', label: 'Moneda', type: 'select', options: [], required: true },
 		],
 	},
 	{
@@ -102,7 +102,9 @@ interface CreatePropertyProps {
 }
 
 export default function CreateProperty({ open, onClose, onSave, operationType }: CreatePropertyProps) {
-	const [form, setForm] = useState<Record<string, any>>({});
+	const [form, setForm] = useState<Record<string, any>>({
+		currencyPrice: { id: 'CLP', label: 'CLP' }
+	});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [propertyTypes, setPropertyTypes] = useState<Array<{ id: string; label: string }>>([]);
@@ -126,6 +128,11 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			...prev, 
 			status: prev.status || { id: 3, label: 'Publicada' }, // Default to 'Published' (3)
 			operationType: operationType ? (operationType === 'SALE' ? { id: 1, label: 'Venta' } : { id: 2, label: 'Arriendo' }) : (prev.operationType || { id: 1, label: 'Venta' }) // Default to 'Sale' (1)
+		}));
+		// Set default currencyPrice to CLP
+		setForm(prev => ({
+			...prev,
+			currencyPrice: prev.currencyPrice || { id: 'CLP', label: 'CLP' }
 		}));
 	}, [operationType]);
 
@@ -261,15 +268,13 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 				setLoading(false);
 				return;
 			}
-			if (!form.state || typeof form.state !== 'object' || !form.state.id) {
-				console.log('State validation failed:', { state: form.state, type: typeof form.state, hasId: form.state?.id });
-				setError('La región es obligatoria y debe ser seleccionada de la lista');
+			if (!form.price || form.price === '') {
+				setError('El precio es obligatorio');
 				setLoading(false);
 				return;
 			}
-			if (!form.city || typeof form.city !== 'object' || !form.city.id) {
-				console.log('City validation failed:', { city: form.city, type: typeof form.city, hasId: form.city?.id });
-				setError('La comuna es obligatoria y debe ser seleccionada de la lista');
+			if (form.currencyPrice === undefined || form.currencyPrice === null || typeof form.currencyPrice !== 'object' || !form.currencyPrice.id) {
+				setError('La moneda es obligatoria');
 				setLoading(false);
 				return;
 			}
@@ -310,13 +315,13 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			const processedForm = {
 				...form,
 				// Extraer IDs de objetos
-				state: form.state?.id || '',
-				city: form.city?.id || '',
+				state: form.state?.id || undefined,
+				city: form.city?.id || undefined,
 				status: form.status?.id || 0,
 				operationType: form.operationType?.id || 0,
 				propertyTypeId: form.propertyTypeId?.id || form.propertyTypeId,
 				assignedAgentId: form.assignedAgentId?.id || form.assignedAgentId,
-				currencyPrice: form.currencyPrice?.id || 0,
+				currencyPrice: form.currencyPrice?.id || 'CLP',
 				// Convertir strings numéricos a numbers
 				bedrooms: form.bedrooms !== undefined ? Number(form.bedrooms) : undefined,
 				bathrooms: form.bathrooms !== undefined ? Number(form.bathrooms) : undefined,
@@ -413,8 +418,8 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 				];
 			case 'currencyPrice':
 				return [
-					{ id: 1, label: 'CLP' },
-					{ id: 2, label: 'UF' }
+					{ id: 'CLP', label: 'CLP' },
+					{ id: 'UF', label: 'UF' }
 				];
 			case 'propertyTypeId':
 				return propertyTypes;
@@ -786,9 +791,12 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 									<Select
 										options={options}
 										placeholder={field.label || 'Selecciona'}
-										value={form[field.name] || null}
+										value={form[field.name]?.id || null}
 										required={field.required}
-										onChange={(val: any) => handleChange(field.name, val)}
+										onChange={(val: string | number | null) => {
+											const selectedOption = options.find((opt: any) => opt.id === val);
+											handleChange(field.name, selectedOption || null);
+										}}
 									/>
 								</div>
 							);
@@ -800,6 +808,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 										label={field.label || 'Buscar'}
 										placeholder={field.label || 'Buscar'}
 										value={form[field.name] || null}
+										required={field.required}
 										onChange={(val: any) => handleChange(field.name, val)}
 									/>
 								</div>

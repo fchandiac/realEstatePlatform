@@ -13,6 +13,7 @@ import { Testimonial } from '../../src/entities/testimonial.entity';
 import { AboutUs } from '../../src/entities/about-us.entity';
 import { Article, ArticleCategory } from '../../src/entities/article.entity';
 import { Multimedia, MultimediaFormat, MultimediaType } from '../../src/entities/multimedia.entity';
+import { Identity } from '../../src/entities/identity.entity';
 import {
   PersonSeed,
   UserSeed,
@@ -182,6 +183,17 @@ async function seedDatabase() {
     const aboutUs = await aboutUsRepository.save(
       aboutUsRepository.create({
         ...aboutUsData,
+        deletedAt: undefined
+      })
+    );
+    
+    // Seed Identity
+    console.log('Seeding identity...');
+    const identityRepository = AppDataSource.getRepository(Identity);
+    const identityData = SeederFactory.createRandomIdentity();
+    const identity = await identityRepository.save(
+      identityRepository.create({
+        ...identityData,
         deletedAt: undefined
       })
     );
