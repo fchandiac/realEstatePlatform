@@ -14,6 +14,7 @@ import {
 import { Response } from 'express';
 import { PropertyService } from './property.service';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
+import { CreatePropertyDto as CreatePropertyPayloadDto } from './dto/create-property.dto';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
 import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { Audit } from '../../common/interceptors/audit.interceptor';
@@ -39,9 +40,8 @@ export class PropertyController {
 
   @Post()
   @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Property created')
-    // No changes needed; description is handled by DTOs in create and update endpoints.
-  create(@Body(ValidationPipe) createPropertyDto: CreatePropertyDto) {
-    return this.propertyService.create(createPropertyDto);
+  create(@Body(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } })) createPropertyDto: CreatePropertyPayloadDto) {
+    return this.propertyService.createProperty(createPropertyDto);
   }
 
   @Get()

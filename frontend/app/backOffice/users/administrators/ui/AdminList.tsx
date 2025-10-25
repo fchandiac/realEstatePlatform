@@ -5,6 +5,7 @@ import type { AdministratorType } from './types';
 import { TextField } from '@/components/TextField/TextField';
 import { useRouter, useSearchParams } from "next/navigation";
 import AdminCard from "./AdminCard";
+import UpdateAdminDialog from "./UpdateAdminDialog";
 
 export interface AdminListProps {
     administrators: AdministratorType[];
@@ -37,6 +38,8 @@ const AdminList: React.FC<AdminListProps> = ({
      const router = useRouter();
     const searchParams = useSearchParams();
     const [search, setSearch] = useState(searchParams.get("search") || "");
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [selectedAdmin, setSelectedAdmin] = useState<AdministratorType | null>(null);
    
     useEffect(() => {
         setSearch(searchParams.get("search") || "");
@@ -52,6 +55,21 @@ const AdminList: React.FC<AdminListProps> = ({
       params.delete("search");
     }
     router.replace(`?${params.toString()}`);
+  };
+
+  const handleEditAdmin = (admin: AdministratorType) => {
+    setSelectedAdmin(admin);
+    setEditDialogOpen(true);
+  };
+
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false);
+    setSelectedAdmin(null);
+  };
+
+  const handleRefreshList = () => {
+    // Refresh the page to reload the administrators list
+    router.refresh();
   };
 
 
@@ -86,15 +104,20 @@ const AdminList: React.FC<AdminListProps> = ({
                     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full"
                 >
                     {administrators.map(admin => (
-                        <AdminCard key={admin.id} admin={admin} />
+                        <AdminCard key={admin.id} admin={admin} onEdit={handleEditAdmin} />
                     ))}
                 </div>
             </div>
 
 
 
+            <UpdateAdminDialog
+                open={editDialogOpen}
+                onClose={handleEditDialogClose}
+                administrator={selectedAdmin}
+                onSave={handleRefreshList}
+            />
         </>
-
     );
 };
 

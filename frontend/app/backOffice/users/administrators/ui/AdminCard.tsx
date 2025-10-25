@@ -4,6 +4,7 @@ import IconButton from '@/components/Button/IconButton';
 
 export interface AdminCardProps {
   admin: AdministratorType;
+  onEdit?: (admin: AdministratorType) => void;
 }
 
 const STATUS_STYLES: Record<AdministratorStatus, { className: string; label: string }> = {
@@ -13,7 +14,7 @@ const STATUS_STYLES: Record<AdministratorStatus, { className: string; label: str
   SUSPENDED: { className: 'bg-rose-600 text-white', label: 'SUSPENDIDO' },
 };
 
-const AdminCard: React.FC<AdminCardProps> = ({ admin}) => {
+const AdminCard: React.FC<AdminCardProps> = ({ admin, onEdit }) => {
   const fullName = `${admin.personalInfo?.firstName ?? ''} ${admin.personalInfo?.lastName ?? ''}`.trim() || admin.username || admin.email;
 
   const status = STATUS_STYLES[admin.status as AdministratorStatus] ?? {
@@ -58,7 +59,7 @@ const AdminCard: React.FC<AdminCardProps> = ({ admin}) => {
             size="sm"
             aria-label={`Editar ${fullName}`}
             title="Editar"
-            onClick={() => {}}
+            onClick={() => onEdit?.(admin)}
           />
 
 

@@ -243,42 +243,52 @@ export interface Property {
 }
 
 export interface CreatePropertyDto {
+  // Datos generales
   title: string;
   description?: string;
-  price: number;
-  currencyPrice: 'CLP' | 'UF';
-  operationType: 'RENT' | 'SALE';
-  propertyTypeId: string;
+  status: number;
+  operationType: number;
+  propertyTypeId?: string;
   assignedAgentId?: string;
-  availableFrom?: string;
-  publicDescription?: string;
-  privateNotes?: string;
-  isPublished?: boolean;
-  isFeatured?: boolean;
+
+  // Ubicación  
+  state: { id: string; label: string } | string;
+  city: { id: string; label: string } | string;
+  address?: string;
   location?: {
-    country?: string;
-    region?: string;
-    province?: string;
-    city?: string;
-    neighborhood?: string;
+    lat: number;
+    lng: number;
     address?: string;
-    coordinates?: {
-      latitude: number;
-      longitude: number;
-    };
   };
-  characteristics?: {
-    totalArea?: number;
-    builtArea?: number;
-    bedrooms?: number;
-    bathrooms?: number;
-    parkingSpaces?: number;
-    floors?: number;
-    amenities?: string[];
-    orientation?: string;
-    condition?: string;
-    yearBuilt?: number;
-  };
+
+  // Características (todas opcionales ahora)
+  bedrooms?: number;
+  bathrooms?: number;
+  parkingSpaces?: number;
+  floors?: number;
+  builtSquareMeters?: number;
+  landSquareMeters?: number;
+  constructionYear?: number;
+
+  // Precio (opcionales)
+  price?: string;
+  currencyPrice?: number;
+
+  // SEO
+  seoTitle?: string;
+  seoDescription?: string;
+
+  // Multimedia
+  multimedia?: Array<{
+    id?: string;
+    url: string;
+    filename: string;
+    type: 'image' | 'video';
+    order?: number;
+  }>;
+
+  // Internos
+  internalNotes?: string;
 }
 
 export interface UpdatePropertyDto {

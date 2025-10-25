@@ -5,6 +5,7 @@ import { Repository, IsNull } from 'typeorm';
 import { Property } from '../../entities/property.entity';
 import { User } from '../../entities/user.entity';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
+import { CreatePropertyDto as NewCreatePropertyDto } from './dto/create-property.dto';
 import { PropertyStatus } from '../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../common/enums/property-operation-type.enum';
 import { ChangeHistoryEntry, ViewEntry, LeadEntry } from '../../common/interfaces/property.interfaces';
@@ -13,6 +14,11 @@ import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { plainToClass } from 'class-transformer';
 import * as ExcelJS from 'exceljs';
 import { NotificationsService } from '../notifications/notifications.service';
+import { PropertyType } from '../../entities/property-type.entity';
+import { Multimedia, MultimediaType, MultimediaFormat } from '../../entities/multimedia.entity';
+import { RegionEnum } from '../../common/regions/regions.enum';
+import { ComunaEnum } from '../../common/regions/comunas.enum';
+import { CurrencyPriceEnum } from '../../entities/property.entity';
 
 @Injectable()
 export class PropertyService {
@@ -760,6 +766,145 @@ export class PropertyService {
 
     return row;
   }
+
+  @InjectRepository(Multimedia)
+  private readonly multimediaRepository: Repository<Multimedia>;
+
+  @InjectRepository(PropertyType)
+  private readonly propertyTypeRepository: Repository<PropertyType>;
+
+  async createProperty(createPropertyDto: NewCreatePropertyDto, creatorId?: string): Promise<Property> {
+    // 1. Crear propiedad base
+    const property = await this.createPropertyBase(createPropertyDto, creatorId);
+
+    // 2. Asignar ubicación
+    await this.assignPropertyLocation(property, createPropertyDto);
+
+    // 3. Procesar multimedia si existe
+    if (createPropertyDto.multimedia?.length) {
+      await this.processPropertyMultimedia(property, createPropertyDto.multimedia);
+    }
+
+    // 4. Asignar agente si existe
+    if (createPropertyDto.assignedAgentId) {
+      await this.assignPropertyAgent(property, createPropertyDto.assignedAgentId);
+    }
+
+    // 5. Guardar propiedad completa
+    return this.propertyRepository.save(property);
+  }
+
+  // Sub-método 1: Crear propiedad base
+  private async createPropertyBase(dto: NewCreatePropertyDto, creatorId?: string): Promise<Property> {
+    const property = new Property();
+
+    // Datos básicos
+    property.title = dto.title;
+    property.description = dto.description;
+    // ✅ @Transform in DTO already converts numbers to correct enum strings
+    property.status = dto.status as PropertyStatus;
+    property.operationType = dto.operationType as PropertyOperationType;
+
+    // Usuario creador
+    property.creatorUserId = creatorId;
+
+    // Relaciones básicas
+    if (dto.propertyTypeId) {
+      property.propertyTypeId = dto.propertyTypeId;
+    }
+
+    // Características (todas opcionales ahora)
+    property.bedrooms = dto.bedrooms;
+    property.bathrooms = dto.bathrooms;
+    property.parkingSpaces = dto.parkingSpaces;
+    property.floors = dto.floors;
+    property.builtSquareMeters = dto.builtSquareMeters;
+    property.landSquareMeters = dto.landSquareMeters;
+    property.constructionYear = dto.constructionYear;
+
+    // Precio (con valor por defecto si no se proporciona)
+    property.price = dto.price ? this.parsePrice(dto.price) : 0;
+    
+    // Currency con valor por defecto
+    property.currencyPrice = dto.currencyPrice === 'UF' ? CurrencyPriceEnum.UF : CurrencyPriceEnum.CLP;
+
+    // SEO
+    property.seoTitle = dto.seoTitle;
+    property.seoDescription = dto.seoDescription;
+
+    // Ubicación básica
+    property.address = dto.address;
+    if (dto.location) {
+      property.latitude = dto.location.lat;
+      property.longitude = dto.location.lng;
+    }
+
+    // Notas internas
+    property.internalNotes = dto.internalNotes;
+
+    // Historial de cambios
+    property.changeHistory = [{
+      timestamp: new Date(),
+      changedBy: creatorId || 'system',
+      field: 'creation',
+      previousValue: null,
+      newValue: 'Created',
+    }];
+
+    return property;
+  }
+
+  // Sub-método 2: Asignar ubicación
+  private async assignPropertyLocation(property: Property, dto: NewCreatePropertyDto): Promise<void> {
+    // Los campos ya vienen como strings después del @Transform en el DTO
+    if (dto.state) {
+      property.state = dto.state as RegionEnum;
+    }
+    if (dto.city) {
+      property.city = dto.city as ComunaEnum;
+    }
+  }
+
+  // Sub-método 3: Procesar multimedia
+  private async processPropertyMultimedia(
+    property: Property,
+    multimedia: any[]
+  ): Promise<void> {
+    const multimediaEntities: Multimedia[] = [];
+
+    for (const mediaDto of multimedia) {
+      const media = new Multimedia();
+      media.propertyId = property.id; // Se asignará después de guardar la propiedad
+      media.url = mediaDto.url;
+      media.filename = mediaDto.filename;
+      media.type = mediaDto.type === 'image' ? MultimediaType.PROPERTY_IMG : MultimediaType.PROPERTY_VIDEO;
+      media.format = mediaDto.type === 'image' ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
+
+      multimediaEntities.push(media);
+    }
+
+    // Nota: Los archivos multimedia se guardarán después de que la propiedad tenga ID
+    property.multimedia = multimediaEntities;
+  }
+
+  // Sub-método 4: Asignar agente
+  private async assignPropertyAgent(property: Property, agentId: string): Promise<void> {
+    const agent = await this.propertyRepository.manager.findOne(User, {
+      where: { id: agentId }
+    });
+    if (!agent) {
+      throw new NotFoundException('Agent not found');
+    }
+    property.assignedAgentId = agentId;
+  }
+
+  // Método auxiliar para parsear precio
+  private parsePrice(priceString: string): number {
+    // Convertir formato currency (ej: "1.500.000") a número
+    return parseFloat(priceString.replace(/\./g, '').replace(',', '.'));
+  }
+
+  // ===== FIN DEL NUEVO MÉTODO =====
 
 }
 

@@ -44,6 +44,13 @@ export class IdentitiesService {
     return await this.identityRepository.save(identity);
   }
 
+  async findLast(): Promise<Identity | null> {
+    return await this.identityRepository.findOne({
+      where: { deletedAt: IsNull() },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   async softDelete(id: string): Promise<void> {
     const identity = await this.findOne(id);
     await this.identityRepository.softDelete(id);

@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import Dialog from '@/components/Dialog/Dialog';
-import StepperBaseForm, { StepperStep } from '@/components/BaseForm/StepperBaseForm';
 import { TextField } from '@/components/TextField/TextField';
 import Select from '@/components/Select/Select';
 import AutoComplete from '@/components/AutoComplete/AutoComplete';
@@ -19,6 +18,12 @@ import NumberStepper from '@/components/NumberStepper/NumberStepper';
 import MultimediaGallery from '@/components/FileUploader/MultimediaGallery';
 import IconButton from '@/components/IconButton/IconButton';
 
+interface StepperStep {
+  title: string;
+  description: string;
+  fields: any[];
+}
+
 const steps: StepperStep[] = [
 	{
 		title: 'Datos generales',
@@ -26,9 +31,9 @@ const steps: StepperStep[] = [
 		fields: [
 			{ name: 'title', label: 'Título', type: 'text', required: true },
 			{ name: 'description', label: 'Descripción', type: 'textarea', rows: 3 },
-			{ name: 'status', label: 'Estado publicación', type: 'select', required: true, options: [ { id: 1, label: 'Publicado' }, { id: 2, label: 'Inactivo' } ] },
-			{ name: 'operationType', label: 'Operación', type: 'select', required: true, options: [ { id: 1, label: 'Venta' }, { id: 2, label: 'Arriendo' } ] },
-			{ name: 'propertyTypeId', label: 'Tipo de propiedad', type: 'select', options: [] },
+			{ name: 'status', label: 'Estado publicación', type: 'autocomplete', required: true },
+			{ name: 'operationType', label: 'Operación', type: 'autocomplete', required: true },
+			{ name: 'propertyTypeId', label: 'Tipo de propiedad', type: 'autocomplete', options: [] },
 			{ name: 'assignedAgentId', label: 'Agente asignado', type: 'autocomplete', options: [] },
 		],
 	},
@@ -36,8 +41,8 @@ const steps: StepperStep[] = [
 		title: 'Ubicación',
 		description: 'Define la ubicación geográfica de tu propiedad con dirección y coordenadas',
 		fields: [
-			{ name: 'state', label: 'Región', type: 'autocomplete', options: [] },
-			{ name: 'city', label: 'Comuna', type: 'autocomplete', options: [] },
+			{ name: 'state', label: 'Región', type: 'autocomplete', options: [], required: true },
+			{ name: 'city', label: 'Comuna', type: 'autocomplete', options: [], required: true },
 			{ name: 'address', label: 'Dirección', type: 'text' },
 			{ name: 'location', label: 'Ubicación', type: 'location' },
 		],
@@ -60,7 +65,7 @@ const steps: StepperStep[] = [
 		description: 'Configuración de precio y moneda de la propiedad',
 		fields: [
 			{ name: 'price', label: 'Precio', type: 'currency' },
-			{ name: 'currencyPrice', label: 'Moneda', type: 'select', options: [] },
+			{ name: 'currencyPrice', label: 'Moneda', type: 'autocomplete', options: [] },
 		],
 	},
 	{
@@ -112,8 +117,16 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 	// Inicializar form con operationType si viene definido
 	useEffect(() => {
 		if (operationType) {
-			setForm(prev => ({ ...prev, operationType }));
+			// Convert string operationType to object expected by AutoComplete
+			const operationTypeObj = operationType === 'SALE' ? { id: 1, label: 'Venta' } : { id: 2, label: 'Arriendo' };
+			setForm(prev => ({ ...prev, operationType: operationTypeObj }));
 		}
+		// Initialize status and operationType to default objects if not set
+		setForm(prev => ({ 
+			...prev, 
+			status: prev.status || { id: 3, label: 'Publicada' }, // Default to 'Published' (3)
+			operationType: operationType ? (operationType === 'SALE' ? { id: 1, label: 'Venta' } : { id: 2, label: 'Arriendo' }) : (prev.operationType || { id: 1, label: 'Venta' }) // Default to 'Sale' (1)
+		}));
 	}, [operationType]);
 
 	// Load options when component mounts
@@ -156,16 +169,24 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 
 	const handleChange = (field: string, value: any) => {
 		let processedValue = value;
+		
 		// Parse numeric fields that come from TextField type="number"
 		if (['builtSquareMeters', 'landSquareMeters', 'constructionYear'].includes(field)) {
-			const num = parseFloat(value);
-			if (isNaN(num)) {
-				console.warn(`Invalid number for ${field}: ${value}`);
-				return;
+			// Allow empty strings for optional fields
+			if (value === '' || value === null || value === undefined) {
+				processedValue = undefined;
+			} else {
+				const num = parseFloat(value);
+				if (isNaN(num)) {
+					console.warn(`Invalid number for ${field}: ${value}`);
+					// Still update the form with the invalid value to show user feedback
+					processedValue = value;
+				} else {
+					processedValue = num;
+				}
 			}
-			processedValue = num;
 		}
-		console.log(`Field changed: ${field}, Value:`, processedValue); // Depurar cambios en el campo
+		
 		setForm(prev => ({ ...prev, [field]: processedValue }));
 
 		// Clear step errors when a required field is filled
@@ -188,15 +209,13 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			const filterComunas = async () => {
 				try {
 					const regionId = value.id; // Usar solo el id de la región
-					console.log('Fetching comunas for region:', regionId); // Depurar valor de región
 					const regionComunas = await getComunasByRegion(regionId);
-					console.log('Comunas fetched:', regionComunas); // Depurar comunas obtenidas
 					setFilteredComunas(regionComunas);
-					console.log('Filtered comunas state updated:', regionComunas); // Verificar estado actualizado
-					setForm(prev => ({ ...prev, city: '' })); // Resetear comuna seleccionada
+					setForm(prev => ({ ...prev, city: null })); // Resetear comuna seleccionada a null
 				} catch (error) {
 					console.error('Error al cargar comunas:', error);
 					setFilteredComunas([]); // En caso de error, dejar vacío
+					setForm(prev => ({ ...prev, city: null })); // Resetear comuna seleccionada a null
 				}
 			};
 			filterComunas();
@@ -226,8 +245,31 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 		setLoading(true);
 		setError(null);
 		try {
-			if (!form.title || !form.status || !form.operationType) {
-				setError('Completa los campos obligatorios');
+			// Validar campos requeridos con formato correcto
+			if (!form.title || !form.title.trim()) {
+				setError('El título es obligatorio');
+				setLoading(false);
+				return;
+			}
+			if (form.status === undefined || form.status === null || typeof form.status !== 'object' || !form.status.id) {
+				setError('El estado de publicación es obligatorio');
+				setLoading(false);
+				return;
+			}
+			if (form.operationType === undefined || form.operationType === null || typeof form.operationType !== 'object' || !form.operationType.id) {
+				setError('El tipo de operación es obligatorio');
+				setLoading(false);
+				return;
+			}
+			if (!form.state || typeof form.state !== 'object' || !form.state.id) {
+				console.log('State validation failed:', { state: form.state, type: typeof form.state, hasId: form.state?.id });
+				setError('La región es obligatoria y debe ser seleccionada de la lista');
+				setLoading(false);
+				return;
+			}
+			if (!form.city || typeof form.city !== 'object' || !form.city.id) {
+				console.log('City validation failed:', { city: form.city, type: typeof form.city, hasId: form.city?.id });
+				setError('La comuna es obligatoria y debe ser seleccionada de la lista');
 				setLoading(false);
 				return;
 			}
@@ -237,7 +279,12 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 				let num;
 				if (['builtSquareMeters', 'landSquareMeters', 'constructionYear'].includes(field)) {
 					// Estos campos vienen como string de TextField type="number"
-					num = parseFloat(form[field]);
+					const fieldValue = form[field];
+					if (fieldValue === undefined || fieldValue === null || fieldValue === '') {
+						// Campo opcional vacío - permitir
+						continue;
+					}
+					num = parseFloat(fieldValue);
 					if (isNaN(num) || num < 0) {
 						setError(`El campo ${field} debe tener un valor válido`);
 						setLoading(false);
@@ -246,7 +293,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 				} else {
 					// Estos campos vienen como number de NumberStepper
 					num = form[field];
-					if (num === undefined || num === null || num < 0) {
+					if (num !== undefined && num !== null && num < 0) {
 						setError(`El campo ${field} debe tener un valor válido`);
 						setLoading(false);
 						return;
@@ -258,7 +305,29 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 					return;
 				}
 			}
-			await onSave(form);
+			
+			// Procesar el form para extraer IDs y convertir tipos antes de enviar
+			const processedForm = {
+				...form,
+				// Extraer IDs de objetos
+				state: form.state?.id || '',
+				city: form.city?.id || '',
+				status: form.status?.id || 0,
+				operationType: form.operationType?.id || 0,
+				propertyTypeId: form.propertyTypeId?.id || form.propertyTypeId,
+				assignedAgentId: form.assignedAgentId?.id || form.assignedAgentId,
+				currencyPrice: form.currencyPrice?.id || 0,
+				// Convertir strings numéricos a numbers
+				bedrooms: form.bedrooms !== undefined ? Number(form.bedrooms) : undefined,
+				bathrooms: form.bathrooms !== undefined ? Number(form.bathrooms) : undefined,
+				parkingSpaces: form.parkingSpaces !== undefined ? Number(form.parkingSpaces) : undefined,
+				floors: form.floors !== undefined ? Number(form.floors) : undefined,
+				builtSquareMeters: form.builtSquareMeters !== undefined ? parseFloat(form.builtSquareMeters) : undefined,
+				landSquareMeters: form.landSquareMeters !== undefined ? parseFloat(form.landSquareMeters) : undefined,
+				constructionYear: form.constructionYear !== undefined ? parseInt(form.constructionYear) : undefined,
+			};
+			
+			await onSave(processedForm);
 			setStepErrors({}); // Clear all step errors on success
 			setLoading(false);
 			onClose();
@@ -329,11 +398,24 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 	const getFieldOptions = (fieldName: string) => {
 		switch (fieldName) {
 			case 'status':
-				return PROPERTY_STATUSES;
+				return [
+					{ id: 1, label: 'Solicitud recibida' },
+					{ id: 2, label: 'Preaprobada' },
+					{ id: 3, label: 'Publicada' },
+					{ id: 4, label: 'Inactiva' },
+					{ id: 5, label: 'Vendida' },
+					{ id: 6, label: 'Arrendada' }
+				];
 			case 'operationType':
-				return OPERATION_TYPES;
+				return [
+					{ id: 1, label: 'Venta' },
+					{ id: 2, label: 'Arriendo' }
+				];
 			case 'currencyPrice':
-				return CURRENCY_TYPES;
+				return [
+					{ id: 1, label: 'CLP' },
+					{ id: 2, label: 'UF' }
+				];
 			case 'propertyTypeId':
 				return propertyTypes;
 			case 'assignedAgentId':
@@ -349,7 +431,6 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 
 	// Helper to render fields for current step
 	const renderFields = (fields: any[]) => {
-		// Special handling for step 2 (location) - combine state and city in same row
 		if (activeStep === 1) {
 			const renderedFields: React.JSX.Element[] = [];
 			let i = 0;
@@ -381,6 +462,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 									label={stateField.label || 'Buscar'}
 									placeholder={stateField.label || 'Buscar'}
 									value={form[stateField.name] || null}
+									required={stateField.required}
 									onChange={(val: any) => handleChange(stateField.name, val)}
 								/>
 							</div>
@@ -390,6 +472,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 									label={cityField.label || 'Buscar'}
 									placeholder={cityField.label || 'Buscar'}
 									value={form[cityField.name] || null}
+									required={cityField.required}
 									onChange={(val: any) => handleChange(cityField.name, val)}
 								/>
 							</div>
@@ -421,7 +504,6 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 									<MultimediaGallery
 										uploadPath="/uploads/properties"
 										onChange={(files) => {
-											console.log('Archivos multimedia seleccionados:', files);
 											handleChange(field.name, files);
 										}}
 										maxFiles={20}
@@ -524,7 +606,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 								<div key={`${field.name}-${idx}`} className="w-full">
 									<NumberStepper
 										label={field.label || 'Campo'}
-										value={form[field.name] || 0}
+										value={typeof form[field.name] === 'number' ? form[field.name] : 0}
 										onChange={(value) => handleChange(field.name, value)}
 										min={0}
 										max={field.name === 'floors' ? 50 : 20}
@@ -539,7 +621,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 									<TextField
 										label={field.label || 'Campo'}
 										type="number"
-										value={form[field.name]?.toString() || ''}
+										value={form[field.name] !== undefined ? form[field.name].toString() : ''}
 										onChange={e => handleChange(field.name, e.target.value)}
 										required={field.required}
 									/>
@@ -558,7 +640,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 										<div key={`${field.name}-${idx}`} className="w-full">
 											<NumberStepper
 												label={field.label || 'Campo'}
-												value={form[field.name] || 0}
+												value={typeof form[field.name] === 'number' ? form[field.name] : 2020}
 												onChange={(value) => handleChange(field.name, value)}
 												min={1800}
 												max={new Date().getFullYear()}
@@ -638,7 +720,6 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 									<MultimediaGallery
 										uploadPath="/uploads/properties"
 										onChange={(files) => {
-											console.log('Archivos multimedia seleccionados:', files);
 											handleChange(field.name, files);
 										}}
 										maxFiles={20}
@@ -692,7 +773,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 										<TextField
 											label={field.label || 'Campo'}
 											type="number"
-											value={form[field.name]?.toString() || '0'}
+											value={form[field.name] !== undefined ? form[field.name].toString() : '0'}
 											onChange={e => handleChange(field.name, e.target.value)}
 											required={field.required}
 										/>

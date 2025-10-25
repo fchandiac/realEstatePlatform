@@ -125,7 +125,7 @@ const AutoComplete = <T = Option,>({
   };
 
   const handleValidation = () => {
-    if (required && !inputValue) {
+    if (required && (!value || (inputValue && !value))) {
       setValidationTriggered(true);
       setOpen(false); // Prevent dropdown from opening when validation fails
     } else {
@@ -162,8 +162,8 @@ const AutoComplete = <T = Option,>({
         required={required}
       />
       <label
-        className={`absolute left-3 -top-1 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs text-foreground` +
-          (shrink ? " -translate-y-1 scale-90 opacity-100" : " opacity-0")}
+        className={`absolute left-3 top-1 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs text-foreground` +
+          (shrink ? " -translate-y-2 scale-90 opacity-100" : " opacity-0")}
         style={{ backgroundColor: "var(--color-background)" }}
         onClick={() => inputRef.current?.focus()}
         data-test-id="auto-complete-label"
@@ -176,7 +176,7 @@ const AutoComplete = <T = Option,>({
         <IconButton
           icon="close_small"
           variant="text"
-          className={`absolute right-6 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center ${focused ? 'text-primary' : 'text-secondary'}`}
+          className={`absolute right-6 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center ${focused ? 'text-primary' : 'text-secondary'}`}
           style={{lineHeight:0, padding: 0, margin: 0}}
           onClick={handleClear}
           aria-label="Limpiar selección"
@@ -188,7 +188,7 @@ const AutoComplete = <T = Option,>({
       <IconButton
         icon="arrow_drop_down"
         variant="text"
-        className={`absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center ${focused ? 'text-primary' : 'text-secondary'}`}
+        className={`absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 flex items-center justify-center ${focused ? 'text-primary' : 'text-secondary'}`}
         style={{lineHeight:0, padding: 0, margin: 0}}
         tabIndex={-1}
         aria-label="Desplegar opciones"

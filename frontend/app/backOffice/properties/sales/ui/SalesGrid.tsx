@@ -41,62 +41,92 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
   const handleCreateSave = async (propertyData: any) => {
     setCreateLoading(true);
     try {
-      console.log('Guardando propiedad:', propertyData);
+      // Validate required fields before sending
+      if (!propertyData.status) {
+        throw new Error('El estado de publicación es obligatorio');
+      }
+      if (!propertyData.operationType) {
+        throw new Error('El tipo de operación es obligatorio');
+      }
+      if (!propertyData.state) {
+        throw new Error('La región es obligatoria');
+      }
+      if (!propertyData.city) {
+        throw new Error('La comuna es obligatoria');
+      }
       
-      // Transform form data to CreatePropertyDto format
+      // Professional helper functions for data type extraction
+      const extractNumberId = (value: any): number => {
+        if (typeof value === 'number') return value;
+        if (typeof value === 'string') return parseInt(value, 10);
+        if (value && typeof value === 'object' && value.id) {
+          return typeof value.id === 'number' ? value.id : parseInt(value.id, 10);
+        }
+        return 1; // Default fallback
+      };
+
+      const extractStringId = (value: any): string | undefined => {
+        if (typeof value === 'string') return value;
+        if (typeof value === 'number') return value.toString();
+        if (value && typeof value === 'object' && value.id) {
+          return value.id.toString();
+        }
+        return undefined;
+      };
+      
+      // Professional data transformation with proper type handling
       const createData: CreatePropertyDto = {
         title: propertyData.title,
         description: propertyData.description,
-        price: parseFloat(propertyData.price) || 0,
-        currencyPrice: propertyData.currencyPrice === 1 ? 'CLP' : 'UF',
-        operationType: propertyData.operationType === 1 ? 'SALE' : 'RENT',
-        propertyTypeId: propertyData.propertyTypeId?.toString(),
-        assignedAgentId: propertyData.assignedAgentId?.toString(),
-        isPublished: propertyData.status === 1,
-        isFeatured: false,
-        publicDescription: propertyData.seoDescription,
-        privateNotes: propertyData.internalNotes,
-        location: {
-          city: propertyData.city,
-          region: propertyData.state,
+        
+        // STATUS & OPERATION: Send as numbers, backend @Transform converts to enum strings
+        status: extractNumberId(propertyData.status),
+        operationType: extractNumberId(propertyData.operationType),
+        
+        // IDs: Extract string IDs
+        propertyTypeId: extractStringId(propertyData.propertyTypeId),
+        assignedAgentId: extractStringId(propertyData.assignedAgentId),
+
+        // LOCATION: Send as objects, backend @Transform extracts IDs
+        state: propertyData.state,
+        city: propertyData.city,
+        address: propertyData.address,
+        location: propertyData.location ? {
+          lat: propertyData.location.lat || propertyData.location.latitude,
+          lng: propertyData.location.lng || propertyData.location.longitude,
           address: propertyData.address,
-          coordinates: propertyData.location ? {
-            latitude: propertyData.location.lat || propertyData.location.latitude,
-            longitude: propertyData.location.lng || propertyData.location.longitude,
-          } : undefined,
-        },
-        characteristics: {
-          bedrooms: parseInt(propertyData.bedrooms) || undefined,
-          bathrooms: parseInt(propertyData.bathrooms) || undefined,
-          builtArea: parseInt(propertyData.builtSquareMeters) || undefined,
-          totalArea: parseInt(propertyData.landSquareMeters) || undefined,
-          parkingSpaces: parseInt(propertyData.parkingSpaces) || undefined,
-          floors: parseInt(propertyData.floors) || undefined,
-          yearBuilt: parseInt(propertyData.constructionYear) || undefined,
-        },
+        } : undefined,
+
+        // Características
+        bedrooms: propertyData.bedrooms !== undefined && propertyData.bedrooms !== null ? parseInt(propertyData.bedrooms) : undefined,
+        bathrooms: propertyData.bathrooms !== undefined && propertyData.bathrooms !== null ? parseInt(propertyData.bathrooms) : undefined,
+        parkingSpaces: propertyData.parkingSpaces !== undefined && propertyData.parkingSpaces !== null ? parseInt(propertyData.parkingSpaces) : undefined,
+        floors: propertyData.floors !== undefined && propertyData.floors !== null ? parseInt(propertyData.floors) : undefined,
+        builtSquareMeters: propertyData.builtSquareMeters !== undefined && propertyData.builtSquareMeters !== null ? parseInt(propertyData.builtSquareMeters) : undefined,
+        landSquareMeters: propertyData.landSquareMeters !== undefined && propertyData.landSquareMeters !== null ? parseInt(propertyData.landSquareMeters) : undefined,
+        constructionYear: propertyData.constructionYear !== undefined && propertyData.constructionYear !== null ? parseInt(propertyData.constructionYear) : undefined,
+
+        // PRICE: String and number for currency
+        price: propertyData.price?.toString(),
+        currencyPrice: extractNumberId(propertyData.currencyPrice),
+
+        // SEO
+        seoTitle: propertyData.seoTitle,
+        seoDescription: propertyData.seoDescription,
+
+        // Multimedia
+        multimedia: propertyData.multimedia,
+
+        // Internos
+        internalNotes: propertyData.internalNotes,
       };
+
+      console.log('Complete createData:', createData);
 
       // Create the property
       const result = await createProperty(createData);
       
       if (result.success && result.data) {
-        console.log('Propiedad creada exitosamente:', result.data);
-        
-        // Upload multimedia files if any
-        if (propertyData.multimedia && propertyData.multimedia.length > 0) {
-          const multimediaResult = await uploadPropertyMultimedia(
-            result.data.id,
-            propertyData.multimedia,
-            'IMAGE' // Default to IMAGE, could be enhanced to detect video files
-          );
-          
-          if (multimediaResult.success) {
-            console.log('Multimedia subida exitosamente:', multimediaResult.data);
-          } else {
-            console.warn('Error subiendo multimedia:', multimediaResult.error);
-          }
-        }
-        
         // Refresh the page to show new property
         router.refresh();
       } else {
