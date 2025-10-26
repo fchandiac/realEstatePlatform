@@ -172,6 +172,7 @@ const PortalFooter: React.FC = () => {
             </div>
           </div>
         </div>
+        <hr className="my-8 border-t border-gray-400/30" />
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
           {/* Columna 1: Información de la Empresa */}
           <div>
@@ -293,7 +294,7 @@ const PortalFooter: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="mt-8 text-center text-sm font-extralight text-background border-t border-border pt-4">
+        <div className="mt-8 text-center text-sm font-extralight text-background border-t border-gray-400/30 pt-4">
           &copy; 2025 {identity?.name || 'Plataforma Inmobiliaria'}. Todos los derechos reservados.
         </div>
       </div>
