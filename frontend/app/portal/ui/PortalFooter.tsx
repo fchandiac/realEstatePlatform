@@ -174,36 +174,82 @@ const PortalFooter: React.FC = () => {
         </div>
         <hr className="my-8 border-t border-gray-400/30" />
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
-          {/* Columna 1: Información de la Empresa */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-background flex items-center">
-              <img
-                src={identity?.urlLogo || "/PropLogo2.png"}
-                alt="Logo Plataforma Inmobiliaria"
-                className="w-8 h-8 mr-2 inline-block align-middle"
-              />
-              {identity?.name || 'Plataforma Inmobiliaria'}
+          {/* Columna 1: Información de Contacto */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">
+              Información de Contacto
             </h3>
-            <p className="text-sm font-extralight text-background flex items-center mb-2">
-              <span className="material-symbols-rounded align-middle mr-2">location_on</span>
-              {identity?.address || 'Calle Falsa 123, Parral, Región del Maule'}
-            </p>
-            <p className="text-sm font-extralight text-background flex items-center mb-2">
-              <span className="material-symbols-rounded align-middle mr-2">call</span>
-              {identity?.phone || '+56 9 1234 5678'}
-            </p>
-            <p className="text-sm font-extralight text-background flex items-center mb-2">
-              <span className="material-symbols-rounded align-middle mr-2">mail</span>
-              {identity?.mail || 'info@plataformainmobiliaria.cl'}
-            </p>
-            <p className="text-sm font-extralight text-background flex items-center mt-4">
-              <span className="material-symbols-rounded align-middle mr-2">schedule</span>
-              {identity?.businessHours || 'Lunes a Viernes: 9:00 - 18:00'}
-            </p>
+            <div className="space-y-4">
+              {/* Logo y nombre de la empresa */}
+              <div className="flex items-center gap-3 mb-6">
+                <img
+                  src={identity?.urlLogo || "/PropLogo2.png"}
+                  alt="Logo Plataforma Inmobiliaria"
+                  className="w-12 h-12 object-contain rounded-lg shadow-md bg-white/10 p-1"
+                />
+                <div>
+                  <h4 className="text-lg font-semibold text-background">
+                    {identity?.name || 'Plataforma Inmobiliaria'}
+                  </h4>
+                  <p className="text-xs text-background/70 font-light">Tu socio inmobiliario de confianza</p>
+                </div>
+              </div>
+
+              {/* Información de contacto */}
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
+                    <span className="material-symbols-rounded text-primary text-lg">location_on</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-background mb-1">Dirección</p>
+                    <p className="text-sm text-background/90 leading-relaxed">
+                      {identity?.address || '572 Francesca Stream, Parral, Región del Maule'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
+                    <span className="material-symbols-rounded text-primary text-lg">call</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-background mb-1">Teléfono</p>
+                    <p className="text-sm text-background/90">
+                      {identity?.phone || '+56 9 1429 0441'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
+                    <span className="material-symbols-rounded text-primary text-lg">mail</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-background mb-1">Correo Electrónico</p>
+                    <p className="text-sm text-background/90">
+                      {identity?.mail || 'Giuseppe53@yahoo.com'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
+                    <span className="material-symbols-rounded text-primary text-lg">schedule</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-background mb-1">Horario de Atención</p>
+                    <p className="text-sm text-background/90 leading-relaxed">
+                      {identity?.businessHours || 'Lunes a Viernes: 9:00 - 18:00<br />Sábado: 9:00 - 13:00<br />Domingo: Cerrado'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          {/* Columna 2: Menú estilizado del SideBar */}
+          {/* Columna 2: Navegación del Sitio */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-background">Menú</h3>
+            <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">Navegación</h3>
             <ul className="mt-2 custom-footer-menu-gap">
               <li>
                 <a href="#" className="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-background transition-colors">
@@ -257,12 +303,12 @@ const PortalFooter: React.FC = () => {
           </div>
           {/* Columna 3: Formulario de Contacto */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-background">Contáctanos</h3>
+            <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">Contacto</h3>
             <ContactForm />
           </div>
           {/* Columna 4: Preguntas Frecuentes */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-left">Preguntas Frecuentes</h3>
+            <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">Preguntas Frecuentes</h3>
             <div className="space-y-4 text-left">
               {identity?.faqs && identity.faqs.length > 0 ? (
                 identity.faqs.slice(0, 4).map((faq, index) => (
