@@ -5,17 +5,14 @@ import { TextField } from "@/components/TextField/TextField";
 import { Button } from "@/components/Button/Button";
 import IconButton from "@/components/Button/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-import { faFacebook } from "@fortawesome/free-brands-svg-icons";
-import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { config } from "@fortawesome/fontawesome-svg-core";
-import "@fortawesome/fontawesome-svg-core/styles.css";
+import {
+  faInstagram,
+  faFacebook,
+  faLinkedin,
+  faYoutube
+} from "@fortawesome/free-brands-svg-icons";
 import { getIdentity } from "@/app/actions/identity";
 import { env } from "@/lib/env";
-
-// Configurar FontAwesome para que no agregue CSS automáticamente
-config.autoAddCss = false;
 
 interface SocialMediaItem {
   url?: string;

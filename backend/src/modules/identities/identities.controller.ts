@@ -84,6 +84,7 @@ export class IdentitiesController {
   }
 
   @Get('last')
+  @UseGuards()
   @Audit(AuditAction.READ, AuditEntityType.IDENTITY, 'Last identity retrieved')
   findLast() {
     return this.identitiesService.findLast();

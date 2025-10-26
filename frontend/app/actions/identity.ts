@@ -5,11 +5,16 @@ import { authOptions } from '@/lib/auth'
 import { env } from '@/lib/env'
 
 export async function getIdentity() {
+  // Try to get session, but don't require it for public identity data
   const session = await getServerSession(authOptions)
-  if (!session?.accessToken) throw new Error('Unauthorized')
+
+  const headers: Record<string, string> = {}
+  if (session?.accessToken) {
+    headers.Authorization = `Bearer ${session.accessToken}`
+  }
 
   const res = await fetch(`${env.backendApiUrl}/identities/last`, {
-    headers: { Authorization: `Bearer ${session.accessToken}` },
+    headers,
   })
 
   if (!res.ok) {
