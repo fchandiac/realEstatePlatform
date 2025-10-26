@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import IconButton from "@/components/IconButton/IconButton";
 import { Button } from "@/components/Button/Button";
 import Dialog from "@/components/Dialog/Dialog";
 import LoginForm from "./loginForm";
 import RegisterForm from "./RegisterForm";
+import { getIdentity } from "@/app/actions/identity";
 
 interface RegisterData {
   firstName: string;
@@ -12,6 +13,16 @@ interface RegisterData {
   username: string;
   password: string;
   confirmPassword: string;
+}
+
+interface Identity {
+  id?: string;
+  name: string;
+  address: string;
+  phone: string;
+  mail: string;
+  businessHours: string;
+  urlLogo?: string;
 }
 
 function formatCLP(value: number) {
@@ -28,6 +39,21 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [identity, setIdentity] = useState<Identity | null>(null);
+
+  useEffect(() => {
+    async function loadIdentity() {
+      try {
+        const data = await getIdentity();
+        if (data) {
+          setIdentity(data);
+        }
+      } catch (error) {
+        console.error('Error loading identity:', error);
+      }
+    }
+    loadIdentity();
+  }, []);
 
   const handleLogin = async (username: string, password: string) => {
     setLoading(true);
@@ -75,13 +101,13 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
       {/* Izquierda: icono imagen y nombre empresa */}
       <div className="flex items-center gap-3 ml-4" data-test-id="topBarLogo">
         <img
-          src="/PropLogo2.png"
+          src={identity?.urlLogo || "/PropLogo2.png"}
           alt="Logo"
           style={{ width: "40px", height: "40px", objectFit: "contain" }}
           data-test-id="topBarLogo"
         />
         <span className="sm:text-base md:text-2xl font-medium text-foreground whitespace-nowrap">
-          {nombreEmpresa}
+          {identity?.name || nombreEmpresa}
         </span>
       </div>
 
@@ -90,11 +116,11 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
         <div className="flex items-center gap-6 justify-center">
           <span className="flex items-center gap-1 text-xs text-foreground whitespace-nowrap">
             <span className="material-symbols-outlined text-base">mail</span>
-            contacto@empresa.cl
+            {identity?.mail || "contacto@empresa.cl"}
           </span>
           <span className="flex items-center gap-1 text-xs text-foreground whitespace-nowrap">
             <span className="material-symbols-outlined text-base">call</span>
-            +56 9 1234 5678
+            {identity?.phone || "+56 9 1234 5678"}
           </span>
         </div>
       </div>

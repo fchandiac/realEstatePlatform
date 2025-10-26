@@ -196,7 +196,7 @@ const PortalFooter: React.FC = () => {
               <div className="space-y-3">
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
-                    <span className="material-symbols-rounded text-primary text-lg">location_on</span>
+                    <span className="material-symbols-rounded text-background text-lg">location_on</span>
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-background mb-1">Dirección</p>
@@ -208,7 +208,7 @@ const PortalFooter: React.FC = () => {
 
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
-                    <span className="material-symbols-rounded text-primary text-lg">call</span>
+                    <span className="material-symbols-rounded text-background text-lg">call</span>
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-background mb-1">Teléfono</p>
@@ -220,7 +220,7 @@ const PortalFooter: React.FC = () => {
 
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
-                    <span className="material-symbols-rounded text-primary text-lg">mail</span>
+                    <span className="material-symbols-rounded text-background text-lg">mail</span>
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-background mb-1">Correo Electrónico</p>
@@ -232,7 +232,7 @@ const PortalFooter: React.FC = () => {
 
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mt-0.5">
-                    <span className="material-symbols-rounded text-primary text-lg">schedule</span>
+                    <span className="material-symbols-rounded text-background text-lg">schedule</span>
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-background mb-1">Horario de Atención</p>
@@ -366,7 +366,7 @@ export const ContactForm: React.FC = () => {
   <TextField label="Tu Mensaje" value={mensaje} onChange={(e) => setMensaje(e.target.value)} name="mensaje" type="text" placeholder="Mensaje" className="text-sm font-extralight" rows={2} />
       <div className="flex justify-end">
         <IconButton icon="send" variant="text" type="submit" className="text-primary">
-          <span className="material-symbols-rounded text-2xl text-primary">send</span>
+          <span className="material-symbols-rounded text-2xl text-background">send</span>
         </IconButton>
       </div>
     </form>

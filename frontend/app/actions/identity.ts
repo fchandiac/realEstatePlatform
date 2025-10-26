@@ -25,6 +25,27 @@ export async function getIdentity() {
   return res.json()
 }
 
+export async function updateIdentity(id: string, formData: FormData) {
+  const session = await getServerSession(authOptions)
+  if (!session?.accessToken) throw new Error('Unauthorized')
+
+  const res = await fetch(`${env.backendApiUrl}/identities/${id}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: formData,
+  })
+
+  if (!res.ok) {
+    const errorText = await res.text()
+    console.error('Update identity failed:', res.status, errorText)
+    throw new Error(`Failed to update identity: ${res.status} ${errorText}`)
+  }
+
+  return res.json()
+}
+
 export async function createIdentity(formData: FormData) {
   const session = await getServerSession(authOptions)
   if (!session?.accessToken) throw new Error('Unauthorized')

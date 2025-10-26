@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { getIdentity, createIdentity } from '@/app/actions/identity'
+import { getIdentity, createIdentity, updateIdentity } from '@/app/actions/identity'
 import { env } from '@/lib/env'
 import { TextField } from '@/components/TextField/TextField'
 import { Button } from '@/components/Button/Button'
@@ -81,7 +81,7 @@ export default function IdentityPage() {
         }
       } catch (err) {
         console.error('Error loading identity:', err)
-        error('Error loading identity')
+        error('Error cargando identidad')
       } finally {
         setLoading(false)
       }
@@ -125,11 +125,23 @@ export default function IdentityPage() {
         }
       })
 
-      await createIdentity(formData)
-      success('Identidad creada exitosamente')
+      // Create or update based on whether identity exists
+      let result
+      if (identity.id) {
+        result = await updateIdentity(identity.id, formData)
+        success('Identidad actualizada exitosamente')
+      } else {
+        result = await createIdentity(formData)
+        success('Identidad creada exitosamente')
+      }
+
+      // Update local state with server response to ensure ID is set
+      if (result) {
+        setIdentity(result)
+      }
     } catch (err) {
       console.error('Error saving identity:', err)
-      error('Error actualizando identidad')
+      error('Error guardando identidad')
     } finally {
       setSaving(false)
     }

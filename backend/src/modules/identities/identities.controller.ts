@@ -52,12 +52,12 @@ export class TransformJsonFieldsInterceptor implements NestInterceptor {
 }
 
 @Controller('identities')
-@UseGuards(JwtAuthGuard)
 @UseInterceptors(AuditInterceptor)
 export class IdentitiesController {
   constructor(private readonly identitiesService: IdentitiesService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.CREATE, AuditEntityType.IDENTITY, 'Identity created')
   @UseInterceptors(
     FileFieldsInterceptor([
@@ -78,25 +78,27 @@ export class IdentitiesController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.READ, AuditEntityType.IDENTITY, 'Identities listed')
   findAll() {
     return this.identitiesService.findAll();
   }
 
   @Get('last')
-  @UseGuards()
   @Audit(AuditAction.READ, AuditEntityType.IDENTITY, 'Last identity retrieved')
   findLast() {
     return this.identitiesService.findLast();
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.READ, AuditEntityType.IDENTITY, 'Identity viewed')
   findOne(@Param('id') id: string) {
     return this.identitiesService.findOne(id);
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.IDENTITY, 'Identity updated')
   @UseInterceptors(
     FileFieldsInterceptor([
@@ -118,6 +120,7 @@ export class IdentitiesController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.DELETE, AuditEntityType.IDENTITY, 'Identity deleted')
   softDelete(@Param('id') id: string) {
     return this.identitiesService.softDelete(id);
