@@ -6,7 +6,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { SocialMedia, Partnership } from '../../../entities/identity.entity';
+import { SocialMedia, Partnership, FAQItem } from '../../../entities/identity.entity';
 
 export class CreateIdentityDto {
   @IsNotEmpty()
@@ -42,6 +42,11 @@ export class CreateIdentityDto {
   @ValidateNested({ each: true })
   @Type(() => Partnership)
   partnerships?: Partnership[];
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => FAQItem)
+  faqs?: FAQItem[];
 }
 
 export class UpdateIdentityDto {
@@ -78,4 +83,9 @@ export class UpdateIdentityDto {
   @ValidateNested({ each: true })
   @Type(() => Partnership)
   partnerships?: Partnership[];
+
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => FAQItem)
+  faqs?: FAQItem[];
 }

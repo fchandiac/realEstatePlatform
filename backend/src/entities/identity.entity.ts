@@ -61,6 +61,16 @@ export class Partnership {
   logoUrl?: string;
 }
 
+export class FAQItem {
+  @IsNotEmpty()
+  @IsString()
+  question: string;
+
+  @IsNotEmpty()
+  @IsString()
+  answer: string;
+}
+
 @Entity('identities')
 export class Identity {
   @PrimaryGeneratedColumn('uuid')
@@ -107,6 +117,12 @@ export class Identity {
   @ValidateNested({ each: true })
   @Type(() => Partnership)
   partnerships?: Partnership[];
+
+  @Column({ type: 'json', nullable: true })
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => FAQItem)
+  faqs?: FAQItem[];
 
   @CreateDateColumn()
   createdAt: Date;

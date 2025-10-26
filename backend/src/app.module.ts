@@ -20,6 +20,7 @@ import { PropertyTypesModule } from './modules/property-types/property-types.mod
 import { AuthModule } from './modules/auth/auth.module';
 import { AuditModule } from './audit/audit.module';
 import { DocumentModule } from './modules/document/document.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { SlidersModule } from './modules/sliders/sliders.module';
 
 @Module({
