@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
   },
   // Enable standalone output for production deployments
   output: 'standalone',
+  // Increase server actions body size limit for file uploads
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
   /* other config options here */
 };
 

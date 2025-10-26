@@ -96,7 +96,7 @@ const PortalFooter: React.FC = () => {
                 identity.partnerships.slice(0, 2).map((partnership, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <img
-                      src={partnership.logoUrl ? `${env.backendApiUrl}/uploads/${partnership.logoUrl}` : "/globe.svg"}
+                      src={partnership.logoUrl || "/globe.svg"}
                       alt={partnership.name}
                       className="w-12 h-12 object-contain"
                     />
@@ -178,7 +178,7 @@ const PortalFooter: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-background flex items-center">
               <img
-                src={identity?.urlLogo ? `${env.backendApiUrl}/uploads/${identity.urlLogo}` : "/PropLogo2.png"}
+                src={identity?.urlLogo || "/PropLogo2.png"}
                 alt="Logo Plataforma Inmobiliaria"
                 className="w-8 h-8 mr-2 inline-block align-middle"
               />

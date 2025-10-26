@@ -59,9 +59,14 @@ export class StaticFilesService implements OnModuleInit {
     return path.join(this.uploadBasePath, paths[type] || '');
   }
 
-  // Genera una URL pública para un archivo
+  // Genera una URL pública completa para un archivo
   getPublicUrl(relativePath: string): string {
-    return `/uploads/${relativePath}`;
+    const protocol = this.configService.get('NODE_ENV') === 'production' ? 'https' : 'http';
+    const host = this.configService.get('HOST') || 'localhost';
+    const port = this.configService.get('PORT') || '3000';
+    const baseUrl = `${protocol}://${host}:${port}`;
+    
+    return `${baseUrl}/uploads/${relativePath}`;
   }
 
   // Obtiene la ruta completa del sistema de archivos para un archivo

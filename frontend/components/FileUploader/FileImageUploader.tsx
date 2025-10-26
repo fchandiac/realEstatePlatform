@@ -2,6 +2,7 @@
 import React, { useRef, useState } from 'react';
 import { Button } from '../Button/Button';
 import IconButton from '../IconButton/IconButton';
+import { useAlert } from '@/app/contexts/AlertContext';
 
 interface FileImageUploaderProps {
   uploadPath: string; // Ruta donde se guardará el archivo (en el backend)
@@ -9,6 +10,7 @@ interface FileImageUploaderProps {
   label?: string;
   accept?: string;
   maxFiles?: number;
+  maxSize?: number; // Tamaño máximo en MB
   aspectRatio?: 'square' | 'video' | 'auto';
   buttonType?: 'icon' | 'normal';
 }
@@ -19,19 +21,46 @@ export const FileImageUploader: React.FC<FileImageUploaderProps> = ({
   label = 'Selecciona imágenes',
   accept = 'image/*',
   maxFiles = 5,
+  maxSize = 9, // 9MB por defecto (margen con el límite de 10MB de Next.js)
   aspectRatio = 'auto',
   buttonType = 'icon',
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
+  const { error } = useAlert();
 
   // Generate previews only for current files, avoid duplicates
   const previews = files.map(file => URL.createObjectURL(file));
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
+    
+    // Validar tamaño de archivos
+    const maxSizeBytes = maxSize * 1024 * 1024; // Convertir MB a bytes
+    const validFiles: File[] = [];
+    const oversizedFiles: string[] = [];
+    
+    selectedFiles.forEach(file => {
+      if (file.size > maxSizeBytes) {
+        oversizedFiles.push(file.name);
+      } else {
+        validFiles.push(file);
+      }
+    });
+    
+    // Mostrar alerta si hay archivos demasiado grandes
+    if (oversizedFiles.length > 0) {
+      error(`Los siguientes archivos exceden el límite de ${maxSize}MB: ${oversizedFiles.join(', ')}`);
+    }
+    
+    // Solo procesar archivos válidos
+    if (validFiles.length === 0) {
+      if (inputRef.current) inputRef.current.value = "";
+      return;
+    }
+    
     // Avoid duplicates by name and size
-    const allFiles = [...files, ...selectedFiles];
+    const allFiles = [...files, ...validFiles];
     const uniqueFiles = Array.from(
       new Map(allFiles.map(f => [f.name + f.size, f])).values()
     ).slice(0, maxFiles);

@@ -118,7 +118,7 @@ export class MultimediaService {
       multimedia.type = metadata.type as MultimediaType;
       multimedia.seoTitle = metadata.seoTitle;
       multimedia.description = metadata.description;
-      multimedia.url = filePath;
+      multimedia.url = this.staticFilesService.getPublicUrl(filePath);
       multimedia.userId = userId || undefined; // Ensure userId is undefined if not provided
       multimedia.format = file.mimetype.startsWith('image')
         ? MultimediaFormat.IMG

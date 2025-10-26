@@ -254,10 +254,11 @@ export default function IdentityPage() {
                     onChange={setLogoFile}
                     maxFiles={1}
                     accept="image/*"
+                    maxSize={9}
                     aspectRatio="square"
                     buttonType="icon"
                   />
-                  <small className="text-xs text-muted-foreground mt-2 block">Máx. 1 imagen</small>
+                  <small className="text-xs text-muted-foreground mt-2 block">Máx. 1 imagen (hasta 9MB)</small>
                 </div>
               </div>
             </div>
@@ -349,13 +350,14 @@ export default function IdentityPage() {
                         }}
                         maxFiles={1}
                         accept="image/*"
+                        maxSize={9}
                         aspectRatio="square"
                         buttonType="icon"
                       />
-                      <small className="text-xs text-muted-foreground mt-2 block">Máx. 1 imagen</small>
+                      <small className="text-xs text-muted-foreground mt-2 block">Máx. 1 imagen (hasta 9MB)</small>
                       {partnership.logoUrl && (
                         <div className="mt-2">
-                          <img src={`${env.backendApiUrl}/uploads/${partnership.logoUrl}`} alt="Partnership logo" className="h-16 w-auto" />
+                          <img src={partnership.logoUrl} alt="Partnership logo" className="h-16 w-auto" />
                         </div>
                       )}
                     </div>
