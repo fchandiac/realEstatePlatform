@@ -30,7 +30,7 @@ const Switch: React.FC<SwitchProps> = ({ checked = false, onChange, label, label
     tabIndex={0}
   >
     <span
-      className={`absolute left-1 top-1 w-4 h-4 rounded-full transition-transform duration-200${isChecked ? ' translate-x-4 bg-primary' : ' border bg-background group-hover:bg-accent/60'}`}
+      className={`absolute left-1 top-1 w-4 h-4 rounded-full transition-transform duration-200${isChecked ? ' translate-x-4 bg-border' : ' border bg-background group-hover:bg-accent/60'}`}
       style={isChecked ? {} : { borderColor: 'var(--color-neutral)', borderWidth: '1px' }}
     />
   </span>

@@ -48,17 +48,19 @@ export const FileImageUploader: React.FC<FileImageUploaderProps> = ({
 
   return (
     <div className="flex flex-col gap-4 w-full" data-test-id="file-image-uploader-root">
-      <label className="font-medium cursor-pointer">
-        {label}
-        <input
-          ref={inputRef}
-          type="file"
-          accept={accept}
-          multiple
-          style={{ display: 'none' }} 
-          onChange={handleFileChange}
-        />
-      </label>
+      <input
+        ref={inputRef}
+        type="file"
+        accept={accept}
+        multiple
+        style={{ display: 'none' }} 
+        onChange={handleFileChange}
+      />
+      {buttonType === 'icon' ? null : (
+        <label className="font-medium cursor-pointer">
+          {label}
+        </label>
+      )}
       {buttonType === 'icon' ? (
         <IconButton
           icon="add"

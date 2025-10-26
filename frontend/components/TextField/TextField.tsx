@@ -265,9 +265,8 @@ export const TextField: React.FC<TextFieldProps> = ({
         <style>{`input.${placeholderClassRef.current}::placeholder, textarea.${placeholderClassRef.current}::placeholder { color: ${placeholderColor} }`}</style>
       )}
       <label
-        className={`absolute left-3 -top-1 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs text-foreground` +
+        className={`absolute left-3 -top-1 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs text-foreground rounded-md bg-background` +
           (shrink ? " -translate-y-1 scale-90 opacity-100" : " opacity-0")}
-        style={{ backgroundColor: "var(--color-background)" }}
         onClick={() => inputRef.current?.focus()}
         data-test-id="text-field-label"
       >

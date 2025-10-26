@@ -131,7 +131,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose 
         );
       })()}
 
-      <nav className="w-full px-4 flex-1 mt-2">
+      <nav className="w-full px-4 flex-1 mt-2 overflow-y-auto">
         <ul className="flex flex-col gap-2 w-full">
           {menuItems.map((item, idx) => renderMenuItem(item, idx))}
         </ul>

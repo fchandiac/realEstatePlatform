@@ -1,16 +1,17 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { getIdentity, updateIdentity } from '@/app/actions/identity'
+import { getIdentity, createIdentity } from '@/app/actions/identity'
 import { env } from '@/lib/env'
 import { TextField } from '@/components/TextField/TextField'
 import { Button } from '@/components/Button/Button'
-import Alert from '@/components/Alert/Alert'
 import DotProgress from '@/components/DotProgress/DotProgress'
 import Switch from '@/components/Switch/Switch'
 import IconButton from '@/components/IconButton/IconButton'
-import FontAwesome from '@/components/FontAwesome/FontAwesome'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInstagram, faFacebook, faLinkedin, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import FileImageUploader from '@/components/FileUploader/FileImageUploader'
+import { useAlert } from '@/app/contexts/AlertContext'
 
 interface SocialMediaItem {
   url?: string
@@ -30,6 +31,11 @@ interface Partnership {
   logoUrl?: string
 }
 
+interface FAQItem {
+  question: string
+  answer: string
+}
+
 interface Identity {
   id?: string
   name: string
@@ -40,9 +46,17 @@ interface Identity {
   urlLogo?: string
   socialMedia?: SocialMedia
   partnerships?: Partnership[]
+  faqs?: FAQItem[]
 }
 
 export default function IdentityPage() {
+  const socialIcons = {
+    instagram: faInstagram,
+    facebook: faFacebook,
+    linkedin: faLinkedin,
+    youtube: faYoutube,
+  }
+  const { success, error } = useAlert()
   const [identity, setIdentity] = useState<Identity>({
     name: '',
     address: '',
@@ -50,13 +64,13 @@ export default function IdentityPage() {
     mail: '',
     businessHours: '',
     socialMedia: {},
-    partnerships: []
+    partnerships: [],
+    faqs: []
   })
   const [logoFile, setLogoFile] = useState<File[]>([])
   const [partnershipLogoFiles, setPartnershipLogoFiles] = useState<(File[] | null)[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   useEffect(() => {
     async function loadIdentity() {
@@ -65,8 +79,9 @@ export default function IdentityPage() {
         if (data) {
           setIdentity(data)
         }
-      } catch (error) {
-        setAlert({ type: 'error', message: 'Error loading identity' })
+      } catch (err) {
+        console.error('Error loading identity:', err)
+        error('Error loading identity')
       } finally {
         setLoading(false)
       }
@@ -76,7 +91,6 @@ export default function IdentityPage() {
 
   const handleSave = async () => {
     setSaving(true)
-    setAlert(null)
     try {
       const formData = new FormData()
 
@@ -95,6 +109,10 @@ export default function IdentityPage() {
         formData.append('partnerships', JSON.stringify(identity.partnerships))
       }
 
+      if (identity.faqs) {
+        formData.append('faqs', JSON.stringify(identity.faqs))
+      }
+
       // Add logo file
       if (logoFile.length > 0) {
         formData.append('logo', logoFile[0])
@@ -107,10 +125,11 @@ export default function IdentityPage() {
         }
       })
 
-      await updateIdentity(formData)
-      setAlert({ type: 'success', message: 'Identidad actualizada exitosamente' })
-    } catch (error) {
-      setAlert({ type: 'error', message: 'Error actualizando identidad' })
+      await createIdentity(formData)
+      success('Identidad creada exitosamente')
+    } catch (err) {
+      console.error('Error saving identity:', err)
+      error('Error actualizando identidad')
     } finally {
       setSaving(false)
     }
@@ -152,6 +171,27 @@ export default function IdentityPage() {
     setPartnershipLogoFiles(prev => prev.filter((_, i) => i !== index))
   }
 
+  const addFAQ = () => {
+    setIdentity(prev => ({
+      ...prev,
+      faqs: [...(prev.faqs || []), { question: '', answer: '' }]
+    }))
+  }
+
+  const updateFAQ = (index: number, field: keyof FAQItem, value: string) => {
+    setIdentity(prev => ({
+      ...prev,
+      faqs: prev.faqs?.map((faq, i) => i === index ? { ...faq, [field]: value } : faq)
+    }))
+  }
+
+  const removeFAQ = (index: number) => {
+    setIdentity(prev => ({
+      ...prev,
+      faqs: prev.faqs?.filter((_, i) => i !== index)
+    }))
+  }
+
   if (loading) return (
     <div className="flex justify-center items-center min-h-[400px]">
       <DotProgress />
@@ -164,12 +204,6 @@ export default function IdentityPage() {
         <h1 className="text-3xl font-bold text-foreground mb-2">Identidad de la Empresa</h1>
         <p className="text-muted-foreground">Gestiona la información básica y redes sociales de tu empresa</p>
       </div>
-
-      {alert && (
-        <Alert variant={alert.type} className="mb-6">
-          {alert.message}
-        </Alert>
-      )}
 
       <div className="space-y-8">
         {/* Información Básica */}
@@ -212,21 +246,20 @@ export default function IdentityPage() {
               />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-2">Logo de la Empresa</label>
-              <FileImageUploader
-                uploadPath="/uploads/web/logos"
-                onChange={setLogoFile}
-                label="Haz clic aquí para seleccionar el logo de la empresa"
-                maxFiles={1}
-                accept="image/*"
-                aspectRatio="square"
-              />
-              <small className="text-xs text-muted-foreground mt-1 block">Máximo 1 imagen permitida</small>
-              {identity.urlLogo && (
-                <div className="mt-2">
-                  <img src={`${env.backendApiUrl}/uploads/${identity.urlLogo}`} alt="Current logo" className="h-20 w-auto" />
+              <div className="relative">
+                <label className="block text-sm font-medium mb-2">Logo de la Empresa</label>
+                <div className="border border-input rounded-md p-4 bg-background">
+                  <FileImageUploader
+                    uploadPath="/uploads/web/logos"
+                    onChange={setLogoFile}
+                    maxFiles={1}
+                    accept="image/*"
+                    aspectRatio="square"
+                    buttonType="icon"
+                  />
+                  <small className="text-xs text-muted-foreground mt-2 block">Máx. 1 imagen</small>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
@@ -235,21 +268,40 @@ export default function IdentityPage() {
         <div className="bg-card rounded-lg p-6 border border-border">
           <h2 className="text-xl font-semibold mb-4">Redes Sociales</h2>
           <div className="space-y-4">
-            {(['instagram', 'facebook', 'linkedin', 'youtube'] as const).map(platform => (
-              <div key={platform} className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                <div className="w-24 text-sm font-medium capitalize">{platform}</div>
-                <Switch
-                  checked={identity.socialMedia?.[platform]?.available || false}
-                  onChange={(checked) => updateSocialMedia(platform, 'available', checked)}
-                  label=""
-                />
-                <TextField
-                  label="URL"
-                  value={identity.socialMedia?.[platform]?.url || ''}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updateSocialMedia(platform, 'url', e.target.value)}
-                  placeholder={`https://${platform}.com/...`}
-                  className="flex-1"
-                />
+            {([
+              { key: 'instagram', label: 'Instagram' },
+              { key: 'facebook', label: 'Facebook' },
+              { key: 'linkedin', label: 'LinkedIn' },
+              { key: 'youtube', label: 'YouTube' }
+            ] as const).map(({ key, label }) => (
+              <div key={key} className="w-full mb-3">
+                <div className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg">
+                  <div className="flex items-center gap-4">
+                    {/* Ícono y nombre de la red social */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center">
+                        <FontAwesomeIcon icon={socialIcons[key]} className="text-sm" />
+                      </div>
+                      <span className="text-sm font-medium">{label}</span>
+                    </div>
+
+                    {/* Switch y campo URL */}
+                    <div className="flex items-center gap-3 flex-1">
+                      <Switch
+                        checked={identity.socialMedia?.[key]?.available || false}
+                        onChange={(checked) => updateSocialMedia(key, 'available', checked)}
+                        label=""
+                      />
+                      <TextField
+                        label="URL"
+                        value={identity.socialMedia?.[key]?.url || ''}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updateSocialMedia(key, 'url', e.target.value)}
+                        placeholder={`https://${key}.com/...`}
+                        className="flex-1"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -268,7 +320,7 @@ export default function IdentityPage() {
           </div>
           <div className="space-y-4">
             {identity.partnerships?.map((partnership, index) => (
-              <div key={index} className="p-4 bg-muted/50 rounded-lg border border-border">
+              <div key={index} className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg">
                 <div className="flex items-start justify-between mb-4">
                   <h3 className="text-lg font-medium">Alianza {index + 1}</h3>
                   <IconButton
@@ -287,24 +339,26 @@ export default function IdentityPage() {
                   />
                   <div>
                     <label className="block text-sm font-medium mb-2">Logo</label>
-                    <FileImageUploader
-                      uploadPath="/uploads/web/partnerships"
-                      onChange={(files) => {
-                        const newFiles = [...partnershipLogoFiles]
-                        newFiles[index] = files
-                        setPartnershipLogoFiles(newFiles)
-                      }}
-                      label="Haz clic aquí para seleccionar el logo de la alianza"
-                      maxFiles={1}
-                      accept="image/*"
-                      aspectRatio="square"
-                    />
-                    <small className="text-xs text-muted-foreground mt-1 block">Máximo 1 imagen permitida</small>
-                    {partnership.logoUrl && (
-                      <div className="mt-2">
-                        <img src={`${env.backendApiUrl}/uploads/${partnership.logoUrl}`} alt="Partnership logo" className="h-16 w-auto" />
-                      </div>
-                    )}
+                    <div className="border border-input rounded-md p-4 bg-background">
+                      <FileImageUploader
+                        uploadPath="/uploads/web/partnerships"
+                        onChange={(files) => {
+                          const newFiles = [...partnershipLogoFiles]
+                          newFiles[index] = files
+                          setPartnershipLogoFiles(newFiles)
+                        }}
+                        maxFiles={1}
+                        accept="image/*"
+                        aspectRatio="square"
+                        buttonType="icon"
+                      />
+                      <small className="text-xs text-muted-foreground mt-2 block">Máx. 1 imagen</small>
+                      {partnership.logoUrl && (
+                        <div className="mt-2">
+                          <img src={`${env.backendApiUrl}/uploads/${partnership.logoUrl}`} alt="Partnership logo" className="h-16 w-auto" />
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="md:col-span-2">
                     <TextField
@@ -327,6 +381,57 @@ export default function IdentityPage() {
           </div>
         </div>
 
+        {/* Preguntas Frecuentes (FAQs) */}
+        <div className="bg-card rounded-lg p-6 border border-border">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold">Preguntas Frecuentes</h2>
+            <IconButton
+              icon="add"
+              variant="containedSecondary"
+              onClick={addFAQ}
+              ariaLabel="Agregar Pregunta Frecuente"
+            />
+          </div>
+          <div className="space-y-4">
+            {identity.faqs?.map((faq, index) => (
+              <div key={index} className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg">
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="text-lg font-medium">Pregunta {index + 1}</h3>
+                  <IconButton
+                    icon="delete"
+                    variant="text"
+                    onClick={() => removeFAQ(index)}
+                    className="text-red-500"
+                  />
+                </div>
+                <div className="space-y-4">
+                  <TextField
+                    label="Pregunta"
+                    value={faq.question}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updateFAQ(index, 'question', e.target.value)}
+                    type="textarea"
+                    rows={2}
+                    required
+                  />
+                  <TextField
+                    label="Respuesta"
+                    value={faq.answer}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updateFAQ(index, 'answer', e.target.value)}
+                    type="textarea"
+                    rows={4}
+                    required
+                  />
+                </div>
+              </div>
+            ))}
+            {(!identity.faqs || identity.faqs.length === 0) && (
+              <div className="text-center py-8 text-muted-foreground">
+                No hay preguntas frecuentes registradas. Haz clic en "Agregar Pregunta Frecuente" para comenzar.
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Botón Guardar */}
         <div className="flex justify-end">
           <Button
@@ -336,12 +441,9 @@ export default function IdentityPage() {
             size="large"
           >
             {saving ? (
-              <>
-                <DotProgress className="mr-2" />
-                Guardando...
-              </>
+              <DotProgress className="w-4 h-4" />
             ) : (
-              identity.id ? 'Guardar Cambios' : 'Registrar Identidad'
+              'Guardar'
             )}
           </Button>
         </div>
