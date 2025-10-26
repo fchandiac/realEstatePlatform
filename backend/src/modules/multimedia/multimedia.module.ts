@@ -11,6 +11,6 @@ import { StaticFilesService } from './services/static-files.service';
   imports: [TypeOrmModule.forFeature([Multimedia])],
   controllers: [MultimediaController, UploadMultimediaController],
   providers: [MultimediaService, UploadMultimediaService, StaticFilesService],
-  exports: [MultimediaService, UploadMultimediaService],
+  exports: [MultimediaService, UploadMultimediaService, StaticFilesService],
 })
 export class MultimediaModule {}

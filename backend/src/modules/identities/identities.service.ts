@@ -4,7 +4,7 @@ import { Repository, IsNull } from 'typeorm';
 import { Identity } from '../../entities/identity.entity';
 import { CreateIdentityDto, UpdateIdentityDto } from './dto/identity.dto';
 import { MultimediaService } from '../multimedia/services/multimedia.service';
-import { MultimediaType } from '../../entities/multimedia.entity';
+import { StaticFilesService } from '../multimedia/services/static-files.service';
 
 @Injectable()
 export class IdentitiesService {
@@ -12,6 +12,7 @@ export class IdentitiesService {
     @InjectRepository(Identity)
     private readonly identityRepository: Repository<Identity>,
     private readonly multimediaService: MultimediaService,
+    private readonly staticFilesService: StaticFilesService,
   ) {}
 
   async create(
@@ -24,12 +25,8 @@ export class IdentitiesService {
     // Handle logo upload
     if (files?.logo?.[0]) {
       const logoFile = files.logo[0];
-      const logoMultimedia = await this.multimediaService.uploadFile(
-        logoFile,
-        { type: MultimediaType.LOGO, seoTitle: 'Identity Logo', description: 'Main identity logo' },
-        '', // userId, assuming not needed or get from context
-      );
-      createIdentityDto.urlLogo = logoMultimedia.url;
+      const logoPath = await this.multimediaService.uploadFileToPath(logoFile, 'web/logos');
+      createIdentityDto.urlLogo = this.staticFilesService.getPublicUrl(logoPath);
     }
 
     // Handle partnership logos
@@ -38,12 +35,8 @@ export class IdentitiesService {
         const partnership = createIdentityDto.partnerships[i];
         const logoFile = files.partnershipLogos[i];
         if (logoFile) {
-          const partnershipLogo = await this.multimediaService.uploadFile(
-            logoFile,
-            { type: MultimediaType.PARTNERSHIP, seoTitle: `Partnership Logo ${i + 1}`, description: partnership.name },
-            '',
-          );
-          partnership.logoUrl = partnershipLogo.url;
+          const partnershipPath = await this.multimediaService.uploadFileToPath(logoFile, 'web/partnerships');
+          partnership.logoUrl = this.staticFilesService.getPublicUrl(partnershipPath);
         }
       }
     }
@@ -84,12 +77,8 @@ export class IdentitiesService {
     // Handle logo upload
     if (files?.logo?.[0]) {
       const logoFile = files.logo[0];
-      const logoMultimedia = await this.multimediaService.uploadFile(
-        logoFile,
-        { type: MultimediaType.LOGO, seoTitle: 'Identity Logo', description: 'Main identity logo' },
-        '',
-      );
-      updateIdentityDto.urlLogo = logoMultimedia.url;
+      const logoPath = await this.multimediaService.uploadFileToPath(logoFile, 'web/logos');
+      updateIdentityDto.urlLogo = this.staticFilesService.getPublicUrl(logoPath);
     }
 
     // Handle partnership logos - this is more complex as we need to match with existing partnerships
@@ -98,12 +87,8 @@ export class IdentitiesService {
         const partnership = updateIdentityDto.partnerships[i];
         const logoFile = files.partnershipLogos[i];
         if (logoFile) {
-          const partnershipLogo = await this.multimediaService.uploadFile(
-            logoFile,
-            { type: MultimediaType.PARTNERSHIP, seoTitle: `Partnership Logo ${i + 1}`, description: partnership.name },
-            '',
-          );
-          partnership.logoUrl = partnershipLogo.url;
+          const partnershipPath = await this.multimediaService.uploadFileToPath(logoFile, 'web/partnerships');
+          partnership.logoUrl = this.staticFilesService.getPublicUrl(partnershipPath);
         }
       }
     }
