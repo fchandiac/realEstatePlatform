@@ -22,19 +22,6 @@ export class IdentitiesService {
       partnershipLogos?: Express.Multer.File[];
     },
   ): Promise<Identity> {
-    // Transform JSON stringified fields
-    const jsonFields = ['socialMedia', 'partnerships', 'faqs'];
-    jsonFields.forEach(field => {
-      if (createIdentityDto[field] && typeof createIdentityDto[field] === 'string') {
-        try {
-          createIdentityDto[field] = JSON.parse(createIdentityDto[field] as string);
-          console.log(`Parsed ${field} in create:`, createIdentityDto[field]);
-        } catch (error) {
-          console.warn(`Failed to parse JSON field ${field} in create:`, error);
-        }
-      }
-    });
-
     // Handle logo upload
     if (files?.logo?.[0]) {
       const logoFile = files.logo[0];
@@ -86,19 +73,6 @@ export class IdentitiesService {
     },
   ): Promise<Identity> {
     const identity = await this.findOne(id);
-
-    // Transform JSON stringified fields
-    const jsonFields = ['socialMedia', 'partnerships', 'faqs'];
-    jsonFields.forEach(field => {
-      if (updateIdentityDto[field] && typeof updateIdentityDto[field] === 'string') {
-        try {
-          updateIdentityDto[field] = JSON.parse(updateIdentityDto[field] as string);
-          console.log(`Parsed ${field} in update:`, updateIdentityDto[field]);
-        } catch (error) {
-          console.warn(`Failed to parse JSON field ${field} in update:`, error);
-        }
-      }
-    });
 
     // Handle logo upload
     if (files?.logo?.[0]) {
