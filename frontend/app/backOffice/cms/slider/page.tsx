@@ -9,6 +9,7 @@ import { TextField } from '@/components/TextField/TextField'
 import FileImageUploader from '@/components/FileUploader/FileImageUploader'
 import Alert from '@/components/Alert/Alert'
 import CircularProgress from '@/components/CircularProgress/CircularProgress'
+import { useAlert } from '@/app/contexts/AlertContext'
 
 interface Slider {
   id: string
@@ -23,13 +24,13 @@ interface Slider {
 }
 
 export default function SliderPage() {
+  const alert = useAlert();
   const [sliders, setSliders] = useState<Slider[]>([])
   const [loading, setLoading] = useState(true)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingSlider, setEditingSlider] = useState<Slider | null>(null)
   const [form, setForm] = useState<Partial<Slider>>({})
   const [imageFile, setImageFile] = useState<File | null>(null)
-  const [alert, setAlert] = useState<{ variant: 'success' | 'error'; message: string } | null>(null)
 
   useEffect(() => {
     loadSliders()
@@ -40,7 +41,7 @@ export default function SliderPage() {
       const data = await getSliders()
       setSliders(data)
     } catch (error) {
-      setAlert({ variant: 'error', message: 'Error loading sliders' })
+      alert.error('Error al cargar los sliders')
     } finally {
       setLoading(false)
     }
@@ -50,10 +51,10 @@ export default function SliderPage() {
     try {
       if (editingSlider) {
         await updateSlider(editingSlider.id, form, imageFile || undefined)
-        setAlert({ variant: 'success', message: 'Slider updated successfully' })
+        alert.success('Slider actualizado exitosamente')
       } else {
         await createSlider(form, imageFile || undefined)
-        setAlert({ variant: 'success', message: 'Slider created successfully' })
+        alert.success('Slider creado exitosamente')
       }
       setDialogOpen(false)
       setEditingSlider(null)
@@ -61,7 +62,7 @@ export default function SliderPage() {
       setImageFile(null)
       loadSliders()
     } catch (error) {
-      setAlert({ variant: 'error', message: 'Error saving slider' })
+      alert.error('Error al guardar el slider')
     }
   }
 
@@ -69,10 +70,10 @@ export default function SliderPage() {
     if (confirm('Are you sure you want to delete this slider?')) {
       try {
         await deleteSlider(id)
-        setAlert({ variant: 'success', message: 'Slider deleted successfully' })
+        alert.success('Slider eliminado exitosamente')
         loadSliders()
       } catch (error) {
-        setAlert({ variant: 'error', message: 'Error deleting slider' })
+        alert.error('Error al eliminar el slider')
       }
     }
   }
@@ -88,7 +89,7 @@ export default function SliderPage() {
     try {
       await reorderSliders(ids)
     } catch (error) {
-      setAlert({ variant: 'error', message: 'Error reordering sliders' })
+      alert.error('Error al reordenar los sliders')
       loadSliders() // Revert on error
     }
   }
@@ -104,7 +105,7 @@ export default function SliderPage() {
     try {
       await reorderSliders(ids)
     } catch (error) {
-      setAlert({ variant: 'error', message: 'Error reordering sliders' })
+      alert.error('Error al reordenar los sliders')
       loadSliders() // Revert on error
     }
   }
@@ -119,11 +120,6 @@ export default function SliderPage() {
           Add Slider
         </Button>
       </div>
-      {alert && (
-        <Alert variant={alert.variant} className="mb-4">
-          {alert.message}
-        </Alert>
-      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {sliders.map((slider, index) => (
           <div key={slider.id} className="bg-white rounded-lg border border-gray-300 p-4 relative">

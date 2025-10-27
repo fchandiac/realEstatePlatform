@@ -10,6 +10,7 @@ import type { SalePropertyGridRow } from '@/app/actions/properties';
 import { createProperty, type CreatePropertyDto } from '@/app/actions/properties';
 import { uploadPropertyMultimedia } from '@/app/actions/multimedia';
 import CreateProperty from '../../ui/CreateProperty';
+import { useAlert } from '@/app/contexts/AlertContext';
 
 type SalesGridProps = {
   rows: SalePropertyGridRow[];
@@ -35,6 +36,7 @@ function mapRow(row: any) {
 }
 
 export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
+  const alert = useAlert();
   const [createLoading, setCreateLoading] = useState(false);
   const router = useRouter();
 
@@ -134,7 +136,7 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
       }
       
     } catch (error) {
-      console.error('Error creando propiedad:', error);
+      alert.error('Error al crear la propiedad');
       // Re-throw the error to keep the dialog open and show error message
       throw error;
     } finally {

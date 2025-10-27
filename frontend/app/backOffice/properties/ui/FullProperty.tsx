@@ -7,6 +7,7 @@ import MultimediaGallery from '@/components/FileUploader/MultimediaGallery';
 import IconButton from '@/components/IconButton/IconButton';
 import { listPropertyTypes } from '@/app/actions/properties';
 import { listAdminsAgents } from '@/app/actions/users';
+import { useAlert } from '@/app/contexts/AlertContext';
 
 // Enums copiados del backend
 interface PropertyStatus {
@@ -123,6 +124,7 @@ interface FullPropertyDialogProps {
 }
 
 const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) => {
+  const alert = useAlert();
   const [activeSection, setActiveSection] = useState('basic');
   const [formData, setFormData] = useState(property || mockProperty);
   const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
@@ -148,7 +150,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
           setAvailableUsers(usersResult.data?.data || []);
         }
       } catch (error) {
-        console.error('Error cargando datos:', error);
+        alert.error('Error al cargar los datos de la propiedad');
       } finally {
         setLoading(false);
       }

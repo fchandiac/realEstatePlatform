@@ -17,6 +17,7 @@ import { PROPERTY_STATUSES, OPERATION_TYPES, CURRENCY_TYPES } from '@/app/consta
 import NumberStepper from '@/components/NumberStepper/NumberStepper';
 import MultimediaGallery from '@/components/FileUploader/MultimediaGallery';
 import IconButton from '@/components/IconButton/IconButton';
+import { useAlert } from '@/app/contexts/AlertContext';
 
 interface StepperStep {
   title: string;
@@ -33,7 +34,7 @@ const steps: StepperStep[] = [
 			{ name: 'description', label: 'Descripción', type: 'textarea', rows: 3 },
 			{ name: 'status', label: 'Estado publicación', type: 'select', required: true },
 			{ name: 'operationType', label: 'Operación', type: 'select', required: true },
-			{ name: 'propertyTypeId', label: 'Tipo de propiedad', type: 'autocomplete', options: [] },
+			{ name: 'propertyTypeId', label: 'Tipo de propiedad', type: 'autocomplete', options: [], required: true },
 			{ name: 'assignedAgentId', label: 'Agente asignado', type: 'autocomplete', options: [] },
 		],
 	},
@@ -102,6 +103,7 @@ interface CreatePropertyProps {
 }
 
 export default function CreateProperty({ open, onClose, onSave, operationType }: CreatePropertyProps) {
+	const alert = useAlert();
 	const [form, setForm] = useState<Record<string, any>>({
 		currencyPrice: { id: 'CLP', label: 'CLP' }
 	});
@@ -165,7 +167,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 				const comunasResult = await getComunas();
 				setComunas(comunasResult);
 			} catch (error) {
-				console.error('Error loading options:', error);
+				alert.error('Error al cargar las opciones de formulario');
 			} finally {
 				setLoadingOptions(false);
 			}
@@ -196,15 +198,6 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 		
 		setForm(prev => ({ ...prev, [field]: processedValue }));
 
-		// Clear step errors when a required field is filled
-		if (stepErrors[activeStep] && stepErrors[activeStep].length > 0) {
-			const currentStep = steps[activeStep];
-			const fieldConfig = currentStep.fields.find(f => f.name === field);
-			if (fieldConfig?.required && value !== undefined && value !== null && value !== '') {
-				setStepErrors(prev => ({ ...prev, [activeStep]: [] }));
-			}
-		}
-
 		if (field === 'state') {
 			if (!value) {
 				console.warn('State cleared, resetting comunas');
@@ -220,7 +213,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 					setFilteredComunas(regionComunas);
 					setForm(prev => ({ ...prev, city: null })); // Resetear comuna seleccionada a null
 				} catch (error) {
-					console.error('Error al cargar comunas:', error);
+					alert.error('Error al cargar comunas por región');
 					setFilteredComunas([]); // En caso de error, dejar vacío
 					setForm(prev => ({ ...prev, city: null })); // Resetear comuna seleccionada a null
 				}
@@ -230,21 +223,28 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 	};
 
 	const handleSubmit = async () => {
+		// Validate all required fields before submission
+		const requiredFields = ['title', 'status', 'operationType', 'propertyTypeId', 'price', 'currencyPrice'];
+		for (const field of requiredFields) {
+			if (!form[field]) {
+				alert.error(`El campo ${field} es obligatorio.`);
+				return;
+			}
+		}
+
 		// Validate all steps before submitting
 		let allStepsValid = true;
-		const allErrors: Record<number, string[]> = {};
 
 		for (let i = 0; i < steps.length; i++) {
 			const stepValid = validateStep(i);
 			if (!stepValid) {
 				allStepsValid = false;
-				allErrors[i] = stepErrors[i] || [];
+				break;
 			}
 		}
 
 		if (!allStepsValid) {
-			setStepErrors(allErrors);
-			setError('Completa todos los campos obligatorios antes de guardar');
+			alert.error('Completa todos los campos obligatorios antes de guardar');
 			setLoading(false);
 			return;
 		}
@@ -252,6 +252,27 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 		setLoading(true);
 		setError(null);
 		try {
+			// Replace inline error messages with useAlert
+if (!form.title) {
+  alert.error('El título es obligatorio.');
+  return;
+}
+if (!form.status) {
+  alert.error('El estado de publicación es obligatorio.');
+  return;
+}
+if (!form.operationType) {
+  alert.error('El tipo de operación es obligatorio.');
+  return;
+}
+if (!form.price) {
+  alert.error('El precio es obligatorio.');
+  return;
+}
+if (!form.currencyPrice) {
+  alert.error('La moneda es obligatoria.');
+  return;
+}
 			// Validar campos requeridos con formato correcto
 			if (!form.title || !form.title.trim()) {
 				setError('El título es obligatorio');
@@ -314,6 +335,10 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			// Procesar el form para extraer IDs y convertir tipos antes de enviar
 			const processedForm = {
 				...form,
+				multimedia: form.multimedia.map((file: { url: string; type: string }) => ({
+					url: file.url,
+					type: file.type,
+				})),
 				// Extraer IDs de objetos
 				state: form.state?.id || undefined,
 				city: form.city?.id || undefined,
@@ -333,16 +358,14 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			};
 			
 			await onSave(processedForm);
-			setStepErrors({}); // Clear all step errors on success
+			alert.success('Propiedad creada exitosamente');
 			setLoading(false);
 			onClose();
 		} catch (e) {
-			setError('Error al guardar');
+			alert.error('Error al guardar la propiedad');
 			setLoading(false);
 		}
 	};
-
-	const [stepErrors, setStepErrors] = useState<Record<number, string[]>>({});
 
 	// Custom stepper state
 	const [activeStep, setActiveStep] = useState(0);
@@ -383,20 +406,20 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			}
 		}
 		
-		setStepErrors(prev => ({ ...prev, [stepIndex]: errors }));
 		return errors.length === 0;
 	};
 
 	const handleNextStep = () => {
 		if (validateStep(activeStep)) {
 			setActiveStep(activeStep + 1);
+		} else {
+			// Mostrar alert cuando hay campos obligatorios faltantes
+			alert.error('Por favor complete todos los campos obligatorios antes de continuar');
 		}
 	};
 
 	const handlePrevStep = () => {
 		setActiveStep(activeStep - 1);
-		// Clear errors when going back
-		setStepErrors(prev => ({ ...prev, [activeStep]: [] }));
 	};
 
 	// Helper to get options for each field
@@ -478,7 +501,7 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 									placeholder={cityField.label || 'Buscar'}
 									value={form[cityField.name] || null}
 									required={cityField.required}
-									onChange={(val: any) => handleChange(cityField.name, val)}
+									onChange={(val: any) => handleChange(field.name, val)}
 								/>
 							</div>
 						</div>
@@ -956,16 +979,6 @@ export default function CreateProperty({ open, onClose, onSave, operationType }:
 			{/* Alertas de error abajo del contenido */}
 			<div className="flex-shrink-0 mt-4">
 				{error && <Alert variant="error" className="mb-4">{error}</Alert>}
-				{stepErrors[activeStep] && stepErrors[activeStep].length > 0 && (
-					<Alert variant="error" className="mb-4">
-						<div className="font-semibold mb-2">Campos obligatorios faltantes:</div>
-						<ul className="list-disc list-inside space-y-1">
-							{stepErrors[activeStep].map((errorMsg, idx) => (
-								<li key={idx} className="text-sm">{errorMsg}</li>
-							))}
-						</ul>
-					</Alert>
-				)}
 			</div>
 			
 			{/* Loading centrado absolutamente */}

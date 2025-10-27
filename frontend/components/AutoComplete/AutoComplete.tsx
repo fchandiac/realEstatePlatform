@@ -149,7 +149,7 @@ const AutoComplete = <T = Option,>({
           setHighlightedIndex(-1);
         }}
         onChange={e => { setInputValue(e.target.value); setOpen(true); setHighlightedIndex(-1); }}
-        className={`block w-full min-w-[180px] rounded border-[1px] px-3 py-2 text-sm font-light text-foreground focus:outline-none transition-colors duration-200 border-border ${focused ? 'border-primary' : (required && !value ? 'border-red-500' : '')} ${value ? 'pr-16' : 'pr-10'}`}
+        className={`block w-full min-w-[180px] rounded border-[1px] px-3 py-2 text-sm font-light text-foreground focus:outline-none transition-colors duration-200 border-border ${focused ? 'border-primary' : ''} ${value ? 'pr-16' : 'pr-10'}`}
         style={{ backgroundColor: "var(--color-background)" }}
         placeholder={shrink ? '' : (required ? '' : (placeholder ?? label))}
         autoComplete="off"

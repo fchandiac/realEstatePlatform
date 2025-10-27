@@ -80,7 +80,6 @@ export default function IdentityPage() {
           setIdentity(data)
         }
       } catch (err) {
-        console.error('Error loading identity:', err)
         error('Error cargando identidad')
       } finally {
         setLoading(false)
@@ -140,7 +139,6 @@ export default function IdentityPage() {
         setIdentity(result)
       }
     } catch (err) {
-      console.error('Error saving identity:', err)
       error('Error guardando identidad')
     } finally {
       setSaving(false)
