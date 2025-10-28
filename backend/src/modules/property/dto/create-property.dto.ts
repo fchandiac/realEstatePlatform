@@ -139,6 +139,7 @@ export class CreatePropertyDto {
 
   // Precio (opcionales)
   @IsOptional()
+  @Transform(({ value }) => value === '' || value === undefined ? undefined : value.toString())
   @IsString()
   price?: string;
 

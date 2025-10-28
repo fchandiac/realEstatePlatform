@@ -5,29 +5,93 @@ export class Slider {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  title: string;
+  @Column({ type: 'json' })
+  slide1: {
+    title: string;
+    description: string;
+    multimediaUrl: string;
+    url: string;
+    duration: number;
+    startDate: Date;
+    endDate: Date;
+  };
 
-  @Column({ type: 'text', nullable: true })
-  description?: string;
+  @Column({ type: 'json' })
+  slide2: {
+    title: string;
+    description: string;
+    multimediaUrl: string;
+    url: string;
+    duration: number;
+    startDate: Date;
+    endDate: Date;
+  };
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
-  imageUrl?: string;
+  @Column({ type: 'json' })
+  slide3: {
+    title: string;
+    description: string;
+    multimediaUrl: string;
+    url: string;
+    duration: number;
+    startDate: Date;
+    endDate: Date;
+  };
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
-  url?: string;
+  @Column({ type: 'json' })
+  slide4: {
+    title: string;
+    description: string;
+    multimediaUrl: string;
+    url: string;
+    duration: number;
+    startDate: Date;
+    endDate: Date;
+  };
 
-  @Column({ type: 'int', default: 3 })
-  duration: number; // in seconds
+  @Column({ type: 'json' })
+  slide5: {
+    title: string;
+    description: string;
+    multimediaUrl: string;
+    url: string;
+    duration: number;
+    startDate: Date;
+    endDate: Date;
+  };
 
-  @Column({ type: 'datetime', nullable: true })
-  startDate?: Date;
+  @Column({ type: 'json' })
+  slide6: {
+    title: string;
+    description: string;
+    multimediaUrl: string;
+    url: string;
+    duration: number;
+    startDate: Date;
+    endDate: Date;
+  };
 
-  @Column({ type: 'datetime', nullable: true })
-  endDate?: Date;
+  @Column({ type: 'json' })
+  slide7: {
+    title: string;
+    description: string;
+    multimediaUrl: string;
+    url: string;
+    duration: number;
+    startDate: Date;
+    endDate: Date;
+  };
 
-  @Column({ type: 'int', default: 0 })
-  order: number;
+  @Column({ type: 'json' })
+  slide8: {
+    title: string;
+    description: string;
+    multimediaUrl: string;
+    url: string;
+    duration: number;
+    startDate: Date;
+    endDate: Date;
+  };
 
   @CreateDateColumn()
   createdAt: Date;
