@@ -338,43 +338,22 @@ export interface UpdatePropertyDto {
 /**
  * Create a new property
  */
-export async function createProperty(data: CreatePropertyDto): Promise<{
-  success: boolean;
-  data?: Property;
-  error?: string;
-}> {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session?.accessToken) {
-      return { success: false, error: 'No authenticated' };
-    }
+export async function createProperty(formData: FormData) {
+  const session = await getServerSession(authOptions);
+  if (!session?.accessToken) throw new Error('Unauthorized');
 
-    const response = await fetch(`${env.backendApiUrl}/properties`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+  const res = await fetch(`${env.backendApiUrl}/properties`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${session.accessToken}` },
+    body: formData,
+  });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      return { 
-        success: false, 
-        error: errorData?.message || `Failed to create property: ${response.status}` 
-      };
-    }
-
-    const result = await response.json();
-    return { success: true, data: result };
-  } catch (error) {
-    console.error('Error creating property:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
-    };
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Failed to create property: ${res.status} ${errorText}`);
   }
+
+  return res.json();
 }
 
 /**

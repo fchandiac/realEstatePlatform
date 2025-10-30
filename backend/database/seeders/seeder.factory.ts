@@ -217,6 +217,13 @@ export class SeederFactory {
     return {
       name: selectedType,
       description: faker.lorem.sentence(),
+      hasBedrooms: faker.datatype.boolean(),
+      hasBathrooms: faker.datatype.boolean(),
+      hasBuiltSquareMeters: faker.datatype.boolean(),
+      hasLandSquareMeters: faker.datatype.boolean(),
+      hasParkingSpaces: faker.datatype.boolean(),
+      hasFloors: faker.datatype.boolean(),
+      hasConstructionYear: faker.datatype.boolean(),
       createdAt: faker.date.past(),
       updatedAt: new Date(),
       deletedAt: null

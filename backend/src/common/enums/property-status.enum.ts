@@ -5,4 +5,5 @@ export enum PropertyStatus {
   INACTIVE = 'INACTIVE',
   SOLD = 'SOLD',
   RENTED = 'RENTED',
+  CONTRACT_IN_PROGRESS = 'CONTRACT-IN-PROGRESS',
 }

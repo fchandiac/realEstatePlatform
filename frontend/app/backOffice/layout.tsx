@@ -10,7 +10,7 @@ const menuItems = [
     children: [
       { label: 'Venta', url: '/backOffice/properties/sales' },
       { label: 'Arriendo' },
-      { label: 'Tipos de propiedad' },
+      { label: 'Tipos de propiedad', url: '/backOffice/properties/propertyTypes' },
       { label: 'Solicitudes de publicación' },
       { label: 'Valoraciones' },
     ],

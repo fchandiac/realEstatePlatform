@@ -28,6 +28,14 @@ export class CreatePropertyTypeDto {
   @IsBoolean()
   @IsOptional()
   hasParkingSpaces?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  hasFloors?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  hasConstructionYear?: boolean;
 }
 
 export class UpdatePropertyTypeDto {
@@ -58,4 +66,12 @@ export class UpdatePropertyTypeDto {
   @IsBoolean()
   @IsOptional()
   hasParkingSpaces?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  hasFloors?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  hasConstructionYear?: boolean;
 }

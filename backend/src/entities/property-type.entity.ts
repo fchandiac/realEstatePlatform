@@ -33,6 +33,12 @@ export class PropertyType {
   @Column({ default: false })
   hasParkingSpaces: boolean;
 
+  @Column({ default: false })
+  hasFloors: boolean;
+
+  @Column({ default: false })
+  hasConstructionYear: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 
