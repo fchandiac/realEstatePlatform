@@ -39,6 +39,7 @@ export class PropertyTypesService {
   async findAll(): Promise<PropertyType[]> {
     return await this.propertyTypeRepository.find({
       where: { deletedAt: IsNull() },
+      order: { createdAt: 'DESC' },
     });
   }
 
@@ -46,6 +47,7 @@ export class PropertyTypesService {
     const propertyTypes = await this.propertyTypeRepository.find({
       select: ['id', 'name'],
       where: { deletedAt: IsNull() },
+      order: { createdAt: 'DESC' },
     });
     return propertyTypes;
   }

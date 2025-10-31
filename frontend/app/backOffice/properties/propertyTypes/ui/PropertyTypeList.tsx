@@ -136,7 +136,6 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
             <Dialog
                 open={showCreateForm}
                 onClose={handleCreateCancel}
-                title="Crear Tipo de Propiedad"
                 size="lg"
             >
                 <CreatePropertyTypeForm
