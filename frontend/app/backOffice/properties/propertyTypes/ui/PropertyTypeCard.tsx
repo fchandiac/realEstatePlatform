@@ -1,7 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Switch from '@/components/Switch/Switch';
+import IconButton from '@/components/IconButton/IconButton';
+import Dialog from '@/components/Dialog/Dialog';
+import UpdatePropertyTypeForm from './updatePropertyTypeForm';
 
 export interface PropertyType {
   id: string;
@@ -35,6 +38,7 @@ export default function PropertyTypeCard({
   onClick,
   onToggleFeature,
 }: PropertyTypeCardProps) {
+  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
   const {
     name,
     description,
@@ -60,6 +64,20 @@ export default function PropertyTypeCard({
 
   const handleFeatureToggle = (featureKey: keyof PropertyType, value: boolean) => {
     onToggleFeature?.(featureKey, value);
+  };
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    setShowUpdateDialog(true);
+  };
+
+  const handleUpdateSuccess = () => {
+    setShowUpdateDialog(false);
+    // Optionally refresh the card data here
+  };
+
+  const handleUpdateCancel = () => {
+    setShowUpdateDialog(false);
   };
 
   return (
@@ -96,7 +114,32 @@ export default function PropertyTypeCard({
             </div>
           </div>
         </div>
+
+        {/* Botón de editar en la parte inferior */}
+        <div className="flex justify-end mt-4 pt-2 border-t border-border">
+          <IconButton
+            aria-label="Editar tipo de propiedad"
+            variant="text"
+            onClick={handleEditClick}
+            icon="edit"
+            size="sm"
+          />
+        </div>
       </div>
+
+      {/* Dialog para actualizar */}
+      <Dialog
+        open={showUpdateDialog}
+        onClose={handleUpdateCancel}
+        title="Editar Tipo de Propiedad"
+        size="lg"
+      >
+        <UpdatePropertyTypeForm
+          propertyType={propertyType}
+          onSuccess={handleUpdateSuccess}
+          onCancel={handleUpdateCancel}
+        />
+      </Dialog>
     </div>
   );
 }
