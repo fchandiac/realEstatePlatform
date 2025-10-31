@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import PropertyTypeCard from "./PropertyTypeCard";
 import type { PropertyType } from "./PropertyTypeCard";
 import { updatePropertyTypeFeatures } from '@/app/actions/propertyTypes';
+import { useAlert } from '@/app/contexts/AlertContext';
 
 export interface PropertyTypeListProps {
     propertyTypes: PropertyType[];
@@ -20,6 +21,20 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
     const searchParams = useSearchParams();
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>(initialPropertyTypes);
+    const alert = useAlert();
+
+    const getFeatureDisplayName = (feature: keyof PropertyType): string => {
+        const featureNames: Record<string, string> = {
+            hasBedrooms: 'Dormitorios',
+            hasBathrooms: 'Baños',
+            hasBuiltSquareMeters: 'M² Construidos',
+            hasLandSquareMeters: 'M² Terreno',
+            hasParkingSpaces: 'Estacionamientos',
+            hasFloors: 'Pisos',
+            hasConstructionYear: 'Año Construcción',
+        };
+        return featureNames[feature as string] || feature as string;
+    };
 
     useEffect(() => {
         setSearch(searchParams.get("search") || "");
@@ -65,9 +80,14 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
                         : type
                 )
             );
-        } catch (error) {
-            console.error('Error updating property type feature:', error);
-            // TODO: Show error message to user
+
+            // Show success alert
+            const featureName = getFeatureDisplayName(feature);
+            alert.success(`Característica "${featureName}" ${value ? 'activada' : 'desactivada'} exitosamente`);
+        } catch (err) {
+            console.error('Error updating property type feature:', err);
+            // Show error alert
+            alert.error('Error al actualizar la característica. Por favor, inténtalo de nuevo.');
         }
     };
 
