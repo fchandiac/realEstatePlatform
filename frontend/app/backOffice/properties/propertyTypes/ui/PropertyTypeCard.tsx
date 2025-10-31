@@ -158,7 +158,7 @@ export default function PropertyTypeCard({
       <Dialog
         open={showUpdateDialog}
         onClose={handleUpdateCancel}
-        title="Editar Tipo de Propiedad"
+    
         size="lg"
       >
         <UpdatePropertyTypeForm
@@ -172,7 +172,7 @@ export default function PropertyTypeCard({
       <Dialog
         open={showDeleteDialog}
         onClose={handleDeleteCancel}
-        title="Eliminar Tipo de Propiedad"
+
         size="md"
       >
         <DeletePropertyTypeForm
