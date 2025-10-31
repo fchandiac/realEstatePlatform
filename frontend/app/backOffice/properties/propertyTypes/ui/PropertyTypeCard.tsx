@@ -5,6 +5,7 @@ import Switch from '@/components/Switch/Switch';
 import IconButton from '@/components/IconButton/IconButton';
 import Dialog from '@/components/Dialog/Dialog';
 import UpdatePropertyTypeForm from './updatePropertyTypeForm';
+import DeletePropertyTypeForm from './DeletePropertyTypeForm';
 import { useRouter } from 'next/navigation';
 
 export interface PropertyType {
@@ -40,6 +41,7 @@ export default function PropertyTypeCard({
   onToggleFeature,
 }: PropertyTypeCardProps) {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const router = useRouter();
   const {
     name,
@@ -83,6 +85,21 @@ export default function PropertyTypeCard({
     setShowUpdateDialog(false);
   };
 
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    setShowDeleteDialog(true);
+  };
+
+  const handleDeleteSuccess = () => {
+    setShowDeleteDialog(false);
+    // Refresh the page to get updated data
+    router.refresh();
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteDialog(false);
+  };
+
   return (
     <div
       className="w-full h-full cursor-pointer transition-all duration-200 hover:shadow-lg"
@@ -118,13 +135,20 @@ export default function PropertyTypeCard({
           </div>
         </div>
 
-        {/* Botón de editar en la parte inferior */}
-        <div className="flex justify-end mt-4 pt-2 border-t border-border">
+        {/* Botones de editar y eliminar en la parte inferior */}
+        <div className="flex justify-end gap-2 mt-4 pt-2 border-t border-border">
           <IconButton
             aria-label="Editar tipo de propiedad"
             variant="text"
             onClick={handleEditClick}
             icon="edit"
+            size="sm"
+          />
+          <IconButton
+            aria-label="Eliminar tipo de propiedad"
+            variant="text"
+            onClick={handleDeleteClick}
+            icon="delete"
             size="sm"
           />
         </div>
@@ -141,6 +165,20 @@ export default function PropertyTypeCard({
           propertyType={propertyType}
           onSuccess={handleUpdateSuccess}
           onCancel={handleUpdateCancel}
+        />
+      </Dialog>
+
+      {/* Dialog para eliminar */}
+      <Dialog
+        open={showDeleteDialog}
+        onClose={handleDeleteCancel}
+        title="Eliminar Tipo de Propiedad"
+        size="md"
+      >
+        <DeletePropertyTypeForm
+          propertyType={propertyType}
+          onSuccess={handleDeleteSuccess}
+          onCancel={handleDeleteCancel}
         />
       </Dialog>
     </div>
