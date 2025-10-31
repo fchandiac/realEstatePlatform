@@ -64,14 +64,14 @@ export default function PropertyTypeCard({
 
   return (
     <div
-      className="w-full mb-3 cursor-pointer transition-all duration-200 hover:shadow-lg"
+      className="w-full h-full cursor-pointer transition-all duration-200 hover:shadow-lg"
       onClick={onClick}
     >
       <div
-        className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg"
+        className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg h-full flex flex-col"
       >
-        <div className="flex items-start">
-          <div className="flex-1 min-w-0">
+        <div className="flex items-start flex-1">
+          <div className="flex-1 min-w-0 flex flex-col">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-lg font-semibold text-foreground truncate">{name}</h3>
               {!isActive && (

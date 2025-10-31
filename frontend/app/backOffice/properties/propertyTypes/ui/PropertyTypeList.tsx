@@ -5,6 +5,7 @@ import { TextField } from '@/components/TextField/TextField';
 import { useRouter, useSearchParams } from "next/navigation";
 import PropertyTypeCard from "./PropertyTypeCard";
 import type { PropertyType } from "./PropertyTypeCard";
+import { updatePropertyTypeFeatures } from '@/app/actions/propertyTypes';
 
 export interface PropertyTypeListProps {
     propertyTypes: PropertyType[];
@@ -13,15 +14,20 @@ export interface PropertyTypeListProps {
 const defaultEmptyMessage = 'No hay tipos de propiedad para mostrar.';
 
 const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
-    propertyTypes,
+    propertyTypes: initialPropertyTypes,
 }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [search, setSearch] = useState(searchParams.get("search") || "");
+    const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>(initialPropertyTypes);
 
     useEffect(() => {
         setSearch(searchParams.get("search") || "");
     }, [searchParams]);
+
+    useEffect(() => {
+        setPropertyTypes(initialPropertyTypes);
+    }, [initialPropertyTypes]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const value = e.target.value;
@@ -45,9 +51,24 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
         console.log("Property type clicked:", propertyType);
     };
 
-    const handleToggleFeature = (propertyTypeId: string, feature: keyof PropertyType, value: boolean) => {
-        // TODO: Implement toggle feature functionality
-        console.log("Toggle feature:", propertyTypeId, feature, value);
+    const handleToggleFeature = async (propertyTypeId: string, feature: keyof PropertyType, value: boolean) => {
+        try {
+            // Create the update object with only the feature being changed
+            const updateData = { [feature]: value };
+            await updatePropertyTypeFeatures(propertyTypeId, updateData);
+            
+            // Update local state optimistically
+            setPropertyTypes(prevTypes => 
+                prevTypes.map(type => 
+                    type.id === propertyTypeId 
+                        ? { ...type, [feature]: value }
+                        : type
+                )
+            );
+        } catch (error) {
+            console.error('Error updating property type feature:', error);
+            // TODO: Show error message to user
+        }
     };
 
     // Filter property types based on search
@@ -79,10 +100,10 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
                 </div>
             </div>
 
-            {/* Segunda fila: lista de tarjetas */}
-            <div className="space-y-3 w-full">
+            {/* Grid de tarjetas: 3 por fila */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-stretch">
                 {filteredPropertyTypes.length === 0 ? (
-                    <div className="text-center py-8 text-secondary">
+                    <div className="col-span-full text-center py-8 text-secondary">
                         {search ? 'No se encontraron tipos de propiedad que coincidan con la búsqueda.' : defaultEmptyMessage}
                     </div>
                 ) : (

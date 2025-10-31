@@ -9,6 +9,7 @@ import { PropertyType } from '../../entities/property-type.entity';
 import {
   CreatePropertyTypeDto,
   UpdatePropertyTypeDto,
+  UpdatePropertyTypeFeaturesDto,
 } from './dto/property-type.dto';
 
 @Injectable()
@@ -89,5 +90,37 @@ export class PropertyTypesService {
   async softDelete(id: string): Promise<void> {
     const propertyType = await this.findOne(id);
     await this.propertyTypeRepository.softDelete(id);
+  }
+
+  async updateFeatures(
+    id: string,
+    updateFeaturesDto: UpdatePropertyTypeFeaturesDto,
+  ): Promise<PropertyType> {
+    const propertyType = await this.findOne(id);
+
+    // Update only the feature fields
+    if (updateFeaturesDto.hasBedrooms !== undefined) {
+      propertyType.hasBedrooms = updateFeaturesDto.hasBedrooms;
+    }
+    if (updateFeaturesDto.hasBathrooms !== undefined) {
+      propertyType.hasBathrooms = updateFeaturesDto.hasBathrooms;
+    }
+    if (updateFeaturesDto.hasBuiltSquareMeters !== undefined) {
+      propertyType.hasBuiltSquareMeters = updateFeaturesDto.hasBuiltSquareMeters;
+    }
+    if (updateFeaturesDto.hasLandSquareMeters !== undefined) {
+      propertyType.hasLandSquareMeters = updateFeaturesDto.hasLandSquareMeters;
+    }
+    if (updateFeaturesDto.hasParkingSpaces !== undefined) {
+      propertyType.hasParkingSpaces = updateFeaturesDto.hasParkingSpaces;
+    }
+    if (updateFeaturesDto.hasFloors !== undefined) {
+      propertyType.hasFloors = updateFeaturesDto.hasFloors;
+    }
+    if (updateFeaturesDto.hasConstructionYear !== undefined) {
+      propertyType.hasConstructionYear = updateFeaturesDto.hasConstructionYear;
+    }
+
+    return await this.propertyTypeRepository.save(propertyType);
   }
 }

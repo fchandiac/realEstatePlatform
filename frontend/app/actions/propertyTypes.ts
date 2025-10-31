@@ -14,10 +14,36 @@ export interface PropertyType {
 
 export interface CreatePropertyTypeDto {
   name: string
+  description?: string
+  hasBedrooms?: boolean
+  hasBathrooms?: boolean
+  hasBuiltSquareMeters?: boolean
+  hasLandSquareMeters?: boolean
+  hasParkingSpaces?: boolean
+  hasFloors?: boolean
+  hasConstructionYear?: boolean
 }
 
 export interface UpdatePropertyTypeDto {
   name?: string
+  description?: string
+  hasBedrooms?: boolean
+  hasBathrooms?: boolean
+  hasBuiltSquareMeters?: boolean
+  hasLandSquareMeters?: boolean
+  hasParkingSpaces?: boolean
+  hasFloors?: boolean
+  hasConstructionYear?: boolean
+}
+
+export interface UpdatePropertyTypeFeaturesDto {
+  hasBedrooms?: boolean;
+  hasBathrooms?: boolean;
+  hasBuiltSquareMeters?: boolean;
+  hasLandSquareMeters?: boolean;
+  hasParkingSpaces?: boolean;
+  hasFloors?: boolean;
+  hasConstructionYear?: boolean;
 }
 
 /**
@@ -121,6 +147,33 @@ export async function updatePropertyType(id: string, data: UpdatePropertyTypeDto
 
   if (!response.ok) {
     throw new Error(`Failed to update property type: ${response.status}`)
+  }
+
+  return response.json()
+}
+
+/**
+ * Actualiza las características de un tipo de propiedad
+ */
+export async function updatePropertyTypeFeatures(id: string, data: UpdatePropertyTypeFeaturesDto): Promise<PropertyType> {
+  const session = await getServerSession(authOptions)
+  
+  if (!session?.accessToken) {
+    throw new Error('No authenticated')
+  }
+
+  const response = await fetch(`${env.backendApiUrl}/property-types/${id}/features`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${session.accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+    cache: 'no-store'
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to update property type features: ${response.status}`)
   }
 
   return response.json()

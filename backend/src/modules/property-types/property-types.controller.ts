@@ -12,6 +12,7 @@ import { PropertyTypesService } from './property-types.service';
 import {
   CreatePropertyTypeDto,
   UpdatePropertyTypeDto,
+  UpdatePropertyTypeFeaturesDto,
 } from './dto/property-type.dto';
 
 @Controller('property-types')
@@ -44,6 +45,14 @@ export class PropertyTypesController {
     @Body(ValidationPipe) updatePropertyTypeDto: UpdatePropertyTypeDto,
   ) {
     return this.propertyTypesService.update(id, updatePropertyTypeDto);
+  }
+
+  @Patch(':id/features')
+  updateFeatures(
+    @Param('id') id: string,
+    @Body(ValidationPipe) updateFeaturesDto: UpdatePropertyTypeFeaturesDto,
+  ) {
+    return this.propertyTypesService.updateFeatures(id, updateFeaturesDto);
   }
 
   @Delete(':id')
