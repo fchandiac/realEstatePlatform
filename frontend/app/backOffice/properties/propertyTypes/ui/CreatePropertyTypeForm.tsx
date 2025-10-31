@@ -48,36 +48,43 @@ export default function CreatePropertyTypeForm({ onSuccess, onCancel }: CreatePr
       name: 'hasBedrooms',
       label: 'Dormitorios',
       type: 'switch',
+      labelPosition: 'right',
     },
     {
       name: 'hasBathrooms',
       label: 'Baños',
       type: 'switch',
+      labelPosition: 'right',
     },
     {
       name: 'hasBuiltSquareMeters',
       label: 'M² Construidos',
       type: 'switch',
+      labelPosition: 'right',
     },
     {
       name: 'hasLandSquareMeters',
       label: 'M² Terreno',
       type: 'switch',
+      labelPosition: 'right',
     },
     {
       name: 'hasParkingSpaces',
       label: 'Estacionamientos',
       type: 'switch',
+      labelPosition: 'right',
     },
     {
       name: 'hasFloors',
       label: 'Pisos',
       type: 'switch',
+      labelPosition: 'right',
     },
     {
       name: 'hasConstructionYear',
       label: 'Año Construcción',
       type: 'switch',
+      labelPosition: 'right',
     },
   ];
 

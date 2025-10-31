@@ -40,6 +40,7 @@ export interface BaseFormField {
 	min?: number;
 	max?: number;
 	col?: number;
+	labelPosition?: 'left' | 'right';
 }
 
 export interface CreateBaseFormProps {
@@ -122,6 +123,7 @@ const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 					checked={Boolean(values[field.name])}
 					onChange={val => onChange(field.name, val)}
 					label={field.label}
+					labelPosition={field.labelPosition || 'left'}
 					data-test-id={`switch-${field.name}`}
 				/>
 			) : (
