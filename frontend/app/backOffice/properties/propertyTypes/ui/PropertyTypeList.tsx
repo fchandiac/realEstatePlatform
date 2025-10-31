@@ -112,7 +112,7 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
     return (
         <div className="w-full">
             {/* Primera fila: botón agregar y búsqueda */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <div className="flex items-center justify-between gap-4 mb-4">
                 <div className="flex-shrink-0">
                     <IconButton
                         aria-label="Agregar tipo de propiedad"
@@ -121,7 +121,7 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
                         icon="add"
                     />
                 </div>
-                <div className="w-full sm:w-64 lg:w-80">
+                <div className="flex-1 min-w-0 max-w-xs sm:max-w-sm">
                     <TextField
                         label="Buscar"
                         value={search}
