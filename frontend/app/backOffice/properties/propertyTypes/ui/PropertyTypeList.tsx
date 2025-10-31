@@ -7,6 +7,7 @@ import PropertyTypeCard from "./PropertyTypeCard";
 import type { PropertyType } from "./PropertyTypeCard";
 import { updatePropertyTypeFeatures } from '@/app/actions/propertyTypes';
 import { useAlert } from '@/app/contexts/AlertContext';
+import CreatePropertyTypeForm from './CreatePropertyTypeForm';
 
 export interface PropertyTypeListProps {
     propertyTypes: PropertyType[];
@@ -22,6 +23,7 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>(initialPropertyTypes);
     const alert = useAlert();
+    const [showCreateForm, setShowCreateForm] = useState(false);
 
     const getFeatureDisplayName = (feature: keyof PropertyType): string => {
         const featureNames: Record<string, string> = {
@@ -57,8 +59,17 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
     };
 
     const handleAddPropertyType = () => {
-        // TODO: Implement add property type functionality
-        console.log("Add property type clicked");
+        setShowCreateForm(true);
+    };
+
+    const handleCreateSuccess = () => {
+        setShowCreateForm(false);
+        // Refresh the property types list
+        window.location.reload();
+    };
+
+    const handleCreateCancel = () => {
+        setShowCreateForm(false);
     };
 
     const handlePropertyTypeClick = (propertyType: PropertyType) => {
@@ -119,6 +130,16 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
                     />
                 </div>
             </div>
+
+            {/* Formulario de creación */}
+            {showCreateForm && (
+                <div className="mb-6">
+                    <CreatePropertyTypeForm
+                        onSuccess={handleCreateSuccess}
+                        onCancel={handleCreateCancel}
+                    />
+                </div>
+            )}
 
             {/* Grid de tarjetas: 3 por fila */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-stretch">
