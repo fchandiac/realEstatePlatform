@@ -8,6 +8,7 @@ import type { PropertyType } from "./PropertyTypeCard";
 import { updatePropertyTypeFeatures } from '@/app/actions/propertyTypes';
 import { useAlert } from '@/app/contexts/AlertContext';
 import CreatePropertyTypeForm from './CreatePropertyTypeForm';
+import Dialog from '@/components/Dialog/Dialog';
 
 export interface PropertyTypeListProps {
     propertyTypes: PropertyType[];
@@ -131,15 +132,18 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
                 </div>
             </div>
 
-            {/* Formulario de creación */}
-            {showCreateForm && (
-                <div className="mb-6">
-                    <CreatePropertyTypeForm
-                        onSuccess={handleCreateSuccess}
-                        onCancel={handleCreateCancel}
-                    />
-                </div>
-            )}
+            {/* Formulario de creación en dialog */}
+            <Dialog
+                open={showCreateForm}
+                onClose={handleCreateCancel}
+                title="Crear Tipo de Propiedad"
+                size="lg"
+            >
+                <CreatePropertyTypeForm
+                    onSuccess={handleCreateSuccess}
+                    onCancel={handleCreateCancel}
+                />
+            </Dialog>
 
             {/* Grid de tarjetas: 3 por fila */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-stretch">
