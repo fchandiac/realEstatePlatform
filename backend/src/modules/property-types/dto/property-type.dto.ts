@@ -78,23 +78,30 @@ export class UpdatePropertyTypeDto {
 
 export class UpdatePropertyTypeFeaturesDto {
   @IsBoolean()
+  @IsOptional()
   hasBedrooms?: boolean;
 
   @IsBoolean()
+  @IsOptional()
   hasBathrooms?: boolean;
 
   @IsBoolean()
+  @IsOptional()
   hasBuiltSquareMeters?: boolean;
 
   @IsBoolean()
+  @IsOptional()
   hasLandSquareMeters?: boolean;
 
   @IsBoolean()
+  @IsOptional()
   hasParkingSpaces?: boolean;
 
   @IsBoolean()
+  @IsOptional()
   hasFloors?: boolean;
 
   @IsBoolean()
+  @IsOptional()
   hasConstructionYear?: boolean;
 }
