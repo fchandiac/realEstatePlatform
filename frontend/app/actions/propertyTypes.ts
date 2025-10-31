@@ -3,6 +3,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { env } from '@/lib/env'
+import { revalidatePath } from 'next/cache'
 
 export interface PropertyType {
   id: string
@@ -122,6 +123,7 @@ export async function createPropertyType(data: CreatePropertyTypeDto): Promise<P
     throw new Error(`Failed to create property type: ${response.status}`)
   }
 
+  revalidatePath('/backOffice/properties/propertyTypes')
   return response.json()
 }
 
@@ -149,6 +151,7 @@ export async function updatePropertyType(id: string, data: UpdatePropertyTypeDto
     throw new Error(`Failed to update property type: ${response.status}`)
   }
 
+  revalidatePath('/backOffice/properties/propertyTypes')
   return response.json()
 }
 
@@ -176,6 +179,7 @@ export async function updatePropertyTypeFeatures(id: string, data: UpdatePropert
     throw new Error(`Failed to update property type features: ${response.status}`)
   }
 
+  revalidatePath('/backOffice/properties/propertyTypes')
   return response.json()
 }
 
@@ -201,4 +205,6 @@ export async function deletePropertyType(id: string): Promise<void> {
   if (!response.ok) {
     throw new Error(`Failed to delete property type: ${response.status}`)
   }
+
+  revalidatePath('/backOffice/properties/propertyTypes')
 }

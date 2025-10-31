@@ -65,8 +65,8 @@ const PropertyTypeList: React.FC<PropertyTypeListProps> = ({
 
     const handleCreateSuccess = () => {
         setShowCreateForm(false);
-        // Refresh the property types list
-        window.location.reload();
+        // Refresh the page to get updated data
+        router.refresh();
     };
 
     const handleCreateCancel = () => {

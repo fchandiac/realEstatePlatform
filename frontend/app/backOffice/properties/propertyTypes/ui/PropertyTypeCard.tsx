@@ -5,6 +5,7 @@ import Switch from '@/components/Switch/Switch';
 import IconButton from '@/components/IconButton/IconButton';
 import Dialog from '@/components/Dialog/Dialog';
 import UpdatePropertyTypeForm from './updatePropertyTypeForm';
+import { useRouter } from 'next/navigation';
 
 export interface PropertyType {
   id: string;
@@ -39,6 +40,7 @@ export default function PropertyTypeCard({
   onToggleFeature,
 }: PropertyTypeCardProps) {
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const router = useRouter();
   const {
     name,
     description,
@@ -73,7 +75,8 @@ export default function PropertyTypeCard({
 
   const handleUpdateSuccess = () => {
     setShowUpdateDialog(false);
-    // Optionally refresh the card data here
+    // Refresh the page to get updated data
+    router.refresh();
   };
 
   const handleUpdateCancel = () => {
