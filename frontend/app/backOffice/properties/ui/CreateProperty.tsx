@@ -1,5 +1,7 @@
+'use client';
+
 import { StepperBaseForm } from '@/components/BaseForm';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField } from '@/components/TextField/TextField';
 import Select from '@/components/Select/Select';
 import LocationPicker from '@/components/LocationPicker/LocationPicker';
@@ -7,6 +9,7 @@ import { Button } from '@/components/Button/Button';
 import AutoComplete from '@/components/AutoComplete/AutoComplete';
 import { FileImageUploader } from '@/components/FileUploader/FileImageUploader';
 import { PropertyStatus, PropertyOperationType, CurrencyPriceEnum } from '../enums';
+import { getPropertyTypesMinimal } from '@/app/actions/propertyTypesMinimal';
 
 interface CreatePropertyProps {
   open: boolean;
@@ -19,6 +22,27 @@ export default function CreateProperty({
   onClose,
   size,
 }: CreatePropertyProps) {
+  const [propertyTypes, setPropertyTypes] = useState<{ id: string; label: string }[]>([]);
+  const [loadingTypes, setLoadingTypes] = useState(true);
+
+  useEffect(() => {
+    const loadPropertyTypes = async () => {
+      try {
+        const types = await getPropertyTypesMinimal();
+        const formattedTypes = types.map(type => ({
+          id: type.id,
+          label: type.name,
+        }));
+        setPropertyTypes(formattedTypes);
+      } catch (error) {
+        console.error('Error loading property types:', error);
+      } finally {
+        setLoadingTypes(false);
+      }
+    };
+
+    loadPropertyTypes();
+  }, []);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -119,8 +143,8 @@ export default function CreateProperty({
             />
           </div>
           <Select
-            placeholder="Property Type"
-            options={propertyTypeOptions}
+            placeholder={loadingTypes ? "Cargando tipos..." : "Property Type"}
+            options={propertyTypes}
             value={formData.propertyTypeId}
             onChange={(value) => handleChange('propertyTypeId', value)}
             required
