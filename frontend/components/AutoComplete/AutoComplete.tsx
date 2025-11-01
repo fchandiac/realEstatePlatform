@@ -164,8 +164,8 @@ const AutoComplete = <T = Option,>({
         </span>
       )}
       <label
-        className={`absolute left-3 top-1 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs text-foreground` +
-          (shrink ? " -translate-y-2 scale-90 opacity-100" : " opacity-0")}
+        className={`absolute left-3 top-2 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs text-foreground` +
+          (shrink ? " -translate-y-1 scale-90 opacity-100" : " opacity-0")}
         style={{ backgroundColor: "var(--color-background)" }}
         onClick={() => inputRef.current?.focus()}
         data-test-id="auto-complete-label"
