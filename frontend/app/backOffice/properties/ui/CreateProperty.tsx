@@ -9,9 +9,11 @@ import { Button } from '@/components/Button/Button';
 import AutoComplete from '@/components/AutoComplete/AutoComplete';
 import { FileImageUploader } from '@/components/FileUploader/FileImageUploader';
 import { PropertyStatus, PropertyOperationType, CurrencyPriceEnum } from '../enums';
+import { PROPERTY_STATUS_MAPPING, PROPERTY_OPERATION_TYPE_MAPPING, CURRENCY_PRICE_MAPPING } from '@/lib/enums';
 import { getPropertyTypesMinimal } from '@/app/actions/propertyTypesMinimal';
 import { getPropertyType, PropertyType } from '@/app/actions/propertyTypes';
 import { getRegiones, getComunasByRegion } from '@/app/actions/commons';
+import { createProperty } from '@/app/actions/properties';
 
 interface CreatePropertyProps {
   open: boolean;
@@ -30,6 +32,8 @@ export default function CreateProperty({
   const [loadingStates, setLoadingStates] = useState(true);
   const [cityOptions, setCityOptions] = useState<{ id: string; label: string }[]>([]);
   const [loadingCities, setLoadingCities] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [selectedPropertyType, setSelectedPropertyType] = useState<PropertyType | null>(null);
 
   useEffect(() => {
@@ -71,7 +75,7 @@ export default function CreateProperty({
     description: '',
     price: '',
     operationType: '',
-    location: null,
+    location: undefined, // Cambiar de null a undefined para compatibilidad con backend
     state: { id: '', label: '' },
     city: { id: '', label: '' },
     currencyPrice: 'CLP',
@@ -150,9 +154,57 @@ export default function CreateProperty({
     }
   };
 
-  const handleSubmit = () => {
-    console.log('Form submitted:', formData);
-    // Aquí puedes agregar la lógica para enviar los datos al backend
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      // Transformar los valores del frontend a los que espera el backend
+      const transformedData = {
+        ...formData,
+        // Transformar enums de strings a números
+        status: PROPERTY_STATUS_MAPPING[formData.status] || 1, // Default a REQUEST
+        operationType: PROPERTY_OPERATION_TYPE_MAPPING[formData.operationType] || 1, // Default a SALE
+        currencyPrice: CURRENCY_PRICE_MAPPING[formData.currencyPrice] || 1, // Default a CLP
+        
+        // Convertir campos numéricos de strings a numbers
+        bedrooms: formData.bedrooms || undefined,
+        bathrooms: formData.bathrooms || undefined,
+        parkingSpaces: formData.parkingSpaces || undefined,
+        floors: formData.floors || undefined,
+        builtSquareMeters: formData.builtSquareMeters || undefined,
+        landSquareMeters: formData.landSquareMeters || undefined,
+        constructionYear: formData.constructionYear || undefined,
+        
+        // Extraer IDs de objetos de ubicación
+        state: formData.state?.id || '',
+        city: formData.city?.id || '',
+      };
+
+      // Filtrar campos opcionales: solo incluir location si existe
+      const dataToSend = {
+        ...transformedData,
+        ...(formData.location ? { location: formData.location } : {}),
+      };
+
+      console.log('Transformed data to send:', dataToSend);
+
+      // Enviar datos al backend
+      const result = await createProperty(dataToSend);
+
+      if (result.success) {
+        console.log('Property created successfully:', result.data);
+        // Aquí podrías mostrar un mensaje de éxito y cerrar el modal
+        onClose();
+      } else {
+        setSubmitError(result.error || 'Error desconocido al crear la propiedad');
+      }
+    } catch (error) {
+      console.error('Error submitting property:', error);
+      setSubmitError('Error inesperado al crear la propiedad');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Determinar el tipo del campo de precio basado en la moneda
@@ -253,7 +305,7 @@ export default function CreateProperty({
             />
           </div>
           <LocationPicker
-            onChange={(coords) => handleChange('location', coords)}
+            onChange={(location) => handleChange('location', location)}
           />
           <FileImageUploader
             uploadPath="/uploads/media"
@@ -334,8 +386,17 @@ export default function CreateProperty({
             value={formData.seoDescription}
             onChange={(e) => handleChange('seoDescription', e.target.value)}
           />
-          <Button onClick={handleSubmit} variant="primary">
-            Submit
+          {submitError && (
+            <div className="text-red-600 text-sm bg-red-50 p-2 rounded">
+              {submitError}
+            </div>
+          )}
+          <Button 
+            onClick={handleSubmit} 
+            variant="primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Creating...' : 'Submit'}
           </Button>
         </form>
       </div>

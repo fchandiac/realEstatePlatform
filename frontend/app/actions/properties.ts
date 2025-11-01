@@ -246,14 +246,13 @@ export interface CreatePropertyDto {
   // Datos generales
   title: string;
   description?: string;
-  status: number;
-  operationType: number;
+  status: number; // Número que se mapea a string en el backend
+  operationType: number; // Número que se mapea a string en el backend
   propertyTypeId?: string;
-  assignedAgentId?: string;
 
   // Ubicación  
-  state: { id: string; label: string } | string;
-  city: { id: string; label: string } | string;
+  state: string; // ID extraído del objeto
+  city: string; // ID extraído del objeto
   address?: string;
   location?: {
     lat: number;
@@ -272,7 +271,7 @@ export interface CreatePropertyDto {
 
   // Precio (opcionales)
   price?: string;
-  currencyPrice?: number;
+  currencyPrice?: number; // Número que se mapea a string en el backend
 
   // SEO
   seoTitle?: string;
@@ -286,6 +285,9 @@ export interface CreatePropertyDto {
     type: 'image' | 'video';
     order?: number;
   }>;
+
+  // Imagen principal
+  mainImageUrl?: string;
 
   // Internos
   internalNotes?: string;
@@ -338,22 +340,43 @@ export interface UpdatePropertyDto {
 /**
  * Create a new property
  */
-export async function createProperty(formData: FormData) {
-  const session = await getServerSession(authOptions);
-  if (!session?.accessToken) throw new Error('Unauthorized');
+export async function createProperty(data: CreatePropertyDto): Promise<{
+  success: boolean;
+  data?: Property;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' };
+    }
 
-  const res = await fetch(`${env.backendApiUrl}/properties`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${session.accessToken}` },
-    body: formData,
-  });
+    const response = await fetch(`${env.backendApiUrl}/properties`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Failed to create property: ${res.status} ${errorText}`);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return { 
+        success: false, 
+        error: errorData?.message || `Failed to create property: ${response.status}` 
+      };
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error('Error creating property:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    };
   }
-
-  return res.json();
 }
 
 /**

@@ -272,3 +272,24 @@ export enum PropertyStatus {
   RENTED = 'RENTED',
   CONTRACT_IN_PROGRESS = 'CONTRACT-IN-PROGRESS',
 }
+
+// Mapeos para transformar valores del frontend (strings) a backend (números)
+export const PROPERTY_STATUS_MAPPING: Record<string, number> = {
+  'REQUEST': 1,
+  'PRE-APPROVED': 2,
+  'PUBLISHED': 3,
+  'INACTIVE': 4,
+  'SOLD': 5,
+  'RENTED': 6,
+  'CONTRACT-IN-PROGRESS': 7, // Nota: El DTO solo tiene hasta 6, pero mantengo consistencia
+};
+
+export const PROPERTY_OPERATION_TYPE_MAPPING: Record<string, number> = {
+  'SALE': 1,
+  'RENT': 2,
+};
+
+export const CURRENCY_PRICE_MAPPING: Record<string, number> = {
+  'CLP': 1,
+  'UF': 2,
+};
