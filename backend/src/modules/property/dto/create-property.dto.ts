@@ -71,10 +71,6 @@ export class CreatePropertyDto {
   @IsString()
   propertyTypeId?: string;
 
-  @IsOptional()
-  @IsString()
-  assignedAgentId?: string;
-
   // Ubicación
   @Transform(({ value }) => {
     if (typeof value === 'object' && value?.id) return value.id;

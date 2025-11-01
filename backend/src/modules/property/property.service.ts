@@ -786,12 +786,7 @@ export class PropertyService {
       await this.processPropertyMultimedia(property, createPropertyDto.multimedia);
     }
 
-    // 4. Asignar agente si existe
-    if (createPropertyDto.assignedAgentId) {
-      await this.assignPropertyAgent(property, createPropertyDto.assignedAgentId);
-    }
-
-    // 5. Guardar propiedad completa
+    // 4. Guardar propiedad completa
     return this.propertyRepository.save(property);
   }
 
