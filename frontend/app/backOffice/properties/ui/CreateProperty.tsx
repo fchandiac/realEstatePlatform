@@ -92,6 +92,7 @@ export default function CreateProperty({
     seoDescription: '',
     status: '',
     propertyTypeId: '',
+    internalNotes: '', // Campo opcional para notas internas
   });
 
   useEffect(() => {
@@ -385,6 +386,12 @@ export default function CreateProperty({
             label="SEO Description"
             value={formData.seoDescription}
             onChange={(e) => handleChange('seoDescription', e.target.value)}
+          />
+          <TextField
+            label="Internal Notes"
+            value={formData.internalNotes}
+            onChange={(e) => handleChange('internalNotes', e.target.value)}
+            rows={3}
           />
           {submitError && (
             <div className="text-red-600 text-sm bg-red-50 p-2 rounded">
