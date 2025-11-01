@@ -135,6 +135,7 @@ const AutoComplete = <T = Option,>({
 
   return (
     <div className="relative w-full pt-2" data-test-id={props["data-test-id"] || "auto-complete-root"}>
+      <div className="relative w-full">
       <input
         ref={inputRef}
         type="text"
@@ -199,6 +200,7 @@ const AutoComplete = <T = Option,>({
         }}
         data-test-id="auto-complete-dropdown-icon"
       />
+      </div>
       <DropdownList open={open && filteredOptions.length > 0} testId="auto-complete-list">
         {filteredOptions.map((opt, idx) => (
           <li
