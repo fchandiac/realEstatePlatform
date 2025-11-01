@@ -10,6 +10,7 @@ import AutoComplete from '@/components/AutoComplete/AutoComplete';
 import { FileImageUploader } from '@/components/FileUploader/FileImageUploader';
 import { PropertyStatus, PropertyOperationType, CurrencyPriceEnum } from '../enums';
 import { getPropertyTypesMinimal } from '@/app/actions/propertyTypesMinimal';
+import { getRegiones } from '@/app/actions/commons';
 
 interface CreatePropertyProps {
   open: boolean;
@@ -24,6 +25,8 @@ export default function CreateProperty({
 }: CreatePropertyProps) {
   const [propertyTypes, setPropertyTypes] = useState<{ id: string; label: string }[]>([]);
   const [loadingTypes, setLoadingTypes] = useState(true);
+  const [stateOptions, setStateOptions] = useState<{ id: string; label: string }[]>([]);
+  const [loadingStates, setLoadingStates] = useState(true);
 
   useEffect(() => {
     const loadPropertyTypes = async () => {
@@ -42,6 +45,21 @@ export default function CreateProperty({
     };
 
     loadPropertyTypes();
+  }, []);
+
+  useEffect(() => {
+    const loadStates = async () => {
+      try {
+        const states = await getRegiones();
+        setStateOptions(states);
+      } catch (error) {
+        console.error('Error loading states:', error);
+      } finally {
+        setLoadingStates(false);
+      }
+    };
+
+    loadStates();
   }, []);
   const [formData, setFormData] = useState({
     title: '',
@@ -80,11 +98,6 @@ export default function CreateProperty({
   const getPriceFieldType = () => {
     return formData.currencyPrice === 'CLP' ? 'currency' : 'number';
   };
-
-  const stateOptions = [
-    { id: 's1', label: 'State 1' },
-    { id: 's2', label: 'State 2' },
-  ];
 
   const cityOptions = [
     { id: 'c1', label: 'City 1' },
@@ -173,6 +186,7 @@ export default function CreateProperty({
               value={formData.state}
               onChange={(value) => handleChange('state', value)}
               required
+              placeholder={loadingStates ? "Cargando regiones..." : "Selecciona una región"}
             />
             <AutoComplete
               label="City"
