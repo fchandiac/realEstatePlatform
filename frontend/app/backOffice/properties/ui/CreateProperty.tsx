@@ -10,6 +10,7 @@ import AutoComplete from '@/components/AutoComplete/AutoComplete';
 import { FileImageUploader } from '@/components/FileUploader/FileImageUploader';
 import { PropertyStatus, PropertyOperationType, CurrencyPriceEnum } from '../enums';
 import { getPropertyTypesMinimal } from '@/app/actions/propertyTypesMinimal';
+import { getPropertyType, PropertyType } from '@/app/actions/propertyTypes';
 import { getRegiones, getComunasByRegion } from '@/app/actions/commons';
 
 interface CreatePropertyProps {
@@ -29,6 +30,7 @@ export default function CreateProperty({
   const [loadingStates, setLoadingStates] = useState(true);
   const [cityOptions, setCityOptions] = useState<{ id: string; label: string }[]>([]);
   const [loadingCities, setLoadingCities] = useState(false);
+  const [selectedPropertyType, setSelectedPropertyType] = useState<PropertyType | null>(null);
 
   useEffect(() => {
     const loadPropertyTypes = async () => {
@@ -75,13 +77,13 @@ export default function CreateProperty({
     currencyPrice: 'CLP',
     address: '',
     multimedia: [],
-    bedrooms: '',
-    bathrooms: '',
-    parkingSpaces: '',
-    floors: '',
-    builtSquareMeters: '',
-    landSquareMeters: '',
-    constructionYear: '',
+    bedrooms: 0,
+    bathrooms: 0,
+    parkingSpaces: 0,
+    floors: 0,
+    builtSquareMeters: 0,
+    landSquareMeters: 0,
+    constructionYear: 0,
     seoTitle: '',
     seoDescription: '',
     status: '',
@@ -110,12 +112,41 @@ export default function CreateProperty({
     loadCities();
   }, [formData.state?.id]);
 
+  useEffect(() => {
+    const loadPropertyTypeDetails = async () => {
+      if (!formData.propertyTypeId) {
+        setSelectedPropertyType(null);
+        return;
+      }
+
+      try {
+        const propertyTypeDetails = await getPropertyType(formData.propertyTypeId);
+        setSelectedPropertyType(propertyTypeDetails);
+      } catch (error) {
+        console.error('Error loading property type details:', error);
+        setSelectedPropertyType(null);
+      }
+    };
+
+    loadPropertyTypeDetails();
+  }, [formData.propertyTypeId]);
+
   const handleChange = (field: string, value: any) => {
+    // Campos numéricos que deben convertirse a number
+    const numericFields = ['bedrooms', 'bathrooms', 'parkingSpaces', 'floors', 'builtSquareMeters', 'landSquareMeters', 'constructionYear'];
+
+    let processedValue = value;
+    if (numericFields.includes(field)) {
+      // Convertir a número, usar 0 si está vacío o no es válido
+      const numValue = typeof value === 'string' ? parseFloat(value) || 0 : (typeof value === 'number' ? value : 0);
+      processedValue = numValue;
+    }
+
     if (field === 'state') {
       // Cuando cambia la región, resetear la ciudad seleccionada
       setFormData({ ...formData, [field]: value || { id: '', label: '' }, city: { id: '', label: '' } });
     } else {
-      setFormData({ ...formData, [field]: value });
+      setFormData({ ...formData, [field]: processedValue });
     }
   };
 
@@ -186,13 +217,6 @@ export default function CreateProperty({
             />
           </div>
           <Select
-            placeholder={loadingTypes ? "Cargando tipos..." : "Property Type"}
-            options={propertyTypes}
-            value={formData.propertyTypeId}
-            onChange={(value) => handleChange('propertyTypeId', value)}
-            required
-          />
-          <Select
             placeholder="Status"
             options={statusOptions}
             value={formData.status}
@@ -237,48 +261,69 @@ export default function CreateProperty({
             accept="image/*,video/*"
             onChange={(files: File[]) => handleChange('multimedia', files)}
           />
-          <TextField
-            label="Bedrooms"
-            value={formData.bedrooms}
-            onChange={(e) => handleChange('bedrooms', e.target.value)}
-            type="number"
+          <Select
+            placeholder={loadingTypes ? "Cargando tipos..." : "Property Type"}
+            options={propertyTypes}
+            value={formData.propertyTypeId}
+            onChange={(value) => handleChange('propertyTypeId', value)}
+            required
           />
-          <TextField
-            label="Bathrooms"
-            value={formData.bathrooms}
-            onChange={(e) => handleChange('bathrooms', e.target.value)}
-            type="number"
-          />
-          <TextField
-            label="Parking Spaces"
-            value={formData.parkingSpaces}
-            onChange={(e) => handleChange('parkingSpaces', e.target.value)}
-            type="number"
-          />
-          <TextField
-            label="Floors"
-            value={formData.floors}
-            onChange={(e) => handleChange('floors', e.target.value)}
-            type="number"
-          />
-          <TextField
-            label="Built Square Meters"
-            value={formData.builtSquareMeters}
-            onChange={(e) => handleChange('builtSquareMeters', e.target.value)}
-            type="number"
-          />
-          <TextField
-            label="Land Square Meters"
-            value={formData.landSquareMeters}
-            onChange={(e) => handleChange('landSquareMeters', e.target.value)}
-            type="number"
-          />
-          <TextField
-            label="Construction Year"
-            value={formData.constructionYear}
-            onChange={(e) => handleChange('constructionYear', e.target.value)}
-            type="number"
-          />
+          {selectedPropertyType?.hasBedrooms && (
+            <TextField
+              label="Bedrooms"
+              value={formData.bedrooms.toString()}
+              onChange={(e) => handleChange('bedrooms', e.target.value)}
+              type="number"
+            />
+          )}
+          {selectedPropertyType?.hasBathrooms && (
+            <TextField
+              label="Bathrooms"
+              value={formData.bathrooms.toString()}
+              onChange={(e) => handleChange('bathrooms', e.target.value)}
+              type="number"
+            />
+          )}
+          {selectedPropertyType?.hasParkingSpaces && (
+            <TextField
+              label="Parking Spaces"
+              value={formData.parkingSpaces.toString()}
+              onChange={(e) => handleChange('parkingSpaces', e.target.value)}
+              type="number"
+            />
+          )}
+          {selectedPropertyType?.hasFloors && (
+            <TextField
+              label="Floors"
+              value={formData.floors.toString()}
+              onChange={(e) => handleChange('floors', e.target.value)}
+              type="number"
+            />
+          )}
+          {selectedPropertyType?.hasBuiltSquareMeters && (
+            <TextField
+              label="Built Square Meters"
+              value={formData.builtSquareMeters.toString()}
+              onChange={(e) => handleChange('builtSquareMeters', e.target.value)}
+              type="number"
+            />
+          )}
+          {selectedPropertyType?.hasLandSquareMeters && (
+            <TextField
+              label="Land Square Meters"
+              value={formData.landSquareMeters.toString()}
+              onChange={(e) => handleChange('landSquareMeters', e.target.value)}
+              type="number"
+            />
+          )}
+          {selectedPropertyType?.hasConstructionYear && (
+            <TextField
+              label="Construction Year"
+              value={formData.constructionYear.toString()}
+              onChange={(e) => handleChange('constructionYear', e.target.value)}
+              type="number"
+            />
+          )}
           <TextField
             label="SEO Title"
             value={formData.seoTitle}
