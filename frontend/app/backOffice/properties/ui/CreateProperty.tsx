@@ -51,7 +51,7 @@ export default function CreateProperty({
     location: null,
     state: { id: '', label: '' },
     city: { id: '', label: '' },
-    currencyPrice: '',
+    currencyPrice: 'CLP',
     address: '',
     multimedia: [],
     bedrooms: '',
@@ -74,6 +74,11 @@ export default function CreateProperty({
   const handleSubmit = () => {
     console.log('Form submitted:', formData);
     // Aquí puedes agregar la lógica para enviar los datos al backend
+  };
+
+  // Determinar el tipo del campo de precio basado en la moneda
+  const getPriceFieldType = () => {
+    return formData.currencyPrice === 'CLP' ? 'currency' : 'number';
   };
 
   const stateOptions = [
@@ -131,7 +136,7 @@ export default function CreateProperty({
               label="Price"
               value={formData.price}
               onChange={(e) => handleChange('price', e.target.value)}
-              type="currency"
+              type={getPriceFieldType()}
               required
             />
             <Select
