@@ -165,7 +165,7 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, value = null, onC
           icon="close_small"
           variant="text"
           className={`absolute right-10 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center ${focused ? 'text-primary' : 'text-secondary'}`}
-          style={{lineHeight:0, padding: 0, margin: 0}}
+          style={{lineHeight:0, padding: 0, margin: 0, verticalAlign: 'middle'}}
           onClick={() => onChange?.(null)}
           aria-label="Limpiar selección"
           data-test-id="select-clear-btn"
@@ -177,7 +177,7 @@ const Select: React.FC<SelectProps> = ({ options, placeholder, value = null, onC
         icon="arrow_drop_down"
         variant="text"
         className={`absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center ${focused ? 'text-primary' : 'text-secondary'}`}
-        style={{lineHeight:0, padding: 0, margin: 0}}
+        style={{lineHeight:0, padding: 0, margin: 0, verticalAlign: 'middle'}}
         tabIndex={-1}
         aria-label="Desplegar opciones"
         onClick={(e: React.MouseEvent<HTMLButtonElement>) => { e.stopPropagation(); setOpen(!open); }}
