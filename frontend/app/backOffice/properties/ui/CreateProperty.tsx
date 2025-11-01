@@ -10,7 +10,7 @@ import AutoComplete from '@/components/AutoComplete/AutoComplete';
 import { FileImageUploader } from '@/components/FileUploader/FileImageUploader';
 import { PropertyStatus, PropertyOperationType, CurrencyPriceEnum } from '../enums';
 import { getPropertyTypesMinimal } from '@/app/actions/propertyTypesMinimal';
-import { getRegiones } from '@/app/actions/commons';
+import { getRegiones, getComunasByRegion } from '@/app/actions/commons';
 
 interface CreatePropertyProps {
   open: boolean;
@@ -27,6 +27,8 @@ export default function CreateProperty({
   const [loadingTypes, setLoadingTypes] = useState(true);
   const [stateOptions, setStateOptions] = useState<{ id: string; label: string }[]>([]);
   const [loadingStates, setLoadingStates] = useState(true);
+  const [cityOptions, setCityOptions] = useState<{ id: string; label: string }[]>([]);
+  const [loadingCities, setLoadingCities] = useState(false);
 
   useEffect(() => {
     const loadPropertyTypes = async () => {
@@ -61,6 +63,7 @@ export default function CreateProperty({
 
     loadStates();
   }, []);
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -85,8 +88,35 @@ export default function CreateProperty({
     propertyTypeId: '',
   });
 
+  useEffect(() => {
+    const loadCities = async () => {
+      if (!formData.state.id) {
+        setCityOptions([]);
+        return;
+      }
+
+      setLoadingCities(true);
+      try {
+        const cities = await getComunasByRegion(formData.state.id);
+        setCityOptions(cities);
+      } catch (error) {
+        console.error('Error loading cities:', error);
+        setCityOptions([]);
+      } finally {
+        setLoadingCities(false);
+      }
+    };
+
+    loadCities();
+  }, [formData.state.id]);
+
   const handleChange = (field: string, value: any) => {
-    setFormData({ ...formData, [field]: value });
+    if (field === 'state') {
+      // Cuando cambia la región, resetear la ciudad seleccionada
+      setFormData({ ...formData, [field]: value, city: { id: '', label: '' } });
+    } else {
+      setFormData({ ...formData, [field]: value });
+    }
   };
 
   const handleSubmit = () => {
@@ -98,11 +128,6 @@ export default function CreateProperty({
   const getPriceFieldType = () => {
     return formData.currencyPrice === 'CLP' ? 'currency' : 'number';
   };
-
-  const cityOptions = [
-    { id: 'c1', label: 'City 1' },
-    { id: 'c2', label: 'City 2' },
-  ];
 
   const propertyTypeOptions = Object.values(PropertyOperationType).map((type) => ({
     id: type as string,
@@ -194,6 +219,13 @@ export default function CreateProperty({
               value={formData.city}
               onChange={(value) => handleChange('city', value)}
               required
+              placeholder={
+                !formData.state.id
+                  ? "Primero selecciona una región"
+                  : loadingCities
+                  ? "Cargando comunas..."
+                  : "Selecciona una comuna"
+              }
             />
           </div>
           <LocationPicker
