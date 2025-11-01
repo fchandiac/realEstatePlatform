@@ -90,7 +90,7 @@ export default function CreateProperty({
 
   useEffect(() => {
     const loadCities = async () => {
-      if (!formData.state.id) {
+      if (!formData.state || !formData.state.id) {
         setCityOptions([]);
         return;
       }
@@ -108,12 +108,12 @@ export default function CreateProperty({
     };
 
     loadCities();
-  }, [formData.state.id]);
+  }, [formData.state?.id]);
 
   const handleChange = (field: string, value: any) => {
     if (field === 'state') {
       // Cuando cambia la región, resetear la ciudad seleccionada
-      setFormData({ ...formData, [field]: value, city: { id: '', label: '' } });
+      setFormData({ ...formData, [field]: value || { id: '', label: '' }, city: { id: '', label: '' } });
     } else {
       setFormData({ ...formData, [field]: value });
     }
@@ -220,7 +220,7 @@ export default function CreateProperty({
               onChange={(value) => handleChange('city', value)}
               required
               placeholder={
-                !formData.state.id
+                !formData.state || !formData.state.id
                   ? "Primero selecciona una región"
                   : loadingCities
                   ? "Cargando comunas..."
