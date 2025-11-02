@@ -21,7 +21,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuditModule } from './audit/audit.module';
 import { DocumentModule } from './modules/document/document.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
-import { SlidersModule } from './modules/sliders/sliders.module';
+
+import { SlideModule } from './modules/slide/slide.module';
 
 @Module({
   imports: [
@@ -51,7 +52,7 @@ import { SlidersModule } from './modules/sliders/sliders.module';
     AuditModule,
     DocumentModule,
     AnalyticsModule,
-    SlidersModule,
+    SlideModule,
     // CustomConfigModule,
   ],
   controllers: [AppController],

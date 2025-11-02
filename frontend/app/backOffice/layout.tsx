@@ -34,7 +34,7 @@ const menuItems = [
   {
     label: 'CMS',
     children: [
-      { label: 'Slider' },
+      { label: 'Slider', url: '/backOffice/cms/slider' },
       { label: 'Sobre nosotros' },
       { label: 'Testimonios' },
       { label: 'Nuestro Equipo' },

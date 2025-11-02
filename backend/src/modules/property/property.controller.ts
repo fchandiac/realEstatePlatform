@@ -50,7 +50,23 @@ export class PropertyController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FilesInterceptor('multimediaFiles', 10, {
     dest: './uploads/temp',
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB por archivo
+    limits: { 
+      fileSize: 10 * 1024 * 1024, // 10MB por archivo
+      files: 10 // Máximo 10 archivos
+    },
+    fileFilter: (req, file, callback) => {
+      // Validar tipos de archivo permitidos
+      const allowedMimes = [
+        'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+        'video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'
+      ];
+      
+      if (allowedMimes.includes(file.mimetype)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`File type ${file.mimetype} not allowed`), false);
+      }
+    }
   }))
   @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Property created')
   async create(
@@ -86,9 +102,25 @@ export class PropertyController {
       // Obtener el ID del usuario creador del request
       const creatorId = request.user?.id;
       
+      if (!creatorId) {
+        throw new Error('User ID not found in request. Authentication required.');
+      }
+      
+      console.log(`Creating property with ${files?.length || 0} multimedia files by user ${creatorId}`);
+      
       return await this.propertyService.createProperty(validatedDto, creatorId);
     } catch (error) {
-      throw error;
+      console.error('Error creating property:', error);
+      
+      if (error.message?.includes('validation')) {
+        throw new Error(`Validation error: ${error.message}`);
+      }
+      
+      if (error.message?.includes('multimedia') || error.message?.includes('upload')) {
+        throw new Error(`File upload error: ${error.message}`);
+      }
+      
+      throw new Error(`Failed to create property: ${error.message || error}`);
     }
   }
 

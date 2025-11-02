@@ -14,6 +14,7 @@ import { AboutUs } from '../../src/entities/about-us.entity';
 import { Article, ArticleCategory } from '../../src/entities/article.entity';
 import { Multimedia, MultimediaFormat, MultimediaType } from '../../src/entities/multimedia.entity';
 import { Identity } from '../../src/entities/identity.entity';
+import { Slide } from '../../src/entities/slide.entity';
 import {
   PersonSeed,
   UserSeed,
@@ -25,7 +26,8 @@ import {
   TestimonialSeed,
   AboutUsSeed,
   ArticleSeed,
-  MultimediaSeed
+  MultimediaSeed,
+  SlideSeed
 } from './seeder.types';
 
 async function seedDatabase() {
@@ -235,6 +237,25 @@ async function seedDatabase() {
         });
       })
     );
+    
+    // Seed slides
+    console.log('Seeding slides...');
+    const slideRepository = AppDataSource.getRepository(Slide);
+    
+    // Create example slides
+    const exampleSlides = SeederFactory.createExampleSlides();
+    const savedExampleSlides = await slideRepository.save(
+      exampleSlides.map(slideData => slideRepository.create(slideData))
+    );
+    
+    // Create random slides
+    const randomSlides = Array.from({ length: 15 }, () => {
+      const slideData = SeederFactory.createRandomSlide();
+      return slideRepository.create(slideData);
+    });
+    const savedRandomSlides = await slideRepository.save(randomSlides);
+    
+    console.log(`Created ${savedExampleSlides.length + savedRandomSlides.length} slides`);
     
     console.log('Seeding completed successfully!');
     

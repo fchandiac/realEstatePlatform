@@ -3,6 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Multimedia } from '../../entities/multimedia.entity';
 import { CreateMultimediaDto, UpdateMultimediaDto } from './dto/multimedia.dto';
+import { MultimediaUploadMetadata } from './interfaces/multimedia.interface';
+import { MultimediaType, MultimediaFormat } from '../../entities/multimedia.entity';
+import * as fs from 'fs';
+import * as path from 'path';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class MultimediaService {
@@ -57,6 +62,80 @@ export class MultimediaService {
   async setSeoTitle(id: string, seoTitle: string): Promise<Multimedia> {
     const multimedia = await this.findOne(id);
     multimedia.seoTitle = seoTitle;
+    return await this.multimediaRepository.save(multimedia);
+  }
+
+  async uploadFile(
+    file: Express.Multer.File,
+    metadata: MultimediaUploadMetadata,
+    userId: string
+  ): Promise<Multimedia> {
+    // Determinar el tipo y formato basado en el mimetype
+    const isImage = file.mimetype.startsWith('image/');
+    const isVideo = file.mimetype.startsWith('video/');
+    const isDocument = file.mimetype.startsWith('application/') || file.mimetype.includes('pdf');
+
+    let type: MultimediaType;
+    let format: MultimediaFormat;
+
+    if (isImage) {
+      type = MultimediaType.PROPERTY_IMG;
+      format = MultimediaFormat.IMG;
+    } else if (isVideo) {
+      type = MultimediaType.PROPERTY_VIDEO;
+      format = MultimediaFormat.VIDEO;
+    } else if (isDocument) {
+      type = MultimediaType.DOCUMENT;
+      format = MultimediaFormat.IMG; // Usar IMG como formato por defecto para documentos
+    } else {
+      throw new Error(`Unsupported file type: ${file.mimetype}`);
+    }
+
+    // Generar nombre único para el archivo
+    const fileExtension = path.extname(file.originalname);
+    const uniqueId = randomBytes(16).toString('hex');
+    const uniqueFilename = `${uniqueId}${fileExtension}`;
+
+    // Determinar el directorio basado en el tipo
+    let uploadDir: string;
+    switch (type) {
+      case MultimediaType.PROPERTY_IMG:
+        uploadDir = 'properties';
+        break;
+      case MultimediaType.PROPERTY_VIDEO:
+        uploadDir = 'properties'; // Videos también van en properties por ahora
+        break;
+      case MultimediaType.DOCUMENT:
+        uploadDir = 'docs';
+        break;
+      default:
+        uploadDir = 'temp';
+    }
+
+    // Crear el directorio si no existe
+    const fullUploadDir = path.join(__dirname, '..', '..', '..', 'uploads', uploadDir);
+    if (!fs.existsSync(fullUploadDir)) {
+      fs.mkdirSync(fullUploadDir, { recursive: true });
+    }
+
+    // Ruta completa del archivo
+    const filePath = path.join(fullUploadDir, uniqueFilename);
+
+    // Guardar el archivo
+    fs.writeFileSync(filePath, file.buffer);
+
+    // Crear la entidad Multimedia
+    const multimedia = new Multimedia();
+    multimedia.filename = uniqueFilename;
+    multimedia.url = `/uploads/${uploadDir}/${uniqueFilename}`;
+    multimedia.type = type;
+    multimedia.format = format;
+    multimedia.fileSize = file.size;
+    multimedia.seoTitle = metadata.seoTitle || file.originalname;
+    multimedia.description = metadata.description;
+    multimedia.userId = userId;
+
+    // Guardar en la base de datos
     return await this.multimediaRepository.save(multimedia);
   }
 

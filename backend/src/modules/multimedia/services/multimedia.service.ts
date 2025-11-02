@@ -97,7 +97,7 @@ export class MultimediaService {
     metadata: MultimediaUploadMetadata,
     userId: string,
   ): Promise<Multimedia> {
-    const uploadDir = path.join(this.baseUploadPath, metadata.type);
+    const uploadDir = this.getUploadPath(metadata.type as MultimediaType);
 
     // Ensure the directory exists
     await fs.mkdir(uploadDir, { recursive: true });
@@ -108,6 +108,7 @@ export class MultimediaService {
       metadata.type as MultimediaType,
     );
     const filePath = path.join(uploadDir, uniqueFilename);
+    const relativePath = path.relative(this.baseUploadPath, filePath);
 
     try {
       // Save the file to the upload directory
@@ -118,7 +119,7 @@ export class MultimediaService {
       multimedia.type = metadata.type as MultimediaType;
       multimedia.seoTitle = metadata.seoTitle;
       multimedia.description = metadata.description;
-      multimedia.url = this.staticFilesService.getPublicUrl(filePath);
+      multimedia.url = this.staticFilesService.getPublicUrl(relativePath);
       multimedia.userId = userId || undefined; // Ensure userId is undefined if not provided
       multimedia.format = file.mimetype.startsWith('image')
         ? MultimediaFormat.IMG

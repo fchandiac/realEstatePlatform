@@ -19,7 +19,8 @@ import {
   AboutUsSeed,
   ArticleSeed,
   MultimediaSeed,
-  IdentitySeed
+  IdentitySeed,
+  SlideSeed
 } from './seeder.types';
 
 export class SeederFactory {
@@ -316,5 +317,98 @@ export class SeederFactory {
       updatedAt: new Date(),
       deletedAt: undefined
     };
+  }
+
+  static createRandomSlide(): SlideSeed {
+    const slideTemplates = [
+      {
+        title: '¡Vende tu Propiedad con Nosotros!',
+        description: 'Obtén la mejor valorización y vende rápido con nuestro equipo de expertos.',
+        linkUrl: '/properties/sale'
+      },
+      {
+        title: 'Encuentra tu Hogar Ideal',
+        description: 'Miles de propiedades disponibles en las mejores ubicaciones de la ciudad.',
+        linkUrl: '/properties/search'
+      },
+      {
+        title: 'Arriendo Seguro y Confiable',
+        description: 'Propiedades verificadas con contratos seguros y asesoría legal completa.',
+        linkUrl: '/properties/rent'
+      },
+      {
+        title: 'Asesoría Inmobiliaria Premium',
+        description: 'Expertos en el mercado inmobiliario te guían en cada paso de tu inversión.',
+        linkUrl: '/services/advisory'
+      },
+      {
+        title: 'Inversión Inmobiliaria Inteligente',
+        description: 'Descubre las mejores oportunidades de inversión en el sector inmobiliario.',
+        linkUrl: '/investment'
+      }
+    ];
+
+    const template = faker.helpers.arrayElement(slideTemplates);
+    
+    return {
+      title: template.title,
+      description: template.description,
+      multimediaUrl: faker.helpers.maybe(() => `/uploads/slides/slide-${faker.string.alphanumeric(8)}.jpg`, { probability: 0.8 }),
+      linkUrl: template.linkUrl,
+      duration: faker.number.int({ min: 3, max: 7 }),
+      startDate: faker.helpers.maybe(() => faker.date.recent(), { probability: 0.7 }),
+      endDate: faker.helpers.maybe(() => faker.date.future(), { probability: 0.7 }),
+      order: faker.number.int({ min: 1, max: 10 }),
+      isActive: faker.helpers.weightedArrayElement([
+        { weight: 0.8, value: true },
+        { weight: 0.2, value: false }
+      ]),
+      createdAt: faker.date.past(),
+      updatedAt: new Date()
+    };
+  }
+
+  static createExampleSlides(): SlideSeed[] {
+    return [
+      {
+        title: '¡Vende tu Propiedad con Nosotros!',
+        description: 'Obtén la mejor valorización y vende rápido con nuestro equipo de expertos.',
+        multimediaUrl: '/uploads/slides/slide-venta.jpg',
+        linkUrl: '/properties/sale',
+        duration: 5,
+        startDate: new Date(),
+        endDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 días
+        order: 1,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        title: 'Encuentra tu Hogar Ideal',
+        description: 'Miles de propiedades disponibles en las mejores ubicaciones de la ciudad.',
+        multimediaUrl: '/uploads/slides/slide-hogar.jpg',
+        linkUrl: '/properties/search',
+        duration: 4,
+        startDate: new Date(),
+        endDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 días
+        order: 2,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        title: 'Arriendo Seguro y Confiable',
+        description: 'Propiedades verificadas con contratos seguros y asesoría legal completa.',
+        multimediaUrl: '/uploads/slides/slide-arriendo.jpg',
+        linkUrl: '/properties/rent',
+        duration: 3,
+        startDate: new Date(),
+        endDate: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000), // 45 días
+        order: 3,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
   }
 }

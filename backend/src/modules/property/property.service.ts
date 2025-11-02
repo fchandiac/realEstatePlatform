@@ -20,7 +20,7 @@ import { Multimedia, MultimediaType, MultimediaFormat } from '../../entities/mul
 import { RegionEnum } from '../../common/regions/regions.enum';
 import { ComunaEnum } from '../../common/regions/comunas.enum';
 import { CurrencyPriceEnum } from '../../entities/property.entity';
-import { MultimediaService } from '../multimedia/services/multimedia.service';
+import { MultimediaService as UploadMultimediaService } from '../multimedia/services/multimedia.service';
 import { MultimediaUploadMetadata } from '../multimedia/interfaces/multimedia.interface';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class PropertyService {
     @InjectRepository(Property)
     private readonly propertyRepository: Repository<Property>,
     private readonly notificationsService: NotificationsService,
-    private readonly multimediaService: MultimediaService,
+    private readonly multimediaService: UploadMultimediaService,
   ) {}
 
   /**
@@ -789,13 +789,16 @@ export class PropertyService {
       await this.processPropertyMultimedia(property, createPropertyDto.multimedia);
     }
 
-    // 4. Procesar archivos multimedia si existen (nuevo - para un solo paso)
+    // 4. Guardar propiedad PRIMERO para obtener ID válido
+    const savedProperty = await this.propertyRepository.save(property);
+
+    // 5. Procesar archivos multimedia si existen (después de tener ID)
     if (createPropertyDto.multimediaFiles?.length) {
-      await this.processPropertyMultimediaFiles(property, createPropertyDto.multimediaFiles);
+      await this.processPropertyMultimediaFiles(savedProperty, createPropertyDto.multimediaFiles);
     }
 
-    // 5. Guardar propiedad completa
-    return this.propertyRepository.save(property);
+    // 6. Retornar propiedad con multimedia procesado
+    return savedProperty;
   }
 
   // Sub-método 1: Crear propiedad base
@@ -896,39 +899,43 @@ export class PropertyService {
     property: Property,
     files: Express.Multer.File[]
   ): Promise<void> {
-    const multimediaEntities: Multimedia[] = [];
-
+    console.log(`Processing ${files.length} multimedia files for property ${property.id}`);
+    
     for (const file of files) {
-      // Determinar el tipo de multimedia basado en el mimetype
-      const isImage = file.mimetype.startsWith('image/');
-      const multimediaType = isImage ? MultimediaType.PROPERTY_IMG : MultimediaType.PROPERTY_VIDEO;
+      try {
+        // Determinar el tipo de multimedia basado en el mimetype
+        const isImage = file.mimetype.startsWith('image/');
+        const multimediaType = isImage ? MultimediaType.PROPERTY_IMG : MultimediaType.PROPERTY_VIDEO;
 
-      // Crear metadata para el upload
-      const metadata: MultimediaUploadMetadata = {
-        type: multimediaType,
-        seoTitle: file.originalname,
-        description: `Multimedia for property ${property.title}`,
-      };
+        console.log(`Processing file ${file.originalname}, type: ${multimediaType}, size: ${file.size}`);
 
-      // Usar el servicio de multimedia para subir el archivo
-      const multimedia = await this.multimediaService.uploadFile(
-        file,
-        metadata,
-        property.creatorUserId || 'system'
-      );
+        // Crear metadata para el upload
+        const metadata: MultimediaUploadMetadata = {
+          type: multimediaType,
+          seoTitle: file.originalname,
+          description: `Multimedia for property ${property.title}`,
+        };
 
-      // Asignar la propiedad al archivo multimedia
-      multimedia.propertyId = property.id;
-      await this.multimediaRepository.save(multimedia);
+        // Usar el servicio de multimedia para subir el archivo
+        const multimedia = await this.multimediaService.uploadFile(
+          file,
+          metadata,
+          property.creatorUserId || 'system'
+        );
 
-      multimediaEntities.push(multimedia);
+        console.log(`File uploaded successfully: ${multimedia.filename}`);
+
+        // Asignar la propiedad al archivo multimedia
+        multimedia.propertyId = property.id;
+        await this.multimediaRepository.save(multimedia);
+
+        console.log(`Multimedia associated with property ${property.id}`);
+
+      } catch (error) {
+        console.error(`Error processing multimedia file ${file.originalname}:`, error);
+        // Continuar con el siguiente archivo en caso de error
+      }
     }
-
-    // Agregar a la propiedad
-    if (!property.multimedia) {
-      property.multimedia = [];
-    }
-    property.multimedia.push(...multimediaEntities);
   }
 
   // Sub-método 4: Asignar agente

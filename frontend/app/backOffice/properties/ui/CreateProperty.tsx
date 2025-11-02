@@ -187,6 +187,8 @@ export default function CreateProperty({
         Object.entries(transformedData).filter(([key, value]) => {
           // Excluir price si está vacío para evitar NaN
           if (key === 'price' && (!value || value === '')) return false;
+          // Excluir multimedia ya que se envía como archivos separados
+          if (key === 'multimedia') return false;
           // Agregar filtros similares para otros campos opcionales si es necesario
           return true;
         })

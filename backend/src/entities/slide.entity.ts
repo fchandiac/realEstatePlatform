@@ -7,8 +7,8 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-@Entity('sliders')
-export class Slider {
+@Entity('slides')
+export class Slide {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

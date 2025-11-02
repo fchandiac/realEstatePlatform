@@ -11,6 +11,7 @@ import { AboutUs } from '../../src/entities/about-us.entity';
 import { Article } from '../../src/entities/article.entity';
 import { Multimedia } from '../../src/entities/multimedia.entity';
 import { Identity } from '../../src/entities/identity.entity';
+import { Slide } from '../../src/entities/slide.entity';
 
 export type PersonSeed = DeepPartial<Person>;
 export type UserSeed = DeepPartial<User>;
@@ -24,3 +25,4 @@ export type AboutUsSeed = DeepPartial<AboutUs>;
 export type ArticleSeed = DeepPartial<Article>;
 export type MultimediaSeed = DeepPartial<Multimedia>;
 export type IdentitySeed = DeepPartial<Identity>;
+export type SlideSeed = DeepPartial<Slide>;
