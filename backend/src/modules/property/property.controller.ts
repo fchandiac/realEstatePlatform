@@ -10,7 +10,12 @@ import {
   Query,
   ValidationPipe,
   Res,
+  UseInterceptors,
+  UploadedFiles,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { PropertyService } from './property.service';
 import { Property } from '../../entities/property.entity';
@@ -21,6 +26,7 @@ import { GridSaleQueryDto } from './dto/grid-sale.dto';
 import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { Audit } from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('properties')
 export class PropertyController {
@@ -41,9 +47,49 @@ export class PropertyController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FilesInterceptor('multimediaFiles', 10, {
+    dest: './uploads/temp',
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB por archivo
+  }))
   @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Property created')
-  create(@Body(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } })) createPropertyDto: CreatePropertyPayloadDto) {
-    return this.propertyService.createProperty(createPropertyDto);
+  async create(
+    @Body() body: any,
+    @Req() request: any,
+    @UploadedFiles() files?: Express.Multer.File[]
+  ) {
+    // Parse the 'data' field from FormData which contains the JSON string
+    let createPropertyDto: CreatePropertyPayloadDto;
+    
+    try {
+      if (body.data) {
+        // If data is sent as a field in the form
+        createPropertyDto = typeof body.data === 'string' 
+          ? JSON.parse(body.data) 
+          : body.data;
+      } else {
+        // Fallback: assume the body is the DTO directly
+        createPropertyDto = body;
+      }
+      
+      // Validate the DTO
+      const validatedDto = await new ValidationPipe({
+        transform: true, 
+        transformOptions: { enableImplicitConversion: true }
+      }).transform(createPropertyDto, { type: 'body', metatype: CreatePropertyPayloadDto });
+      
+      // Agregar archivos al DTO si existen
+      if (files && files.length > 0) {
+        validatedDto.multimediaFiles = files;
+      }
+      
+      // Obtener el ID del usuario creador del request
+      const creatorId = request.user?.id;
+      
+      return await this.propertyService.createProperty(validatedDto, creatorId);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Get()

@@ -20,6 +20,8 @@ import { Multimedia, MultimediaType, MultimediaFormat } from '../../entities/mul
 import { RegionEnum } from '../../common/regions/regions.enum';
 import { ComunaEnum } from '../../common/regions/comunas.enum';
 import { CurrencyPriceEnum } from '../../entities/property.entity';
+import { MultimediaService } from '../multimedia/services/multimedia.service';
+import { MultimediaUploadMetadata } from '../multimedia/interfaces/multimedia.interface';
 
 @Injectable()
 export class PropertyService {
@@ -27,6 +29,7 @@ export class PropertyService {
     @InjectRepository(Property)
     private readonly propertyRepository: Repository<Property>,
     private readonly notificationsService: NotificationsService,
+    private readonly multimediaService: MultimediaService,
   ) {}
 
   /**
@@ -786,7 +789,12 @@ export class PropertyService {
       await this.processPropertyMultimedia(property, createPropertyDto.multimedia);
     }
 
-    // 4. Guardar propiedad completa
+    // 4. Procesar archivos multimedia si existen (nuevo - para un solo paso)
+    if (createPropertyDto.multimediaFiles?.length) {
+      await this.processPropertyMultimediaFiles(property, createPropertyDto.multimediaFiles);
+    }
+
+    // 5. Guardar propiedad completa
     return this.propertyRepository.save(property);
   }
 
@@ -819,7 +827,7 @@ export class PropertyService {
     property.constructionYear = dto.constructionYear;
 
     // Precio (con valor por defecto si no se proporciona)
-    property.price = dto.price ? this.parsePrice(dto.price) : 0;
+    property.price = dto.price !== undefined && dto.price !== null ? dto.price : 0;
     
     // Currency con valor por defecto
     property.currencyPrice = dto.currencyPrice === 'UF' ? CurrencyPriceEnum.UF : CurrencyPriceEnum.CLP;
@@ -881,6 +889,46 @@ export class PropertyService {
 
     // Nota: Los archivos multimedia se guardarán después de que la propiedad tenga ID
     property.multimedia = multimediaEntities;
+  }
+
+  // Sub-método 4: Procesar archivos multimedia (nuevo - para un solo paso)
+  private async processPropertyMultimediaFiles(
+    property: Property,
+    files: Express.Multer.File[]
+  ): Promise<void> {
+    const multimediaEntities: Multimedia[] = [];
+
+    for (const file of files) {
+      // Determinar el tipo de multimedia basado en el mimetype
+      const isImage = file.mimetype.startsWith('image/');
+      const multimediaType = isImage ? MultimediaType.PROPERTY_IMG : MultimediaType.PROPERTY_VIDEO;
+
+      // Crear metadata para el upload
+      const metadata: MultimediaUploadMetadata = {
+        type: multimediaType,
+        seoTitle: file.originalname,
+        description: `Multimedia for property ${property.title}`,
+      };
+
+      // Usar el servicio de multimedia para subir el archivo
+      const multimedia = await this.multimediaService.uploadFile(
+        file,
+        metadata,
+        property.creatorUserId || 'system'
+      );
+
+      // Asignar la propiedad al archivo multimedia
+      multimedia.propertyId = property.id;
+      await this.multimediaRepository.save(multimedia);
+
+      multimediaEntities.push(multimedia);
+    }
+
+    // Agregar a la propiedad
+    if (!property.multimedia) {
+      property.multimedia = [];
+    }
+    property.multimedia.push(...multimediaEntities);
   }
 
   // Sub-método 4: Asignar agente

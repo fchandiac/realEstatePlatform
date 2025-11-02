@@ -8,9 +8,10 @@ import { PropertyType } from '../../entities/property-type.entity';
 import { Multimedia } from '../../entities/multimedia.entity';
 import { AuditModule } from '../../audit/audit.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { MultimediaModule } from '../multimedia/multimedia.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Property, User, Multimedia, PropertyType]), AuditModule, NotificationsModule],
+  imports: [TypeOrmModule.forFeature([Property, User, Multimedia, PropertyType]), AuditModule, NotificationsModule, MultimediaModule],
   controllers: [PropertyController],
   providers: [PropertyService],
   exports: [PropertyService],

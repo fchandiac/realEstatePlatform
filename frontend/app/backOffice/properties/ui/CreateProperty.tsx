@@ -74,7 +74,7 @@ export default function CreateProperty({
     title: '',
     description: '',
     price: '',
-    operationType: '',
+    operationType: 'SALE', // ✅ Valor por defecto como string
     location: undefined, // Cambiar de null a undefined para compatibilidad con backend
     state: { id: '', label: '' },
     city: { id: '', label: '' },
@@ -90,7 +90,7 @@ export default function CreateProperty({
     constructionYear: 0,
     seoTitle: '',
     seoDescription: '',
-    status: '',
+    status: 'REQUEST', // ✅ Valor por defecto como string
     propertyTypeId: '',
     internalNotes: '', // Campo opcional para notas internas
   });
@@ -163,10 +163,10 @@ export default function CreateProperty({
       // Transformar los valores del frontend a los que espera el backend
       const transformedData = {
         ...formData,
-        // Transformar enums de strings a números
-        status: PROPERTY_STATUS_MAPPING[formData.status] || 1, // Default a REQUEST
-        operationType: PROPERTY_OPERATION_TYPE_MAPPING[formData.operationType] || 1, // Default a SALE
-        currencyPrice: CURRENCY_PRICE_MAPPING[formData.currencyPrice] || 1, // Default a CLP
+        // Enviar strings directamente para enums (backend maneja transformación)
+        status: formData.status, // ✅ Envía string (ej. 'REQUEST')
+        operationType: formData.operationType, // ✅ Envía string (ej. 'SALE')
+        currencyPrice: formData.currencyPrice, // ✅ Envía string (ej. 'CLP')
         
         // Convertir campos numéricos de strings a numbers
         bedrooms: formData.bedrooms || undefined,
@@ -182,16 +182,33 @@ export default function CreateProperty({
         city: formData.city?.id || '',
       };
 
-      // Filtrar campos opcionales: solo incluir location si existe
-      const dataToSend = {
-        ...transformedData,
-        ...(formData.location ? { location: formData.location } : {}),
-      };
+      // Filtrar campos opcionales vacíos antes de enviar
+      const dataToSend = Object.fromEntries(
+        Object.entries(transformedData).filter(([key, value]) => {
+          // Excluir price si está vacío para evitar NaN
+          if (key === 'price' && (!value || value === '')) return false;
+          // Agregar filtros similares para otros campos opcionales si es necesario
+          return true;
+        })
+      );
 
-      console.log('Transformed data to send:', dataToSend);
+      console.log('Filtered data to send:', dataToSend);
 
-      // Enviar datos al backend
-      const result = await createProperty(dataToSend);
+      // Crear FormData para enviar archivos junto con datos JSON
+      const formDataToSend = new FormData();
+      
+      // Agregar datos JSON como string
+      formDataToSend.append('data', JSON.stringify(dataToSend));
+      
+      // Agregar archivos multimedia si existen
+      if (formData.multimedia && formData.multimedia.length > 0) {
+        formData.multimedia.forEach((file: File, index: number) => {
+          formDataToSend.append(`multimediaFiles`, file);
+        });
+      }
+
+      // Enviar FormData al backend
+      const result = await createProperty(formDataToSend);
 
       if (result.success) {
         console.log('Property created successfully:', result.data);

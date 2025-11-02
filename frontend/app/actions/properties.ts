@@ -340,7 +340,7 @@ export interface UpdatePropertyDto {
 /**
  * Create a new property
  */
-export async function createProperty(data: CreatePropertyDto): Promise<{
+export async function createProperty(data: FormData): Promise<{
   success: boolean;
   data?: Property;
   error?: string;
@@ -351,13 +351,14 @@ export async function createProperty(data: CreatePropertyDto): Promise<{
       return { success: false, error: 'No authenticated' };
     }
 
+    // El FormData ya viene preparado con 'data' como JSON string y 'multimediaFiles' como archivos
     const response = await fetch(`${env.backendApiUrl}/properties`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
+        // No incluir Content-Type para que el navegador lo setee automáticamente con boundary
       },
-      body: JSON.stringify(data),
+      body: data,
     });
 
     if (!response.ok) {

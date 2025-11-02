@@ -1,5 +1,6 @@
 import { IsString, IsOptional, IsNumber, IsObject, IsArray, ValidateNested, IsNotEmpty } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
+import { Multer } from 'multer';
 
 export class CreatePropertyLocationDto {
   @IsNumber()
@@ -135,9 +136,13 @@ export class CreatePropertyDto {
 
   // Precio (opcionales)
   @IsOptional()
-  @Transform(({ value }) => value === '' || value === undefined ? undefined : value.toString())
-  @IsString()
-  price?: string;
+  @IsNumber()
+  @Transform(({ value }) => {
+    if (value === '' || value === undefined || value === null) return undefined;
+    const parsed = typeof value === 'string' ? parseFloat(value) : Number(value);
+    return isNaN(parsed) ? undefined : parsed;
+  })
+  price?: number;
 
   @IsOptional()
   @Transform(({ value }) => {
@@ -166,6 +171,10 @@ export class CreatePropertyDto {
   @ValidateNested({ each: true })
   @Type(() => CreatePropertyMultimediaDto)
   multimedia?: CreatePropertyMultimediaDto[];
+
+  // Archivos multimedia para upload (nuevo - para un solo paso)
+  @IsOptional()
+  multimediaFiles?: Express.Multer.File[];
 
   // Imagen principal
   @IsOptional()

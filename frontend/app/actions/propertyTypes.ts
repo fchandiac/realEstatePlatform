@@ -8,6 +8,14 @@ import { revalidatePath } from 'next/cache'
 export interface PropertyType {
   id: string
   name: string
+  description?: string
+  hasBedrooms?: boolean
+  hasBathrooms?: boolean
+  hasBuiltSquareMeters?: boolean
+  hasLandSquareMeters?: boolean
+  hasParkingSpaces?: boolean
+  hasFloors?: boolean
+  hasConstructionYear?: boolean
   createdAt: string
   updatedAt: string
   deletedAt?: string
