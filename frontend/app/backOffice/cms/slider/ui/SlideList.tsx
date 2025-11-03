@@ -45,6 +45,7 @@ export const SlideList: React.FC<SlideListProps> = ({
   const [slides, setSlides] = useState<Slide[]>(initialSlides);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const alert = useAlert();
 
   // Configuración de sensores para drag & drop
@@ -58,6 +59,11 @@ export const SlideList: React.FC<SlideListProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  // Effect para evitar hydration mismatch
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Sincronizar con URL
   useEffect(() => {
@@ -204,35 +210,71 @@ export const SlideList: React.FC<SlideListProps> = ({
           )}
         </div>
       ) : (
-        <DndContext 
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext 
-            items={filteredSlides.map(slide => slide.id)} 
-            strategy={rectSortingStrategy}
-          >
+        <>
+          {!isMounted ? (
+            // Renderizar grid simple sin drag & drop durante SSR
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
               {filteredSlides.map(slide => (
-                <SortableSlideCard
-                  key={slide.id}
-                  slide={slide}
-                />
+                <div key={slide.id} className="bg-white rounded-lg w-full border-l-4 border-secondary border-t border-b border-r border-border shadow-lg text-left relative">
+                  <div className="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400 overflow-hidden rounded-t-lg">
+                    {slide.multimediaUrl ? (
+                      <img
+                        src={slide.multimediaUrl}
+                        alt={slide.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="material-symbols-outlined text-6xl">
+                        image
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
+                      {slide.title}
+                    </h3>
+                    {slide.description && (
+                      <p className="text-sm font-medium text-gray-500 mb-2 line-clamp-2">
+                        {slide.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
-          </SortableContext>
-          
-          <DragOverlay>
-            {activeId ? (
-              <SortableSlideCard
-                slide={filteredSlides.find(slide => slide.id === activeId)!}
-                isDragOverlay
-              />
-            ) : null}
-          </DragOverlay>
-        </DndContext>
+          ) : (
+            // Renderizar con drag & drop después de mount
+            <DndContext 
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext 
+                items={filteredSlides.map(slide => slide.id)} 
+                strategy={rectSortingStrategy}
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
+                  {filteredSlides.map(slide => (
+                    <SortableSlideCard
+                      key={slide.id}
+                      slide={slide}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+              
+              <DragOverlay>
+                {activeId ? (
+                  <SortableSlideCard
+                    slide={filteredSlides.find(slide => slide.id === activeId)!}
+                    isDragOverlay
+                  />
+                ) : null}
+              </DragOverlay>
+            </DndContext>
+          )}
+        </>
       )}
 
       {/* Modal de crear slide */}

@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { env } from '@/lib/env'
@@ -165,6 +166,10 @@ export async function createSlideWithMultimedia(data: FormData): Promise<{
     }
 
     const result = await res.json()
+    
+    // Revalidar la página para reflejar los cambios
+    revalidatePath('/backOffice/cms/slider')
+    
     return { success: true, data: result }
   } catch (error) {
     console.error('Error creating slide with multimedia:', error)
@@ -297,6 +302,9 @@ export async function reorderSlides(slideIds: string[]): Promise<{
       }
     }
 
+    // Revalidar la página para reflejar los cambios
+    revalidatePath('/backOffice/cms/slider')
+    
     return { success: true }
   } catch (error) {
     console.error('Error reordering slides:', error)
