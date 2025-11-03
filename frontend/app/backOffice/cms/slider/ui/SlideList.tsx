@@ -6,8 +6,26 @@ import { useAlert } from '@/app/contexts/AlertContext';
 import { TextField } from '@/components/TextField/TextField';
 import IconButton from '@/components/IconButton/IconButton';
 import Dialog from '@/components/Dialog/Dialog';
-import { Slide, getSlides } from '@/app/actions/slides';
-import SlideCard from './SlideCard';
+import { 
+  DndContext, 
+  closestCenter, 
+  KeyboardSensor, 
+  PointerSensor, 
+  useSensor, 
+  useSensors,
+  DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+  UniqueIdentifier,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { Slide, getSlides, reorderSlides } from '@/app/actions/slides';
+import SortableSlideCard from '@/components/SortableSlideCard/SortableSlideCard';
 import CreateSlideForm from './CreateSlideForm';
 
 export interface SlideListProps {
@@ -26,7 +44,20 @@ export const SlideList: React.FC<SlideListProps> = ({
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [slides, setSlides] = useState<Slide[]>(initialSlides);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const alert = useAlert();
+
+  // Configuración de sensores para drag & drop
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Sincronizar con URL
   useEffect(() => {
@@ -68,6 +99,47 @@ export const SlideList: React.FC<SlideListProps> = ({
     }
   };
 
+  // Drag & Drop handlers
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id);
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveId(null);
+
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const oldIndex = slides.findIndex((slide) => slide.id === active.id);
+    const newIndex = slides.findIndex((slide) => slide.id === over.id);
+
+    if (oldIndex !== -1 && newIndex !== -1) {
+      // Actualización optimista
+      const reorderedSlides = arrayMove(slides, oldIndex, newIndex);
+      setSlides(reorderedSlides);
+
+      // Llamada al backend
+      try {
+        const slideIds = reorderedSlides.map(slide => slide.id);
+        const result = await reorderSlides(slideIds);
+        
+        if (!result.success) {
+          // Revertir cambios si falla
+          setSlides(slides);
+          alert.error(result.error || 'Error al reordenar slides');
+        } else {
+          alert.success('Slides reordenados exitosamente');
+        }
+      } catch (error) {
+        // Revertir cambios si hay error
+        setSlides(slides);
+        alert.error('Error al reordenar slides');
+      }
+    }
+  };
+
   // Handlers CRUD
   const handleAddSlide = () => {
     setIsCreateDialogOpen(true);
@@ -82,6 +154,8 @@ export const SlideList: React.FC<SlideListProps> = ({
   const handleCreateCancel = () => {
     setIsCreateDialogOpen(false);
   };
+
+
 
 
 
@@ -130,23 +204,35 @@ export const SlideList: React.FC<SlideListProps> = ({
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
-          {filteredSlides.map(slide => (
-            <SlideCard
-              key={slide.id}
-              id={slide.id}
-              title={slide.title}
-              description={slide.description}
-              multimediaUrl={slide.multimediaUrl}
-              linkUrl={slide.linkUrl}
-              duration={slide.duration}
-              startDate={slide.startDate}
-              endDate={slide.endDate}
-              isActive={slide.isActive}
-              order={slide.order}
-            />
-          ))}
-        </div>
+        <DndContext 
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext 
+            items={filteredSlides.map(slide => slide.id)} 
+            strategy={rectSortingStrategy}
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
+              {filteredSlides.map(slide => (
+                <SortableSlideCard
+                  key={slide.id}
+                  slide={slide}
+                />
+              ))}
+            </div>
+          </SortableContext>
+          
+          <DragOverlay>
+            {activeId ? (
+              <SortableSlideCard
+                slide={filteredSlides.find(slide => slide.id === activeId)!}
+                isDragOverlay
+              />
+            ) : null}
+          </DragOverlay>
+        </DndContext>
       )}
 
       {/* Modal de crear slide */}
