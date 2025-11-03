@@ -204,13 +204,13 @@ export default function CreateSlideForm({ onSuccess, onCancel }: CreateSlideForm
           Imagen o Video *
         </label>
         <FileImageUploader
-          uploadPath="/slide"
+          uploadPath="/uploads/web/slides"
           onChange={handleMultimediaChange}
           label="Subir multimedia"
           accept="image/*,video/*"
           maxFiles={1}
           maxSize={10}
-          aspectRatio="auto"
+          aspectRatio="video"
           buttonType="icon"
         />
         {multimediaFile.length > 0 && (

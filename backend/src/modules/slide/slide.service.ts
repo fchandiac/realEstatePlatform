@@ -7,6 +7,7 @@ import { CreateSlideDto } from './dto/create-slide.dto';
 import { UpdateSlideDto } from './dto/update-slide.dto';
 import { CreateSlideWithMultimediaDto } from './dto/create-slide-with-multimedia.dto';
 import { MultimediaService } from '../multimedia/services/multimedia.service';
+import { StaticFilesService } from '../multimedia/services/static-files.service';
 import { MultimediaType, MultimediaFormat } from '../../entities/multimedia.entity';
 import { MultimediaUploadMetadata } from '../multimedia/interfaces/multimedia.interface';
 
@@ -16,6 +17,7 @@ export class SlideService {
     @InjectRepository(Slide)
     private slideRepository: Repository<Slide>,
     private multimediaService: MultimediaService,
+    private staticFilesService: StaticFilesService,
     private dataSource: DataSource,
   ) {}
 
@@ -42,22 +44,15 @@ export class SlideService {
       const multimediaType = MultimediaType.SLIDE;
       const multimediaFormat = isImage ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
 
-      // Subir multimedia
-      const multimedia = await this.multimediaService.uploadFile(
-        file,
-        {
-          type: multimediaType,
-          seoTitle: createSlideDto.seoTitle || createSlideDto.title,
-          description: createSlideDto.multimediaDescription || createSlideDto.description,
-        },
-        'system' // userId - para slides del sistema
-      );
+      // Subir multimedia siguiendo patrón de Identity
+      const slidePath = await this.multimediaService.uploadFileToPath(file, 'web/slides');
+      const multimediaUrl = this.staticFilesService.getPublicUrl(slidePath);
 
       // Crear slide con multimedia URL - asegurar tipos correctos
       const slideData: Partial<Slide> = {
         title: createSlideDto.title,
         description: createSlideDto.description || '',
-        multimediaUrl: multimedia.url,
+        multimediaUrl: multimediaUrl,
         linkUrl: createSlideDto.linkUrl || undefined,
         duration: createSlideDto.duration || 3,
         startDate: createSlideDto.startDate ? new Date(createSlideDto.startDate) : undefined,
