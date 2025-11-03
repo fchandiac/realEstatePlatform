@@ -22,6 +22,7 @@ import { ComunaEnum } from '../../common/regions/comunas.enum';
 import { CurrencyPriceEnum } from '../../entities/property.entity';
 import { MultimediaService as UploadMultimediaService } from '../multimedia/services/multimedia.service';
 import { MultimediaUploadMetadata } from '../multimedia/interfaces/multimedia.interface';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PropertyService {
@@ -30,7 +31,16 @@ export class PropertyService {
     private readonly propertyRepository: Repository<Property>,
     private readonly notificationsService: NotificationsService,
     private readonly multimediaService: UploadMultimediaService,
-  ) {}
+      private readonly config: ConfigService,
+    ) {
+      this.publicBaseUrl = (
+        this.config.get<string>('BACKEND_PUBLIC_URL') ||
+        process.env.BACKEND_PUBLIC_URL ||
+        ''
+      ).replace(/\/$/, '');
+    }
+
+    private readonly publicBaseUrl: string;
 
   /**
    * Devuelve el total de propiedades en venta
@@ -124,6 +134,22 @@ export class PropertyService {
     }
 
     const normalize = (u?: string | null) => (u && u.trim() !== '' ? u.replace('/../', '/') : null);
+    const toAbsoluteMediaUrl = (u?: string | null): string | null => {
+      if (!u) return null;
+      const cleaned = u.replace('/../', '/');
+      // Si ya es absoluta, retornar tal cual
+      try {
+        new URL(cleaned);
+        return cleaned;
+      } catch {
+        // Si es relativa bajo /uploads, prefijar BACKEND_PUBLIC_URL si está configurada
+        if (cleaned.startsWith('/uploads/')) {
+          if (this.publicBaseUrl) return `${this.publicBaseUrl}${cleaned}`;
+          return cleaned; // Último recurso: devolver relativa
+        }
+        return cleaned;
+      }
+    };
 
     // Mapear a la forma esperada por el portal (PortalProperty)
     return items.map((p) => ({
@@ -137,10 +163,9 @@ export class PropertyService {
       state: p.state ?? null,
       city: p.city ?? null,
       propertyType: p.propertyType ? { id: p.propertyType.id, name: p.propertyType.name } : null,
-      // Usa mainImageUrl si existe; si no, toma la primera imagen de multimedia
-      mainImageUrl: normalize(p.mainImageUrl) ?? firstUrlMap[p.id] ?? null,
+      // Usa mainImageUrl si existe; si no, toma la primera imagen de multimedia y devuelve ABSOLUTA (canónica)
+      mainImageUrl: toAbsoluteMediaUrl(normalize(p.mainImageUrl) ?? firstUrlMap[p.id] ?? null),
       // multimedia opcional: omitimos el arreglo para payload liviano
-      multimedia: undefined,
       bedrooms: p.bedrooms ?? null,
       bathrooms: p.bathrooms ?? null,
       builtSquareMeters: p.builtSquareMeters ?? null,
@@ -154,7 +179,6 @@ export class PropertyService {
    * Devuelve toda la información relevante de una propiedad, incluyendo relaciones y datos agregados.
    */
   async getFullProperty(id: string): Promise<GetFullPropertyDto> {
-    // Obtener la propiedad con todas las relaciones relevantes
     const property = await this.propertyRepository.findOne({
       where: { id },
       relations: [

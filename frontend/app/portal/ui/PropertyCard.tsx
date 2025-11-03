@@ -63,27 +63,21 @@ function normalizeMediaUrl(url?: string | null): string | undefined {
   // Sanea rutas con ../
   const cleaned = url.replace('/../', '/');
 
-  // Si es relativa, prepend backend
+  // Si ya es absoluta, devuélvela tal cual (canónica desde el backend)
+  try {
+    // Esto lanzará si no es URL absoluta
+    new URL(cleaned);
+    return cleaned;
+  } catch {
+    // no-op
+  }
+
+  // Si es relativa, prepend backend (misma base en SSR y cliente)
   if (cleaned.startsWith('/')) {
     return `${env.backendApiUrl}${cleaned}`;
   }
 
-  // Si es absoluta pero apunta a 3000, reemplaza por el backendApiUrl base
-  try {
-    const u = new URL(cleaned);
-    const backendBase = new URL(env.backendApiUrl);
-    if (
-      (u.hostname === 'localhost' || u.hostname === '127.0.0.1') &&
-      u.port === '3000' &&
-      backendBase.host !== u.host
-    ) {
-      return `${backendBase.origin}${u.pathname}${u.search}${u.hash}`;
-    }
-  } catch {
-    // Si no es URL válida, retorna como venía
-    return cleaned;
-  }
-
+  // Cualquier otro caso, devolver limpiada
   return cleaned;
 }
 
