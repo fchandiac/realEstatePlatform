@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import moment from 'moment';
+import 'moment/locale/es'; // Para español
 import { TextField } from '@/components/TextField/TextField';
 import Select from '@/components/Select/Select';
 import MultimediaGallery from '@/components/FileUploader/MultimediaGallery';
@@ -10,18 +12,25 @@ import Alert from '@/components/Alert/Alert';
 import { listPropertyTypes, getProperty, updateProperty } from '@/app/actions/properties';
 import { listAdminsAgents } from '@/app/actions/users';
 import { useAlert } from '@/app/contexts/AlertContext';
+import { PropertyStatus, PropertyOperationType } from '../enums';
 
-// Enums copiados del backend
-interface PropertyStatus {
-  value: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' | 'PENDING_REVIEW';
-  label: string;
-}
+// Crear arrays de opciones basados en los enums
+const PROPERTY_STATUSES = [
+  { value: PropertyStatus.REQUEST, label: 'Solicitud' },
+  { value: PropertyStatus.PRE_APPROVED, label: 'Pre-aprobado' },
+  { value: PropertyStatus.PUBLISHED, label: 'Publicado' },
+  { value: PropertyStatus.INACTIVE, label: 'Inactivo' },
+  { value: PropertyStatus.SOLD, label: 'Vendido' },
+  { value: PropertyStatus.RENTED, label: 'Arrendado' },
+  { value: PropertyStatus.CONTRACT_IN_PROGRESS, label: 'Contrato en Progreso' }
+];
 
-interface OperationType {
-  value: 'SALE' | 'RENT' | 'SALE_RENT';
-  label: string;
-}
+const OPERATION_TYPES = [
+  { value: PropertyOperationType.SALE, label: 'Venta' },
+  { value: PropertyOperationType.RENT, label: 'Arriendo' }
+];
 
+// Interfaces para tipos locales
 interface PropertyType {
   id: string;
   name: string;
@@ -41,18 +50,7 @@ interface User {
 }
 
 // Datos estáticos para status y tipos de operación
-const PROPERTY_STATUSES: PropertyStatus[] = [
-  { value: 'DRAFT', label: 'Borrador' },
-  { value: 'PUBLISHED', label: 'Publicado' },
-  { value: 'ARCHIVED', label: 'Archivado' },
-  { value: 'PENDING_REVIEW', label: 'Pendiente de Revisión' }
-];
-
-const OPERATION_TYPES: OperationType[] = [
-  { value: 'SALE', label: 'Venta' },
-  { value: 'RENT', label: 'Arriendo' },
-  { value: 'SALE_RENT', label: 'Venta y Arriendo' }
-];
+// Los enums se importan desde '../enums' y se convierten a arrays arriba
 
 // Mock data basado en el objeto JSON proporcionado
 const mockProperty = {
@@ -275,7 +273,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
                 value={currentProperty.status || ''}
                 onChange={(value) => handleInputChange('status', value)}
                 options={PROPERTY_STATUSES.map(status => ({
-                  id: status.value,
+                  value: status.value,
                   label: status.label
                 }))}
                 required
@@ -287,7 +285,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
                 value={currentProperty.operationType || ''}
                 onChange={(value) => handleInputChange('operationType', value)}
                 options={OPERATION_TYPES.map(type => ({
-                  id: type.value,
+                  value: type.value,
                   label: type.label
                 }))}
                 required
@@ -396,29 +394,29 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
         );
       case 'price':
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <TextField 
-              label="Precio" 
+          <div className="space-y-4">
+            <TextField
+              label="Precio"
               type="number"
-              value={currentProperty.price?.toString() || ''} 
+              value={currentProperty.price?.toString() || ''}
               onChange={(e) => handleInputChange('price', parseFloat(e.target.value) || 0)}
               required
             />
-            <TextField 
-              label="Moneda" 
-              value={currentProperty.currencyPrice || ''} 
+            <TextField
+              label="Moneda"
+              value={currentProperty.currencyPrice || ''}
               onChange={(e) => handleInputChange('currencyPrice', e.target.value)}
             />
-            <TextField 
-              label="Título SEO" 
-              value={currentProperty.seoTitle || ''} 
+            <TextField
+              label="Título SEO"
+              value={currentProperty.seoTitle || ''}
               onChange={(e) => handleInputChange('seoTitle', e.target.value)}
             />
-            <TextField 
-              label="Descripción SEO" 
-              value={currentProperty.seoDescription || ''} 
+            <TextField
+              label="Descripción SEO"
+              value={currentProperty.seoDescription || ''}
               onChange={(e) => handleInputChange('seoDescription', e.target.value)}
-              rows={3} 
+              rows={3}
             />
           </div>
         );
@@ -561,12 +559,12 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
         );
       case 'postRequest':
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-4">
             <TextField label="Mensaje" value={currentProperty.postRequest?.message || ''} onChange={() => {}} rows={3} readOnly />
             <TextField label="Nombre Contacto" value={currentProperty.postRequest?.contactInfo?.name || ''} onChange={() => {}} readOnly />
             <TextField label="Email Contacto" value={currentProperty.postRequest?.contactInfo?.email || ''} onChange={() => {}} readOnly />
             <TextField label="Teléfono Contacto" value={currentProperty.postRequest?.contactInfo?.phone || ''} onChange={() => {}} readOnly />
-            <TextField label="Fecha Solicitud" value={currentProperty.postRequest?.requestedAt || ''} onChange={() => {}} readOnly />
+            <TextField label="Fecha Solicitud" value={currentProperty.postRequest?.requestedAt ? moment(currentProperty.postRequest.requestedAt).format('DD/MM/YYYY HH:mm:ss') : 'Fecha no disponible'} onChange={() => {}} readOnly />
           </div>
         );
       case 'history':
@@ -585,7 +583,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
             />
             <div className="mt-4">
               <h4 className="font-semibold mb-2">Vistas Recientes</h4>
-              <div className="space-y-2 max-h-40 overflow-y-auto">
+              <div className="space-y-2 max-h-80 overflow-y-auto">
                 {(currentProperty.views || []).slice(0, 10).map((view: any, index: number) => (
                   <div key={index} className="border p-3 rounded-lg bg-muted/30">
                     <div className="flex justify-between items-start">
@@ -594,7 +592,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
                         <p className="text-sm text-muted-foreground">Duración: {view.duration}s</p>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {new Date(view.viewedAt).toLocaleDateString()}
+                        {view.viewedAt ? moment(view.viewedAt).format('DD/MM/YYYY HH:mm') : 'Fecha no disponible'}
                       </p>
                     </div>
                   </div>
@@ -615,7 +613,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
                           {change.userId ? `Usuario: ${change.userId}` : 'Sistema'}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {new Date(change.changedAt).toLocaleString()}
+                          {change.changedAt ? moment(change.changedAt).format('DD/MM/YYYY HH:mm:ss') : 'Fecha no disponible'}
                         </p>
                       </div>
                       <div className="space-y-1">
@@ -636,12 +634,37 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
         );
       case 'dates':
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <TextField label="Creado" value={currentProperty.createdAt || ''} onChange={() => {}} readOnly />
-            <TextField label="Actualizado" value={currentProperty.updatedAt || ''} onChange={() => {}} readOnly />
-            <TextField label="Eliminado" value={currentProperty.deletedAt || ''} onChange={() => {}} readOnly />
-            <TextField label="Publicado" value={currentProperty.publishedAt || ''} onChange={() => {}} readOnly />
-            <TextField label="Fecha Publicación" value={currentProperty.publicationDate || ''} onChange={() => {}} readOnly />
+          <div className="space-y-4">
+            <TextField
+              label="Creado"
+              value={currentProperty.createdAt ? moment(currentProperty.createdAt).format('DD/MM/YYYY HH:mm:ss') : ''}
+              onChange={() => {}}
+              readOnly
+            />
+            <TextField
+              label="Actualizado"
+              value={currentProperty.updatedAt ? moment(currentProperty.updatedAt).format('DD/MM/YYYY HH:mm:ss') : ''}
+              onChange={() => {}}
+              readOnly
+            />
+            <TextField
+              label="Eliminado"
+              value={currentProperty.deletedAt ? moment(currentProperty.deletedAt).format('DD/MM/YYYY HH:mm:ss') : 'No eliminado'}
+              onChange={() => {}}
+              readOnly
+            />
+            <TextField
+              label="Publicado"
+              value={currentProperty.publishedAt ? moment(currentProperty.publishedAt).format('DD/MM/YYYY HH:mm:ss') : 'No publicado'}
+              onChange={() => {}}
+              readOnly
+            />
+            <TextField
+              label="Fecha Publicación"
+              value={currentProperty.publicationDate ? moment(currentProperty.publicationDate).format('DD/MM/YYYY HH:mm:ss') : 'No definida'}
+              onChange={() => {}}
+              readOnly
+            />
           </div>
         );
       default:
@@ -650,58 +673,102 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
   };
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Header con botón de guardar */}
-      <div className="flex items-center justify-between p-4 border-b border-border bg-background">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground">
-            Propiedad: {currentProperty.title || 'Sin título'}
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            ID: {currentProperty.id} • Estado: {PROPERTY_STATUSES.find(s => s.value === currentProperty.status)?.label || currentProperty.status}
-          </p>
+    <div className="flex flex-col h-screen bg-neutral overflow-hidden">
+      <header className="flex items-center justify-between p-6 border-b border-border bg-background shadow-sm z-10">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center shadow-sm">
+            <span className="material-symbols-outlined text-primary text-xl">home</span>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">
+              Propiedad: {currentProperty.title || 'Sin título'}
+            </h1>
+            <p className="text-sm text-muted-foreground flex items-center gap-2">
+              <span className="material-symbols-outlined text-xs">tag</span>
+              ID: {currentProperty.id}
+              <span className="mx-2 text-border">•</span>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                currentProperty.status === 'PUBLISHED' 
+                  ? 'bg-success/10 text-success' 
+                  : currentProperty.status === 'DRAFT'
+                  ? 'bg-warning/10 text-warning'
+                  : 'bg-muted/10 text-muted-foreground'
+              }`}>
+                {PROPERTY_STATUSES.find(s => s.value === currentProperty.status)?.label || currentProperty.status}
+              </span>
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {hasChanges && (
-            <span className="text-sm text-orange-600 font-medium">
-              Cambios sin guardar
-            </span>
+            <div className="flex items-center gap-2 px-3 py-2 bg-warning/10 border border-warning/20 rounded-lg animate-pulse">
+              <span className="material-symbols-outlined text-warning text-sm">warning</span>
+              <span className="text-sm font-medium text-warning">
+                Cambios sin guardar
+              </span>
+            </div>
           )}
-          <Button
-            variant={hasChanges ? "primary" : "outlined"}
-            onClick={handleSave}
-            disabled={saving || !hasChanges}
-            className="min-w-[120px]"
-          >
-            {saving ? 'Guardando...' : 'Guardar'}
-          </Button>
         </div>
-      </div>
+      </header>
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <div className="w-64 border-r border-border p-4 bg-muted/20">
-          <div className="space-y-2">
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => setActiveSection(section.id)}
-                className={`w-full text-left p-3 rounded-lg transition-colors ${
-                  activeSection === section.id 
-                    ? 'bg-primary text-primary-foreground shadow-sm' 
-                    : 'hover:bg-muted text-foreground'
-                }`}
-              >
-                {section.label}
-              </button>
-            ))}
+        <aside className="w-64 bg-background text-foreground flex flex-col shadow-lg border-r border-border/20">
+          {/* Navegación */}
+          <nav className="flex-1 p-4 overflow-y-auto">
+            <ul className="space-y-2">
+              {sections.map((section) => (
+                <li key={section.id}>
+                  <button
+                    onClick={() => setActiveSection(section.id)}
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 font-medium text-sm group relative ${
+                      activeSection === section.id
+                        ? 'border border-secondary text-secondary bg-secondary/5'
+                        : 'text-foreground/90 hover:bg-muted hover:text-foreground hover:shadow-sm'
+                    }`}
+                    data-test-id={`section-${section.id}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      {/* Icono simple basado en la sección */}
+                      <span className={`material-symbols-outlined text-lg ${
+                        activeSection === section.id ? 'text-secondary' : 'text-muted-foreground group-hover:text-foreground'
+                      }`}>
+                        {section.id === 'basic' && 'info'}
+                        {section.id === 'price' && 'attach_money'}
+                        {section.id === 'features' && 'home_work'}
+                        {section.id === 'location' && 'location_on'}
+                        {section.id === 'multimedia' && 'photo_library'}
+                        {section.id === 'postRequest' && 'post_add'}
+                        {section.id === 'history' && 'history'}
+                        {section.id === 'dates' && 'schedule'}
+                      </span>
+                      <span className="truncate">{section.label}</span>
+                      {activeSection === section.id && (
+                        <span className="material-symbols-outlined text-xs ml-auto text-secondary animate-pulse">
+                          chevron_right
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Footer del sidebar */}
+          <div className="p-4 border-t border-border/20">
+            <div className="text-xs text-muted-foreground text-center">
+              Selecciona una sección para editar
+            </div>
           </div>
-        </div>
-        
+        </aside>
+
         {/* Contenido */}
-        <div className="flex-1 p-6 overflow-y-auto">
-          {renderSection()}
-        </div>
+        <main className="flex-1 overflow-y-auto bg-background">
+          <div className="p-8 max-w-4xl mx-auto">
+            {renderSection()}
+          </div>
+        </main>
       </div>
     </div>
   );
