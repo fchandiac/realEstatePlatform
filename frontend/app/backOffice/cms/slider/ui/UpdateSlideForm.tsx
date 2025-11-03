@@ -202,10 +202,10 @@ export default function UpdateSlideForm({ slide, onSuccess, onCancel }: UpdateSl
                 />
               )}
             </div>
-            <div className="flex gap-2 mt-2">
+            <div className="flex justify-end mt-2">
               <Button
                 onClick={handleChangeImage}
-                variant="secondary"
+                variant="outlined"
                 size="sm"
               >
                 Cambiar imagen

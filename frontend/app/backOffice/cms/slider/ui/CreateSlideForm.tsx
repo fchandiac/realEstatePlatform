@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { TextField } from '@/components/TextField/TextField';
 import { FileImageUploader } from '@/components/FileUploader/FileImageUploader';
 import { createSlideWithMultimedia } from '@/app/actions/slides';
-import Alert from '@/components/Alert/Alert';
 import { Button } from '@/components/Button/Button';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import Switch from '@/components/Switch/Switch';
@@ -42,7 +41,6 @@ export default function CreateSlideForm({ onSuccess, onCancel }: CreateSlideForm
   // Estados UI
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const [success, setSuccess] = useState('');
 
   // Handlers para campos regulares (patrón IdentityPage)
   const handleInputChange = (field: keyof SlideFormData) => (
@@ -116,7 +114,6 @@ export default function CreateSlideForm({ onSuccess, onCancel }: CreateSlideForm
 
     setIsSubmitting(true);
     setErrors([]);
-    setSuccess('');
 
     try {
       // FormData manual (patrón IdentityPage)
@@ -148,8 +145,7 @@ export default function CreateSlideForm({ onSuccess, onCancel }: CreateSlideForm
       const result = await createSlideWithMultimedia(formData);
 
       if (result.success) {
-        setSuccess('Slide creado exitosamente');
-        setTimeout(() => onSuccess?.(), 1000);
+        onSuccess?.();
       } else {
         setErrors([result.error || 'Error al crear el slide']);
       }
@@ -163,23 +159,6 @@ export default function CreateSlideForm({ onSuccess, onCancel }: CreateSlideForm
 
   return (
     <div className="space-y-6">
-      {/* Feedback */}
-      {errors.length > 0 && (
-        <div className="space-y-2">
-          {errors.map((error, index) => (
-            <Alert key={index} variant="error">
-              {error}
-            </Alert>
-          ))}
-        </div>
-      )}
-      
-      {success && (
-        <Alert variant="success">
-          {success}
-        </Alert>
-      )}
-
       {/* Campo título */}
       <TextField
         label="Título del Slide"
