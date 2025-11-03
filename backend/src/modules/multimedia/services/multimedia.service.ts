@@ -16,35 +16,12 @@ import { StaticFilesService } from './static-files.service';
 
 @Injectable()
 export class MultimediaService {
-  private readonly baseUploadPath = 'uploads';
-
   constructor(
     @InjectRepository(Multimedia)
     private readonly multimediaRepository: Repository<Multimedia>,
     private readonly staticFilesService: StaticFilesService,
   ) {}
 
-  private async initializeUploadDirectories(): Promise<void> {
-    const directories = [
-      // Documentos
-      'docs/dni/front',
-      'docs/dni/rear',
-      // Web
-      'web/slides',
-      'web/logos',
-      'web/staff',
-      'web/partnerships',
-      'web/testimonials',
-      // Propiedades
-      'properties/images',
-      'properties/videos',
-    ];
-
-    for (const dir of directories) {
-      const fullPath = path.join(this.baseUploadPath, dir);
-      await fs.mkdir(fullPath, { recursive: true });
-    }
-  }
 
   private getUploadPath(type: MultimediaType): string {
     const paths = {
@@ -54,8 +31,8 @@ export class MultimediaService {
       [MultimediaType.LOGO]: 'web/logos',
       [MultimediaType.STAFF]: 'web/staff',
       [MultimediaType.PARTNERSHIP]: 'web/partnerships',
-      [MultimediaType.PROPERTY_IMG]: 'properties/images',
-      [MultimediaType.PROPERTY_VIDEO]: 'properties/videos',
+      [MultimediaType.PROPERTY_IMG]: 'PROPERTY_IMG',
+      [MultimediaType.PROPERTY_VIDEO]: 'PROPERTY_VIDEO',
       [MultimediaType.TESTIMONIAL_IMG]: 'web/testimonials',
       [MultimediaType.DOCUMENT]: 'documents',
       [MultimediaType.SLIDER]: 'web/sliders',
@@ -97,22 +74,19 @@ export class MultimediaService {
     metadata: MultimediaUploadMetadata,
     userId: string,
   ): Promise<Multimedia> {
-    const uploadDir = this.getUploadPath(metadata.type as MultimediaType);
+    // Directorio relativo bajo la carpeta de uploads (ej: PROPERTY_IMG)
+    const relativeDir = this.getUploadPath(metadata.type as MultimediaType);
 
-    // Ensure the directory exists
-    await fs.mkdir(uploadDir, { recursive: true });
-
-    // Generate unique filename
+    // Generar nombre único
     const uniqueFilename = this.generateUniqueFilename(
       file.originalname,
       metadata.type as MultimediaType,
     );
-    const filePath = path.join(uploadDir, uniqueFilename);
-    const relativePath = path.relative(this.baseUploadPath, filePath);
+    const relativePath = path.join(relativeDir, uniqueFilename);
 
     try {
-      // Save the file to the upload directory
-      await fs.writeFile(filePath, file.buffer);
+      // Guardar el archivo usando el servicio centralizado (se encarga de la ruta base)
+      await this.staticFilesService.saveFile(file.buffer, relativePath);
 
       // Save metadata to the database
       const multimedia = new Multimedia();
@@ -137,7 +111,7 @@ export class MultimediaService {
   }
 
   async serveFile(filepath: string): Promise<Buffer> {
-    const fullPath = path.join(this.baseUploadPath, filepath);
+    const fullPath = this.staticFilesService.getFullPath(filepath);
     try {
       return await fs.readFile(fullPath);
     } catch (error) {
@@ -154,7 +128,13 @@ export class MultimediaService {
     }
 
     try {
-      const fullPath = path.join(this.baseUploadPath, multimedia.url);
+      // Construir la ruta relativa a partir del tipo y el nombre del archivo
+      const relativePath = path.join(
+        this.getUploadPath(multimedia.type),
+        multimedia.filename,
+      );
+      const fullPath = this.staticFilesService.getFullPath(relativePath);
+
       await fs.unlink(fullPath);
       await this.multimediaRepository.remove(multimedia);
     } catch (error) {
@@ -176,7 +156,7 @@ export class MultimediaService {
    * Useful for logos, documents, etc. that don't need database records
    */
   async uploadFileToPath(file: Express.Multer.File, uploadPath: string): Promise<string> {
-    const fullUploadPath = path.join(this.baseUploadPath, uploadPath);
+    const fullUploadPath = this.staticFilesService.getFullPath(uploadPath);
 
     // Ensure the directory exists
     await fs.mkdir(fullUploadPath, { recursive: true });
@@ -194,7 +174,7 @@ export class MultimediaService {
       .toUpperCase();
     const uniqueFilename = `${uploadPath.toLowerCase().replace('/', '_')}_${timestamp}_${randomString}${extension}`;
 
-    const filePath = path.join(fullUploadPath, uniqueFilename);
+  const filePath = path.join(fullUploadPath, uniqueFilename);
 
     try {
       // Save the file to the upload directory

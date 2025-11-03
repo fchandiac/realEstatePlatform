@@ -59,6 +59,67 @@ export class PropertyService {
     });
   }
 
+  /**
+   * Lista de propiedades publicadas para el portal (público, sin token)
+   * Devuelve campos esenciales y relaciones mínimas.
+   */
+  async listPublishedPublic(): Promise<any[]> {
+    const qb = this.propertyRepository
+      .createQueryBuilder('p')
+      .leftJoinAndSelect('p.propertyType', 'pt')
+      .where('p.deletedAt IS NULL')
+      .andWhere('p.status = :status', { status: PropertyStatus.PUBLISHED })
+      .orderBy('p.publishedAt', 'DESC')
+      .addOrderBy('p.createdAt', 'DESC');
+
+    // Selección de campos compatibles con el PortalProperty
+    qb.select([
+      'p.id',
+      'p.title',
+      'p.description',
+      'p.status',
+      'p.operationType',
+      'p.price',
+      'p.currencyPrice',
+      'p.city',
+      'p.state',
+      'p.mainImageUrl',
+      'p.publishedAt',
+      'p.bedrooms',
+      'p.bathrooms',
+      'p.builtSquareMeters',
+      'p.landSquareMeters',
+      'p.parkingSpaces',
+      'p.isFeatured',
+      'pt.id',
+      'pt.name',
+    ]);
+
+    const items = await qb.getMany();
+
+    // Mapear a la forma esperada por el portal (PortalProperty)
+    return items.map((p) => ({
+      id: p.id,
+      title: p.title,
+      description: p.description ?? null,
+      status: p.status,
+      operationType: p.operationType,
+      price: p.price,
+      currencyPrice: p.currencyPrice,
+      state: p.state ?? null,
+      city: p.city ?? null,
+      propertyType: p.propertyType ? { id: p.propertyType.id, name: p.propertyType.name } : null,
+      mainImageUrl: p.mainImageUrl ?? null,
+      // multimedia opcional: por ahora omitimos la carga pesada, el Card usa mainImageUrl
+      multimedia: undefined,
+      bedrooms: p.bedrooms ?? null,
+      bathrooms: p.bathrooms ?? null,
+      builtSquareMeters: p.builtSquareMeters ?? null,
+      landSquareMeters: p.landSquareMeters ?? null,
+      parkingSpaces: p.parkingSpaces ?? null,
+      isFeatured: !!p.isFeatured,
+    }));
+  }
 
   /**
    * Devuelve toda la información relevante de una propiedad, incluyendo relaciones y datos agregados.
@@ -319,12 +380,28 @@ export class PropertyService {
   ): Promise<Property> {
     const property = await this.propertyRepository.findOne({
       where: { id, deletedAt: IsNull() },
-      relations: ['creatorUser', 'assignedAgent'],
+      relations: [
+        'creatorUser',
+        'assignedAgent', 
+        'propertyType',
+        'multimedia'
+      ],
     });
 
     if (!property) {
+      console.log('❌ [PropertyService.findOne] Propiedad no encontrada con ID:', id);
       throw new NotFoundException('Propiedad no encontrada.');
     }
+
+    console.log('✅ [PropertyService.findOne] Propiedad encontrada:', {
+      id: property.id,
+      title: property.title,
+      hasMultimedia: property.multimedia ? property.multimedia.length : 0,
+      hasPropertyType: !!property.propertyType,
+      propertyTypeId: property.propertyType?.id,
+      propertyTypeName: property.propertyType?.name,
+      multimediaItems: property.multimedia?.map(m => ({ id: m.id, type: m.type, filename: m.filename })) || []
+    });
 
     // Track view if requested
     if (trackView) {
@@ -777,28 +854,149 @@ export class PropertyService {
   @InjectRepository(PropertyType)
   private readonly propertyTypeRepository: Repository<PropertyType>;
 
-  async createProperty(createPropertyDto: NewCreatePropertyDto, creatorId?: string): Promise<Property> {
+  async createPropertyWithFiles(
+    createPropertyDto: NewCreatePropertyDto, 
+    creatorId: string, 
+    multimediaFiles: Express.Multer.File[]
+  ): Promise<Property> {
+    console.log('🚀 [PropertyService.createPropertyWithFiles] ===== METHOD CALLED =====');
+    console.log('📋 [PropertyService.createPropertyWithFiles] DTO received:', {
+      title: createPropertyDto.title,
+      hasMultimedia: !!createPropertyDto.multimedia,
+      multimediaCount: createPropertyDto.multimedia?.length || 0
+    });
+    console.log('📁 [PropertyService.createPropertyWithFiles] Multimedia files received separately:', {
+      filesCount: multimediaFiles.length,
+      filesDetails: multimediaFiles.map(f => ({
+        originalname: f.originalname,
+        filename: f.filename,
+        size: f.size,
+        path: f.path
+      }))
+    });
+    console.log('👤 [PropertyService.createPropertyWithFiles] Creator user ID:', creatorId);
+
     // 1. Crear propiedad base
+    console.log('🔨 [PropertyService] Step 1: Creating property base...');
     const property = await this.createPropertyBase(createPropertyDto, creatorId);
+    console.log('✅ [PropertyService] Property base created');
 
     // 2. Asignar ubicación
+    console.log('🗺️ [PropertyService] Step 2: Assigning location...');
     await this.assignPropertyLocation(property, createPropertyDto);
+    console.log('✅ [PropertyService] Location assigned');
 
     // 3. Procesar multimedia si existe
     if (createPropertyDto.multimedia?.length) {
+      console.log('📸 [PropertyService] Step 3: Processing multimedia metadata...');
       await this.processPropertyMultimedia(property, createPropertyDto.multimedia);
+      console.log('✅ [PropertyService] Multimedia metadata processed');
+    } else {
+      console.log('📭 [PropertyService] Step 3: No multimedia metadata to process');
     }
 
     // 4. Guardar propiedad PRIMERO para obtener ID válido
+    console.log('💾 [PropertyService] Step 4: Saving property to get ID...');
     const savedProperty = await this.propertyRepository.save(property);
+    console.log('✅ [PropertyService] Property saved with ID:', savedProperty.id);
 
     // 5. Procesar archivos multimedia si existen (después de tener ID)
-    if (createPropertyDto.multimediaFiles?.length) {
-      await this.processPropertyMultimediaFiles(savedProperty, createPropertyDto.multimediaFiles);
+    if (multimediaFiles && multimediaFiles.length > 0) {
+      console.log('📁 [PropertyService] Step 5: Processing multimedia FILES...');
+      console.log('📸 [PropertyService] Files to process:', multimediaFiles.length);
+      await this.processPropertyMultimediaFiles(savedProperty, multimediaFiles);
+      console.log('✅ [PropertyService] Multimedia files processed');
+    } else {
+      console.log('📭 [PropertyService] Step 5: No multimedia FILES to process');
     }
 
     // 6. Retornar propiedad con multimedia procesado
-    return savedProperty;
+    console.log('🔄 [PropertyService] Step 6: Loading property with relations...');
+    const finalProperty = await this.propertyRepository.findOne({
+      where: { id: savedProperty.id },
+      relations: ['multimedia', 'propertyType', 'creatorUser']
+    });
+    
+    console.log('🎉 [PropertyService] ===== PROPERTY CREATION COMPLETED =====');
+    console.log('📊 [PropertyService] Final result:', {
+      id: finalProperty?.id,
+      title: finalProperty?.title,
+      multimediaCount: finalProperty?.multimedia?.length || 0,
+      multimediaItems: finalProperty?.multimedia?.map(m => ({
+        id: m.id,
+        filename: m.filename,
+        propertyId: m.propertyId
+      })) || []
+    });
+    
+    return finalProperty || savedProperty;
+  }
+
+  async createProperty(createPropertyDto: NewCreatePropertyDto, creatorId?: string): Promise<Property> {
+    console.log('🏗️ [PropertyService] ===== STARTING PROPERTY CREATION =====');
+    console.log('📋 [PropertyService] DTO received:', {
+      title: createPropertyDto.title,
+      hasMultimediaFiles: !!createPropertyDto.multimediaFiles,
+      multimediaFilesCount: createPropertyDto.multimediaFiles?.length || 0,
+      hasMultimedia: !!createPropertyDto.multimedia,
+      multimediaCount: createPropertyDto.multimedia?.length || 0
+    });
+    console.log('👤 [PropertyService] Creator user ID:', creatorId);
+
+    // 1. Crear propiedad base
+    console.log('🔨 [PropertyService] Step 1: Creating property base...');
+    const property = await this.createPropertyBase(createPropertyDto, creatorId);
+    console.log('✅ [PropertyService] Property base created');
+
+    // 2. Asignar ubicación
+    console.log('🗺️ [PropertyService] Step 2: Assigning location...');
+    await this.assignPropertyLocation(property, createPropertyDto);
+    console.log('✅ [PropertyService] Location assigned');
+
+    // 3. Procesar multimedia si existe
+    if (createPropertyDto.multimedia?.length) {
+      console.log('📸 [PropertyService] Step 3: Processing multimedia metadata...');
+      await this.processPropertyMultimedia(property, createPropertyDto.multimedia);
+      console.log('✅ [PropertyService] Multimedia metadata processed');
+    } else {
+      console.log('📭 [PropertyService] Step 3: No multimedia metadata to process');
+    }
+
+    // 4. Guardar propiedad PRIMERO para obtener ID válido
+    console.log('💾 [PropertyService] Step 4: Saving property to get ID...');
+    const savedProperty = await this.propertyRepository.save(property);
+    console.log('✅ [PropertyService] Property saved with ID:', savedProperty.id);
+
+    // 5. Procesar archivos multimedia si existen (después de tener ID)
+    if (createPropertyDto.multimediaFiles?.length) {
+      console.log('📁 [PropertyService] Step 5: Processing multimedia FILES...');
+      console.log('📸 [PropertyService] Files to process:', createPropertyDto.multimediaFiles.length);
+      await this.processPropertyMultimediaFiles(savedProperty, createPropertyDto.multimediaFiles);
+      console.log('✅ [PropertyService] Multimedia files processed');
+    } else {
+      console.log('📭 [PropertyService] Step 5: No multimedia FILES to process');
+    }
+
+    // 6. Retornar propiedad con multimedia procesado
+    console.log('🔄 [PropertyService] Step 6: Loading property with relations...');
+    const finalProperty = await this.propertyRepository.findOne({
+      where: { id: savedProperty.id },
+      relations: ['multimedia', 'propertyType', 'creatorUser']
+    });
+    
+    console.log('🎉 [PropertyService] ===== PROPERTY CREATION COMPLETED =====');
+    console.log('📊 [PropertyService] Final result:', {
+      id: finalProperty?.id,
+      title: finalProperty?.title,
+      multimediaCount: finalProperty?.multimedia?.length || 0,
+      multimediaItems: finalProperty?.multimedia?.map(m => ({
+        id: m.id,
+        filename: m.filename,
+        propertyId: m.propertyId
+      })) || []
+    });
+    
+    return finalProperty || savedProperty;
   }
 
   // Sub-método 1: Crear propiedad base
@@ -899,15 +1097,37 @@ export class PropertyService {
     property: Property,
     files: Express.Multer.File[]
   ): Promise<void> {
-    console.log(`Processing ${files.length} multimedia files for property ${property.id}`);
+    console.log('📁 [PropertyService.processFiles] ===== PROCESSING MULTIMEDIA FILES =====');
+    console.log('📊 [PropertyService.processFiles] Property ID:', property.id);
+    console.log('📊 [PropertyService.processFiles] Property title:', property.title);
+    console.log('📊 [PropertyService.processFiles] Files count:', files.length);
+    console.log('📋 [PropertyService.processFiles] Files details:', files.map(f => ({
+      originalname: f.originalname,
+      filename: f.filename,
+      mimetype: f.mimetype,
+      size: f.size,
+      path: f.path
+    })));
     
-    for (const file of files) {
+    if (!property.id) {
+      console.error('❌ [PropertyService.processFiles] CRITICAL ERROR: Property ID is null/undefined!');
+      throw new Error('Property ID is required to associate multimedia');
+    }
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      console.log(`\n📸 [PropertyService.processFiles] Processing file ${i + 1}/${files.length}: ${file.originalname}`);
+      
       try {
         // Determinar el tipo de multimedia basado en el mimetype
         const isImage = file.mimetype.startsWith('image/');
         const multimediaType = isImage ? MultimediaType.PROPERTY_IMG : MultimediaType.PROPERTY_VIDEO;
 
-        console.log(`Processing file ${file.originalname}, type: ${multimediaType}, size: ${file.size}`);
+        console.log('🏷️ [PropertyService.processFiles] File type determined:', {
+          isImage,
+          multimediaType,
+          mimetype: file.mimetype
+        });
 
         // Crear metadata para el upload
         const metadata: MultimediaUploadMetadata = {
@@ -916,6 +1136,9 @@ export class PropertyService {
           description: `Multimedia for property ${property.title}`,
         };
 
+        console.log('📋 [PropertyService.processFiles] Metadata created:', metadata);
+        console.log('🚀 [PropertyService.processFiles] Calling multimediaService.uploadFile...');
+
         // Usar el servicio de multimedia para subir el archivo
         const multimedia = await this.multimediaService.uploadFile(
           file,
@@ -923,19 +1146,48 @@ export class PropertyService {
           property.creatorUserId || 'system'
         );
 
-        console.log(`File uploaded successfully: ${multimedia.filename}`);
+        console.log('✅ [PropertyService.processFiles] File uploaded via service:', {
+          id: multimedia.id,
+          filename: multimedia.filename,
+          currentPropertyId: multimedia.propertyId,
+          targetPropertyId: property.id
+        });
 
         // Asignar la propiedad al archivo multimedia
+        console.log('🔗 [PropertyService.processFiles] Associating with property...');
         multimedia.propertyId = property.id;
-        await this.multimediaRepository.save(multimedia);
-
-        console.log(`Multimedia associated with property ${property.id}`);
+        
+        console.log('💾 [PropertyService.processFiles] Saving multimedia with propertyId:', {
+          multimediaId: multimedia.id,
+          propertyId: multimedia.propertyId,
+          filename: multimedia.filename
+        });
+        
+        const savedMultimedia = await this.multimediaRepository.save(multimedia);
+        
+        console.log('✅ [PropertyService.processFiles] Multimedia saved successfully:', {
+          id: savedMultimedia.id,
+          filename: savedMultimedia.filename,
+          propertyId: savedMultimedia.propertyId,
+          url: savedMultimedia.url
+        });
 
       } catch (error) {
-        console.error(`Error processing multimedia file ${file.originalname}:`, error);
+        console.error(`❌ [PropertyService.processFiles] ERROR processing file ${file.originalname}:`, {
+          error: error.message,
+          stack: error.stack,
+          file: {
+            originalname: file.originalname,
+            filename: file.filename,
+            path: file.path
+          }
+        });
         // Continuar con el siguiente archivo en caso de error
+        console.log('⚠️ [PropertyService.processFiles] Continuing with next file...');
       }
     }
+    
+    console.log('🏁 [PropertyService.processFiles] ===== MULTIMEDIA PROCESSING COMPLETED =====');
   }
 
   // Sub-método 4: Asignar agente

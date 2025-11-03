@@ -35,6 +35,8 @@ export class StaticFilesService implements OnModuleInit {
       // Propiedades
       'properties/images',
       'properties/videos',
+      'PROPERTY_IMG',
+      'PROPERTY_VIDEO',
     ];
 
     for (const dir of directories) {
@@ -52,8 +54,8 @@ export class StaticFilesService implements OnModuleInit {
       [MultimediaType.LOGO]: 'web/logos',
       [MultimediaType.STAFF]: 'web/staff',
       [MultimediaType.PARTNERSHIP]: 'web/partnerships',
-      [MultimediaType.PROPERTY_IMG]: 'properties/images',
-      [MultimediaType.PROPERTY_VIDEO]: 'properties/videos',
+      [MultimediaType.PROPERTY_IMG]: 'PROPERTY_IMG',
+      [MultimediaType.PROPERTY_VIDEO]: 'PROPERTY_VIDEO',
     };
 
     return path.join(this.uploadBasePath, paths[type] || '');
@@ -63,7 +65,7 @@ export class StaticFilesService implements OnModuleInit {
   getPublicUrl(relativePath: string): string {
     const protocol = this.configService.get('NODE_ENV') === 'production' ? 'https' : 'http';
     const host = this.configService.get('HOST') || 'localhost';
-    const port = this.configService.get('PORT') || '3000';
+    const port = this.configService.get('PORT') || '3001';
     const baseUrl = `${protocol}://${host}:${port}`;
     
     return `${baseUrl}/uploads/${relativePath}`;

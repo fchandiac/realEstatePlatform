@@ -8,12 +8,14 @@ import { MultimediaType, MultimediaFormat } from '../../entities/multimedia.enti
 import * as fs from 'fs';
 import * as path from 'path';
 import { randomBytes } from 'crypto';
+import { StaticFilesService } from './services/static-files.service';
 
 @Injectable()
 export class MultimediaService {
   constructor(
     @InjectRepository(Multimedia)
     private readonly multimediaRepository: Repository<Multimedia>,
+    private readonly staticFilesService: StaticFilesService,
   ) {}
 
   async create(createMultimediaDto: CreateMultimediaDto): Promise<Multimedia> {
@@ -96,38 +98,29 @@ export class MultimediaService {
     const uniqueId = randomBytes(16).toString('hex');
     const uniqueFilename = `${uniqueId}${fileExtension}`;
 
-    // Determinar el directorio basado en el tipo
-    let uploadDir: string;
+    // Determinar la ruta relativa basada en el tipo
+    let relativePath: string;
     switch (type) {
       case MultimediaType.PROPERTY_IMG:
-        uploadDir = 'properties';
+        relativePath = `PROPERTY_IMG/${uniqueFilename}`;
         break;
       case MultimediaType.PROPERTY_VIDEO:
-        uploadDir = 'properties'; // Videos también van en properties por ahora
+        relativePath = `PROPERTY_VIDEO/${uniqueFilename}`;
         break;
       case MultimediaType.DOCUMENT:
-        uploadDir = 'docs';
+        relativePath = `docs/${uniqueFilename}`;
         break;
       default:
-        uploadDir = 'temp';
+        relativePath = `temp/${uniqueFilename}`;
     }
 
-    // Crear el directorio si no existe
-    const fullUploadDir = path.join(__dirname, '..', '..', '..', 'uploads', uploadDir);
-    if (!fs.existsSync(fullUploadDir)) {
-      fs.mkdirSync(fullUploadDir, { recursive: true });
-    }
+    // Guardar el archivo usando StaticFilesService
+    await this.staticFilesService.saveFile(file.buffer, relativePath);
 
-    // Ruta completa del archivo
-    const filePath = path.join(fullUploadDir, uniqueFilename);
-
-    // Guardar el archivo
-    fs.writeFileSync(filePath, file.buffer);
-
-    // Crear la entidad Multimedia
+    // Crear la entidad Multimedia con URL absoluta
     const multimedia = new Multimedia();
     multimedia.filename = uniqueFilename;
-    multimedia.url = `/uploads/${uploadDir}/${uniqueFilename}`;
+    multimedia.url = this.staticFilesService.getPublicUrl(relativePath);
     multimedia.type = type;
     multimedia.format = format;
     multimedia.fileSize = file.size;

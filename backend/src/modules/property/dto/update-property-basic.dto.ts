@@ -1,0 +1,39 @@
+import { IsOptional, IsString, IsEnum, IsUUID } from 'class-validator';
+import { PropertyStatus } from '../../../common/enums/property-status.enum';
+import { PropertyOperationType } from '../../../common/enums/property-operation-type.enum';
+
+/**
+ * DTO para actualizar solo la información básica de una propiedad.
+ * Campos permitidos:
+ * - title
+ * - description
+ * - status
+ * - operationType
+ * - propertyTypeId
+ * - assignedAgentId
+ */
+export class UpdatePropertyBasicDto {
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsEnum(PropertyStatus)
+  status?: PropertyStatus;
+
+  @IsOptional()
+  @IsEnum(PropertyOperationType)
+  operationType?: PropertyOperationType;
+
+  @IsOptional()
+  @IsUUID()
+  propertyTypeId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  assignedAgentId?: string;
+}

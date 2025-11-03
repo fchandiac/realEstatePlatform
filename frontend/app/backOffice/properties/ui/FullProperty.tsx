@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import moment from 'moment';
+import { env } from '@/lib/env';
 import 'moment/locale/es'; // Para español
 import { TextField } from '@/components/TextField/TextField';
 import Select from '@/components/Select/Select';
@@ -9,8 +10,11 @@ import MultimediaGallery from '@/components/FileUploader/MultimediaGallery';
 import { Button } from '@/components/Button/Button';
 import IconButton from '@/components/IconButton/IconButton';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
-import { listPropertyTypes, getProperty, updateProperty } from '@/app/actions/properties';
+import LocationPicker from '@/components/LocationPicker/LocationPicker';
+import AutoComplete from '@/components/AutoComplete/AutoComplete';
+import { listPropertyTypes, getFullProperty, updateProperty, updatePropertyBasic } from '@/app/actions/properties';
 import { listAdminsAgents } from '@/app/actions/users';
+import { getRegiones, getComunasByRegion } from '@/app/actions/commons';
 import { useAlert } from '@/app/contexts/AlertContext';
 import { PropertyStatus, PropertyOperationType } from '../enums';
 
@@ -134,8 +138,16 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
   const [loadingTypes, setLoadingTypes] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [savingBasic, setSavingBasic] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   const [selectedPropertyType, setSelectedPropertyType] = useState<PropertyType | null>(null);
+  // Región/Comuna (Autocomplete)
+  const [stateOptions, setStateOptions] = useState<Array<{ id: string; label: string }>>([]);
+  const [cityOptions, setCityOptions] = useState<Array<{ id: string; label: string }>>([]);
+  const [loadingStates, setLoadingStates] = useState<boolean>(true);
+  const [loadingCities, setLoadingCities] = useState<boolean>(false);
+  const [selectedState, setSelectedState] = useState<{ id: string; label: string } | null>(null);
+  const [selectedCity, setSelectedCity] = useState<{ id: string; label: string } | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -143,13 +155,15 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
       try {
         // Cargar datos en paralelo
         const [propertyResult, typesResult, usersResult] = await Promise.all([
-          getProperty(propertyId),
+          getFullProperty(propertyId),
           listPropertyTypes(),
           listAdminsAgents({})
         ]);
 
         // Cargar propiedad
         if (propertyResult.success && propertyResult.data) {
+          console.log('🏠 [FullProperty] Objeto completo de la propiedad:', propertyResult.data);
+          console.log('📋 [FullProperty] Tipo de propiedad en el objeto:', propertyResult.data.propertyType);
           setFormData(propertyResult.data);
           setOriginalData(propertyResult.data);
         } else {
@@ -159,12 +173,17 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
 
         // Cargar tipos de propiedad
         if (typesResult.success && typesResult.data) {
+          console.log('🏷️ [FullProperty] Lista de tipos de propiedad disponibles:', typesResult.data);
           setPropertyTypes(typesResult.data);
           
           // Encontrar el tipo de la propiedad y sincronizar con el estado
           const propertyTypeId = propertyResult.data?.propertyType?.id;
+          console.log('🔍 [FullProperty] ID del tipo de propiedad a buscar:', propertyTypeId);
+          
           if (propertyTypeId && propertyResult.data) {
             const matchingType = typesResult.data.find((t: PropertyType) => t.id === propertyTypeId);
+            console.log('✅ [FullProperty] Tipo de propiedad encontrado:', matchingType);
+            
             if (matchingType) {
               setSelectedPropertyType(matchingType);
               // Asegurar que el formData tenga el tipo completo
@@ -189,6 +208,51 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
     
     loadData();
   }, [propertyId, alert]);
+
+  // Cargar regiones y preseleccionar según la propiedad
+  useEffect(() => {
+    const loadStates = async () => {
+      try {
+        const states = await getRegiones();
+        setStateOptions(states);
+        if (formData?.state) {
+          const match = states.find(s => s.id === formData.state || s.label === formData.state);
+          if (match) setSelectedState(match);
+        }
+      } catch (error) {
+        console.error('Error loading regions:', error);
+      } finally {
+        setLoadingStates(false);
+      }
+    };
+    loadStates();
+  }, [formData?.state]);
+
+  // Cargar comunas cuando cambia la región seleccionada
+  useEffect(() => {
+    const loadCities = async () => {
+      if (!selectedState?.id) {
+        setCityOptions([]);
+        setSelectedCity(null);
+        return;
+      }
+      setLoadingCities(true);
+      try {
+        const cities = await getComunasByRegion(selectedState.id);
+        setCityOptions(cities);
+        if (formData?.city) {
+          const match = cities.find(c => c.id === formData.city || c.label === formData.city);
+          if (match) setSelectedCity(match);
+        }
+      } catch (error) {
+        console.error('Error loading cities:', error);
+        setCityOptions([]);
+      } finally {
+        setLoadingCities(false);
+      }
+    };
+    loadCities();
+  }, [selectedState?.id, formData?.city]);
 
   // Detectar cambios para habilitar/deshabilitar guardar
   useEffect(() => {
@@ -226,6 +290,46 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
     }
   };
 
+  // Actualizar solo la información básica desde la sección Básica
+  const handleUpdateBasic = async () => {
+    if (!formData) return;
+    setSavingBasic(true);
+    try {
+      const payload = {
+        title: formData.title || undefined,
+        description: formData.description || undefined,
+        status: formData.status || undefined,
+        operationType: formData.operationType || undefined,
+        propertyTypeId: formData.propertyType?.id || undefined,
+        assignedAgentId: formData.assignedAgent?.id || undefined,
+      };
+
+      const res = await updatePropertyBasic(propertyId, payload);
+      if (res.success) {
+        alert.success('Información básica actualizada');
+        // Sincronizar originalData en los campos básicos para evitar falsos positivos de cambios
+        setOriginalData((prev: any) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            title: formData.title,
+            description: formData.description,
+            status: formData.status,
+            operationType: formData.operationType,
+            propertyType: formData.propertyType,
+            assignedAgent: formData.assignedAgent,
+          };
+        });
+      } else {
+        alert.error(res.error || 'No se pudo actualizar la información básica');
+      }
+    } catch (e) {
+      alert.error('Error al actualizar la información básica');
+    } finally {
+      setSavingBasic(false);
+    }
+  };
+
   // Calcular estadísticas si no están en el DTO
   const calculateStats = () => {
     const views = formData?.views || [];
@@ -241,6 +345,15 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
 
   // Usar datos del formData
   const currentProperty = formData || {};
+
+  // Función helper para convertir URLs relativas a absolutas
+  const getAbsoluteUrl = (url: string) => {
+    if (url.startsWith('http')) {
+      return url;
+    }
+    // Si es relativa, convertirla a absoluta usando el backend URL
+    return `${env.backendApiUrl}${url}`;
+  };
 
   const sections = [
     { id: 'basic', label: 'Información Básica' },
@@ -315,7 +428,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
               {/* Tipo de Propiedad */}
               <Select
                 placeholder="Tipo de Propiedad"
-                value={currentProperty.propertyTypeId || ''}
+                value={currentProperty.propertyType?.id || ''}
                 onChange={(value) => {
                   const selectedType = propertyTypes.find(type => type.id === value);
                   setSelectedPropertyType(selectedType || null);
@@ -351,6 +464,25 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Botón para actualizar información básica: sobre el divider, antes del perfil del creador */}
+            <div className="mb-2 flex items-center justify-end">
+              <Button
+                variant="primary"
+                onClick={handleUpdateBasic}
+                disabled={savingBasic}
+                aria-label="Actualizar información básica"
+              >
+                {savingBasic ? (
+                  <span className="flex items-center gap-2">
+                    <CircularProgress size={16} />
+                    Actualizando información básica...
+                  </span>
+                ) : (
+                  'Actualizar información básica'
+                )}
+              </Button>
             </div>
 
             {/* Sección del Perfil del Creador */}
@@ -508,29 +640,48 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
               />
             </div>
 
-            {/* Grid para los demás campos */}
+            {/* Picker de ubicación para actualizar lat/lng */}
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Selecciona un punto en el mapa para actualizar la latitud y longitud.</p>
+              <LocationPicker
+                height="320px"
+                onChange={(coords) => {
+                  if (!coords) return;
+                  // Guardar con 6 decimales como string para evitar problemas de precisión
+                  handleInputChange('latitude', coords.lat.toFixed(6));
+                  handleInputChange('longitude', coords.lng.toFixed(6));
+                }}
+              />
+            </div>
+
+            {/* Región y Comuna con AutoComplete */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <TextField
+              <AutoComplete
                 label="Región"
-                value={currentProperty.state || ''}
-                onChange={(e) => handleInputChange('state', e.target.value)}
+                options={stateOptions}
+                value={selectedState}
+                onChange={(opt) => {
+                  setSelectedState(opt);
+                  handleInputChange('state', opt?.id || '');
+                  // Al cambiar región, resetear comuna
+                  setSelectedCity(null);
+                  handleInputChange('city', '');
+                }}
+                required
+                placeholder={loadingStates ? 'Cargando regiones...' : 'Selecciona una región'}
+                data-test-id="autocomplete-region"
               />
-              <TextField
+              <AutoComplete
                 label="Comuna"
-                value={currentProperty.city || ''}
-                onChange={(e) => handleInputChange('city', e.target.value)}
-              />
-              <TextField
-                label="Latitud"
-                type="number"
-                value={currentProperty.latitude || ''}
-                onChange={(e) => handleInputChange('latitude', e.target.value)}
-              />
-              <TextField
-                label="Longitud"
-                type="number"
-                value={currentProperty.longitude || ''}
-                onChange={(e) => handleInputChange('longitude', e.target.value)}
+                options={cityOptions}
+                value={selectedCity}
+                onChange={(opt) => {
+                  setSelectedCity(opt);
+                  handleInputChange('city', opt?.id || '');
+                }}
+                required
+                placeholder={!selectedState?.id ? 'Primero selecciona una región' : (loadingCities ? 'Cargando comunas...' : 'Selecciona una comuna')}
+                data-test-id="autocomplete-city"
               />
             </div>
           </div>
@@ -562,33 +713,79 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
             {/* Mostrar multimedia existente */}
             {currentProperty.multimedia && currentProperty.multimedia.length > 0 && (
               <div className="mb-6">
-                <h4 className="font-semibold mb-3">Multimedia Existente</h4>
+                <h4 className="font-semibold mb-3">Multimedia Existente ({currentProperty.multimedia.length} archivos)</h4>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {currentProperty.multimedia.map((media: any, index: number) => (
-                    <div key={media.id || index} className="relative group">
-                      {media.type === 'IMAGE' ? (
+                    <div key={media.id || index} className="relative group border border-border rounded-lg overflow-hidden">
+                      {/* Mostrar imagen o video basado en el tipo correcto */}
+                      {media.format === 'IMG' || media.type === 'PROPERTY_IMG' ? (
                         <img
-                          src={media.url}
-                          alt={media.filename || `Media ${index + 1}`}
-                          className="w-full h-24 object-cover rounded border"
+                          src={getAbsoluteUrl(media.url)}
+                          alt={media.seoTitle || media.filename || `Media ${index + 1}`}
+                          className="w-full h-32 object-cover"
+                          onError={(e) => {
+                            console.error('Error loading image:', getAbsoluteUrl(media.url));
+                            // Usar un data URL para una imagen de placeholder gris
+                            e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbiBubyBkaXNwb25pYmxlPC90ZXh0Pjwvc3ZnPg==';
+                          }}
                         />
+                      ) : media.type === 'VIDEO' ? (
+                        <div className="w-full h-32 bg-muted rounded flex items-center justify-center">
+                          <div className="text-center">
+                            <span className="material-symbols-outlined text-2xl text-muted-foreground mb-1">videocam</span>
+                            <p className="text-xs text-muted-foreground">Video</p>
+                          </div>
+                        </div>
                       ) : (
-                        <div className="w-full h-24 bg-muted rounded border flex items-center justify-center">
-                          <span className="text-sm text-muted-foreground">Video</span>
+                        <div className="w-full h-32 bg-muted rounded flex items-center justify-center">
+                          <div className="text-center">
+                            <span className="material-symbols-outlined text-2xl text-muted-foreground mb-1">insert_drive_file</span>
+                            <p className="text-xs text-muted-foreground">{media.format || 'Archivo'}</p>
+                          </div>
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded flex items-center justify-center">
-                        <IconButton
-                          icon="delete"
-                          variant="text"
-                          className="opacity-0 group-hover:opacity-100 text-white"
-                          onClick={() => {
-                            // Remover multimedia existente
-                            const updatedMultimedia = currentProperty.multimedia.filter((_: any, i: number) => i !== index);
-                            handleInputChange('multimedia', updatedMultimedia);
-                          }}
-                          aria-label="Eliminar multimedia"
-                        />
+                      
+                      {/* Overlay con acciones */}
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 flex gap-2">
+                          {/* Botón de vista previa */}
+                          <IconButton
+                            icon="visibility"
+                            variant="text"
+                            className="text-white bg-black/50 hover:bg-black/70"
+                            onClick={() => {
+                              // Abrir en nueva pestaña o modal
+                              window.open(getAbsoluteUrl(media.url), '_blank');
+                            }}
+                            aria-label="Ver multimedia"
+                          />
+                          
+                          {/* Botón de eliminar */}
+                          <IconButton
+                            icon="delete"
+                            variant="text"
+                            className="text-white bg-red-500/80 hover:bg-red-600"
+                            onClick={() => {
+                              // Confirmar eliminación
+                              if (window.confirm('¿Estás seguro de que quieres eliminar este archivo multimedia?')) {
+                                // Remover multimedia existente
+                                const updatedMultimedia = currentProperty.multimedia.filter((_: any, i: number) => i !== index);
+                                handleInputChange('multimedia', updatedMultimedia);
+                              }
+                            }}
+                            aria-label="Eliminar multimedia"
+                          />
+                        </div>
+                      </div>
+                      
+                      {/* Información del archivo */}
+                      <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white p-2">
+                        <p className="text-xs truncate" title={media.filename}>
+                          {media.filename}
+                        </p>
+                        <p className="text-xs opacity-75">
+                          {(media.fileSize / 1024).toFixed(1)} KB
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -596,23 +793,37 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
               </div>
             )}
             
-            <MultimediaGallery
-              uploadPath="/uploads/properties"
-              onChange={(files) => {
-                console.log('Archivos multimedia seleccionados:', files);
-                // Agregar nuevos archivos a la multimedia existente
-                const existingMedia = currentProperty.multimedia || [];
-                const newMedia = files.map((file: any) => ({
-                  id: `temp-${Date.now()}-${Math.random()}`,
-                  filename: file.name,
-                  url: URL.createObjectURL(file),
-                  type: file.type.startsWith('image/') ? 'IMAGE' : 'VIDEO',
-                  uploadedAt: new Date().toISOString()
-                }));
-                handleInputChange('multimedia', [...existingMedia, ...newMedia]);
-              }}
-              maxFiles={20}
-            />
+            {/* Si no hay multimedia existente */}
+            {(!currentProperty.multimedia || currentProperty.multimedia.length === 0) && (
+              <div className="text-center py-8 text-muted-foreground">
+                <span className="material-symbols-outlined text-4xl mb-2">photo_library</span>
+                <p>No hay archivos multimedia asociados a esta propiedad</p>
+              </div>
+            )}
+            
+            {/* Componente para agregar nueva multimedia */}
+            <div className="mt-6">
+              <h4 className="font-semibold mb-3">Agregar Nueva Multimedia</h4>
+              <MultimediaGallery
+                uploadPath="/uploads/properties"
+                onChange={(files) => {
+                  console.log('Archivos multimedia seleccionados:', files);
+                  // Agregar nuevos archivos a la multimedia existente
+                  const existingMedia = currentProperty.multimedia || [];
+                  const newMedia = files.map((file: any) => ({
+                    id: `temp-${Date.now()}-${Math.random()}`,
+                    filename: file.name,
+                    url: URL.createObjectURL(file),
+                    format: file.type.startsWith('image/') ? 'IMG' : 'VIDEO',
+                    type: file.type.startsWith('image/') ? 'PROPERTY_IMG' : 'VIDEO',
+                    fileSize: file.size,
+                    uploadedAt: new Date().toISOString()
+                  }));
+                  handleInputChange('multimedia', [...existingMedia, ...newMedia]);
+                }}
+                maxFiles={20}
+              />
+            </div>
           </div>
         );
       case 'postRequest':
@@ -732,7 +943,14 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
 
   return (
     <div className="flex flex-col h-screen bg-neutral overflow-hidden">
-      <header className="flex items-center justify-between p-6 border-b border-border bg-background shadow-sm z-10">
+      {/* Indicador flotante de cambios sin guardar en esquina superior derecha */}
+      {hasChanges && (
+        <div className="fixed top-4 right-4 z-50 flex items-center gap-2 px-3 py-2 bg-warning/10 border border-warning/20 rounded-lg shadow animate-pulse">
+          <span className="material-symbols-outlined text-warning text-sm">warning</span>
+          <span className="text-sm font-medium text-warning">Cambios sin guardar</span>
+        </div>
+      )}
+  <header className="flex items-center justify-between p-6 border-b border-border bg-background shadow-sm z-10">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center shadow-sm">
             <span className="material-symbols-outlined text-primary text-xl">home</span>
@@ -757,16 +975,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          {hasChanges && (
-            <div className="flex items-center gap-2 px-3 py-2 bg-warning/10 border border-warning/20 rounded-lg animate-pulse">
-              <span className="material-symbols-outlined text-warning text-sm">warning</span>
-              <span className="text-sm font-medium text-warning">
-                Cambios sin guardar
-              </span>
-            </div>
-          )}
-        </div>
+        <div className="flex items-center gap-4" />
       </header>
 
       <div className="flex flex-1 overflow-hidden">

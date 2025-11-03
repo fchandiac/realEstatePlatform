@@ -333,9 +333,14 @@ export interface UpdatePropertyDto {
   };
 }
 
-// ===================================
-// Property CRUD Operations
-// ===================================
+export interface UpdatePropertyBasicDto {
+  title?: string;
+  description?: string;
+  status?: string; // backend enum string
+  operationType?: string; // backend enum string
+  propertyTypeId?: string;
+  assignedAgentId?: string;
+}
 
 /**
  * Create a new property
@@ -422,6 +427,61 @@ export async function getProperty(id: string): Promise<{
 }
 
 /**
+ * Get full property details with all relations and aggregated data
+ */
+export async function getFullProperty(id: string): Promise<{
+  success: boolean;
+  data?: Property;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' };
+    }
+
+    console.log('🔍 [getFullProperty] Llamando a /properties/' + id + '/full');
+
+    const response = await fetch(`${env.backendApiUrl}/properties/${id}/full`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error('❌ [getFullProperty] Error response:', {
+        status: response.status,
+        error: errorData
+      });
+      return { 
+        success: false, 
+        error: errorData?.message || `Failed to fetch full property: ${response.status}` 
+      };
+    }
+
+    const result = await response.json();
+    console.log('✅ [getFullProperty] Resultado completo:', {
+      id: result?.id,
+      title: result?.title,
+      hasMultimedia: result?.multimedia ? result.multimedia.length : 0,
+      hasPropertyType: !!result?.propertyType,
+      propertyType: result?.propertyType
+    });
+    
+    return { success: true, data: result };
+  } catch (error) {
+    console.error('❌ [getFullProperty] Error fetching full property:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    };
+  }
+}
+
+/**
  * Update a property
  */
 export async function updateProperty(id: string, data: UpdatePropertyDto): Promise<{
@@ -459,6 +519,48 @@ export async function updateProperty(id: string, data: UpdatePropertyDto): Promi
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Unknown error' 
+    };
+  }
+}
+
+/**
+ * Update basic property information (title, description, status, operationType, propertyTypeId, assignedAgentId)
+ */
+export async function updatePropertyBasic(id: string, data: UpdatePropertyBasicDto): Promise<{
+  success: boolean;
+  data?: Property;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' };
+    }
+
+    const response = await fetch(`${env.backendApiUrl}/properties/${id}/basic`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to update property basic info: ${response.status}`,
+      };
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error('Error updating property basic info:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 }
@@ -679,6 +781,64 @@ export async function getPropertiesByAgent(agentId: string, params: {
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Unknown error' 
+    };
+  }
+}
+
+export interface PublicPropertyItem {
+  id: string;
+  title: string;
+  description?: string;
+  status?: string;
+  operationType: 'RENT' | 'SALE';
+  price: number;
+  currencyPrice: 'CLP' | 'UF';
+  city?: string;
+  state?: string;
+  mainImageUrl?: string;
+  publishedAt?: string;
+  propertyType?: { id: string; name: string };
+  bedrooms?: number;
+  bathrooms?: number;
+  builtSquareMeters?: number;
+  landSquareMeters?: number;
+  parkingSpaces?: number;
+  isFeatured?: boolean;
+}
+
+/**
+ * Public: list all published properties (no token required)
+ */
+export async function getPublishedPropertiesPublic(): Promise<{
+  success: boolean;
+  data?: PublicPropertyItem[];
+  error?: string;
+}> {
+  try {
+    const res = await fetch(`${env.backendApiUrl}/properties/public`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+      cache: 'no-store',
+      next: { revalidate: 0 },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to fetch published properties: ${res.status}`,
+      };
+    }
+
+    const data = (await res.json()) as PublicPropertyItem[];
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error fetching published properties (public):', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 }

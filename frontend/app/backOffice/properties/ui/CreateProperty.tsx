@@ -236,9 +236,25 @@ export default function CreateProperty({
 
       // Agregar archivos multimedia si existen
       if (formData.multimedia && formData.multimedia.length > 0) {
+        console.log('🎯 [CreateProperty] Adding multimedia files to FormData:', formData.multimedia.length);
         formData.multimedia.forEach((file: File, index: number) => {
+          console.log(`📎 [CreateProperty] Appending file ${index + 1}:`, {
+            name: file.name,
+            size: file.size,
+            type: file.type
+          });
           formDataToSend.append(`multimediaFiles`, file);
         });
+        console.log('✅ [CreateProperty] FormData entries after adding files:');
+        for (const [key, value] of formDataToSend.entries()) {
+          if (value instanceof File) {
+            console.log(`  - ${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
+          } else {
+            console.log(`  - ${key}: ${value}`);
+          }
+        }
+      } else {
+        console.log('📭 [CreateProperty] No multimedia files to add');
       }
 
       // Enviar FormData al backend
