@@ -5,6 +5,7 @@ import {
   IsInt, 
   MaxLength, 
   IsDateString, 
+  IsUrl,
   Min 
 } from 'class-validator';
 import { Transform } from 'class-transformer';
@@ -24,8 +25,11 @@ export class CreateSlideDto {
   multimediaUrl?: string;
 
   @IsOptional()
-  @IsString()
+  @IsUrl({ require_protocol: true }, { 
+    message: 'Debe ser una URL válida con protocolo (http:// o https://)' 
+  })
   @MaxLength(500)
+  @Transform(({ value }) => value?.trim() === '' ? null : value?.trim())
   linkUrl?: string;
 
   @IsOptional()

@@ -6,6 +6,7 @@ import { Multimedia } from '../../entities/multimedia.entity';
 import { CreateSlideDto } from './dto/create-slide.dto';
 import { UpdateSlideDto } from './dto/update-slide.dto';
 import { CreateSlideWithMultimediaDto } from './dto/create-slide-with-multimedia.dto';
+import { UpdateSlideWithMultimediaDto } from './dto/update-slide-with-multimedia.dto';
 import { MultimediaService } from '../multimedia/services/multimedia.service';
 import { StaticFilesService } from '../multimedia/services/static-files.service';
 import { MultimediaType, MultimediaFormat } from '../../entities/multimedia.entity';
@@ -148,5 +149,60 @@ export class SlideService {
       .getRawOne();
     
     return result?.maxOrder || 0;
+  }
+
+  async updateWithMultimedia(
+    id: string,
+    updateSlideDto: UpdateSlideWithMultimediaDto,
+    file?: Express.Multer.File,
+  ): Promise<Slide> {
+    return await this.slideRepository.manager.transaction(async (manager) => {
+      // 1. Verificar que el slide existe
+      const existingSlide = await manager.findOne(Slide, { where: { id } });
+      if (!existingSlide) {
+        throw new NotFoundException('Slide no encontrado');
+      }
+
+      let newMultimediaUrl = existingSlide.multimediaUrl;
+
+      // 2. Si hay nuevo archivo, procesar multimedia
+      if (file) {
+        // Eliminar archivo anterior si existe
+        if (existingSlide.multimediaUrl) {
+          try {
+            // Extraer path relativo del archivo anterior
+            // URL format: http://localhost:3000/uploads/web/slides/filename.ext
+            const urlParts = existingSlide.multimediaUrl.split('/uploads/');
+            if (urlParts.length > 1) {
+              const relativePath = urlParts[1];
+              await this.staticFilesService.deleteFile(relativePath);
+            }
+          } catch (error) {
+            // Log pero no fallar la actualización
+            console.warn('Error eliminando archivo anterior:', error);
+          }
+        }
+
+        // Subir nuevo archivo
+        const slidePath = await this.multimediaService.uploadFileToPath(file, 'web/slides');
+        newMultimediaUrl = this.staticFilesService.getPublicUrl(slidePath);
+      }
+
+      // 3. Preparar datos para actualización
+      const slideData = {
+        ...updateSlideDto,
+        multimediaUrl: newMultimediaUrl,
+      };
+
+      // 4. Actualizar en base de datos
+      await manager.update(Slide, id, slideData);
+
+      // 5. Retornar slide actualizado
+      const updatedSlide = await manager.findOne(Slide, { where: { id } });
+      if (!updatedSlide) {
+        throw new NotFoundException('Error actualizando slide');
+      }
+      return updatedSlide;
+    });
   }
 }

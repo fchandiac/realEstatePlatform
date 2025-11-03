@@ -27,6 +27,8 @@ import {
 import { Slide, getSlides, reorderSlides } from '@/app/actions/slides';
 import SortableSlideCard from '@/components/SortableSlideCard/SortableSlideCard';
 import CreateSlideForm from './CreateSlideForm';
+import DeleteSlideForm from './DeleteSlideForm';
+import UpdateSlideForm from './UpdateSlideForm';
 
 export interface SlideListProps {
   slides: Slide[];
@@ -44,6 +46,10 @@ export const SlideList: React.FC<SlideListProps> = ({
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [slides, setSlides] = useState<Slide[]>(initialSlides);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [slideToDelete, setSlideToDelete] = useState<Slide | null>(null);
+  const [slideToEdit, setSlideToEdit] = useState<Slide | null>(null);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const alert = useAlert();
@@ -161,6 +167,42 @@ export const SlideList: React.FC<SlideListProps> = ({
     setIsCreateDialogOpen(false);
   };
 
+  // Handlers para Delete
+  const handleDeleteSlide = (slide: Slide) => {
+    setSlideToDelete(slide);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteSuccess = () => {
+    setIsDeleteDialogOpen(false);
+    setSlideToDelete(null);
+    refreshSlides(); // Recargar la lista
+    alert.success('Slide eliminado exitosamente');
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteDialogOpen(false);
+    setSlideToDelete(null);
+  };
+
+  // Handlers para Edit
+  const handleEditSlide = (slide: Slide) => {
+    setSlideToEdit(slide);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleEditSuccess = () => {
+    setIsEditDialogOpen(false);
+    setSlideToEdit(null);
+    refreshSlides(); // Recargar la lista
+    alert.success('Slide actualizado exitosamente');
+  };
+
+  const handleEditCancel = () => {
+    setIsEditDialogOpen(false);
+    setSlideToEdit(null);
+  };
+
 
 
 
@@ -259,6 +301,8 @@ export const SlideList: React.FC<SlideListProps> = ({
                     <SortableSlideCard
                       key={slide.id}
                       slide={slide}
+                      onDelete={handleDeleteSlide}
+                      onEdit={handleEditSlide}
                     />
                   ))}
                 </div>
@@ -269,6 +313,8 @@ export const SlideList: React.FC<SlideListProps> = ({
                   <SortableSlideCard
                     slide={filteredSlides.find(slide => slide.id === activeId)!}
                     isDragOverlay
+                    onDelete={handleDeleteSlide}
+                    onEdit={handleEditSlide}
                   />
                 ) : null}
               </DragOverlay>
@@ -288,6 +334,38 @@ export const SlideList: React.FC<SlideListProps> = ({
           onSuccess={handleCreateSuccess}
           onCancel={handleCreateCancel}
         />
+      </Dialog>
+
+      {/* Modal de eliminar slide */}
+      <Dialog 
+        open={isDeleteDialogOpen} 
+        onClose={handleDeleteCancel}
+        size="md"
+        title=""
+      >
+        {slideToDelete && (
+          <DeleteSlideForm
+            slide={slideToDelete}
+            onSuccess={handleDeleteSuccess}
+            onCancel={handleDeleteCancel}
+          />
+        )}
+      </Dialog>
+
+      {/* Modal de editar slide */}
+      <Dialog 
+        open={isEditDialogOpen} 
+        onClose={handleEditCancel}
+        size="lg"
+        title="Editar Slide"
+      >
+        {slideToEdit && (
+          <UpdateSlideForm
+            slide={slideToEdit}
+            onSuccess={handleEditSuccess}
+            onCancel={handleEditCancel}
+          />
+        )}
       </Dialog>
     </div>
   );

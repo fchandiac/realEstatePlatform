@@ -229,9 +229,56 @@ export async function updateSlide(id: string, data: Partial<Slide>, image?: File
     }
 
     const result = await res.json()
+    
+    // Revalidar la página para reflejar los cambios
+    revalidatePath('/backOffice/cms/slider')
+    
     return { success: true, data: result }
   } catch (error) {
     console.error('Error updating slide:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+export async function updateSlideWithMultimedia(id: string, data: FormData): Promise<{
+  success: boolean;
+  data?: Slide;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' }
+    }
+
+    const res = await fetch(`${env.backendApiUrl}/slide/${id}/with-multimedia`, {
+      method: 'PUT',
+      headers: { 
+        'Authorization': `Bearer ${session.accessToken}`,
+        // No incluir Content-Type para FormData - el browser lo maneja automáticamente
+      },
+      body: data,
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null)
+      return { 
+        success: false, 
+        error: errorData?.message || `Failed to update slide with multimedia: ${res.status}` 
+      }
+    }
+
+    const result = await res.json()
+    
+    // Revalidar la página para reflejar los cambios
+    revalidatePath('/backOffice/cms/slider')
+    
+    return { success: true, data: result }
+  } catch (error) {
+    console.error('Error updating slide with multimedia:', error)
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Unknown error' 

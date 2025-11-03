@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Patch,
+  Put,
   Param,
   Delete,
   UseGuards,
@@ -16,6 +17,7 @@ import { SlideService } from './slide.service';
 import { CreateSlideDto } from './dto/create-slide.dto';
 import { CreateSlideWithMultimediaDto } from './dto/create-slide-with-multimedia.dto';
 import { UpdateSlideDto } from './dto/update-slide.dto';
+import { UpdateSlideWithMultimediaDto } from './dto/update-slide-with-multimedia.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Audit } from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
@@ -71,6 +73,29 @@ export class SlideController {
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Slide updated')
   update(@Param('id') id: string, @Body() updateSlideDto: UpdateSlideDto) {
     return this.slideService.update(id, updateSlideDto);
+  }
+
+  @Put(':id/with-multimedia')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('multimedia'))
+  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Slide updated with multimedia')
+  updateWithMultimedia(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() updateSlideDto: UpdateSlideWithMultimediaDto,
+  ) {
+    // Asegurar que los tipos sean correctos desde FormData
+    const processedDto = {
+      ...updateSlideDto,
+      duration: typeof updateSlideDto.duration === 'string' 
+        ? parseInt(updateSlideDto.duration, 10) 
+        : updateSlideDto.duration,
+      isActive: updateSlideDto.isActive !== undefined 
+        ? String(updateSlideDto.isActive) === 'true' 
+        : undefined,
+    };
+    
+    return this.slideService.updateWithMultimedia(id, processedDto, file);
   }
 
   @Patch(':id/toggle-status')

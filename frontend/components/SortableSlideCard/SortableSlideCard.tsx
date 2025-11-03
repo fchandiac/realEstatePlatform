@@ -8,11 +8,15 @@ import SlideCard from '../../app/backOffice/cms/slider/ui/SlideCard'
 interface SortableSlideCardProps {
   slide: Slide;
   isDragOverlay?: boolean;
+  onDelete?: (slide: Slide) => void;
+  onEdit?: (slide: Slide) => void;
 }
 
 export default function SortableSlideCard({ 
   slide, 
-  isDragOverlay = false 
+  isDragOverlay = false,
+  onDelete,
+  onEdit
 }: SortableSlideCardProps) {
   const {
     attributes,
@@ -46,6 +50,8 @@ export default function SortableSlideCard({
         dragAttributes={attributes}
         dragListeners={listeners}
         isDragging={isDragging}
+        onDelete={onDelete}
+        onEdit={onEdit}
       />
     </div>
   )

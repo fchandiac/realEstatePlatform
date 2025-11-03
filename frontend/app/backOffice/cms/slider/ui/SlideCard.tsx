@@ -9,13 +9,17 @@ interface SlideCardProps {
   dragAttributes?: any;
   dragListeners?: any;
   isDragging?: boolean;
+  onDelete?: (slide: Slide) => void;
+  onEdit?: (slide: Slide) => void;
 }
 
 export default function SlideCard({
   slide,
   dragAttributes,
   dragListeners,
-  isDragging = false
+  isDragging = false,
+  onDelete,
+  onEdit
 }: SlideCardProps) {
   const [imageError, setImageError] = useState(false)
 
@@ -146,16 +150,20 @@ export default function SlideCard({
           
           {/* Divider */}
           <div className="border-t border-gray-100 pt-2">
-            {/* Delete action - Below divider, right aligned */}
-            <div className="flex justify-end items-center">
+            {/* Actions - Below divider, right aligned */}
+            <div className="flex justify-end items-center gap-1">
+              <IconButton
+                icon="edit"
+                variant="text"
+                size="sm"
+                onClick={() => onEdit?.(slide)}
+                ariaLabel="Editar slide"
+              />
               <IconButton
                 icon="delete"
                 variant="text"
                 size="sm"
-                onClick={() => {
-                  // TODO: Implementar eliminación
-                  console.log('Delete slide:', slide.id);
-                }}
+                onClick={() => onDelete?.(slide)}
                 ariaLabel="Eliminar slide"
               />
             </div>
