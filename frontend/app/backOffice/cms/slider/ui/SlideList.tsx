@@ -213,9 +213,9 @@ export const SlideList: React.FC<SlideListProps> = ({
         <>
           {!isMounted ? (
             // Renderizar grid simple sin drag & drop durante SSR
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full items-stretch">
               {filteredSlides.map(slide => (
-                <div key={slide.id} className="bg-white rounded-lg w-full border-l-4 border-secondary border-t border-b border-r border-border shadow-lg text-left relative">
+                <div key={slide.id} className="h-full bg-white rounded-lg w-full border-l-4 border-secondary border-t border-b border-r border-border shadow-lg text-left relative">
                   <div className="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400 overflow-hidden rounded-t-lg">
                     {slide.multimediaUrl ? (
                       <img
@@ -229,8 +229,8 @@ export const SlideList: React.FC<SlideListProps> = ({
                       </span>
                     )}
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
+                  <div className="p-4 pt-6">
+                    <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2">
                       {slide.title}
                     </h3>
                     {slide.description && (
@@ -254,7 +254,7 @@ export const SlideList: React.FC<SlideListProps> = ({
                 items={filteredSlides.map(slide => slide.id)} 
                 strategy={rectSortingStrategy}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full items-stretch">
                   {filteredSlides.map(slide => (
                     <SortableSlideCard
                       key={slide.id}
