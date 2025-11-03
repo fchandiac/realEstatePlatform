@@ -1,20 +1,82 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Slide } from '../../entities/slide.entity';
+import { Multimedia } from '../../entities/multimedia.entity';
 import { CreateSlideDto } from './dto/create-slide.dto';
 import { UpdateSlideDto } from './dto/update-slide.dto';
+import { CreateSlideWithMultimediaDto } from './dto/create-slide-with-multimedia.dto';
+import { MultimediaService } from '../multimedia/services/multimedia.service';
+import { MultimediaType, MultimediaFormat } from '../../entities/multimedia.entity';
+import { MultimediaUploadMetadata } from '../multimedia/interfaces/multimedia.interface';
 
 @Injectable()
 export class SlideService {
   constructor(
     @InjectRepository(Slide)
     private slideRepository: Repository<Slide>,
+    private multimediaService: MultimediaService,
+    private dataSource: DataSource,
   ) {}
 
   async create(createSlideDto: CreateSlideDto): Promise<Slide> {
     const slide = this.slideRepository.create(createSlideDto);
     return await this.slideRepository.save(slide);
+  }
+
+  async createWithMultimedia(
+    createSlideDto: CreateSlideWithMultimediaDto,
+    file: Express.Multer.File,
+  ): Promise<Slide> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Obtener siguiente orden
+      const maxOrder = await this.getMaxOrder();
+      const nextOrder = maxOrder + 1;
+
+      // Determinar tipo de multimedia
+      const isImage = file.mimetype.startsWith('image/');
+      const multimediaType = MultimediaType.SLIDE;
+      const multimediaFormat = isImage ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
+
+      // Subir multimedia
+      const multimedia = await this.multimediaService.uploadFile(
+        file,
+        {
+          type: multimediaType,
+          seoTitle: createSlideDto.seoTitle || createSlideDto.title,
+          description: createSlideDto.multimediaDescription || createSlideDto.description,
+        },
+        'system' // userId - para slides del sistema
+      );
+
+      // Crear slide con multimedia URL - asegurar tipos correctos
+      const slideData: Partial<Slide> = {
+        title: createSlideDto.title,
+        description: createSlideDto.description || '',
+        multimediaUrl: multimedia.url,
+        linkUrl: createSlideDto.linkUrl || undefined,
+        duration: createSlideDto.duration || 3,
+        startDate: createSlideDto.startDate ? new Date(createSlideDto.startDate) : undefined,
+        endDate: createSlideDto.endDate ? new Date(createSlideDto.endDate) : undefined,
+        order: nextOrder,
+        isActive: createSlideDto.isActive !== false, // true por defecto, false solo si explícitamente es false
+      };
+
+      const slide = this.slideRepository.create(slideData);
+      const savedSlide = await queryRunner.manager.save(slide);
+
+      await queryRunner.commitTransaction();
+      return savedSlide;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async findAll(search?: string): Promise<Slide[]> {

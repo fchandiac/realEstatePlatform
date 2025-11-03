@@ -136,6 +136,45 @@ export async function createSlide(data: CreateSlideDto, image?: File): Promise<{
   }
 }
 
+export async function createSlideWithMultimedia(data: FormData): Promise<{
+  success: boolean;
+  data?: Slide;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' }
+    }
+
+    const res = await fetch(`${env.backendApiUrl}/slide/create-with-multimedia`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${session.accessToken}`,
+        // No incluir Content-Type para FormData - el browser lo maneja automáticamente
+      },
+      body: data,
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null)
+      return { 
+        success: false, 
+        error: errorData?.message || `Failed to create slide with multimedia: ${res.status}` 
+      }
+    }
+
+    const result = await res.json()
+    return { success: true, data: result }
+  } catch (error) {
+    console.error('Error creating slide with multimedia:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
 export async function updateSlide(id: string, data: Partial<Slide>, image?: File): Promise<{
   success: boolean;
   data?: Slide;

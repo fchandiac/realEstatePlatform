@@ -5,8 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAlert } from '@/app/contexts/AlertContext';
 import { TextField } from '@/components/TextField/TextField';
 import IconButton from '@/components/IconButton/IconButton';
-import { Slide, toggleSlideStatus } from '@/app/actions/slides';
+import Dialog from '@/components/Dialog/Dialog';
+import { Slide, getSlides } from '@/app/actions/slides';
 import SlideCard from './SlideCard';
+import CreateSlideForm from './CreateSlideForm';
 
 export interface SlideListProps {
   slides: Slide[];
@@ -23,6 +25,7 @@ export const SlideList: React.FC<SlideListProps> = ({
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [slides, setSlides] = useState<Slide[]>(initialSlides);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const alert = useAlert();
 
   // Sincronizar con URL
@@ -50,41 +53,37 @@ export const SlideList: React.FC<SlideListProps> = ({
     router.replace(`?${params.toString()}`);
   };
 
-  // Handlers CRUD
-  const handleAddSlide = () => {
-    // TODO: Implementar modal de creación
-    alert.info('Función de crear slide pendiente de implementar');
-  };
-
-  // Toggle status con update optimista
-  const handleToggleStatus = async (slideId: string) => {
+  // Recargar slides desde el servidor
+  const refreshSlides = async () => {
     try {
-      // 1. Update optimista local
-      setSlides(prevSlides => 
-        prevSlides.map(slide => 
-          slide.id === slideId 
-            ? { ...slide, isActive: !slide.isActive }
-            : slide
-        )
-      );
-
-      // 2. Server action
-      const result = await toggleSlideStatus(slideId);
-      
-      if (!result.success) {
-        throw new Error(result.error || 'Error updating slide status');
+      const result = await getSlides({
+        search: search || undefined,
+      });
+      if (result.success) {
+        setSlides(result.data || []);
       }
-
-      // 3. Success feedback
-      alert.success('Estado del slide actualizado exitosamente');
-    } catch (err) {
-      console.error('Error updating slide status:', err);
-      
-      // 4. Rollback optimistic update
-      setSlides(initialSlides);
-      alert.error('Error al actualizar el estado. Por favor, inténtalo de nuevo.');
+    } catch (error) {
+      console.error('Error recargando slides:', error);
+      alert.error('Error al recargar los slides');
     }
   };
+
+  // Handlers CRUD
+  const handleAddSlide = () => {
+    setIsCreateDialogOpen(true);
+  };
+
+  const handleCreateSuccess = () => {
+    setIsCreateDialogOpen(false);
+    refreshSlides(); // Recargar la lista
+    alert.success('Slide creado exitosamente');
+  };
+
+  const handleCreateCancel = () => {
+    setIsCreateDialogOpen(false);
+  };
+
+
 
   // Filtrado local (servidor ya filtra, esto es adicional)
   const filteredSlides = slides.filter(slide =>
@@ -133,48 +132,35 @@ export const SlideList: React.FC<SlideListProps> = ({
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
           {filteredSlides.map(slide => (
-            <div key={slide.id} className="w-full">
-              <SlideCard
-                id={slide.id}
-                title={slide.title}
-                description={slide.description}
-                multimediaUrl={slide.multimediaUrl}
-                linkUrl={slide.linkUrl}
-                duration={slide.duration}
-                startDate={slide.startDate}
-                endDate={slide.endDate}
-                isActive={slide.isActive}
-                order={slide.order}
-              />
-              
-              {/* Action buttons */}
-              <div className="flex justify-center gap-2 mt-3">
-                <IconButton
-                  aria-label={slide.isActive ? 'Desactivar slide' : 'Activar slide'}
-                  variant={slide.isActive ? "outlined" : "containedSecondary"}
-                  onClick={() => handleToggleStatus(slide.id)}
-                  icon={slide.isActive ? "visibility_off" : "visibility"}
-                  size="sm"
-                />
-                <IconButton
-                  aria-label="Editar slide"
-                  variant="outlined"
-                  onClick={() => alert.info('Función de editar pendiente de implementar')}
-                  icon="edit"
-                  size="sm"
-                />
-                <IconButton
-                  aria-label="Eliminar slide"
-                  variant="outlined"
-                  onClick={() => alert.info('Función de eliminar pendiente de implementar')}
-                  icon="delete"
-                  size="sm"
-                />
-              </div>
-            </div>
+            <SlideCard
+              key={slide.id}
+              id={slide.id}
+              title={slide.title}
+              description={slide.description}
+              multimediaUrl={slide.multimediaUrl}
+              linkUrl={slide.linkUrl}
+              duration={slide.duration}
+              startDate={slide.startDate}
+              endDate={slide.endDate}
+              isActive={slide.isActive}
+              order={slide.order}
+            />
           ))}
         </div>
       )}
+
+      {/* Modal de crear slide */}
+      <Dialog 
+        open={isCreateDialogOpen} 
+        onClose={() => setIsCreateDialogOpen(false)}
+        size="lg"
+        title="Crear Nuevo Slide"
+      >
+        <CreateSlideForm
+          onSuccess={handleCreateSuccess}
+          onCancel={handleCreateCancel}
+        />
+      </Dialog>
     </div>
   );
 };

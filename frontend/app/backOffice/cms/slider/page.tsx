@@ -1,3 +1,4 @@
+
 import { Suspense } from 'react';
 import { getSlides } from '@/app/actions/slides';
 import { SlideList } from './ui';
@@ -28,6 +29,7 @@ export default async function SliderPage({ searchParams }: SliderPageProps) {
 
   return (
     <div className="p-4">
+      
       <Suspense fallback={<DotProgress />}>
         <SlideList slides={result.data || []} />
       </Suspense>
