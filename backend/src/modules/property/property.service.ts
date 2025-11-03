@@ -97,6 +97,34 @@ export class PropertyService {
 
     const items = await qb.getMany();
 
+    // Propiedades que necesitan fallback de imagen principal
+    const idsNeedingFallback = items
+      .filter(p => !p.mainImageUrl || p.mainImageUrl.trim() === '')
+      .map(p => p.id);
+
+    // Buscar primera imagen por propiedad (PROPERTY_IMG) para fallback
+    let firstUrlMap: Record<string, string> = {};
+    if (idsNeedingFallback.length > 0) {
+      const raws = await this.multimediaRepository
+        .createQueryBuilder('m')
+        .select(['m.propertyId AS propertyId', 'm.url AS url', 'm.createdAt AS createdAt'])
+        .where('m.propertyId IN (:...ids)', { ids: idsNeedingFallback })
+        .andWhere('m.type = :type', { type: MultimediaType.PROPERTY_IMG })
+        .orderBy('m.propertyId', 'ASC')
+        .addOrderBy('m.createdAt', 'ASC')
+        .getRawMany<{ propertyId: string; url: string }>();
+
+      const map: Record<string, string> = {};
+      for (const r of raws) {
+        if (!map[r.propertyId] && r.url) {
+          map[r.propertyId] = r.url.replace('/../', '/');
+        }
+      }
+      firstUrlMap = map;
+    }
+
+    const normalize = (u?: string | null) => (u && u.trim() !== '' ? u.replace('/../', '/') : null);
+
     // Mapear a la forma esperada por el portal (PortalProperty)
     return items.map((p) => ({
       id: p.id,
@@ -109,8 +137,9 @@ export class PropertyService {
       state: p.state ?? null,
       city: p.city ?? null,
       propertyType: p.propertyType ? { id: p.propertyType.id, name: p.propertyType.name } : null,
-      mainImageUrl: p.mainImageUrl ?? null,
-      // multimedia opcional: por ahora omitimos la carga pesada, el Card usa mainImageUrl
+      // Usa mainImageUrl si existe; si no, toma la primera imagen de multimedia
+      mainImageUrl: normalize(p.mainImageUrl) ?? firstUrlMap[p.id] ?? null,
+      // multimedia opcional: omitimos el arreglo para payload liviano
       multimedia: undefined,
       bedrooms: p.bedrooms ?? null,
       bathrooms: p.bathrooms ?? null,
