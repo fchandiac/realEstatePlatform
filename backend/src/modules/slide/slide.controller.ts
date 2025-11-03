@@ -95,6 +95,11 @@ export class SlideController {
     return this.slideService.findActive(search);
   }
 
+  @Get('public/active')
+  findPublicActive() {
+    return this.slideService.findPublicActive();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.slideService.findOne(id);

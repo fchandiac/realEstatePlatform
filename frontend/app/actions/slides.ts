@@ -78,6 +78,38 @@ export async function getSlides(params: GetSlidesParams = {}): Promise<{
   }
 }
 
+export async function getPublicSlides(): Promise<{
+  success: boolean;
+  data?: Slide[];
+  error?: string;
+}> {
+  try {
+    const res = await fetch(`${env.backendApiUrl}/slide/public/active`, {
+      headers: { 
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null)
+      return { 
+        success: false, 
+        error: errorData?.message || `HTTP ${res.status}` 
+      }
+    }
+
+    const data = await res.json()
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error fetching public slides:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
 export async function createSlide(data: CreateSlideDto, image?: File): Promise<{
   success: boolean;
   data?: Slide;

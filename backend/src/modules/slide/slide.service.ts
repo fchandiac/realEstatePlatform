@@ -111,6 +111,19 @@ export class SlideService {
       .getMany();
   }
 
+  async findPublicActive(): Promise<Slide[]> {
+    const currentDate = new Date();
+    
+    return await this.slideRepository
+      .createQueryBuilder('slide')
+      .where('slide.deletedAt IS NULL')
+      .andWhere('slide.isActive = :isActive', { isActive: true })
+      .andWhere('(slide.startDate IS NULL OR slide.startDate <= :currentDate)', { currentDate })
+      .andWhere('(slide.endDate IS NULL OR slide.endDate >= :currentDate)', { currentDate })
+      .orderBy('slide.order', 'ASC')
+      .getMany();
+  }
+
   async findOne(id: string): Promise<Slide> {
     const slide = await this.slideRepository.findOne({ where: { id } });
     if (!slide) {

@@ -1,0 +1,288 @@
+"use client";
+import React, { useState, useEffect } from "react";
+import { getPublicSlides, Slide } from "@/app/actions/slides";
+import CircularProgress from "@/components/CircularProgress/CircularProgress";
+
+interface SliderProps {
+  transitionTime?: number;
+}
+
+export default function Slider({ transitionTime = 2000 }: SliderProps) {
+  const [slides, setSlides] = useState<Slide[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [current, setCurrent] = useState(0);
+  const videoRefs = React.useRef<{ [key: string]: HTMLVideoElement | null }>({});
+
+  // Helper functions
+  const isVideo = (url: string) => {
+    return /\.mp4$/i.test(url);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrent(index);
+  };
+
+  const goToPrevious = () => {
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const goToNext = () => {
+    setCurrent((prev) => (prev + 1) % slides.length);
+  };
+
+  // Fetch slides data
+  useEffect(() => {
+    async function fetchSlides() {
+      try {
+        setLoading(true);
+        setError(null);
+        const result = await getPublicSlides();
+        
+        if (result.success && result.data) {
+          setSlides(result.data);
+        } else {
+          setError(result.error || 'Error al cargar slides');
+        }
+      } catch (err) {
+        setError('Error interno al cargar slides');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSlides();
+  }, []);
+
+  // Auto-advance effect
+  useEffect(() => {
+    // No auto-advance si hay 1 o menos slides
+    if (slides.length <= 1) return;
+
+    // Obtener slide actual y su duración
+    const currentSlide = slides[current];
+    if (!currentSlide) return;
+
+    const duration = (currentSlide.duration || 3) * 1000; // Convertir a milliseconds
+
+    console.log(`Slide ${current + 1}: "${currentSlide.title}" - Duración: ${duration}ms`); // Debug
+
+    // Configurar timeout para avanzar al siguiente slide
+    const timeoutId = setTimeout(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, duration);
+
+    // Cleanup function
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [current, slides]); // Solo depende de current y slides
+
+  // Effect para manejar autoplay de videos
+  useEffect(() => {
+    const currentSlide = slides[current];
+    if (currentSlide && currentSlide.multimediaUrl && isVideo(currentSlide.multimediaUrl)) {
+      const videoElement = videoRefs.current[currentSlide.id];
+      if (videoElement) {
+        videoElement.currentTime = 0;
+        videoElement.play().catch((error: any) => {
+          console.warn('Autoplay bloqueado por el navegador:', error);
+        });
+      }
+    }
+  }, [current, slides]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="w-full h-[80vh] flex items-center justify-center bg-gray-100">
+        <CircularProgress size={40} />
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="w-full h-[80vh] flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">Error al cargar slides</h2>
+          <p className="text-gray-500">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // No slides state
+  if (slides.length === 0) {
+    return (
+      <div className="w-full h-[80vh] flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">No hay slides disponibles</h2>
+          <p className="text-gray-500">No se encontraron slides activos para mostrar</p>
+        </div>
+      </div>
+    );
+  }
+
+  const currentSlide = slides[current];
+
+  return (
+    <div className="w-full max-w-none overflow-hidden relative m-0 h-[80vh]">
+      {/* DEBUG: Mostrar información del slide actual */}
+      <div className="absolute top-4 left-4 z-30 bg-black bg-opacity-50 text-white p-2 rounded text-sm">
+        Slide {current + 1}/{slides.length} - {currentSlide?.duration || 3}s
+      </div>
+
+      {/* Media container */}
+      <div className="absolute inset-0 w-full h-full">
+        {slides.map((slide, i) => {
+          if (slide.multimediaUrl && isVideo(slide.multimediaUrl)) {
+            return (
+              <video
+                key={slide.id}
+                ref={(el) => {
+                  if (el) {
+                    videoRefs.current[slide.id] = el;
+                  }
+                }}
+                src={slide.multimediaUrl}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity ${
+                  i === current ? "opacity-100 z-10" : "opacity-0 z-0"
+                }`}
+                style={{ transition: `opacity ${transitionTime}ms linear` }}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                onCanPlayThrough={(e) => {
+                  // Cuando el video está listo para reproducir
+                  if (i === current) {
+                    e.currentTarget.currentTime = 0;
+                    e.currentTarget.play().catch((error: any) => {
+                      console.warn('Autoplay bloqueado por el navegador:', error);
+                    });
+                  }
+                }}
+              />
+            );
+          } else if (slide.multimediaUrl) {
+            return (
+              <img
+                key={slide.id}
+                src={slide.multimediaUrl}
+                alt={slide.title}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity ${
+                  i === current ? "opacity-100 z-10" : "opacity-0 z-0"
+                }`}
+                style={{ transition: `opacity ${transitionTime}ms linear` }}
+              />
+            );
+          } else {
+            return (
+              <div
+                key={slide.id}
+                className={`absolute inset-0 w-full h-full bg-gradient-to-br from-gray-300 to-gray-500 flex items-center justify-center transition-opacity ${
+                  i === current ? "opacity-100 z-10" : "opacity-0 z-0"
+                }`}
+                style={{ transition: `opacity ${transitionTime}ms linear` }}
+              >
+                <span className="material-symbols-outlined text-white text-6xl">
+                  image
+                </span>
+              </div>
+            );
+          }
+        })}
+      </div>
+
+      {/* Overlay content */}
+      <div className="absolute inset-0 z-20 flex flex-col justify-between">
+        {/* Navigation arrows */}
+        {slides.length > 1 && (
+          <>
+            <button
+              onClick={goToPrevious}
+              className="absolute left-4 top-1/2 -translate-y-1/2 p-2"
+              aria-label="Slide anterior"
+            >
+              <span
+                className="material-symbols-rounded text-white drop-shadow-lg hover:text-gray-300 transition-colors"
+                style={{ fontSize: "4rem", fontVariationSettings: "'wght' 700" }}
+              >
+                chevron_left
+              </span>
+            </button>
+            
+            <button
+              onClick={goToNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-2"
+              aria-label="Slide siguiente"
+            >
+              <span
+                className="material-symbols-rounded text-white drop-shadow-lg hover:text-gray-300 transition-colors"
+                style={{ fontSize: "4rem", fontVariationSettings: "'wght' 700" }}
+              >
+                chevron_right
+              </span>
+            </button>
+          </>
+        )}
+
+        {/* Dots indicator */}
+        {slides.length > 1 && (
+          <div className="absolute bottom-6 right-8 flex gap-2">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goToSlide(i)}
+                className={`w-3 h-3 rounded-full transition-all border border-solid border-white ${
+                  i === current ? "bg-primary" : "bg-white/40"
+                }`}
+                aria-label={`Ir al slide ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Content overlay */}
+        <div
+          className="absolute left-[10%] bottom-[10%] flex flex-col items-start text-left px-4 md:px-8"
+          style={{ maxWidth: "50%", zIndex: 20 }}
+        >
+          <h2
+            className="text-xl md:text-3xl lg:text-4xl font-bold text-white mb-2"
+            style={{
+              textShadow: "2px 2px 8px #000, 0 0 2px #000",
+            }}
+          >
+            {currentSlide.title}
+          </h2>
+          
+          {currentSlide.description && (
+            <p
+              className="md:text-lg lg:text-xl text-white mb-4"
+              style={{
+                textShadow: "2px 2px 8px #000, 0 0 2px #000",
+              }}
+            >
+              {currentSlide.description}
+            </p>
+          )}
+          
+          {currentSlide.linkUrl && (
+            <a
+              href={currentSlide.linkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-4 py-2 bg-primary text-white rounded shadow hover:bg-primary/80 transition"
+            >
+              Ver más
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
