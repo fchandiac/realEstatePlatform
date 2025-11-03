@@ -27,51 +27,99 @@ export const FileImageUploader: React.FC<FileImageUploaderProps> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const { error } = useAlert();
 
-  // Generate previews only for current files, avoid duplicates
-  const previews = files.map(file => URL.createObjectURL(file));
+  // Función para validar tamaño de archivo según tipo
+  const validateFileSize = (file: File): string | null => {
+    const isVideo = file.type.startsWith('video/');
+    const maxSizeInBytes = isVideo ? 60 * 1024 * 1024 : 10 * 1024 * 1024; // 60MB vs 10MB
+    const maxSizeLabel = isVideo ? '60MB' : '10MB';
+    const fileType = isVideo ? 'videos' : 'imágenes';
+
+    if (file.size > maxSizeInBytes) {
+      return `El archivo excede el límite de ${maxSizeLabel} para ${fileType}`;
+    }
+
+    return null;
+  };
+
+  // Cleanup function para URLs de preview
+  React.useEffect(() => {
+    return () => {
+      previewUrls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [previewUrls]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
     
-    // Validar tamaño de archivos
-    const maxSizeBytes = maxSize * 1024 * 1024; // Convertir MB a bytes
+    if (selectedFiles.length === 0) return;
+
     const validFiles: File[] = [];
-    const oversizedFiles: string[] = [];
-    
-    selectedFiles.forEach(file => {
-      if (file.size > maxSizeBytes) {
-        oversizedFiles.push(file.name);
-      } else {
-        validFiles.push(file);
+    const errorMessages: string[] = [];
+
+    for (const file of selectedFiles) {
+      // Validar tipo de archivo
+      if (!file.type.match(/^(image|video)\//)) {
+        errorMessages.push(`${file.name}: Solo se permiten imágenes y videos`);
+        continue;
       }
-    });
-    
-    // Mostrar alerta si hay archivos demasiado grandes
-    if (oversizedFiles.length > 0) {
-      error(`Los siguientes archivos exceden el límite de ${maxSize}MB: ${oversizedFiles.join(', ')}`);
+
+      // Validar tamaño específico por tipo
+      const sizeError = validateFileSize(file);
+      if (sizeError) {
+        errorMessages.push(`${file.name}: ${sizeError}`);
+        continue;
+      }
+
+      validFiles.push(file);
     }
-    
+
+    // Mostrar errores si los hay
+    if (errorMessages.length > 0) {
+      error(errorMessages.join('\n'));
+    }
+
     // Solo procesar archivos válidos
     if (validFiles.length === 0) {
       if (inputRef.current) inputRef.current.value = "";
       return;
     }
+
+    // Verificar límite de archivos
+    const totalFiles = files.length + validFiles.length;
+    if (totalFiles > maxFiles) {
+      error(`Solo se permiten máximo ${maxFiles} archivo(s). Actualmente tienes ${files.length}, intentas agregar ${validFiles.length}.`);
+      if (inputRef.current) inputRef.current.value = "";
+      return;
+    }
+
+    // Limpiar URLs de preview anteriores
+    previewUrls.forEach(url => URL.revokeObjectURL(url));
     
-    // Avoid duplicates by name and size
-    const allFiles = [...files, ...validFiles];
-    const uniqueFiles = Array.from(
-      new Map(allFiles.map(f => [f.name + f.size, f])).values()
-    ).slice(0, maxFiles);
-    setFiles(uniqueFiles);
-    onChange?.(uniqueFiles);
+    // Crear nuevas URLs y actualizar archivos
+    const newFiles = [...files, ...validFiles];
+    const newPreviewUrls = newFiles.map(file => URL.createObjectURL(file));
+    
+    setFiles(newFiles);
+    setPreviewUrls(newPreviewUrls);
+    onChange?.(newFiles);
+    
     if (inputRef.current) inputRef.current.value = "";
   };
 
   const handleRemove = (index: number) => {
+    // Revocar URL del archivo que se elimina
+    if (previewUrls[index]) {
+      URL.revokeObjectURL(previewUrls[index]);
+    }
+    
     const newFiles = files.filter((_, i) => i !== index);
+    const newPreviewUrls = previewUrls.filter((_, i) => i !== index);
+    
     setFiles(newFiles);
+    setPreviewUrls(newPreviewUrls);
     onChange?.(newFiles);
   };
 
@@ -102,27 +150,53 @@ export const FileImageUploader: React.FC<FileImageUploaderProps> = ({
           Subir imágenes
         </Button>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full" style={{ flexWrap: 'nowrap' }}>
-        {previews.map((url, idx) => (
-          <div key={idx} style={{ position: 'relative', display: 'inline-block', flex: '0 0 auto' }}>
-            <img
-              src={url}
-              alt={`preview-${idx}`}
-              className={`w-full object-cover rounded-lg shadow ${
-                aspectRatio === 'square' ? 'aspect-square' :
-                aspectRatio === 'video' ? 'aspect-video' :
-                'h-28 sm:h-32 md:h-36'
-              }`}
-            />
-            <IconButton
-              aria-label="Eliminar imagen"
-              icon="close"
-              variant="containedSecondary"
-              onClick={() => handleRemove(idx)}
-              style={{ position: 'absolute', top: 2, right: 2, borderRadius: '50%', minWidth: 24, minHeight: 24, padding: 0, width: 24, height: 24, lineHeight: 1 }}
-            />
-          </div>
-        ))}
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+        {previewUrls.map((url: string, idx: number) => {
+          const file = files[idx];
+          const isVideo = file?.type.startsWith('video/');
+          
+          return (
+            <div key={idx} style={{ position: 'relative', display: 'inline-block', flex: '0 0 auto' }}>
+              {isVideo ? (
+                <video
+                  src={url}
+                  className={`w-full object-cover rounded-lg shadow ${
+                    aspectRatio === 'square' ? 'aspect-square' :
+                    aspectRatio === 'video' ? 'aspect-video' :
+                    'h-40 sm:h-48 md:h-52'
+                  }`}
+                  controls={false}
+                  muted
+                />
+              ) : (
+                <img
+                  src={url}
+                  alt={`preview-${idx}`}
+                  className={`w-full object-cover rounded-lg shadow ${
+                    aspectRatio === 'square' ? 'aspect-square' :
+                    aspectRatio === 'video' ? 'aspect-video' :
+                    'h-40 sm:h-48 md:h-52'
+                  }`}
+                />
+              )}
+              <IconButton
+                aria-label="Eliminar archivo"
+                icon="close"
+                variant="containedSecondary"
+                onClick={() => handleRemove(idx)}
+                style={{ position: 'absolute', top: 2, right: 2, borderRadius: '50%', minWidth: 24, minHeight: 24, padding: 0, width: 24, height: 24, lineHeight: 1 }}
+              />
+              
+              {/* Indicador de tipo de archivo */}
+              <div className="absolute bottom-2 left-2 bg-black bg-opacity-70 text-white p-2 rounded-full flex items-center justify-center">
+                <span className="material-symbols-outlined text-sm leading-none">
+                  {isVideo ? 'videocam' : 'image'}
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

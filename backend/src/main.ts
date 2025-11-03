@@ -4,9 +4,18 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Configuración para archivos grandes (especialmente videos de 60MB)
+  app.use(express.json({ limit: '70mb' }));
+  app.use(express.urlencoded({ 
+    limit: '70mb', 
+    extended: true,
+    parameterLimit: 50000 
+  }));
 
   // Configuración de CORS
   app.enableCors();

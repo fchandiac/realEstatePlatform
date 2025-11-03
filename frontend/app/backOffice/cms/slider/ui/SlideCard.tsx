@@ -21,7 +21,7 @@ export default function SlideCard({
   onDelete,
   onEdit
 }: SlideCardProps) {
-  const [imageError, setImageError] = useState(false)
+  const [mediaError, setMediaError] = useState(false)
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'No definida'
@@ -32,8 +32,13 @@ export default function SlideCard({
     })
   }
 
-  const handleImageError = () => {
-    setImageError(true)
+  const handleMediaError = () => {
+    setMediaError(true)
+  }
+
+  // Detectar si es video MP4
+  const isVideo = (url: string) => {
+    return /\.mp4$/i.test(url)
   }
 
   return (
@@ -59,18 +64,32 @@ export default function SlideCard({
         />
       </div>
 
-      {/* Image container */}
-      <div className="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400 overflow-hidden rounded-t-lg flex-shrink-0">
-        {slide.multimediaUrl && !imageError ? (
-          <img
-            src={slide.multimediaUrl}
-            alt={slide.title}
-            className="w-full h-full object-cover"
-            onError={handleImageError}
-          />
+      {/* Media container */}
+      <div className="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400 overflow-hidden rounded-t-lg flex-shrink-0 relative">
+        {slide.multimediaUrl && !mediaError ? (
+          <>
+            {isVideo(slide.multimediaUrl) ? (
+              <video
+                src={slide.multimediaUrl}
+                className="w-full h-full object-cover"
+                muted
+                autoPlay
+                loop
+                playsInline
+                onError={handleMediaError}
+              />
+            ) : (
+              <img
+                src={slide.multimediaUrl}
+                alt={slide.title}
+                className="w-full h-full object-cover"
+                onError={handleMediaError}
+              />
+            )}
+          </>
         ) : (
           <span className="material-symbols-outlined text-6xl">
-            image
+            {slide.multimediaUrl && isVideo(slide.multimediaUrl) ? 'videocam' : 'image'}
           </span>
         )}
       </div>

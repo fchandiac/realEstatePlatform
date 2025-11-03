@@ -11,6 +11,7 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SlideService } from './slide.service';
@@ -25,6 +26,34 @@ import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 @Controller('slide')
 export class SlideController {
   constructor(private readonly slideService: SlideService) {}
+
+  // Helper method para validar tamaño de archivo según tipo
+  private validateFileSize(file: Express.Multer.File): void {
+    if (!file) return;
+
+    const isVideo = file.mimetype.startsWith('video/');
+    const maxSize = isVideo ? 60 * 1024 * 1024 : 10 * 1024 * 1024; // 60MB vs 10MB
+    const maxSizeLabel = isVideo ? '60MB' : '10MB';
+    const fileType = isVideo ? 'videos' : 'imágenes';
+
+    if (file.size > maxSize) {
+      throw new BadRequestException(
+        `El archivo excede el límite de ${maxSizeLabel} permitido para ${fileType}`
+      );
+    }
+
+    // Validar tipo de archivo
+    const allowedMimeTypes = [
+      'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
+      'video/mp4', 'video/webm', 'video/avi', 'video/mov'
+    ];
+
+    if (!allowedMimeTypes.includes(file.mimetype)) {
+      throw new BadRequestException(
+        'Solo se permiten imágenes (JPG, PNG, GIF) y videos (MP4, WebM, AVI, MOV)'
+      );
+    }
+  }
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -41,6 +70,9 @@ export class SlideController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createSlideDto: CreateSlideWithMultimediaDto,
   ) {
+    // Validar tamaño de archivo según tipo (60MB para videos, 10MB para imágenes)
+    this.validateFileSize(file);
+
     // Asegurar que los tipos sean correctos desde FormData
     const processedDto = {
       ...createSlideDto,
@@ -84,6 +116,9 @@ export class SlideController {
     @UploadedFile() file: Express.Multer.File,
     @Body() updateSlideDto: UpdateSlideWithMultimediaDto,
   ) {
+    // Validar tamaño de archivo según tipo (60MB para videos, 10MB para imágenes)
+    this.validateFileSize(file);
+
     // Asegurar que los tipos sean correctos desde FormData
     const processedDto = {
       ...updateSlideDto,

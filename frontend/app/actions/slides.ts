@@ -159,6 +159,15 @@ export async function createSlideWithMultimedia(data: FormData): Promise<{
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => null)
+      
+      // Manejo específico para errores de tamaño de archivo
+      if (errorData?.message?.includes('excede el límite')) {
+        return { 
+          success: false, 
+          error: errorData.message // Mostrar mensaje específico del backend
+        }
+      }
+      
       return { 
         success: false, 
         error: errorData?.message || `Failed to create slide with multimedia: ${res.status}` 
@@ -265,6 +274,15 @@ export async function updateSlideWithMultimedia(id: string, data: FormData): Pro
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => null)
+      
+      // Manejo específico para errores de tamaño de archivo
+      if (errorData?.message?.includes('excede el límite')) {
+        return { 
+          success: false, 
+          error: errorData.message // Mostrar mensaje específico del backend
+        }
+      }
+      
       return { 
         success: false, 
         error: errorData?.message || `Failed to update slide with multimedia: ${res.status}` 
