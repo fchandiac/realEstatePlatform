@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { TextField } from '@/components/TextField/TextField';
 import Select from '@/components/Select/Select';
 import MultimediaGallery from '@/components/FileUploader/MultimediaGallery';
+import { Button } from '@/components/Button/Button';
 import IconButton from '@/components/IconButton/IconButton';
-import { listPropertyTypes } from '@/app/actions/properties';
+import Alert from '@/components/Alert/Alert';
+import { listPropertyTypes, getProperty, updateProperty } from '@/app/actions/properties';
 import { listAdminsAgents } from '@/app/actions/users';
 import { useAlert } from '@/app/contexts/AlertContext';
 
@@ -119,23 +121,34 @@ const mockProperty = {
 };
 
 interface FullPropertyDialogProps {
-  property?: any; // Para futuro uso con datos reales
+  propertyId: string;
   onSave?: (data: any) => void;
 }
 
-const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) => {
+const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave }) => {
   const alert = useAlert();
   const [activeSection, setActiveSection] = useState('basic');
-  const [formData, setFormData] = useState(property || mockProperty);
+  const [formData, setFormData] = useState<any | null>(null);
+  const [originalData, setOriginalData] = useState<any | null>(null); // Para detectar cambios
   const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
   const [availableUsers, setAvailableUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
 
-  // Cargar datos necesarios al montar el componente
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       try {
+        // Fetch property by id usando server action
+        const propertyResult = await getProperty(propertyId);
+        if (propertyResult.success && propertyResult.data) {
+          setFormData(propertyResult.data);
+          setOriginalData(propertyResult.data);
+        } else {
+          alert.error(propertyResult.error || 'No se pudo cargar la propiedad');
+        }
+
         // Cargar tipos de propiedad y usuarios en paralelo
         const [typesResult, usersResult] = await Promise.all([
           listPropertyTypes(),
@@ -155,9 +168,16 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
         setLoading(false);
       }
     };
-
     loadData();
-  }, []);
+  }, [propertyId, alert]);
+
+  // Detectar cambios para habilitar/deshabilitar guardar
+  useEffect(() => {
+    if (formData && originalData) {
+      const changed = JSON.stringify(formData) !== JSON.stringify(originalData);
+      setHasChanges(changed);
+    }
+  }, [formData, originalData]);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev: any) => ({
@@ -166,8 +186,42 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
     }));
   };
 
+  const handleSave = async () => {
+    if (!formData || !hasChanges) return;
+    
+    setSaving(true);
+    try {
+      const result = await updateProperty(propertyId, formData);
+      if (result.success) {
+        alert.success('Propiedad actualizada exitosamente');
+        setOriginalData(formData);
+        setHasChanges(false);
+        onSave?.(formData);
+      } else {
+        alert.error(result.error || 'Error al actualizar la propiedad');
+      }
+    } catch (error) {
+      alert.error('Error al guardar los cambios');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Calcular estadísticas si no están en el DTO
+  const calculateStats = () => {
+    const views = formData?.views || [];
+    const leads = formData?.leads || [];
+    return {
+      favoritesCount: formData?.favoritesCount || 0,
+      leadsCount: leads.length,
+      viewsCount: views.length
+    };
+  };
+
+  const stats = calculateStats();
+
   // Usar datos del formData
-  const currentProperty = formData;
+  const currentProperty = formData || {};
 
   const sections = [
     { id: 'basic', label: 'Información Básica' },
@@ -179,6 +233,14 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
     { id: 'history', label: 'Historial y Estadísticas' },
     { id: 'dates', label: 'Fechas' }
   ];
+
+  if (loading) {
+    return <div className="py-12 text-center text-muted-foreground">Cargando propiedad...</div>;
+  }
+
+  if (!formData) {
+    return <div className="py-12 text-center text-red-500">No se pudo cargar la propiedad.</div>;
+  }
 
   const renderSection = () => {
     switch (activeSection) {
@@ -207,40 +269,60 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
 
             {/* Grid de campos principales */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Estado - TextField por ahora hasta arreglar Select */}
-              <TextField
-                label="Estado"
-                value={PROPERTY_STATUSES.find(s => s.value === currentProperty.status)?.label || currentProperty.status || ''}
-                onChange={() => {}}
-                readOnly
+              {/* Estado - Select editable */}
+              <Select
+                placeholder="Estado"
+                value={currentProperty.status || ''}
+                onChange={(value) => handleInputChange('status', value)}
+                options={PROPERTY_STATUSES.map(status => ({
+                  id: status.value,
+                  label: status.label
+                }))}
+                required
               />
 
-              {/* Tipo de Operación - TextField por ahora */}
-              <TextField
-                label="Tipo de Operación"
-                value={OPERATION_TYPES.find(t => t.value === currentProperty.operationType)?.label || currentProperty.operationType || ''}
-                onChange={() => {}}
-                readOnly
+              {/* Tipo de Operación - Select editable */}
+              <Select
+                placeholder="Tipo de Operación"
+                value={currentProperty.operationType || ''}
+                onChange={(value) => handleInputChange('operationType', value)}
+                options={OPERATION_TYPES.map(type => ({
+                  id: type.value,
+                  label: type.label
+                }))}
+                required
               />
 
-              {/* Tipo de Propiedad - TextField por ahora */}
-              <TextField
-                label="Tipo de Propiedad"
-                value={currentProperty.propertyType?.name || ''}
-                onChange={() => {}}
-                readOnly
+              {/* Tipo de Propiedad - Select editable */}
+              <Select
+                placeholder="Tipo de Propiedad"
+                value={currentProperty.propertyType?.id || ''}
+                onChange={(value) => {
+                  const selectedType = propertyTypes.find(type => type.id === value);
+                  handleInputChange('propertyType', selectedType);
+                }}
+                options={propertyTypes.map(type => ({
+                  id: type.id,
+                  label: type.name
+                }))}
+                required
               />
 
-              {/* Agente Asignado - TextField con formato mejorado */}
-              <TextField
-                label="Agente Asignado"
-                value={
-                  currentProperty.assignedAgent 
-                    ? `${currentProperty.assignedAgent.personalInfo?.firstName} ${currentProperty.assignedAgent.personalInfo?.lastName} - ${currentProperty.assignedAgent.role === 'ADMIN' ? 'Administrador' : 'Agente'}`
-                    : 'Ninguno'
-                }
-                onChange={() => {}}
-                readOnly
+              {/* Agente Asignado - Select editable */}
+              <Select
+                placeholder="Agente Asignado"
+                value={currentProperty.assignedAgent?.id || ''}
+                onChange={(value) => {
+                  const selectedAgent = availableUsers.find(user => user.id === value);
+                  handleInputChange('assignedAgent', selectedAgent);
+                }}
+                options={[
+                  { id: '', label: 'Ninguno' },
+                  ...availableUsers.map(user => ({
+                    id: user.id,
+                    label: `${user.personalInfo?.firstName} ${user.personalInfo?.lastName} - ${user.role === 'ADMIN' ? 'Administrador' : 'Agente'}`
+                  }))
+                ]}
               />
             </div>
 
@@ -315,22 +397,76 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
       case 'price':
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <TextField label="Precio" value={currentProperty.price?.toString() || ''} onChange={() => {}} readOnly />
-            <TextField label="Moneda" value={currentProperty.currencyPrice || ''} onChange={() => {}} readOnly />
-            <TextField label="Título SEO" value={currentProperty.seoTitle || ''} onChange={() => {}} readOnly />
-            <TextField label="Descripción SEO" value={currentProperty.seoDescription || ''} onChange={() => {}} rows={3} readOnly />
+            <TextField 
+              label="Precio" 
+              type="number"
+              value={currentProperty.price?.toString() || ''} 
+              onChange={(e) => handleInputChange('price', parseFloat(e.target.value) || 0)}
+              required
+            />
+            <TextField 
+              label="Moneda" 
+              value={currentProperty.currencyPrice || ''} 
+              onChange={(e) => handleInputChange('currencyPrice', e.target.value)}
+            />
+            <TextField 
+              label="Título SEO" 
+              value={currentProperty.seoTitle || ''} 
+              onChange={(e) => handleInputChange('seoTitle', e.target.value)}
+            />
+            <TextField 
+              label="Descripción SEO" 
+              value={currentProperty.seoDescription || ''} 
+              onChange={(e) => handleInputChange('seoDescription', e.target.value)}
+              rows={3} 
+            />
           </div>
         );
       case 'features':
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <TextField label="Metros Construidos" value={currentProperty.builtSquareMeters || ''} onChange={() => {}} readOnly />
-            <TextField label="Metros Terreno" value={currentProperty.landSquareMeters || ''} onChange={() => {}} readOnly />
-            <TextField label="Dormitorios" value={currentProperty.bedrooms?.toString() || ''} onChange={() => {}} readOnly />
-            <TextField label="Baños" value={currentProperty.bathrooms?.toString() || ''} onChange={() => {}} readOnly />
-            <TextField label="Estacionamientos" value={currentProperty.parkingSpaces?.toString() || ''} onChange={() => {}} readOnly />
-            <TextField label="Plantas" value={currentProperty.floors?.toString() || ''} onChange={() => {}} readOnly />
-            <TextField label="Año Construcción" value={currentProperty.constructionYear?.toString() || ''} onChange={() => {}} readOnly />
+            <TextField 
+              label="Metros Construidos" 
+              type="number"
+              value={currentProperty.builtSquareMeters || ''} 
+              onChange={(e) => handleInputChange('builtSquareMeters', parseFloat(e.target.value) || 0)}
+            />
+            <TextField 
+              label="Metros Terreno" 
+              type="number"
+              value={currentProperty.landSquareMeters || ''} 
+              onChange={(e) => handleInputChange('landSquareMeters', parseFloat(e.target.value) || 0)}
+            />
+            <TextField 
+              label="Dormitorios" 
+              type="number"
+              value={currentProperty.bedrooms?.toString() || ''} 
+              onChange={(e) => handleInputChange('bedrooms', parseInt(e.target.value) || 0)}
+            />
+            <TextField 
+              label="Baños" 
+              type="number"
+              value={currentProperty.bathrooms?.toString() || ''} 
+              onChange={(e) => handleInputChange('bathrooms', parseInt(e.target.value) || 0)}
+            />
+            <TextField 
+              label="Estacionamientos" 
+              type="number"
+              value={currentProperty.parkingSpaces?.toString() || ''} 
+              onChange={(e) => handleInputChange('parkingSpaces', parseInt(e.target.value) || 0)}
+            />
+            <TextField 
+              label="Plantas" 
+              type="number"
+              value={currentProperty.floors?.toString() || ''} 
+              onChange={(e) => handleInputChange('floors', parseInt(e.target.value) || 0)}
+            />
+            <TextField 
+              label="Año Construcción" 
+              type="number"
+              value={currentProperty.constructionYear?.toString() || ''} 
+              onChange={(e) => handleInputChange('constructionYear', parseInt(e.target.value) || 0)}
+            />
           </div>
         );
       case 'location':
@@ -364,13 +500,60 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
                   height: 40
                 }}
               />
+              <span className="text-sm text-muted-foreground">Agregar archivos multimedia</span>
             </div>
+            
+            {/* Mostrar multimedia existente */}
+            {currentProperty.multimedia && currentProperty.multimedia.length > 0 && (
+              <div className="mb-6">
+                <h4 className="font-semibold mb-3">Multimedia Existente</h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {currentProperty.multimedia.map((media: any, index: number) => (
+                    <div key={media.id || index} className="relative group">
+                      {media.type === 'IMAGE' ? (
+                        <img
+                          src={media.url}
+                          alt={media.filename || `Media ${index + 1}`}
+                          className="w-full h-24 object-cover rounded border"
+                        />
+                      ) : (
+                        <div className="w-full h-24 bg-muted rounded border flex items-center justify-center">
+                          <span className="text-sm text-muted-foreground">Video</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded flex items-center justify-center">
+                        <IconButton
+                          icon="delete"
+                          variant="text"
+                          className="opacity-0 group-hover:opacity-100 text-white"
+                          onClick={() => {
+                            // Remover multimedia existente
+                            const updatedMultimedia = currentProperty.multimedia.filter((_: any, i: number) => i !== index);
+                            handleInputChange('multimedia', updatedMultimedia);
+                          }}
+                          aria-label="Eliminar multimedia"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
             <MultimediaGallery
               uploadPath="/uploads/properties"
               onChange={(files) => {
                 console.log('Archivos multimedia seleccionados:', files);
-                // Aquí puedes manejar los archivos seleccionados
-                // Por ejemplo, subirlos al backend o actualizar el estado
+                // Agregar nuevos archivos a la multimedia existente
+                const existingMedia = currentProperty.multimedia || [];
+                const newMedia = files.map((file: any) => ({
+                  id: `temp-${Date.now()}-${Math.random()}`,
+                  filename: file.name,
+                  url: URL.createObjectURL(file),
+                  type: file.type.startsWith('image/') ? 'IMAGE' : 'VIDEO',
+                  uploadedAt: new Date().toISOString()
+                }));
+                handleInputChange('multimedia', [...existingMedia, ...newMedia]);
               }}
               maxFiles={20}
             />
@@ -390,25 +573,63 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
         return (
           <div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <TextField label="Favoritos" value={currentProperty.favoritesCount?.toString() || '0'} onChange={() => {}} readOnly />
-              <TextField label="Leads" value={currentProperty.leadsCount?.toString() || '0'} onChange={() => {}} readOnly />
-              <TextField label="Vistas" value={currentProperty.viewsCount?.toString() || '0'} onChange={() => {}} readOnly />
+              <TextField label="Favoritos" value={stats.favoritesCount.toString()} onChange={() => {}} readOnly />
+              <TextField label="Leads" value={stats.leadsCount.toString()} onChange={() => {}} readOnly />
+              <TextField label="Vistas" value={stats.viewsCount.toString()} onChange={() => {}} readOnly />
             </div>
-            <TextField label="Notas Internas" value={currentProperty.internalNotes || ''} onChange={() => {}} rows={3} readOnly />
+            <TextField 
+              label="Notas Internas" 
+              value={currentProperty.internalNotes || ''} 
+              onChange={(e) => handleInputChange('internalNotes', e.target.value)}
+              rows={3} 
+            />
             <div className="mt-4">
-              <h4 className="font-semibold mb-2">Vistas</h4>
-              {(currentProperty.views || []).map((view: any, index: number) => (
-                <div key={index} className="border p-2 mb-2 rounded">
-                  <p>Usuario: {view.userId}</p>
-                  <p>Duración: {view.duration}s</p>
-                  <p>Fecha: {view.viewedAt}</p>
-                </div>
-              ))}
+              <h4 className="font-semibold mb-2">Vistas Recientes</h4>
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {(currentProperty.views || []).slice(0, 10).map((view: any, index: number) => (
+                  <div key={index} className="border p-3 rounded-lg bg-muted/30">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium">Usuario: {view.userId}</p>
+                        <p className="text-sm text-muted-foreground">Duración: {view.duration}s</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(view.viewedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                {(currentProperty.views || []).length === 0 && (
+                  <p className="text-muted-foreground text-sm">No hay vistas registradas</p>
+                )}
+              </div>
             </div>
             {currentProperty.changeHistory && currentProperty.changeHistory.length > 0 && (
-              <div className="mt-4">
-                <h4 className="font-semibold mb-2">Historial de Cambios</h4>
-                {/* Renderizar changeHistory si existe */}
+              <div className="mt-6">
+                <h4 className="font-semibold mb-3">Historial de Cambios</h4>
+                <div className="space-y-3 max-h-60 overflow-y-auto">
+                  {currentProperty.changeHistory.map((change: any, index: number) => (
+                    <div key={index} className="border p-3 rounded-lg bg-muted/20">
+                      <div className="flex justify-between items-start mb-2">
+                        <p className="font-medium text-sm">
+                          {change.userId ? `Usuario: ${change.userId}` : 'Sistema'}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(change.changedAt).toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        {change.changes && change.changes.map((fieldChange: any, changeIndex: number) => (
+                          <div key={changeIndex} className="text-sm">
+                            <span className="font-medium">{fieldChange.field}:</span>{' '}
+                            <span className="text-red-600 line-through">{fieldChange.oldValue || 'N/A'}</span>{' '}
+                            <span className="text-green-600">→ {fieldChange.newValue || 'N/A'}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -429,26 +650,58 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ property, onSave }) =
   };
 
   return (
-    <div className="flex h-96">
-      {/* Sidebar */}
-      <div className="w-64 border-r border-gray-300 p-4">
-        <div className="space-y-2">
-          {sections.map((section) => (
-            <button
-              key={section.id}
-              onClick={() => setActiveSection(section.id)}
-              className={`w-full text-left p-2 rounded ${
-                activeSection === section.id ? 'bg-blue-100 text-blue-800' : 'hover:bg-gray-100'
-              }`}
-            >
-              {section.label}
-            </button>
-          ))}
+    <div className="flex flex-col h-full">
+      {/* Header con botón de guardar */}
+      <div className="flex items-center justify-between p-4 border-b border-border bg-background">
+        <div>
+          <h2 className="text-xl font-semibold text-foreground">
+            Propiedad: {currentProperty.title || 'Sin título'}
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            ID: {currentProperty.id} • Estado: {PROPERTY_STATUSES.find(s => s.value === currentProperty.status)?.label || currentProperty.status}
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          {hasChanges && (
+            <span className="text-sm text-orange-600 font-medium">
+              Cambios sin guardar
+            </span>
+          )}
+          <Button
+            variant={hasChanges ? "primary" : "outlined"}
+            onClick={handleSave}
+            disabled={saving || !hasChanges}
+            className="min-w-[120px]"
+          >
+            {saving ? 'Guardando...' : 'Guardar'}
+          </Button>
         </div>
       </div>
-      {/* Contenido */}
-      <div className="flex-1 p-4 overflow-y-auto">
-        {renderSection()}
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <div className="w-64 border-r border-border p-4 bg-muted/20">
+          <div className="space-y-2">
+            {sections.map((section) => (
+              <button
+                key={section.id}
+                onClick={() => setActiveSection(section.id)}
+                className={`w-full text-left p-3 rounded-lg transition-colors ${
+                  activeSection === section.id 
+                    ? 'bg-primary text-primary-foreground shadow-sm' 
+                    : 'hover:bg-muted text-foreground'
+                }`}
+              >
+                {section.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        {/* Contenido */}
+        <div className="flex-1 p-6 overflow-y-auto">
+          {renderSection()}
+        </div>
       </div>
     </div>
   );

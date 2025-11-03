@@ -146,6 +146,12 @@ export default function CreateProperty({
       const numValue = typeof value === 'string' ? parseFloat(value) || 0 : (typeof value === 'number' ? value : 0);
       processedValue = numValue;
     }
+    
+    // Manejo especial para el precio
+    if (field === 'price') {
+      // Si el valor es undefined o null, mantenlo así
+      processedValue = value === undefined || value === null ? value : Number(value);
+    }
 
     if (field === 'state') {
       // Cuando cambia la región, resetear la ciudad seleccionada
@@ -182,14 +188,35 @@ export default function CreateProperty({
         city: formData.city?.id || '',
       };
 
-      // Filtrar campos opcionales vacíos antes de enviar
+      // Transformar price a número antes de filtrar
+      const transformedDataFixed = {
+        ...formData,
+        price:
+          typeof formData.price === 'string'
+            ? formData.price.trim() === ''
+              ? undefined
+              : Number(formData.price)
+            : formData.price,
+        status: formData.status,
+        operationType: formData.operationType,
+        currencyPrice: formData.currencyPrice,
+        bedrooms: formData.bedrooms || undefined,
+        bathrooms: formData.bathrooms || undefined,
+        parkingSpaces: formData.parkingSpaces || undefined,
+        floors: formData.floors || undefined,
+        builtSquareMeters: formData.builtSquareMeters || undefined,
+        landSquareMeters: formData.landSquareMeters || undefined,
+        constructionYear: formData.constructionYear || undefined,
+        state: formData.state?.id || '',
+        city: formData.city?.id || '',
+      };
+
       const dataToSend = Object.fromEntries(
-        Object.entries(transformedData).filter(([key, value]) => {
-          // Excluir price si está vacío para evitar NaN
-          if (key === 'price' && (!value || value === '')) return false;
+        Object.entries(transformedDataFixed).filter(([key, value]) => {
+          // Excluir price solo si está undefined o null (NO si es 0)
+          if (key === 'price' && (value === undefined || value === null)) return false;
           // Excluir multimedia ya que se envía como archivos separados
           if (key === 'multimedia') return false;
-          // Agregar filtros similares para otros campos opcionales si es necesario
           return true;
         })
       );
@@ -198,10 +225,15 @@ export default function CreateProperty({
 
       // Crear FormData para enviar archivos junto con datos JSON
       const formDataToSend = new FormData();
-      
+
+      // Transformar price a número si existe
+      if (typeof dataToSend.price === 'string') {
+        dataToSend.price = dataToSend.price !== '' ? Number(dataToSend.price) : undefined;
+      }
+
       // Agregar datos JSON como string
       formDataToSend.append('data', JSON.stringify(dataToSend));
-      
+
       // Agregar archivos multimedia si existen
       if (formData.multimedia && formData.multimedia.length > 0) {
         formData.multimedia.forEach((file: File, index: number) => {
@@ -229,7 +261,29 @@ export default function CreateProperty({
 
   // Determinar el tipo del campo de precio basado en la moneda
   const getPriceFieldType = () => {
-    return formData.currencyPrice === 'CLP' ? 'currency' : 'number';
+    // Siempre usar type="text" para evitar problemas con el formato de moneda
+    return "text";
+  };
+
+  // Formatear el precio para mostrar en el input
+  const formatPriceForDisplay = (price: string | number) => {
+    if (!price && price !== 0) return '';
+    const numericValue = typeof price === 'string' ? parseFloat(price.replace(/[^\d.-]/g, '')) : price;
+    if (isNaN(numericValue)) return '';
+    
+    if (formData.currencyPrice === 'CLP') {
+      return new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 }).format(numericValue);
+    } else {
+      return new Intl.NumberFormat('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(numericValue);
+    }
+  };
+
+  // Limpiar el formato de moneda y convertir a número
+  const cleanPriceValue = (price: string): number | undefined => {
+    if (!price) return undefined;
+    const cleanValue = price.replace(/[^\d.-]/g, '');
+    const numericValue = parseFloat(cleanValue);
+    return isNaN(numericValue) ? undefined : numericValue;
   };
 
   const propertyTypeOptions = Object.values(PropertyOperationType).map((type) => ({
@@ -275,8 +329,8 @@ export default function CreateProperty({
           <div className="flex space-x-4">
             <TextField
               label="Price"
-              value={formData.price}
-              onChange={(e) => handleChange('price', e.target.value)}
+              value={formatPriceForDisplay(formData.price)}
+              onChange={(e) => handleChange('price', cleanPriceValue(e.target.value))}
               type={getPriceFieldType()}
               required
             />

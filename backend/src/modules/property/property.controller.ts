@@ -76,50 +76,74 @@ export class PropertyController {
   ) {
     // Parse the 'data' field from FormData which contains the JSON string
     let createPropertyDto: CreatePropertyPayloadDto;
-    
     try {
       if (body.data) {
         // If data is sent as a field in the form
-        createPropertyDto = typeof body.data === 'string' 
-          ? JSON.parse(body.data) 
+        createPropertyDto = typeof body.data === 'string'
+          ? JSON.parse(body.data)
           : body.data;
       } else {
         // Fallback: assume the body is the DTO directly
         createPropertyDto = body;
       }
-      
+
+      // LOG: DTO recibido
+      console.log('[PropertyController] DTO recibido:', {
+        price: createPropertyDto.price,
+        currencyPrice: createPropertyDto.currencyPrice,
+      });
+
       // Validate the DTO
       const validatedDto = await new ValidationPipe({
-        transform: true, 
+        transform: true,
         transformOptions: { enableImplicitConversion: true }
       }).transform(createPropertyDto, { type: 'body', metatype: CreatePropertyPayloadDto });
-      
+
+      // LOG: DTO validado y transformado
+      console.log('[PropertyController] DTO validado:', {
+        price: validatedDto.price,
+        currencyPrice: validatedDto.currencyPrice,
+      });
+
       // Agregar archivos al DTO si existen
       if (files && files.length > 0) {
         validatedDto.multimediaFiles = files;
       }
-      
+
       // Obtener el ID del usuario creador del request
       const creatorId = request.user?.id;
-      
+
       if (!creatorId) {
         throw new Error('User ID not found in request. Authentication required.');
       }
-      
-      console.log(`Creating property with ${files?.length || 0} multimedia files by user ${creatorId}`);
-      
-      return await this.propertyService.createProperty(validatedDto, creatorId);
+
+      console.log(`[PropertyController] Creating property with ${files?.length || 0} multimedia files by user ${creatorId}`);
+      console.log('[PropertyController] Enviando a service:', {
+        price: validatedDto.price,
+        currencyPrice: validatedDto.currencyPrice,
+      });
+
+      const result = await this.propertyService.createProperty(validatedDto, creatorId);
+
+      // LOG: Resultado de creación
+      console.log('[PropertyController] Resultado creación:', {
+        id: result?.id,
+        price: result?.price,
+        currencyPrice: result?.currencyPrice,
+      });
+
+      return result;
     } catch (error) {
-      console.error('Error creating property:', error);
-      
+      console.error('[PropertyController] Error creating property:', error);
+
       if (error.message?.includes('validation')) {
         throw new Error(`Validation error: ${error.message}`);
       }
-      
+
       if (error.message?.includes('multimedia') || error.message?.includes('upload')) {
         throw new Error(`File upload error: ${error.message}`);
       }
-      
+
       throw new Error(`Failed to create property: ${error.message || error}`);
     }
   }

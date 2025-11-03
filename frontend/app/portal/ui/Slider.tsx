@@ -63,7 +63,7 @@ export default function Slider({ transitionTime = 2000 }: SliderProps) {
     const currentSlide = slides[current];
     if (!currentSlide) return;
 
-    const duration = (currentSlide.duration || 3) * 1000; // Convertir a milliseconds
+  const duration = ((currentSlide.duration ?? 0) + 3) * 1000; // 3 segundos base + lo que viene del backend
 
     console.log(`Slide ${current + 1}: "${currentSlide.title}" - Duración: ${duration}ms`); // Debug
 

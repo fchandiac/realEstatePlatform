@@ -343,10 +343,10 @@ export const ContactForm: React.FC = () => {
     <form className="space-y-4" onSubmit={handleSubmit}>
   <TextField label="Tu Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} name="nombre" placeholder="Nombre" className="text-sm font-extralight" />
   <TextField label="Tu Correo Electrónico" value={email} onChange={(e) => setEmail(e.target.value)} name="email" type="email" placeholder="Correo Electrónico" className="text-sm font-extralight" />
-  <TextField label="Tu Mensaje" value={mensaje} onChange={(e) => setMensaje(e.target.value)} name="mensaje" type="text" placeholder="Mensaje" className="text-sm font-extralight" rows={2} />
+  <TextField label="Tu Mensaje" value={mensaje} onChange={(e) => setMensaje(e.target.value)} name="mensaje" type="text" placeholder="Mensaje" className="text-sm font-extralight" rows={4} />
       <div className="flex justify-end">
-        <IconButton icon="send" variant="text" type="submit" className="text-primary">
-          <span className="material-symbols-rounded text-2xl text-background">send</span>
+        <IconButton icon="send" variant="text" type="submit" className="bg-background text-foreground">
+          <span className="material-symbols-rounded text-2xl text-foreground">send</span>
         </IconButton>
       </div>
     </form>

@@ -134,13 +134,21 @@ export class CreatePropertyDto {
   @Transform(({ value }) => value === '' || value === undefined ? undefined : (typeof value === 'string' ? parseFloat(value) : value))
   constructionYear?: number;
 
-  // Precio (opcionales)
+  // Precio (opcional, soporta CLP y UF correctamente)
   @IsOptional()
   @IsNumber()
-  @Transform(({ value }) => {
+  @Transform(({ value, obj }) => {
     if (value === '' || value === undefined || value === null) return undefined;
-    const parsed = typeof value === 'string' ? parseFloat(value) : Number(value);
-    return isNaN(parsed) ? undefined : parsed;
+    // Si la moneda es UF, permite decimales
+    if (obj.currencyPrice === 'UF') {
+      return typeof value === 'string' ? parseFloat(value.replace(',', '.')) : Number(value);
+    }
+    // Si la moneda es CLP, fuerza entero
+    if (obj.currencyPrice === 'CLP') {
+      return typeof value === 'string' ? parseInt(value.replace(/\D/g, ''), 10) : Number(value);
+    }
+    // Default: intenta convertir a número
+    return typeof value === 'string' ? Number(value) : value;
   })
   price?: number;
 

@@ -36,7 +36,7 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
           height="700px"
           maxHeight="90vh"
         >
-            <FullProperty property={property} />
+            <FullProperty propertyId={property.id} />
         </Dialog>
       )}
     </div>

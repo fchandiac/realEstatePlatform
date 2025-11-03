@@ -94,7 +94,7 @@ export default function IdentityPage() {
           setCurrentLogo(data.urlLogo || '')
           
           // Inicializar logos de partnerships
-          const partnershipLogos = data.partnerships?.map(p => p.logoUrl || '') || []
+          const partnershipLogos = data.partnerships?.map((p: { logoUrl: any }) => p.logoUrl || '') || []
           setCurrentPartnershipLogos(partnershipLogos)
           setShowPartnershipUploaders(new Array(partnershipLogos.length).fill(false))
           setNewPartnershipLogoFiles(new Array(partnershipLogos.length).fill(null))
