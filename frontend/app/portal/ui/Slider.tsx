@@ -84,10 +84,29 @@ export default function Slider({ transitionTime = 2000 }: SliderProps) {
     if (currentSlide && currentSlide.multimediaUrl && isVideo(currentSlide.multimediaUrl)) {
       const videoElement = videoRefs.current[currentSlide.id];
       if (videoElement) {
-        videoElement.currentTime = 0;
-        videoElement.play().catch((error: any) => {
-          console.warn('Autoplay bloqueado por el navegador:', error);
+        // Pausar todos los otros videos primero
+        Object.keys(videoRefs.current).forEach(slideId => {
+          const video = videoRefs.current[slideId];
+          if (video && slideId !== currentSlide.id) {
+            video.pause();
+          }
         });
+
+        // Reproducir el video actual
+        videoElement.currentTime = 0;
+        const playPromise = videoElement.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.catch((error: any) => {
+            console.warn('Autoplay bloqueado por el navegador:', error);
+            // Intentar reproducir después de un pequeño delay
+            setTimeout(() => {
+              videoElement.play().catch(() => {
+                console.warn('Segunda tentativa de autoplay fallida');
+              });
+            }, 100);
+          });
+        }
       }
     }
   }, [current, slides]);
@@ -129,11 +148,6 @@ export default function Slider({ transitionTime = 2000 }: SliderProps) {
 
   return (
     <div className="w-full max-w-none overflow-hidden relative m-0 h-[80vh]">
-      {/* DEBUG: Mostrar información del slide actual */}
-      <div className="absolute top-4 left-4 z-30 bg-black bg-opacity-50 text-white p-2 rounded text-sm">
-        Slide {current + 1}/{slides.length} - {currentSlide?.duration || 3}s
-      </div>
-
       {/* Media container */}
       <div className="absolute inset-0 w-full h-full">
         {slides.map((slide, i) => {
@@ -156,10 +170,19 @@ export default function Slider({ transitionTime = 2000 }: SliderProps) {
                 muted
                 playsInline
                 preload="metadata"
-                onCanPlayThrough={(e) => {
-                  // Cuando el video está listo para reproducir
+                onLoadedData={(e) => {
+                  // Cuando el video está cargado, intentar reproducir si es el slide actual
                   if (i === current) {
-                    e.currentTarget.currentTime = 0;
+                    const video = e.currentTarget;
+                    video.currentTime = 0;
+                    video.play().catch((error: any) => {
+                      console.warn('Autoplay bloqueado por el navegador:', error);
+                    });
+                  }
+                }}
+                onCanPlay={(e) => {
+                  // Backup: intentar reproducir cuando el video puede empezar a reproducirse
+                  if (i === current && e.currentTarget.paused) {
                     e.currentTarget.play().catch((error: any) => {
                       console.warn('Autoplay bloqueado por el navegador:', error);
                     });
@@ -232,12 +255,12 @@ export default function Slider({ transitionTime = 2000 }: SliderProps) {
 
         {/* Dots indicator */}
         {slides.length > 1 && (
-          <div className="absolute bottom-6 right-8 flex gap-2">
+          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
             {slides.map((_, i) => (
               <button
                 key={i}
                 onClick={() => goToSlide(i)}
-                className={`w-3 h-3 rounded-full transition-all border border-solid border-white ${
+                className={`w-3 h-3 rounded-full transition-all border border-solid border-white shadow-lg ${
                   i === current ? "bg-primary" : "bg-white/40"
                 }`}
                 aria-label={`Ir al slide ${i + 1}`}
