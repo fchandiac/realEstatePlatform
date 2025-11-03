@@ -69,6 +69,17 @@ export default function IdentityPage() {
   })
   const [logoFile, setLogoFile] = useState<File[]>([])
   const [partnershipLogoFiles, setPartnershipLogoFiles] = useState<(File[] | null)[]>([])
+  
+  // Estados para manejo de logo principal
+  const [currentLogo, setCurrentLogo] = useState<string>('')
+  const [newLogoFile, setNewLogoFile] = useState<File[]>([])
+  const [showLogoUploader, setShowLogoUploader] = useState(false)
+
+  // Estados para manejo de partnership logos
+  const [currentPartnershipLogos, setCurrentPartnershipLogos] = useState<string[]>([])
+  const [newPartnershipLogoFiles, setNewPartnershipLogoFiles] = useState<(File[] | null)[]>([])
+  const [showPartnershipUploaders, setShowPartnershipUploaders] = useState<boolean[]>([])
+  
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
@@ -78,6 +89,15 @@ export default function IdentityPage() {
         const data = await getIdentity()
         if (data) {
           setIdentity(data)
+          
+          // Inicializar estados de imágenes
+          setCurrentLogo(data.urlLogo || '')
+          
+          // Inicializar logos de partnerships
+          const partnershipLogos = data.partnerships?.map(p => p.logoUrl || '') || []
+          setCurrentPartnershipLogos(partnershipLogos)
+          setShowPartnershipUploaders(new Array(partnershipLogos.length).fill(false))
+          setNewPartnershipLogoFiles(new Array(partnershipLogos.length).fill(null))
         }
       } catch (err) {
         error('Error cargando identidad')
@@ -87,6 +107,62 @@ export default function IdentityPage() {
     }
     loadIdentity()
   }, [])
+
+  // Handlers para gestión de logo principal
+  const handleChangeLogo = () => {
+    setShowLogoUploader(true)
+    setCurrentLogo('')
+  }
+
+  const handleKeepCurrentLogo = () => {
+    setShowLogoUploader(false)
+    setNewLogoFile([])
+    setCurrentLogo(identity.urlLogo || '')
+  }
+
+  const handleLogoChange = (files: File[]) => {
+    setNewLogoFile(files)
+  }
+
+  // Handlers para gestión de partnership logos
+  const handleChangePartnershipLogo = (index: number) => {
+    setShowPartnershipUploaders(prev => {
+      const newState = [...prev]
+      newState[index] = true
+      return newState
+    })
+    setCurrentPartnershipLogos(prev => {
+      const newState = [...prev]
+      newState[index] = ''
+      return newState
+    })
+  }
+
+  const handleKeepCurrentPartnershipLogo = (index: number) => {
+    setShowPartnershipUploaders(prev => {
+      const newState = [...prev]
+      newState[index] = false
+      return newState
+    })
+    setNewPartnershipLogoFiles(prev => {
+      const newState = [...prev]
+      newState[index] = null
+      return newState
+    })
+    setCurrentPartnershipLogos(prev => {
+      const newState = [...prev]
+      newState[index] = identity.partnerships?.[index]?.logoUrl || ''
+      return newState
+    })
+  }
+
+  const handlePartnershipLogoChange = (index: number, files: File[]) => {
+    setNewPartnershipLogoFiles(prev => {
+      const newState = [...prev]
+      newState[index] = files
+      return newState
+    })
+  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -112,17 +188,28 @@ export default function IdentityPage() {
         formData.append('faqs', JSON.stringify(identity.faqs))
       }
 
-      // Add logo file
-      if (logoFile.length > 0) {
-        formData.append('logo', logoFile[0])
+      // Add logo file solo si hay archivo NUEVO
+      if (newLogoFile.length > 0) {
+        formData.append('logo', newLogoFile[0])
       }
 
-      // Add partnership logo files
-      partnershipLogoFiles.forEach((files, index) => {
+      // Add partnership logo files solo los que han cambiado
+      const changedPartnershipLogos: File[] = []
+      const partnershipLogoIndexes: number[] = []
+      
+      newPartnershipLogoFiles.forEach((files, index) => {
         if (files && files.length > 0) {
-          formData.append('partnershipLogos', files[0])
+          changedPartnershipLogos.push(files[0])
+          partnershipLogoIndexes.push(index)
         }
       })
+
+      if (changedPartnershipLogos.length > 0) {
+        changedPartnershipLogos.forEach(file => {
+          formData.append('partnershipLogos', file)
+        })
+        formData.append('partnershipLogoIndexes', JSON.stringify(partnershipLogoIndexes))
+      }
 
       // Create or update based on whether identity exists
       let result
@@ -164,6 +251,11 @@ export default function IdentityPage() {
       partnerships: [...(prev.partnerships || []), { name: '', description: '', logoUrl: '' }]
     }))
     setPartnershipLogoFiles(prev => [...prev, []])
+    
+    // Sincronizar estados de imágenes
+    setCurrentPartnershipLogos(prev => [...prev, ''])
+    setShowPartnershipUploaders(prev => [...prev, false])
+    setNewPartnershipLogoFiles(prev => [...prev, null])
   }
 
   const updatePartnership = (index: number, field: keyof Partnership, value: string) => {
@@ -179,6 +271,11 @@ export default function IdentityPage() {
       partnerships: prev.partnerships?.filter((_, i) => i !== index)
     }))
     setPartnershipLogoFiles(prev => prev.filter((_, i) => i !== index))
+    
+    // Sincronizar eliminación en todos los estados de imágenes
+    setCurrentPartnershipLogos(prev => prev.filter((_, i) => i !== index))
+    setShowPartnershipUploaders(prev => prev.filter((_, i) => i !== index))
+    setNewPartnershipLogoFiles(prev => prev.filter((_, i) => i !== index))
   }
 
   const addFAQ = () => {
@@ -258,18 +355,64 @@ export default function IdentityPage() {
             <div className="md:col-span-2">
               <div className="relative">
                 <label className="block text-sm font-medium mb-2">Logo de la Empresa</label>
-                <div className="border border-input rounded-md p-4 bg-background">
-                  <FileImageUploader
-                    uploadPath="/uploads/web/logos"
-                    onChange={setLogoFile}
-                    maxFiles={1}
-                    accept="image/*"
-                    maxSize={9}
-                    aspectRatio="square"
-                    buttonType="icon"
-                  />
-                  <small className="text-xs text-muted-foreground mt-2 block">Máx. 1 imagen (hasta 9MB)</small>
-                </div>
+                
+                {/* Mostrar logo actual */}
+                {currentLogo && !showLogoUploader && (
+                  <div className="mb-4">
+                    <div className="relative w-32 h-32 bg-gray-100 rounded-lg overflow-hidden border">
+                      <img 
+                        src={currentLogo} 
+                        alt="Logo actual" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex justify-start mt-2">
+                      <Button
+                        onClick={handleChangeLogo}
+                        variant="outlined"
+                        size="sm"
+                      >
+                        Cambiar logo
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Mostrar uploader cuando se necesita */}
+                {(showLogoUploader || !currentLogo) && (
+                  <div className="border border-input rounded-md p-4 bg-background">
+                    <FileImageUploader
+                      uploadPath="/uploads/web/logos"
+                      onChange={handleLogoChange}
+                      maxFiles={1}
+                      accept="image/*"
+                      maxSize={9}
+                      aspectRatio="square"
+                      buttonType="icon"
+                    />
+                    
+                    {newLogoFile.length > 0 && (
+                      <p className="text-sm text-green-600 mt-2">
+                        ✓ Nuevo logo seleccionado: {newLogoFile[0].name}
+                      </p>
+                    )}
+                    
+                    {currentLogo && (
+                      <Button
+                        onClick={handleKeepCurrentLogo}
+                        variant="text"
+                        size="sm"
+                        className="mt-2"
+                      >
+                        Mantener logo actual
+                      </Button>
+                    )}
+                    
+                    <small className="text-xs text-muted-foreground mt-2 block">
+                      Máx. 1 imagen (hasta 9MB)
+                    </small>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -341,47 +484,87 @@ export default function IdentityPage() {
                     className="text-red-500"
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  {/* Nombre ocupa todo el ancho */}
                   <TextField
                     label="Nombre"
                     value={partnership.name}
                     onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updatePartnership(index, 'name', e.target.value)}
                     required
                   />
+                  
+                  {/* Imagen de la alianza */}
                   <div>
-                    <label className="block text-sm font-medium mb-2">Logo</label>
-                    <div className="border border-input rounded-md p-4 bg-background">
-                      <FileImageUploader
-                        uploadPath="/uploads/web/partnerships"
-                        onChange={(files) => {
-                          const newFiles = [...partnershipLogoFiles]
-                          newFiles[index] = files
-                          setPartnershipLogoFiles(newFiles)
-                        }}
-                        maxFiles={1}
-                        accept="image/*"
-                        maxSize={9}
-                        aspectRatio="square"
-                        buttonType="icon"
-                      />
-                      <small className="text-xs text-muted-foreground mt-2 block">Máx. 1 imagen (hasta 9MB)</small>
-                      {partnership.logoUrl && (
-                        <div className="mt-2">
-                          <img src={partnership.logoUrl} alt="Partnership logo" className="h-16 w-auto" />
+                    <label className="block text-sm font-medium mb-2">Imagen</label>
+                    
+                    {/* Mostrar logo actual del partnership */}
+                    {currentPartnershipLogos[index] && !showPartnershipUploaders[index] && (
+                      <div className="mb-4">
+                        <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden border">
+                          <img 
+                            src={currentPartnershipLogos[index]} 
+                            alt="Imagen de la alianza" 
+                            className="w-full h-full object-cover"
+                          />
                         </div>
-                      )}
-                    </div>
+                        <div className="flex justify-start mt-2">
+                          <Button
+                            onClick={() => handleChangePartnershipLogo(index)}
+                            variant="outlined"
+                            size="sm"
+                          >
+                            Cambiar imagen
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Mostrar uploader cuando se necesita */}
+                    {(showPartnershipUploaders[index] || !currentPartnershipLogos[index]) && (
+                      <div className="border border-input rounded-md p-4 bg-background">
+                        <FileImageUploader
+                          uploadPath="/uploads/web/partnerships"
+                          onChange={(files) => handlePartnershipLogoChange(index, files)}
+                          maxFiles={1}
+                          accept="image/*"
+                          maxSize={9}
+                          aspectRatio="square"
+                          buttonType="icon"
+                        />
+                        
+                        {newPartnershipLogoFiles[index] && newPartnershipLogoFiles[index]!.length > 0 && (
+                          <p className="text-sm text-green-600 mt-2">
+                            ✓ Nueva imagen seleccionada: {newPartnershipLogoFiles[index]![0].name}
+                          </p>
+                        )}
+                        
+                        {currentPartnershipLogos[index] && (
+                          <Button
+                            onClick={() => handleKeepCurrentPartnershipLogo(index)}
+                            variant="text"
+                            size="sm"
+                            className="mt-2"
+                          >
+                            Mantener imagen actual
+                          </Button>
+                        )}
+                        
+                        <small className="text-xs text-muted-foreground mt-2 block">
+                          Máx. 1 imagen (hasta 9MB)
+                        </small>
+                      </div>
+                    )}
                   </div>
-                  <div className="md:col-span-2">
-                    <TextField
-                      label="Descripción"
-                      value={partnership.description}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updatePartnership(index, 'description', e.target.value)}
-                      type="textarea"
-                      rows={3}
-                      required
-                    />
-                  </div>
+                  
+                  {/* Descripción al final */}
+                  <TextField
+                    label="Descripción"
+                    value={partnership.description}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updatePartnership(index, 'description', e.target.value)}
+                    type="textarea"
+                    rows={3}
+                    required
+                  />
                 </div>
               </div>
             ))}

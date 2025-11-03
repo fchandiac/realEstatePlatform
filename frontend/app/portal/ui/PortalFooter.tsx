@@ -170,7 +170,7 @@ const PortalFooter: React.FC = () => {
           </div>
         </div>
         <hr className="my-8 border-t border-gray-400/30" />
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
+        <div className={`container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left ${identity?.faqs && identity.faqs.length > 0 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}`}>
           {/* Columna 1: Información de Contacto */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">
@@ -182,13 +182,12 @@ const PortalFooter: React.FC = () => {
                 <img
                   src={identity?.urlLogo || "/PropLogo2.png"}
                   alt="Logo Plataforma Inmobiliaria"
-                  className="w-12 h-12 object-contain rounded-lg shadow-md bg-white/10 p-1"
+                  className="w-12 h-12 object-contain"
                 />
                 <div>
                   <h4 className="text-lg font-semibold text-background">
                     {identity?.name || 'Plataforma Inmobiliaria'}
                   </h4>
-                  <p className="text-xs text-background/70 font-light">Tu socio inmobiliario de confianza</p>
                 </div>
               </div>
 
@@ -303,39 +302,20 @@ const PortalFooter: React.FC = () => {
             <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">Contacto</h3>
             <ContactForm />
           </div>
-          {/* Columna 4: Preguntas Frecuentes */}
-          <div>
-            <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">Preguntas Frecuentes</h3>
-            <div className="space-y-4 text-left">
-              {identity?.faqs && identity.faqs.length > 0 ? (
-                identity.faqs.slice(0, 4).map((faq, index) => (
+          {/* Columna 4: Preguntas Frecuentes - Solo visible si hay FAQs del backend */}
+          {identity?.faqs && identity.faqs.length > 0 && (
+            <div>
+              <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">Preguntas Frecuentes</h3>
+              <div className="space-y-4 text-left">
+                {identity.faqs.slice(0, 4).map((faq, index) => (
                   <div key={index} className="border-l-2 border-primary pl-3">
                     <h4 className="text-sm font-semibold text-background mb-1">{faq.question}</h4>
                     <p className="text-sm font-extralight text-background leading-relaxed">{faq.answer}</p>
                   </div>
-                ))
-              ) : (
-                <>
-                  <div className="border-l-2 border-primary pl-3">
-                    <h4 className="text-sm font-semibold text-background mb-1">¿Cómo puedo publicar una propiedad?</h4>
-                    <p className="text-sm font-extralight text-background leading-relaxed">Para publicar tu propiedad, regístrate en nuestra plataforma y accede al panel de administración donde podrás crear y gestionar tus anuncios inmobiliarios.</p>
-                  </div>
-                  <div className="border-l-2 border-primary pl-3">
-                    <h4 className="text-sm font-semibold text-background mb-1">¿Cuál es el costo del servicio?</h4>
-                    <p className="text-sm font-extralight text-background leading-relaxed">Ofrecemos diferentes planes según tus necesidades. Contacta con nuestro equipo para obtener información detallada sobre precios y servicios.</p>
-                  </div>
-                  <div className="border-l-2 border-primary pl-3">
-                    <h4 className="text-sm font-semibold text-background mb-1">¿Cómo puedo contactar a un agente?</h4>
-                    <p className="text-sm font-extralight text-background leading-relaxed">Puedes contactar directamente a nuestros agentes a través de la página de cada propiedad o utilizando el formulario de contacto disponible en nuestro sitio.</p>
-                  </div>
-                  <div className="border-l-2 border-primary pl-3">
-                    <h4 className="text-sm font-semibold text-background mb-1">¿Ofrecen servicios de tasación?</h4>
-                    <p className="text-sm font-extralight text-background leading-relaxed">Sí, contamos con un servicio profesional de tasación inmobiliaria. Solicita una evaluación gratuita a través de nuestro formulario de contacto.</p>
-                  </div>
-                </>
-              )}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="mt-8 text-center text-sm font-extralight text-background border-t border-gray-400/30 pt-4">
           &copy; 2025 {identity?.name || 'Plataforma Inmobiliaria'}. Todos los derechos reservados.
