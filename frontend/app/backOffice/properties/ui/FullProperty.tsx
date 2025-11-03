@@ -8,7 +8,7 @@ import Select from '@/components/Select/Select';
 import MultimediaGallery from '@/components/FileUploader/MultimediaGallery';
 import { Button } from '@/components/Button/Button';
 import IconButton from '@/components/IconButton/IconButton';
-import Alert from '@/components/Alert/Alert';
+import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import { listPropertyTypes, getProperty, updateProperty } from '@/app/actions/properties';
 import { listAdminsAgents } from '@/app/actions/users';
 import { useAlert } from '@/app/contexts/AlertContext';
@@ -131,41 +131,62 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
   const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
   const [availableUsers, setAvailableUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingTypes, setLoadingTypes] = useState(false);
+  const [loadingUsers, setLoadingUsers] = useState(false);
   const [saving, setSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [selectedPropertyType, setSelectedPropertyType] = useState<PropertyType | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       try {
-        // Fetch property by id usando server action
-        const propertyResult = await getProperty(propertyId);
-        if (propertyResult.success && propertyResult.data) {
-          setFormData(propertyResult.data);
-          setOriginalData(propertyResult.data);
-        } else {
-          alert.error(propertyResult.error || 'No se pudo cargar la propiedad');
-        }
-
-        // Cargar tipos de propiedad y usuarios en paralelo
-        const [typesResult, usersResult] = await Promise.all([
+        // Cargar datos en paralelo
+        const [propertyResult, typesResult, usersResult] = await Promise.all([
+          getProperty(propertyId),
           listPropertyTypes(),
           listAdminsAgents({})
         ]);
 
-        if (typesResult.success) {
-          setPropertyTypes(typesResult.data || []);
+        // Cargar propiedad
+        if (propertyResult.success && propertyResult.data) {
+          setFormData(propertyResult.data);
+          setOriginalData(propertyResult.data);
+        } else {
+          alert.error('No se pudo cargar la propiedad');
+          return;
         }
 
+        // Cargar tipos de propiedad
+        if (typesResult.success && typesResult.data) {
+          setPropertyTypes(typesResult.data);
+          
+          // Encontrar el tipo de la propiedad y sincronizar con el estado
+          const propertyTypeId = propertyResult.data?.propertyType?.id;
+          if (propertyTypeId && propertyResult.data) {
+            const matchingType = typesResult.data.find((t: PropertyType) => t.id === propertyTypeId);
+            if (matchingType) {
+              setSelectedPropertyType(matchingType);
+              // Asegurar que el formData tenga el tipo completo
+              setFormData((prev: any) => ({
+                ...prev,
+                propertyType: matchingType
+              }));
+            }
+          }
+        }
+
+        // Cargar usuarios
         if (usersResult.success) {
           setAvailableUsers(usersResult.data?.data || []);
         }
       } catch (error) {
-        alert.error('Error al cargar los datos de la propiedad');
+        alert.error('Error al cargar los datos');
       } finally {
         setLoading(false);
       }
     };
+    
     loadData();
   }, [propertyId, alert]);
 
@@ -267,36 +288,37 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
 
             {/* Grid de campos principales */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Estado - Select editable */}
+              {/* Estado - Select editable con carga automática */}
               <Select
                 placeholder="Estado"
-                value={currentProperty.status || ''}
+                value={(currentProperty.status || '').toUpperCase()}
                 onChange={(value) => handleInputChange('status', value)}
                 options={PROPERTY_STATUSES.map(status => ({
-                  value: status.value,
+                  id: status.value,
                   label: status.label
                 }))}
                 required
               />
 
-              {/* Tipo de Operación - Select editable */}
+              {/* Tipo de Operación - Select editable con carga automática */}
               <Select
                 placeholder="Tipo de Operación"
-                value={currentProperty.operationType || ''}
+                value={(currentProperty.operationType || '').toUpperCase()}
                 onChange={(value) => handleInputChange('operationType', value)}
                 options={OPERATION_TYPES.map(type => ({
-                  value: type.value,
+                  id: type.value,
                   label: type.label
                 }))}
                 required
               />
 
-              {/* Tipo de Propiedad - Select editable */}
+              {/* Tipo de Propiedad */}
               <Select
                 placeholder="Tipo de Propiedad"
-                value={currentProperty.propertyType?.id || ''}
+                value={currentProperty.propertyTypeId || ''}
                 onChange={(value) => {
                   const selectedType = propertyTypes.find(type => type.id === value);
+                  setSelectedPropertyType(selectedType || null);
                   handleInputChange('propertyType', selectedType);
                 }}
                 options={propertyTypes.map(type => ({
@@ -307,21 +329,28 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
               />
 
               {/* Agente Asignado - Select editable */}
-              <Select
-                placeholder="Agente Asignado"
-                value={currentProperty.assignedAgent?.id || ''}
-                onChange={(value) => {
-                  const selectedAgent = availableUsers.find(user => user.id === value);
-                  handleInputChange('assignedAgent', selectedAgent);
-                }}
-                options={[
-                  { id: '', label: 'Ninguno' },
-                  ...availableUsers.map(user => ({
-                    id: user.id,
-                    label: `${user.personalInfo?.firstName} ${user.personalInfo?.lastName} - ${user.role === 'ADMIN' ? 'Administrador' : 'Agente'}`
-                  }))
-                ]}
-              />
+              <div className="relative">
+                <Select
+                  placeholder={loadingUsers ? "Cargando agentes..." : "Agente Asignado"}
+                  value={currentProperty.assignedAgent?.id || ''}
+                  onChange={(value) => {
+                    const selectedAgent = availableUsers.find(user => user.id === value);
+                    handleInputChange('assignedAgent', selectedAgent);
+                  }}
+                  options={[
+                    { id: '', label: 'Ninguno' },
+                    ...availableUsers.map(user => ({
+                      id: user.id,
+                      label: `${user.personalInfo?.firstName} ${user.personalInfo?.lastName} - ${user.role === 'ADMIN' ? 'Administrador' : 'Agente'}`
+                    }))
+                  ]}
+                />
+                {loadingUsers && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <CircularProgress size={16} />
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Sección del Perfil del Creador */}
@@ -469,12 +498,41 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
         );
       case 'location':
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <TextField label="Región" value={currentProperty.state || ''} onChange={() => {}} readOnly />
-            <TextField label="Comuna" value={currentProperty.city || ''} onChange={() => {}} readOnly />
-            <TextField label="Dirección" value={currentProperty.address || ''} onChange={() => {}} readOnly />
-            <TextField label="Latitud" value={currentProperty.latitude || ''} onChange={() => {}} readOnly />
-            <TextField label="Longitud" value={currentProperty.longitude || ''} onChange={() => {}} readOnly />
+          <div className="space-y-4">
+            {/* Dirección primero, ancho completo */}
+            <div className="w-full">
+              <TextField
+                label="Dirección"
+                value={currentProperty.address || ''}
+                onChange={(e) => handleInputChange('address', e.target.value)}
+              />
+            </div>
+
+            {/* Grid para los demás campos */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <TextField
+                label="Región"
+                value={currentProperty.state || ''}
+                onChange={(e) => handleInputChange('state', e.target.value)}
+              />
+              <TextField
+                label="Comuna"
+                value={currentProperty.city || ''}
+                onChange={(e) => handleInputChange('city', e.target.value)}
+              />
+              <TextField
+                label="Latitud"
+                type="number"
+                value={currentProperty.latitude || ''}
+                onChange={(e) => handleInputChange('latitude', e.target.value)}
+              />
+              <TextField
+                label="Longitud"
+                type="number"
+                value={currentProperty.longitude || ''}
+                onChange={(e) => handleInputChange('longitude', e.target.value)}
+              />
+            </div>
           </div>
         );
       case 'multimedia':
