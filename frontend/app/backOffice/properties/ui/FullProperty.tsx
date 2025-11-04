@@ -22,7 +22,7 @@ import { PropertyStatus, PropertyOperationType } from '../enums';
 const PROPERTY_STATUSES = [
   { value: PropertyStatus.REQUEST, label: 'Solicitud' },
   { value: PropertyStatus.PRE_APPROVED, label: 'Pre-aprobado' },
-  { value: PropertyStatus.PUBLISHED, label: 'Publicado' },
+  { value: PropertyStatus.PUBLISHED, label: 'Publicada' },
   { value: PropertyStatus.INACTIVE, label: 'Inactivo' },
   { value: PropertyStatus.SOLD, label: 'Vendido' },
   { value: PropertyStatus.RENTED, label: 'Arrendado' },
@@ -943,13 +943,6 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
 
   return (
     <div className="flex flex-col h-screen bg-neutral overflow-hidden">
-      {/* Indicador flotante de cambios sin guardar en esquina superior derecha */}
-      {hasChanges && (
-        <div className="fixed top-4 right-4 z-50 flex items-center gap-2 px-3 py-2 bg-warning/10 border border-warning/20 rounded-lg shadow animate-pulse">
-          <span className="material-symbols-outlined text-warning text-sm">warning</span>
-          <span className="text-sm font-medium text-warning">Cambios sin guardar</span>
-        </div>
-      )}
   <header className="flex items-center justify-between p-6 border-b border-border bg-background shadow-sm z-10">
         <div className="flex items-center gap-4">
           <div>
