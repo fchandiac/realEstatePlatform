@@ -3,7 +3,7 @@
 import { TextField } from '@/components/TextField/TextField';
 import type { FeaturesSectionProps } from '../types/property.types';
 
-// Función para determinar qué características mostrar según el tipo de propiedad
+// Función para determinar qué características deshabilitar según el tipo de propiedad
 const getPropertyTypeFeatures = (propertyTypeName?: string) => {
   if (!propertyTypeName) {
     // Si no hay tipo definido, mostrar todas las características
@@ -112,75 +112,68 @@ export default function FeaturesSection({ property, onChange }: FeaturesSectionP
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {features.hasBuiltSquareMeters && (
-          <TextField 
-            label="Metros Construidos" 
-            type="number"
-            startIcon="home"
-            value={property.builtSquareMeters?.toString() || ''} 
-            onChange={(e) => onChange('builtSquareMeters', parseFloat(e.target.value) || 0)}
-          />
-        )}
+        <TextField 
+          label="Metros Construidos" 
+          type="number"
+          startIcon="home"
+          value={property.builtSquareMeters?.toString() || ''} 
+          onChange={(e) => onChange('builtSquareMeters', parseFloat(e.target.value) || 0)}
+          disabled={!features.hasBuiltSquareMeters}
+        />
 
-        {features.hasLandSquareMeters && (
-          <TextField 
-            label="Metros Terreno" 
-            type="number"
-            startIcon="screenshot_frame_2"
-            value={property.landSquareMeters?.toString() || ''} 
-            onChange={(e) => onChange('landSquareMeters', parseFloat(e.target.value) || 0)}
-          />
-        )}
+        <TextField 
+          label="Metros Terreno" 
+          type="number"
+          startIcon="screenshot_frame_2"
+          value={property.landSquareMeters?.toString() || ''} 
+          onChange={(e) => onChange('landSquareMeters', parseFloat(e.target.value) || 0)}
+          disabled={!features.hasLandSquareMeters}
+        />
 
-        {features.hasBedrooms && (
-          <TextField 
-            label="Dormitorios" 
-            type="number"
-            startIcon="bed"
-            value={property.bedrooms?.toString() || ''} 
-            onChange={(e) => onChange('bedrooms', parseInt(e.target.value) || 0)}
-          />
-        )}
+        <TextField 
+          label="Dormitorios" 
+          type="number"
+          startIcon="bed"
+          value={property.bedrooms?.toString() || ''} 
+          onChange={(e) => onChange('bedrooms', parseInt(e.target.value) || 0)}
+          disabled={!features.hasBedrooms}
+        />
 
-        {features.hasBathrooms && (
-          <TextField 
-            label="Baños" 
-            type="number"
-            startIcon="bathtub"
-            value={property.bathrooms?.toString() || ''} 
-            onChange={(e) => onChange('bathrooms', parseInt(e.target.value) || 0)}
-          />
-        )}
+        <TextField 
+          label="Baños" 
+          type="number"
+          startIcon="bathtub"
+          value={property.bathrooms?.toString() || ''} 
+          onChange={(e) => onChange('bathrooms', parseInt(e.target.value) || 0)}
+          disabled={!features.hasBathrooms}
+        />
 
-        {features.hasParkingSpaces && (
-          <TextField 
-            label="Estacionamientos" 
-            type="number"
-            startIcon="parking_sign"
-            value={property.parkingSpaces?.toString() || ''} 
-            onChange={(e) => onChange('parkingSpaces', parseInt(e.target.value) || 0)}
-          />
-        )}
+        <TextField 
+          label="Estacionamientos" 
+          type="number"
+          startIcon="parking_sign"
+          value={property.parkingSpaces?.toString() || ''} 
+          onChange={(e) => onChange('parkingSpaces', parseInt(e.target.value) || 0)}
+          disabled={!features.hasParkingSpaces}
+        />
 
-        {features.hasFloors && (
-          <TextField 
-            label="Plantas" 
-            type="number"
-            startIcon="apartment"
-            value={property.floors?.toString() || ''} 
-            onChange={(e) => onChange('floors', parseInt(e.target.value) || 0)}
-          />
-        )}
+        <TextField 
+          label="Plantas" 
+          type="number"
+          startIcon="apartment"
+          value={property.floors?.toString() || ''} 
+          onChange={(e) => onChange('floors', parseInt(e.target.value) || 0)}
+          disabled={!features.hasFloors}
+        />
 
-        {features.hasConstructionYear && (
-          <TextField 
-            label="Año Construcción" 
-            type="number"
-            startIcon="calendar_today"
-            value={property.constructionYear?.toString() || ''} 
-            onChange={(e) => onChange('constructionYear', parseInt(e.target.value) || 0)}
-          />
-        )}
+        <TextField 
+          label="Año Construcción" 
+          type="number"
+          startIcon="calendar_today"
+          value={property.constructionYear?.toString() || ''} 
+          onChange={(e) => onChange('constructionYear', parseInt(e.target.value) || 0)}
+          disabled={!features.hasConstructionYear}
+        />
       </div>
     </div>
   );
