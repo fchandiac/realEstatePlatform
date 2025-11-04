@@ -952,9 +952,6 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
       )}
   <header className="flex items-center justify-between p-6 border-b border-border bg-background shadow-sm z-10">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center shadow-sm">
-            <span className="material-symbols-outlined text-primary text-xl">home</span>
-          </div>
           <div>
             <h1 className="text-2xl font-bold text-foreground">
               Propiedad: {currentProperty.title || 'Sin título'}
@@ -980,7 +977,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 bg-background text-foreground flex flex-col shadow-lg border-r border-border/20">
+        <aside className="w-16 sm:w-20 md:w-64 bg-background text-foreground flex flex-col shadow-lg border-r border-border/20">
           {/* Navegación */}
           <nav className="flex-1 p-4 overflow-y-auto">
             <ul className="space-y-2">
@@ -990,8 +987,8 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
                     onClick={() => setActiveSection(section.id)}
                     className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 font-medium text-sm group relative ${
                       activeSection === section.id
-                        ? 'border border-secondary text-secondary bg-secondary/5'
-                        : 'text-foreground/90 hover:bg-muted hover:text-foreground hover:shadow-sm'
+                        ? 'text-secondary'
+                        : 'text-foreground/90 hover:text-foreground'
                     }`}
                     data-test-id={`section-${section.id}`}
                   >
@@ -1009,7 +1006,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
                         {section.id === 'history' && 'history'}
                         {section.id === 'dates' && 'schedule'}
                       </span>
-                      <span className="truncate">{section.label}</span>
+                      <span className="truncate hidden md:inline">{section.label}</span>
                       {activeSection === section.id && (
                         <span className="material-symbols-outlined text-xs ml-auto text-secondary animate-pulse">
                           chevron_right
@@ -1022,12 +1019,6 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
             </ul>
           </nav>
 
-          {/* Footer del sidebar */}
-          <div className="p-4 border-t border-border/20">
-            <div className="text-xs text-muted-foreground text-center">
-              Selecciona una sección para editar
-            </div>
-          </div>
         </aside>
 
         {/* Contenido */}
