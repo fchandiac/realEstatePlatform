@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import IconButton from '@/components/IconButton/IconButton';
-import MultimediaGallery from '@/components/FileUploader/MultimediaGallery';
 import { env } from '@/lib/env';
 import type { MultimediaSectionProps } from '../types/property.types';
 import { getAbsoluteUrl } from '../utils/formatters';
@@ -19,7 +18,7 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
   const handleNewFilesChange = (files: any[]) => {
     console.log('Nuevos archivos multimedia seleccionados:', files);
 
-    // Convertir archivos del MultimediaGallery al formato esperado
+    // Convertir archivos del input file al formato esperado
     const formattedFiles = files.map((fileData: any) => ({
       id: `temp-${Date.now()}-${Math.random()}`,
       filename: fileData.file.name,
@@ -32,7 +31,7 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
       fileData: fileData // Guardar referencia al archivo original
     }));
 
-    setNewFiles(formattedFiles);
+    setNewFiles(prev => [...prev, ...formattedFiles]);
   };
 
   const handleRemoveMedia = (index: number) => {
@@ -41,16 +40,16 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
     if (mediaToRemove.isNew) {
       // Es un archivo nuevo, remover del estado local
       if (window.confirm('¿Estás seguro de que quieres eliminar este archivo nuevo?')) {
-        const updatedNewFiles = newFiles.filter((_, i) =>
-          allMultimedia.findIndex(m => m.id === newFiles[i].id) !== index
-        );
-        setNewFiles(updatedNewFiles);
+        setNewFiles(prev => prev.filter(file => file.id !== mediaToRemove.id));
       }
     } else {
       // Es un archivo existente, remover de la propiedad
       if (window.confirm('¿Estás seguro de que quieres eliminar este archivo multimedia existente?')) {
-        const updatedMultimedia = property.multimedia?.filter((_, i) => i !== index) || [];
-        onChange('multimedia', updatedMultimedia);
+        const existingIndex = property.multimedia?.findIndex(media => media.id === mediaToRemove.id) ?? -1;
+        if (existingIndex !== -1) {
+          const updatedMultimedia = property.multimedia?.filter((_, i) => i !== existingIndex) || [];
+          onChange('multimedia', updatedMultimedia);
+        }
       }
     }
   };
@@ -166,12 +165,34 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
       {/* Sección para agregar nueva multimedia */}
       <div className="border-t pt-6">
         <h4 className="font-semibold mb-3">Agregar Nueva Multimedia</h4>
-        <MultimediaGallery
-          uploadPath="/uploads/properties"
-          onChange={handleNewFilesChange}
-          maxFiles={20}
-          label="Selecciona archivos multimedia"
-        />
+        <div className="flex items-center gap-3 mb-4">
+          <input
+            id="multimedia-file-input"
+            type="file"
+            accept="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/avi,video/mov"
+            multiple
+            style={{ display: 'none' }}
+            onChange={(e) => {
+              const files = Array.from(e.target.files || []);
+              handleNewFilesChange(files.map(file => ({
+                file,
+                type: file.type.startsWith('video/') ? 'video' : 'image',
+                preview: URL.createObjectURL(file)
+              })));
+              e.target.value = '';
+            }}
+          />
+          <button
+            onClick={() => document.getElementById('multimedia-file-input')?.click()}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            <span className="material-symbols-outlined text-sm">add</span>
+            Seleccionar archivos
+          </button>
+          <span className="text-sm text-muted-foreground">
+            Puedes seleccionar múltiples imágenes y videos
+          </span>
+        </div>
       </div>
     </div>
   );
