@@ -31,7 +31,7 @@ export default function BasicSection({
       isFeatured: property.isFeatured || false,
     };
 
-    await onSave(payload);
+    onSave();
   };
 
   return (
