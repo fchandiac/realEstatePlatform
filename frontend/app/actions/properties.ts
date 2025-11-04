@@ -905,6 +905,55 @@ export interface UpdatePropertyLocationDto {
   longitude?: number;
 }
 
+export interface UpdatePropertyPriceDto {
+  price?: number;
+  currencyPrice?: 'CLP' | 'UF';
+  seoTitle?: string;
+  seoDescription?: string;
+}
+
+/**
+ * Update property price and SEO information
+ */
+export async function updatePropertyPrice(id: string, data: UpdatePropertyPriceDto): Promise<{
+  success: boolean;
+  data?: Property;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' };
+    }
+
+    const response = await fetch(`${env.backendApiUrl}/properties/${id}/price`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return { 
+        success: false, 
+        error: errorData?.message || `Failed to update property price: ${response.status}` 
+      };
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error('Error updating property price:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    };
+  }
+}
+
 /**
  * Update property location
  */

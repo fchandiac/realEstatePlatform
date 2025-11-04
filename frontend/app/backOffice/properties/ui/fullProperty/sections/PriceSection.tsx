@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { TextField } from '@/components/TextField/TextField';
 import Select from '@/components/Select/Select';
 import { Button } from '@/components/Button/Button';
-import { updatePropertyPrice } from '@/app/actions/properties';
+import { updateProperty, updatePropertyPrice } from '@/app/actions/properties';
 import Alert from '@/components/Alert/Alert';
 import type { PriceSectionProps } from '../types/property.types';
 
