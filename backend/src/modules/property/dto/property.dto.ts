@@ -209,10 +209,45 @@ export class CreatePropertyDto {
   rejectionReason?: string;
 }
 
-export class UpdatePropertyDto {
+export class UpdatePropertyCharacteristicsDto {
   @IsOptional()
-  @IsString()
-  title?: string;
+  @IsNumber()
+  @Min(0)
+  builtSquareMeters?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  landSquareMeters?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  bedrooms?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  bathrooms?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  parkingSpaces?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  floors?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(1800)
+  @Max(new Date().getFullYear())
+  constructionYear?: number;
+}
+
+export class UpdatePropertyDto {
 
   @IsOptional()
   @IsString()

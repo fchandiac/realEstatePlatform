@@ -1,9 +1,13 @@
 'use client';
 
 import { TextField } from '@/components/TextField/TextField';
+import { Button } from '@/components/Button/Button';
+import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import type { FeaturesSectionProps } from '../types/property.types';
 import { getPropertyType } from '@/app/actions/propertyTypes';
+import { updatePropertyCharacteristics } from '@/app/actions/properties';
 import { useEffect, useState } from 'react';
+import Alert from '@/components/Alert/Alert';
 
 export default function FeaturesSection({ property, onChange }: FeaturesSectionProps) {
   const [features, setFeatures] = useState({
@@ -15,6 +19,9 @@ export default function FeaturesSection({ property, onChange }: FeaturesSectionP
     hasFloors: true,
     hasConstructionYear: true,
   });
+
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [updateMessage, setUpdateMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const propertyTypeId = property.propertyType?.id;
 
@@ -65,6 +72,47 @@ export default function FeaturesSection({ property, onChange }: FeaturesSectionP
 
     loadPropertyTypeFeatures();
   }, [propertyTypeId]);
+
+  const handleUpdateCharacteristics = async () => {
+    setIsUpdating(true);
+    setUpdateMessage(null);
+
+    try {
+      // Función helper para convertir valores a números válidos
+      const toValidNumber = (value: any): number => {
+        if (value === null || value === undefined || value === '') return 0;
+        const num = Number(value);
+        return isNaN(num) || num < 0 ? 0 : num;
+      };
+
+      const characteristicsData = {
+        builtSquareMeters: toValidNumber(property.builtSquareMeters),
+        landSquareMeters: toValidNumber(property.landSquareMeters),
+        bedrooms: toValidNumber(property.bedrooms),
+        bathrooms: toValidNumber(property.bathrooms),
+        parkingSpaces: toValidNumber(property.parkingSpaces),
+        floors: toValidNumber(property.floors),
+        constructionYear: toValidNumber(property.constructionYear),
+      };
+
+      console.log('📊 Enviando datos de características:', characteristicsData);
+
+      const result = await updatePropertyCharacteristics(property.id, characteristicsData);
+
+      if (result.success) {
+        setUpdateMessage({ type: 'success', message: 'Características actualizadas correctamente' });
+        // Limpiar mensaje después de 3 segundos
+        setTimeout(() => setUpdateMessage(null), 3000);
+      } else {
+        setUpdateMessage({ type: 'error', message: result.error || 'Error al actualizar características' });
+      }
+    } catch (error) {
+      console.error('❌ Error al actualizar características:', error);
+      setUpdateMessage({ type: 'error', message: 'Error inesperado al actualizar características' });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -126,16 +174,14 @@ export default function FeaturesSection({ property, onChange }: FeaturesSectionP
           disabled={!features.hasParkingSpaces}
         />
 
-        <TextField
-          label="Plantas"
+        <TextField 
+          label="Pisos" 
           type="number"
           startIcon="apartment"
-          value={property.floors?.toString() || ''}
+          value={property.floors?.toString() || ''} 
           onChange={(e) => onChange('floors', parseInt(e.target.value) || 0)}
           disabled={!features.hasFloors}
-        />
-
-        <TextField
+        />        <TextField
           label="Año Construcción"
           type="number"
           startIcon="calendar_today"
@@ -143,6 +189,34 @@ export default function FeaturesSection({ property, onChange }: FeaturesSectionP
           onChange={(e) => onChange('constructionYear', parseInt(e.target.value) || 0)}
           disabled={!features.hasConstructionYear}
         />
+      </div>
+
+      {/* Mensaje de actualización */}
+      {updateMessage && (
+        <div className="mt-4">
+          <Alert
+            variant={updateMessage.type}
+          >
+            {updateMessage.message}
+          </Alert>
+        </div>
+      )}
+
+      {/* Botón de actualizar características */}
+      <div className="mt-6 flex justify-end">
+        <Button
+          onClick={handleUpdateCharacteristics}
+          disabled={isUpdating}
+        >
+          {isUpdating ? (
+            <>
+              <CircularProgress size={16} thickness={2} className="mr-2" />
+              Actualizando...
+            </>
+          ) : (
+            'Actualizar características'
+          )}
+        </Button>
       </div>
     </div>
   );

@@ -19,7 +19,8 @@ import { Response, Request } from 'express';
 import { Request as NestRequest } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import { Property } from '../../entities/property.entity';
-import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
+import { CreatePropertyDto, UpdatePropertyDto, UpdatePropertyCharacteristicsDto } from './dto/property.dto';
+import { UpdatePropertyLocationDto } from './dto/update-property-location.dto';
 import { UpdatePropertyBasicDto } from './dto/update-property-basic.dto';
 import { CreatePropertyDto as CreatePropertyPayloadDto } from './dto/create-property.dto';
 import { UpdateMainImageDto } from './dto/create-property.dto';
@@ -298,6 +299,36 @@ export class PropertyController {
   ): Promise<Property> {
     const userId = this.extractUserId(req);
     return this.propertyService.updatePrice(id, dto, userId);
+  }
+
+  /**
+   * Actualiza las características de una propiedad
+   */
+  @Patch(':id/characteristics')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property characteristics updated')
+  async updateCharacteristics(
+    @Param('id') id: string,
+    @Body(ValidationPipe) dto: UpdatePropertyCharacteristicsDto,
+    @Req() req: any,
+  ): Promise<Property> {
+    const userId = this.extractUserId(req);
+    return this.propertyService.updateCharacteristics(id, dto, userId);
+  }
+
+  /**
+   * Actualiza la ubicación de una propiedad
+   */
+  @Patch(':id/location')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property location updated')
+  async updateLocation(
+    @Param('id') id: string,
+    @Body(ValidationPipe) dto: UpdatePropertyLocationDto,
+    @Req() req: any,
+  ): Promise<Property> {
+    const userId = this.extractUserId(req);
+    return this.propertyService.updateLocation(id, dto, userId);
   }
 
   private extractUserId(req: any): string {

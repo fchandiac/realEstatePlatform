@@ -4,7 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Property } from '../../entities/property.entity';
 import { User } from '../../entities/user.entity';
-import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
+import { CreatePropertyDto, UpdatePropertyDto, UpdatePropertyCharacteristicsDto } from './dto/property.dto';
+import { UpdatePropertyLocationDto } from './dto/update-property-location.dto';
 import { CreatePropertyDto as NewCreatePropertyDto } from './dto/create-property.dto';
 import { UpdateMainImageDto } from './dto/create-property.dto';
 import { UpdatePropertyPriceDto } from './dto/update-property-price.dto';
@@ -1404,6 +1405,110 @@ export class PropertyService {
   }
 
   // ===== FIN DEL NUEVO MÉTODO =====
+
+  /**
+   * Actualiza las características de una propiedad
+   */
+  async updateCharacteristics(
+    id: string,
+    dto: UpdatePropertyCharacteristicsDto,
+    updatedBy?: string
+  ): Promise<Property> {
+    const property = await this.propertyRepository.findOne({ where: { id } });
+    if (!property) {
+      throw new NotFoundException('Property not found');
+    }
+
+    const changes: ChangeHistoryEntry[] = [];
+
+    // Campos de características a actualizar
+    const characteristicFields = [
+      'builtSquareMeters',
+      'landSquareMeters',
+      'bedrooms',
+      'bathrooms',
+      'parkingSpaces',
+      'floors',
+      'constructionYear'
+    ];
+
+    // Trackear cambios para cada campo de características
+    for (const field of characteristicFields) {
+      const newValue = dto[field];
+      if (newValue !== undefined) {
+        const currentValue = property[field];
+        if (currentValue !== newValue) {
+          changes.push({
+            timestamp: new Date(),
+            changedBy: updatedBy || 'system',
+            field,
+            previousValue: currentValue?.toString() || null,
+            newValue: newValue?.toString() || null,
+          });
+          property[field] = newValue;
+        }
+      }
+    }
+
+    // Agregar cambios al historial si hay cambios
+    if (changes.length > 0) {
+      property.changeHistory = [...(property.changeHistory || []), ...changes];
+      property.lastModifiedAt = new Date();
+    }
+
+    return this.propertyRepository.save(property);
+  }
+
+  /**
+   * Actualiza la ubicación de una propiedad
+   */
+  async updateLocation(
+    id: string,
+    dto: UpdatePropertyLocationDto,
+    updatedBy?: string
+  ): Promise<Property> {
+    const property = await this.propertyRepository.findOne({ where: { id } });
+    if (!property) {
+      throw new NotFoundException('Property not found');
+    }
+
+    const changes: ChangeHistoryEntry[] = [];
+
+    // Campos de ubicación a actualizar
+    const locationFields = [
+      'address',
+      'state',
+      'city',
+      'latitude',
+      'longitude'
+    ];
+
+    // Trackear cambios para cada campo de ubicación
+    for (const field of locationFields) {
+      const newValue = dto[field];
+      if (newValue !== undefined) {
+        const currentValue = property[field];
+        if (currentValue !== newValue) {
+          changes.push({
+            timestamp: new Date(),
+            changedBy: updatedBy || 'system',
+            field,
+            previousValue: currentValue?.toString() || null,
+            newValue: newValue?.toString() || null,
+          });
+          property[field] = newValue;
+        }
+      }
+    }
+
+    // Agregar cambios al historial si hay cambios
+    if (changes.length > 0) {
+      property.changeHistory = [...(property.changeHistory || []), ...changes];
+      property.lastModifiedAt = new Date();
+    }
+
+    return this.propertyRepository.save(property);
+  }
 
 }
 

@@ -845,17 +845,20 @@ export async function getPropertiesByAgent(agentId: string, params: {
   }
 }
 
-export interface UpdatePropertyPriceDto {
-  price?: number;
-  currencyPrice?: 'CLP' | 'UF';
-  seoTitle?: string;
-  seoDescription?: string;
+export interface UpdatePropertyCharacteristicsDto {
+  builtSquareMeters?: number;
+  landSquareMeters?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  parkingSpaces?: number;
+  floors?: number;
+  constructionYear?: number;
 }
 
 /**
- * Update property price and SEO information
+ * Update property characteristics
  */
-export async function updatePropertyPrice(id: string, data: UpdatePropertyPriceDto): Promise<{
+export async function updatePropertyCharacteristics(id: string, data: UpdatePropertyCharacteristicsDto): Promise<{
   success: boolean;
   data?: Property;
   error?: string;
@@ -866,7 +869,7 @@ export async function updatePropertyPrice(id: string, data: UpdatePropertyPriceD
       return { success: false, error: 'No authenticated' };
     }
 
-    const response = await fetch(`${env.backendApiUrl}/properties/${id}/price`, {
+    const response = await fetch(`${env.backendApiUrl}/properties/${id}/characteristics`, {
       method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
@@ -879,14 +882,64 @@ export async function updatePropertyPrice(id: string, data: UpdatePropertyPriceD
       const errorData = await response.json().catch(() => null);
       return { 
         success: false, 
-        error: errorData?.message || `Failed to update property price: ${response.status}` 
+        error: errorData?.message || `Failed to update property characteristics: ${response.status}` 
       };
     }
 
     const result = await response.json();
     return { success: true, data: result };
   } catch (error) {
-    console.error('Error updating property price:', error);
+    console.error('Error updating property characteristics:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    };
+  }
+}
+
+export interface UpdatePropertyLocationDto {
+  address?: string;
+  state?: string;
+  city?: string;
+  latitude?: number;
+  longitude?: number;
+}
+
+/**
+ * Update property location
+ */
+export async function updatePropertyLocation(id: string, data: UpdatePropertyLocationDto): Promise<{
+  success: boolean;
+  data?: Property;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' };
+    }
+
+    const response = await fetch(`${env.backendApiUrl}/properties/${id}/location`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return { 
+        success: false, 
+        error: errorData?.message || `Failed to update property location: ${response.status}` 
+      };
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error('Error updating property location:', error);
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Unknown error' 

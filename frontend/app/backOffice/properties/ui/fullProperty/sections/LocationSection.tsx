@@ -4,7 +4,11 @@ import { useState, useEffect } from 'react';
 import { TextField } from '@/components/TextField/TextField';
 import LocationPicker from '@/components/LocationPicker/LocationPicker';
 import AutoComplete from '@/components/AutoComplete/AutoComplete';
+import { Button } from '@/components/Button/Button';
+import CircularProgress from '@/components/CircularProgress/CircularProgress';
+import Alert from '@/components/Alert/Alert';
 import { getComunasByRegion } from '@/app/actions/commons';
+import { updatePropertyLocation } from '@/app/actions/properties';
 import type { LocationSectionProps, Region } from '../types/property.types';
 
 export default function LocationSection({ property, regions, onChange }: LocationSectionProps) {
@@ -12,6 +16,10 @@ export default function LocationSection({ property, regions, onChange }: Locatio
   const [loadingCities, setLoadingCities] = useState(false);
   const [selectedState, setSelectedState] = useState<Region | null>(null);
   const [selectedCity, setSelectedCity] = useState<Region | null>(null);
+
+  // Estados para la actualización de ubicación
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [updateMessage, setUpdateMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   // Inicializar región seleccionada
   useEffect(() => {
@@ -51,6 +59,38 @@ export default function LocationSection({ property, regions, onChange }: Locatio
     loadCities();
   }, [selectedState?.id, property.city]);
 
+  const handleUpdateLocation = async () => {
+    setIsUpdating(true);
+    setUpdateMessage(null);
+
+    try {
+      const locationData = {
+        address: property.address || undefined,
+        state: property.state || undefined,
+        city: property.city || undefined,
+        latitude: property.latitude ? parseFloat(property.latitude) : undefined,
+        longitude: property.longitude ? parseFloat(property.longitude) : undefined,
+      };
+
+      console.log('📍 Enviando datos de ubicación:', locationData);
+
+      const result = await updatePropertyLocation(property.id, locationData);
+
+      if (result.success) {
+        setUpdateMessage({ type: 'success', message: 'Ubicación actualizada correctamente' });
+        // Limpiar mensaje después de 3 segundos
+        setTimeout(() => setUpdateMessage(null), 3000);
+      } else {
+        setUpdateMessage({ type: 'error', message: result.error || 'Error al actualizar ubicación' });
+      }
+    } catch (error) {
+      console.error('❌ Error al actualizar ubicación:', error);
+      setUpdateMessage({ type: 'error', message: 'Error inesperado al actualizar ubicación' });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
   return (
     <div className="max-w-5xl mx-auto">
       <div className="space-y-4">
@@ -60,22 +100,6 @@ export default function LocationSection({ property, regions, onChange }: Locatio
             label="Dirección"
             value={property.address || ''}
             onChange={(e) => onChange('address', e.target.value)}
-          />
-        </div>
-
-        {/* Picker de ubicación */}
-        <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">
-            Selecciona un punto en el mapa para actualizar la latitud y longitud.
-          </p>
-          <LocationPicker
-            height="320px"
-            onChange={(coords) => {
-              if (!coords) return;
-              // Guardar con 6 decimales como string
-              onChange('latitude', coords.lat.toFixed(6));
-              onChange('longitude', coords.lng.toFixed(6));
-            }}
           />
         </div>
 
@@ -113,6 +137,50 @@ export default function LocationSection({ property, regions, onChange }: Locatio
             }
             data-test-id="autocomplete-city"
           />
+        </div>
+
+        {/* Picker de ubicación */}
+        <div className="space-y-2">
+          <p className="text-sm text-muted-foreground">
+            Selecciona un punto en el mapa para actualizar la latitud y longitud.
+          </p>
+          <LocationPicker
+            height="320px"
+            onChange={(coords) => {
+              if (!coords) return;
+              // Guardar con 6 decimales como string
+              onChange('latitude', coords.lat.toFixed(6));
+              onChange('longitude', coords.lng.toFixed(6));
+            }}
+          />
+        </div>
+
+        {/* Mensaje de actualización */}
+        {updateMessage && (
+          <div className="mt-4">
+            <Alert
+              variant={updateMessage.type}
+            >
+              {updateMessage.message}
+            </Alert>
+          </div>
+        )}
+
+        {/* Botón de actualizar ubicación */}
+        <div className="mt-6 flex justify-end">
+          <Button
+            onClick={handleUpdateLocation}
+            disabled={isUpdating}
+          >
+            {isUpdating ? (
+              <>
+                <CircularProgress size={16} thickness={2} className="mr-2" />
+                Actualizando...
+              </>
+            ) : (
+              'Actualizar ubicación'
+            )}
+          </Button>
         </div>
       </div>
     </div>
