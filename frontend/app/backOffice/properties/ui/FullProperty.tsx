@@ -12,6 +12,7 @@ import IconButton from '@/components/IconButton/IconButton';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import LocationPicker from '@/components/LocationPicker/LocationPicker';
 import AutoComplete from '@/components/AutoComplete/AutoComplete';
+import Switch from '@/components/Switch/Switch';
 import { listPropertyTypes, getFullProperty, updateProperty, updatePropertyBasic } from '@/app/actions/properties';
 import { listAdminsAgents } from '@/app/actions/users';
 import { getRegiones, getComunasByRegion } from '@/app/actions/commons';
@@ -302,6 +303,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
         operationType: formData.operationType || undefined,
         propertyTypeId: formData.propertyType?.id || undefined,
         assignedAgentId: formData.assignedAgent?.id || undefined,
+        isFeatured: formData.isFeatured || false,
       };
 
       const res = await updatePropertyBasic(propertyId, payload);
@@ -318,6 +320,7 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
             operationType: formData.operationType,
             propertyType: formData.propertyType,
             assignedAgent: formData.assignedAgent,
+            isFeatured: formData.isFeatured,
           };
         });
       } else {
@@ -464,6 +467,16 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Switch para propiedad destacada */}
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={currentProperty.isFeatured || false}
+                onChange={(checked) => handleInputChange('isFeatured', checked)}
+                label="Destacada"
+              />
+              <span className="text-sm text-muted-foreground">Marcar como propiedad destacada en el portal</span>
             </div>
 
             {/* Botón para actualizar información básica: sobre el divider, antes del perfil del creador */}

@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsEnum, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsEnum, IsUUID, IsBoolean } from 'class-validator';
 import { PropertyStatus } from '../../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../../common/enums/property-operation-type.enum';
 
@@ -11,6 +11,7 @@ import { PropertyOperationType } from '../../../common/enums/property-operation-
  * - operationType
  * - propertyTypeId
  * - assignedAgentId
+ * - isFeatured
  */
 export class UpdatePropertyBasicDto {
   @IsOptional()
@@ -36,4 +37,8 @@ export class UpdatePropertyBasicDto {
   @IsOptional()
   @IsUUID()
   assignedAgentId?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
 }

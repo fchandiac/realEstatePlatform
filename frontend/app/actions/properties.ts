@@ -340,6 +340,7 @@ export interface UpdatePropertyBasicDto {
   operationType?: string; // backend enum string
   propertyTypeId?: string;
   assignedAgentId?: string;
+  isFeatured?: boolean;
 }
 
 /**
