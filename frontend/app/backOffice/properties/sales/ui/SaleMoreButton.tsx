@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import IconButton from '@/components/IconButton/IconButton';
-import FullProperty from '../../ui/FullProperty';
+import FullProperty from '../../ui/fullProperty/FullProperty';
 import Dialog from '@/components/Dialog/Dialog';
 
 interface SaleMoreButtonProps {

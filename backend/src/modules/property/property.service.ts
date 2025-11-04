@@ -187,6 +187,16 @@ export class PropertyService {
         'propertyType',     // Tipo de propiedad
         'multimedia',       // Imágenes, videos, documentos
       ],
+      select: [
+        'id', 'title', 'description', 'status', 'operationType',
+        'creatorUserId', 'assignedAgentId', 'propertyTypeId',
+        'price', 'currencyPrice', 'seoTitle', 'seoDescription',
+        'publicationDate', 'isFeatured', 'builtSquareMeters', 'landSquareMeters',
+        'bedrooms', 'bathrooms', 'parkingSpaces', 'floors', 'constructionYear',
+        'state', 'city', 'address', 'latitude', 'longitude',
+        'internalNotes', 'createdAt', 'updatedAt', 'deletedAt', 'publishedAt',
+        'changeHistory', 'views', 'leads' // Incluir campos JSON
+      ]
     });
 
     if (!property) throw new NotFoundException('Property not found');
@@ -475,16 +485,52 @@ export class PropertyService {
     // Validate update data
     this.validatePropertyUpdate(updatePropertyDto);
 
-    // Track changes for history
+    // Track changes for history with improved comparison logic
     const changes: ChangeHistoryEntry[] = [];
 
     for (const [key, newValue] of Object.entries(updatePropertyDto)) {
-      if (key in property && property[key] !== newValue) {
+      // Skip undefined values (fields not being updated)
+      if (newValue === undefined) continue;
+
+      const currentValue = property[key];
+
+      // Improved comparison that handles different data types
+      let hasChanged = false;
+
+      if (currentValue !== newValue) {
+        // Handle null/undefined comparisons
+        if ((currentValue == null && newValue != null) ||
+            (currentValue != null && newValue == null)) {
+          hasChanged = true;
+        }
+        // Handle string/number comparisons
+        else if (typeof currentValue !== typeof newValue) {
+          hasChanged = true;
+        }
+        // Handle boolean comparisons
+        else if (typeof newValue === 'boolean') {
+          hasChanged = Boolean(currentValue) !== Boolean(newValue);
+        }
+        // Handle string comparisons (case sensitive)
+        else if (typeof newValue === 'string') {
+          hasChanged = String(currentValue || '').trim() !== String(newValue).trim();
+        }
+        // Handle number comparisons
+        else if (typeof newValue === 'number') {
+          hasChanged = Number(currentValue || 0) !== Number(newValue);
+        }
+        // Default comparison for other types
+        else {
+          hasChanged = currentValue !== newValue;
+        }
+      }
+
+      if (hasChanged) {
         changes.push({
           timestamp: new Date(),
           changedBy: updatedBy || 'system',
           field: key,
-          previousValue: property[key],
+          previousValue: currentValue,
           newValue: newValue,
         });
       }
@@ -500,7 +546,7 @@ export class PropertyService {
     }
     property.lastModifiedAt = new Date();
 
-    // Add change history
+    // Add change history only if there are actual changes
     if (changes.length > 0) {
       property.changeHistory = [...(property.changeHistory || []), ...changes];
     }
@@ -1260,12 +1306,27 @@ export class PropertyService {
     return parseFloat(priceString.replace(/\./g, '').replace(',', '.'));
   }
 
-  async updateMainImage(id: string, mainImageUrl: string): Promise<Property> {
+  async updateMainImage(id: string, mainImageUrl: string, updatedBy?: string): Promise<Property> {
     const property = await this.propertyRepository.findOne({ where: { id } });
     if (!property) {
       throw new NotFoundException('Property not found');
     }
+
+    const oldMainImageUrl = property.mainImageUrl;
+
+    // Add change to history
+    const historyEntry: ChangeHistoryEntry = {
+      timestamp: new Date(),
+      changedBy: updatedBy || 'system',
+      field: 'mainImageUrl',
+      previousValue: oldMainImageUrl,
+      newValue: mainImageUrl,
+    };
+
     property.mainImageUrl = mainImageUrl;
+    property.lastModifiedAt = new Date();
+    property.changeHistory = [...(property.changeHistory || []), historyEntry];
+
     return this.propertyRepository.save(property);
   }
 

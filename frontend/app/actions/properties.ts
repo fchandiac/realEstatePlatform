@@ -449,6 +449,7 @@ export async function getFullProperty(id: string): Promise<{
         'Authorization': `Bearer ${session.accessToken}`,
         'Content-Type': 'application/json',
       },
+      cache: 'no-store',
     });
 
     if (!response.ok) {
@@ -469,8 +470,66 @@ export async function getFullProperty(id: string): Promise<{
       title: result?.title,
       hasMultimedia: result?.multimedia ? result.multimedia.length : 0,
       hasPropertyType: !!result?.propertyType,
-      propertyType: result?.propertyType
+      propertyType: result?.propertyType,
+      hasChangeHistory: !!result?.changeHistory,
+      changeHistoryCount: result?.changeHistory?.length || 0
     });
+    
+    // Resolver nombres de usuarios del historial en el servidor
+    if (result.changeHistory && Array.isArray(result.changeHistory) && result.changeHistory.length > 0) {
+      console.log('📜 [getFullProperty] Resolviendo nombres de usuarios del historial...');
+      
+      // Obtener IDs únicos de usuarios
+      const uniqueUserIds = [...new Set(
+        result.changeHistory
+          .map((h: any) => h.changedBy)
+          .filter((id: any) => id && typeof id === 'string' && id !== 'system')
+      )] as string[];
+      
+      console.log('👥 [getFullProperty] IDs de usuarios a resolver:', uniqueUserIds);
+      
+      // Cargar nombres de usuarios en paralelo
+      const userPromises = uniqueUserIds.map(async (userId: string) => {
+        try {
+          const userResponse = await fetch(`${env.backendApiUrl}/users/${userId}`, {
+            headers: {
+              'Authorization': `Bearer ${session.accessToken}`,
+            },
+            cache: 'no-store',
+          });
+          
+          if (!userResponse.ok) {
+            console.warn(`⚠️ [getFullProperty] No se pudo cargar usuario ${userId}`);
+            return { id: userId, name: 'Usuario desconocido' };
+          }
+          
+          const user = await userResponse.json();
+          const name = `${user.personalInfo?.firstName || ''} ${user.personalInfo?.lastName || ''}`.trim() 
+            || user.username 
+            || 'Usuario desconocido';
+          
+          return { id: userId, name };
+        } catch (error) {
+          console.error(`❌ [getFullProperty] Error cargando usuario ${userId}:`, error);
+          return { id: userId, name: 'Usuario desconocido' };
+        }
+      });
+      
+      const users = await Promise.all(userPromises);
+      const userMap = Object.fromEntries(users.map(u => [u.id, u.name]));
+      
+      console.log('✅ [getFullProperty] Nombres de usuarios resueltos:', userMap);
+      
+      // Agregar nombres al historial
+      result.changeHistory = result.changeHistory.map((change: any) => ({
+        ...change,
+        changedByName: change.changedBy === 'system' 
+          ? 'Sistema' 
+          : (userMap[change.changedBy] || 'Usuario desconocido')
+      }));
+      
+      console.log('✅ [getFullProperty] Historial enriquecido con nombres de usuarios');
+    }
     
     return { success: true, data: result };
   } catch (error) {

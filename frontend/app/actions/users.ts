@@ -502,3 +502,25 @@ export async function setUserStatus(id: string, status: 'ACTIVE' | 'INACTIVE'): 
 	}
 }
 
+/**
+ * Find user by ID for change history display
+ */
+export async function findUserById(id: string): Promise<{ id: string; name: string } | null> {
+	const session = await getServerSession(authOptions);
+	if (!session?.accessToken) return null;
+
+	try {
+		const res = await fetch(`${env.backendApiUrl}/users/${id}`, {
+			headers: { Authorization: `Bearer ${session.accessToken}` },
+		});
+		if (!res.ok) return null;
+		const user = await res.json();
+		return { 
+			id: user.id, 
+			name: `${user.personalInfo?.firstName || ''} ${user.personalInfo?.lastName || ''}`.trim() || user.username || 'Usuario' 
+		};
+	} catch {
+		return null;
+	}
+}
+

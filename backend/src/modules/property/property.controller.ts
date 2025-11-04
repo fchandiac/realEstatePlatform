@@ -15,7 +15,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
+import { Response, Request } from 'express';
+import { Request as NestRequest } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import { Property } from '../../entities/property.entity';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
@@ -202,34 +203,46 @@ export class PropertyController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property updated')
     // No changes needed; description is handled by DTOs in create and update endpoints.
   update(
     @Param('id') id: string,
     @Body(ValidationPipe) updatePropertyDto: UpdatePropertyDto,
+    @Req() request: any,
   ) {
-    return this.propertyService.update(id, updatePropertyDto);
+    // Extraer el ID del usuario de manera más robusta
+    const user = request?.user;
+    const userId = user?.id || user?.sub || (typeof user === 'string' ? user : undefined);
+
+    return this.propertyService.update(id, updatePropertyDto, userId);
   }
 
   /**
    * Actualiza solo la información básica de la propiedad
    */
   @Patch(':id/basic')
+  @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property basic info updated')
   async updateBasic(
     @Param('id') id: string,
     @Body(ValidationPipe) dto: UpdatePropertyBasicDto,
     @Req() request: any,
   ): Promise<Property> {
-    const updatedBy: string | undefined = request?.user?.id;
+    // Extraer el ID del usuario de manera más robusta
+    const user = request?.user;
+    const userId = user?.id || user?.sub || (typeof user === 'string' ? user : undefined);
+
     // Reutiliza el método general de actualización con el subconjunto permitido
-    return await this.propertyService.update(id, dto as UpdatePropertyDto, updatedBy);
+    return await this.propertyService.update(id, dto as UpdatePropertyDto, userId);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.DELETE, AuditEntityType.PROPERTY, 'Property deleted')
-  remove(@Param('id') id: string) {
-    return this.propertyService.remove(id);
+  remove(@Param('id') id: string, @Req() req: Request) {
+    const userId = this.extractUserId(req);
+    return this.propertyService.remove(id, userId);
   }
 
     /**
@@ -260,11 +273,22 @@ export class PropertyController {
   }
 
   @Patch(':id/main-image')
+  @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Main image updated')
   async updateMainImage(
     @Param('id') id: string,
     @Body(new ValidationPipe({ transform: true })) dto: UpdateMainImageDto,
+    @Req() req: any,
   ): Promise<Property> {
-    return this.propertyService.updateMainImage(id, dto.mainImageUrl);
+    const userId = this.extractUserId(req);
+    return this.propertyService.updateMainImage(id, dto.mainImageUrl, userId);
+  }
+
+  private extractUserId(req: any): string {
+    const user = req.user as any;
+    if (user?.id) return user.id;
+    if (user?.sub) return user.sub;
+    if (typeof user === 'string') return user;
+    return 'system';
   }
 }

@@ -1,4 +1,5 @@
-import { Expose, Type } from 'class-transformer';
+import { Expose, Type, Transform } from 'class-transformer';
+import { IsOptional, IsArray } from 'class-validator';
 import { PropertyStatus } from '../../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../../common/enums/property-operation-type.enum';
 import { CurrencyPriceEnum } from '../../../entities/property.entity';
@@ -144,12 +145,21 @@ export class GetFullPropertyDto {
   postRequest?: PostRequest;
 
   @Expose()
+  @IsOptional()
+  @IsArray()
+  @Transform(({ value }) => Array.isArray(value) ? value : [])
   changeHistory?: ChangeHistoryEntry[];
 
   @Expose()
+  @IsOptional()
+  @IsArray()
+  @Transform(({ value }) => Array.isArray(value) ? value : [])
   views?: ViewEntry[];
 
   @Expose()
+  @IsOptional()
+  @IsArray()
+  @Transform(({ value }) => Array.isArray(value) ? value : [])
   leads?: LeadEntry[];
 
   // Internal Notes
