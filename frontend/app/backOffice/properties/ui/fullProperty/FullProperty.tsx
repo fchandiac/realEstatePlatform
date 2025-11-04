@@ -144,8 +144,10 @@ export default function FullProperty({ propertyId, onSave }: FullPropertyProps) 
 
         {/* Contenido */}
         <main className="flex-1 overflow-y-auto bg-background">
-          <div className="pl-4 pt-4">
-            {renderSection()}
+          <div className="p-4">
+            <div className="max-w-5xl mx-auto">
+              {renderSection()}
+            </div>
           </div>
         </main>
       </div>

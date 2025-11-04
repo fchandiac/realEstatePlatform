@@ -92,8 +92,7 @@ export default function LocationSection({ property, regions, onChange }: Locatio
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="space-y-4">
+    <div className="space-y-4">
         {/* Dirección */}
         <div className="w-full">
           <TextField
@@ -183,6 +182,5 @@ export default function LocationSection({ property, regions, onChange }: Locatio
           </Button>
         </div>
       </div>
-    </div>
   );
 }

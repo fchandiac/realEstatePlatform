@@ -115,7 +115,7 @@ export default function FeaturesSection({ property, onChange }: FeaturesSectionP
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div>
       {/* Mostrar tipo de propiedad */}
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-foreground mb-2">

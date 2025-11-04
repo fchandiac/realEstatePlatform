@@ -43,8 +43,7 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div>
+    <div>
         {/* Botón para agregar */}
         <div className="flex items-center gap-3 mb-4">
           <IconButton
@@ -155,6 +154,5 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
           />
         </div>
       </div>
-    </div>
   );
 }

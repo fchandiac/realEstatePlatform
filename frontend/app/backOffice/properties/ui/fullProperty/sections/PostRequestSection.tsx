@@ -6,8 +6,7 @@ import { formatDate } from '../utils/formatters';
 
 export default function PostRequestSection({ property }: PostRequestSectionProps) {
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="space-y-4">
+    <div className="space-y-4">
         <TextField 
           label="Mensaje" 
           value={property.postRequest?.message || ''} 
@@ -40,6 +39,5 @@ export default function PostRequestSection({ property }: PostRequestSectionProps
           readOnly 
         />
       </div>
-    </div>
   );
 }

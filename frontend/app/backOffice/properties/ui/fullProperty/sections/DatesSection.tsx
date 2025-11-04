@@ -6,8 +6,7 @@ import { formatDate } from '../utils/formatters';
 
 export default function DatesSection({ property }: DatesSectionProps) {
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="space-y-4">
+    <div className="space-y-4">
         <TextField
           label="Creado"
           value={formatDate(property.createdAt)}
@@ -39,6 +38,5 @@ export default function DatesSection({ property }: DatesSectionProps) {
           readOnly
         />
       </div>
-    </div>
   );
 }

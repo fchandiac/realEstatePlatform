@@ -48,8 +48,7 @@ export default function PriceSection({ property, onChange }: PriceSectionProps) 
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="space-y-4">
+    <div className="space-y-4">
         {message && (
           <Alert
             variant={message.type}
@@ -98,6 +97,5 @@ export default function PriceSection({ property, onChange }: PriceSectionProps) 
           </Button>
         </div>
       </div>
-    </div>
   );
 }

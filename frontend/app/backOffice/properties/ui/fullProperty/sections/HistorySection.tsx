@@ -1,6 +1,7 @@
 'use client';
 
-import moment from 'moment';
+i  return (
+    <div className="space-y-4">rt moment from 'moment';
 import { TextField } from '@/components/TextField/TextField';
 import ChangeHistoryItem from '../components/ChangeHistoryItem';
 import StatsCard from '../components/StatsCard';
@@ -79,6 +80,5 @@ export default function HistorySection({ property, onChange }: HistorySectionPro
           </div>
         </div>
       </div>
-    </div>
   );
 }
