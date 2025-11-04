@@ -476,7 +476,6 @@ const FullProperty: React.FC<FullPropertyDialogProps> = ({ propertyId, onSave })
                 onChange={(checked) => handleInputChange('isFeatured', checked)}
                 label="Destacada"
               />
-              <span className="text-sm text-muted-foreground">Marcar como propiedad destacada en el portal</span>
             </div>
 
             {/* Botón para actualizar información básica: sobre el divider, antes del perfil del creador */}

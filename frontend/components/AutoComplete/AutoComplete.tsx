@@ -178,7 +178,7 @@ const AutoComplete = <T = Option,>({
         <IconButton
           icon="close_small"
           variant="text"
-          className={`absolute right-10 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center ${focused ? 'text-primary' : 'text-secondary'}`}
+          className={`absolute right-6 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center ${focused ? 'text-primary' : 'text-secondary'}`}
           style={{lineHeight:0, padding: 0, margin: 0, verticalAlign: 'middle'}}
           onClick={handleClear}
           aria-label="Limpiar selección"
