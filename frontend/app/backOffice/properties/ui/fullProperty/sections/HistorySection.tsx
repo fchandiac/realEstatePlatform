@@ -1,7 +1,6 @@
 'use client';
 
-i  return (
-    <div className="space-y-4">rt moment from 'moment';
+import moment from 'moment';
 import { TextField } from '@/components/TextField/TextField';
 import ChangeHistoryItem from '../components/ChangeHistoryItem';
 import StatsCard from '../components/StatsCard';
@@ -16,8 +15,7 @@ export default function HistorySection({ property, onChange }: HistorySectionPro
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Header del historial */}
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">Historial de Cambios</h3>

@@ -1,7 +1,6 @@
 'use client';
 
-import { TextField }   return (
-    <div className="space-y-4">m '@/components/TextField/TextField';
+import { TextField } from '@/components/TextField/TextField';
 import Select from '@/components/Select/Select';
 import Switch from '@/components/Switch/Switch';
 import { Button } from '@/components/Button/Button';
@@ -36,8 +35,7 @@ export default function BasicSection({
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Título - ancho completo */}
         <div className="w-full">
           <TextField 
