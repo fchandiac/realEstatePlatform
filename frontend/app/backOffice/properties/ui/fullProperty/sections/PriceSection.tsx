@@ -30,11 +30,7 @@ export default function PriceSection({ property, onChange }: PriceSectionProps) 
           type="currency"
           currencySymbol={currencySymbol}
           value={property.price?.toString() || ''}
-          onChange={(e) => {
-            // Extraer solo los números del valor formateado
-            const numericValue = e.target.value.replace(/[^\d]/g, '');
-            onChange('price', parseFloat(numericValue) || 0);
-          }}
+          onChange={(e) => onChange('price', parseFloat(e.target.value) || 0)}
           required
         />
 

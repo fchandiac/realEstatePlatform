@@ -124,22 +124,31 @@ export const TextField: React.FC<TextFieldProps> = ({
 
   const handleCurrencyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
-    // Usar el símbolo pasado por props
-    const formattedValue = formatCurrency(rawValue, currencySymbol);
     
-    // Crear un evento sintético con el valor formateado
+    // Extraer solo los números del valor (ignorar símbolo y separadores)
+    const numericValue = rawValue.replace(/[^\d]/g, '');
+    
+    // Crear un evento sintético con el valor NUMÉRICO (no formateado)
     const syntheticEvent = {
       ...e,
       target: {
         ...e.target,
-        value: formattedValue
+        value: numericValue // ← VALOR NUMÉRICO para el componente padre
       }
     } as React.ChangeEvent<HTMLInputElement>;
     
     onChange(syntheticEvent);
   };
 
-  const shrink = focused || value.length > 0;
+  // Formatear el valor para mostrar en currency
+  const getDisplayValue = () => {
+    if (type === 'currency' && value) {
+      return formatCurrency(value, currencySymbol);
+    }
+    return value;
+  };
+
+  const shrink = focused || getDisplayValue().length > 0;
   const [showPlaceholder, setShowPlaceholder] = useState(!shrink);
 
   // Unique class for placeholder styling when placeholderColor is provided
@@ -204,7 +213,7 @@ export const TextField: React.FC<TextFieldProps> = ({
               (type === "dni" || type === "currency" ? "text" : type)
             }
             name={name}
-            value={value}
+            value={type === 'currency' ? getDisplayValue() : value}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onChange={type === "dni" ? handleDNIChange : type === "currency" ? handleCurrencyChange : onChange}
