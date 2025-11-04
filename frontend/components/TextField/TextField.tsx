@@ -148,7 +148,8 @@ export const TextField: React.FC<TextFieldProps> = ({
     return value;
   };
 
-  const shrink = focused || getDisplayValue().length > 0;
+  const displayValue = getDisplayValue();
+  const shrink = focused || displayValue.length > 0;
   const [showPlaceholder, setShowPlaceholder] = useState(!shrink);
 
   // Unique class for placeholder styling when placeholderColor is provided
@@ -213,7 +214,7 @@ export const TextField: React.FC<TextFieldProps> = ({
               (type === "dni" || type === "currency" ? "text" : type)
             }
             name={name}
-            value={type === 'currency' ? getDisplayValue() : value}
+            value={type === 'currency' ? displayValue : value}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             onChange={type === "dni" ? handleDNIChange : type === "currency" ? handleCurrencyChange : onChange}
