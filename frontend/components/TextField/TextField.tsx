@@ -17,6 +17,7 @@ interface TextFieldProps {
   style?: React.CSSProperties;
   labelStyle?: React.CSSProperties;
   placeholderColor?: string;
+  currencySymbol?: string; // Símbolo de moneda personalizado (default: "$")
   ["data-test-id"]?: string;
 }
 
@@ -36,6 +37,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   readOnly = false,
   labelStyle,
   placeholderColor,
+  currencySymbol = "$", // Default: peso chileno
   ...props
 }) => {
   const [focused, setFocused] = useState(false);
@@ -84,8 +86,8 @@ export const TextField: React.FC<TextFieldProps> = ({
     }
   };
 
-  // Función para formatear moneda chilena
-  const formatCurrency = (value: string): string => {
+  // Función para formatear moneda con símbolo configurable
+  const formatCurrency = (value: string, symbol: string = "$"): string => {
     // Remover todo lo que no sea número
     const numbers = value.replace(/\D/g, '');
     
@@ -94,12 +96,14 @@ export const TextField: React.FC<TextFieldProps> = ({
     // Convertir a número
     const numericValue = parseInt(numbers);
     
-    // Formatear como moneda chilena
-    return numericValue.toLocaleString('es-CL', {
-      style: 'currency',
-      currency: 'CLP',
-      minimumFractionDigits: 0
+    // Formatear con separadores de miles (español chileno)
+    const formattedNumber = numericValue.toLocaleString('es-CL', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
     });
+    
+    // Retornar con el símbolo personalizado
+    return `${symbol} ${formattedNumber}`;
   };
 
   const handleDNIChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,7 +124,8 @@ export const TextField: React.FC<TextFieldProps> = ({
 
   const handleCurrencyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
-    const formattedValue = formatCurrency(rawValue);
+    // Usar el símbolo pasado por props
+    const formattedValue = formatCurrency(rawValue, currencySymbol);
     
     // Crear un evento sintético con el valor formateado
     const syntheticEvent = {

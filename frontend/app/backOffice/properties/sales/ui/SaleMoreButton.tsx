@@ -30,7 +30,6 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
         <Dialog 
           open={open} 
           onClose={() => setOpen(false)} 
-          title="Detalles de la Propiedad" 
           size="custom"
           maxWidth="1400px"
           height="700px"
