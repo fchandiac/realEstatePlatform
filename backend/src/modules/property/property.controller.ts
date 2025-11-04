@@ -23,6 +23,7 @@ import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 import { UpdatePropertyBasicDto } from './dto/update-property-basic.dto';
 import { CreatePropertyDto as CreatePropertyPayloadDto } from './dto/create-property.dto';
 import { UpdateMainImageDto } from './dto/create-property.dto';
+import { UpdatePropertyPriceDto } from './dto/update-property-price.dto';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
 import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { Audit } from '../../common/interceptors/audit.interceptor';
@@ -282,6 +283,21 @@ export class PropertyController {
   ): Promise<Property> {
     const userId = this.extractUserId(req);
     return this.propertyService.updateMainImage(id, dto.mainImageUrl, userId);
+  }
+
+  /**
+   * Actualiza la información de precio y SEO de una propiedad
+   */
+  @Patch(':id/price')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property price and SEO updated')
+  async updatePrice(
+    @Param('id') id: string,
+    @Body(ValidationPipe) dto: UpdatePropertyPriceDto,
+    @Req() req: any,
+  ): Promise<Property> {
+    const userId = this.extractUserId(req);
+    return this.propertyService.updatePrice(id, dto, userId);
   }
 
   private extractUserId(req: any): string {

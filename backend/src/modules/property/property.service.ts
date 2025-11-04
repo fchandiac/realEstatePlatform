@@ -7,6 +7,7 @@ import { User } from '../../entities/user.entity';
 import { CreatePropertyDto, UpdatePropertyDto } from './dto/property.dto';
 import { CreatePropertyDto as NewCreatePropertyDto } from './dto/create-property.dto';
 import { UpdateMainImageDto } from './dto/create-property.dto';
+import { UpdatePropertyPriceDto } from './dto/update-property-price.dto';
 import { PropertyStatus } from '../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../common/enums/property-operation-type.enum';
 import { ChangeHistoryEntry, ViewEntry, LeadEntry } from '../../common/interfaces/property.interfaces';
@@ -1326,6 +1327,78 @@ export class PropertyService {
     property.mainImageUrl = mainImageUrl;
     property.lastModifiedAt = new Date();
     property.changeHistory = [...(property.changeHistory || []), historyEntry];
+
+    return this.propertyRepository.save(property);
+  }
+
+  /**
+   * Actualiza la información de precio y SEO de una propiedad
+   */
+  async updatePrice(
+    id: string,
+    dto: UpdatePropertyPriceDto,
+    updatedBy?: string
+  ): Promise<Property> {
+    const property = await this.propertyRepository.findOne({ where: { id } });
+    if (!property) {
+      throw new NotFoundException('Property not found');
+    }
+
+    const changes: ChangeHistoryEntry[] = [];
+
+    // Actualizar precio si se proporciona
+    if (dto.price !== undefined && dto.price !== property.price) {
+      changes.push({
+        timestamp: new Date(),
+        changedBy: updatedBy || 'system',
+        field: 'price',
+        previousValue: property.price?.toString() || null,
+        newValue: dto.price.toString(),
+      });
+      property.price = dto.price;
+    }
+
+    // Actualizar moneda si se proporciona
+    if (dto.currencyPrice !== undefined && dto.currencyPrice !== property.currencyPrice) {
+      changes.push({
+        timestamp: new Date(),
+        changedBy: updatedBy || 'system',
+        field: 'currencyPrice',
+        previousValue: property.currencyPrice || null,
+        newValue: dto.currencyPrice,
+      });
+      property.currencyPrice = dto.currencyPrice;
+    }
+
+    // Actualizar título SEO si se proporciona
+    if (dto.seoTitle !== undefined && dto.seoTitle !== property.seoTitle) {
+      changes.push({
+        timestamp: new Date(),
+        changedBy: updatedBy || 'system',
+        field: 'seoTitle',
+        previousValue: property.seoTitle || null,
+        newValue: dto.seoTitle,
+      });
+      property.seoTitle = dto.seoTitle;
+    }
+
+    // Actualizar descripción SEO si se proporciona
+    if (dto.seoDescription !== undefined && dto.seoDescription !== property.seoDescription) {
+      changes.push({
+        timestamp: new Date(),
+        changedBy: updatedBy || 'system',
+        field: 'seoDescription',
+        previousValue: property.seoDescription || null,
+        newValue: dto.seoDescription,
+      });
+      property.seoDescription = dto.seoDescription;
+    }
+
+    // Agregar cambios al historial si hay cambios
+    if (changes.length > 0) {
+      property.changeHistory = [...(property.changeHistory || []), ...changes];
+      property.lastModifiedAt = new Date();
+    }
 
     return this.propertyRepository.save(property);
   }
