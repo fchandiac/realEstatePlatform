@@ -55,43 +55,6 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
     loadIdentity();
   }, []);
 
-  const handleLogin = async (username: string, password: string) => {
-    setLoading(true);
-    try {
-      // Aquí iría la lógica de login
-      console.log('Login attempt:', { username, password });
-      // Por ahora solo cerramos el dialog
-      setLoginDialogOpen(false);
-    } catch (error) {
-      console.error('Login error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRegister = async (data: RegisterData) => {
-    setLoading(true);
-    try {
-      // Aquí iría la lógica de registro
-      console.log('Register attempt:', data);
-      // Por ahora solo cerramos el dialog
-      setRegisterDialogOpen(false);
-    } catch (error) {
-      console.error('Register error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const openLoginDialog = () => {
-    setRegisterDialogOpen(false);
-    setLoginDialogOpen(true);
-  };
-
-  const openRegisterDialog = () => {
-    setLoginDialogOpen(false);
-    setRegisterDialogOpen(true);
-  };
 
   return (
     <div
@@ -159,7 +122,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
         title="Iniciar Sesión"
         size="sm"
       >
-        <LoginForm />
+        <LoginForm logoSrc={identity?.urlLogo} companyName={identity?.name} />
       </Dialog>
 
       {/* Register Dialog */}

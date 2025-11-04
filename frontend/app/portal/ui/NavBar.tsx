@@ -27,7 +27,7 @@ export default function NavBar() {
   }, [openNosotros, openPropiedades]);
 
   return (
-    <nav className="w-full bg-background shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)] sticky top-16 z-50" aria-label="Main navigation">
+    <nav className="w-full bg-background shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)] sticky top-16 z-20" aria-label="Main navigation">
       <ul className="flex items-center justify-center gap-3 px-4 py-3">
         <li>
           <a href="#" className="flex items-center gap-2 text-sm font-medium text-neutral-900 hover:text-primary">

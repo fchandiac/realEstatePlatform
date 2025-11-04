@@ -3,12 +3,16 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { TextField } from "@/components/TextField/TextField";
 import { useAuth } from "@/app/providers";
+import Logo from "@/components/Logo/Logo";
 
 interface LoginFormProps {
   onClose?: () => void;
+  logoSrc?: string;
+  companyName?: string;
+
 }
 
-export default function LoginForm({ onClose }: LoginFormProps) {
+export default function LoginForm({ onClose, logoSrc, companyName }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,7 +73,20 @@ export default function LoginForm({ onClose }: LoginFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4" data-test-id="portal-login-form">
+    <div className="flex flex-col gap-4" data-test-id="portal-login-form">
+      {logoSrc && (
+
+        <div>
+          <div className="flex justify-center mb-4">
+            <Logo src={logoSrc} className="w-48 h-20 md:w-64 md:h-24" aspect={{ w: 4, h: 1 }} />
+
+          </div>
+          <div className="text-center text-sm text-foreground text-xl">
+            {companyName || "nuestro portal"}
+          </div>
+        </div>
+
+      )}
       <TextField
         label="Correo electrónico"
         type="email"
@@ -102,6 +119,6 @@ export default function LoginForm({ onClose }: LoginFormProps) {
       >
         {isSubmitting ? "Ingresando..." : "Ingresar"}
       </button>
-    </form>
+    </div>
   );
 }
