@@ -164,6 +164,19 @@ const Dialog: React.FC<DialogProps> = ({
     }
   }, [open, animationDuration]);
 
+  // Bloquear/restaurar scroll del body cuando el dialog se abre/cierra
+  useEffect(() => {
+    if (open) {
+      // Guardar el overflow original del body
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      // Restaurar al desmontar o cerrar
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [open]);
+
   // Handle ESC key
   useEffect(() => {
     if (!open || persistent) return;
