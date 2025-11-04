@@ -14,6 +14,7 @@ interface TextFieldProps {
   variante?: "normal" | "contrast";
   rows?: number;
   readOnly?: boolean;
+  disabled?: boolean;
   style?: React.CSSProperties;
   labelStyle?: React.CSSProperties;
   placeholderColor?: string;
@@ -35,6 +36,7 @@ export const TextField: React.FC<TextFieldProps> = ({
   rows,
   required = false,
   readOnly = false,
+  disabled = false,
   labelStyle,
   placeholderColor,
   currencySymbol = "$", // Default: peso chileno
@@ -44,6 +46,15 @@ export const TextField: React.FC<TextFieldProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [showPassword, setShowPassword] = useState(false);
   const passwordToggleLabel = showPassword ? "Ocultar contraseña" : "Mostrar contraseña";
+
+  // Determinar si el campo está efectivamente deshabilitado
+  const isDisabled = disabled || readOnly;
+
+  // Controlador de cambios que respeta el estado disabled
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (isDisabled) return; // No ejecutar onChange si está disabled
+    onChange(e);
+  };
 
   // Función para formatear DNI chileno
   const formatDNI = (value: string): string => {
@@ -107,6 +118,8 @@ export const TextField: React.FC<TextFieldProps> = ({
   };
 
   const handleDNIChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isDisabled) return; // No procesar si está disabled
+    
     const rawValue = e.target.value;
     const formattedValue = formatDNI(rawValue);
     
@@ -123,6 +136,8 @@ export const TextField: React.FC<TextFieldProps> = ({
   };
 
   const handleCurrencyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isDisabled) return; // No procesar si está disabled
+    
     const rawValue = e.target.value;
     
     // Extraer solo los números del valor (ignorar símbolo y separadores)
@@ -175,12 +190,17 @@ export const TextField: React.FC<TextFieldProps> = ({
   ? "bg-foreground text-background"
   : "bg-background text-foreground";
 
+  // Estilos para estado disabled
+  const disabledStyles = isDisabled
+    ? "opacity-50 cursor-not-allowed bg-muted"
+    : "";
+
   return (
     <div className="relative w-full pt-2">
       <div className={`relative ${className}`} data-test-id="text-field-root"> 
       {typeof startIcon === 'string' && startIcon.length > 0 && (
         <span
-          className="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-xl text-secondary pointer-events-none flex items-center justify-center z-10"
+          className={`material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-xl pointer-events-none flex items-center justify-center z-10 ${isDisabled ? 'text-muted-foreground opacity-50' : 'text-secondary'}`}
           style={{ fontSize: 20, width: 20, height: 20, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
           
         >
@@ -194,11 +214,12 @@ export const TextField: React.FC<TextFieldProps> = ({
           rows={rows}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          onChange={onChange}
-          className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] pr-4 py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${contrastInput} z-0`}
+          onChange={handleChange}
+          className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] pr-4 py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${contrastInput} ${disabledStyles} z-0`}
           placeholder={required ? "" : (shrink || !showPlaceholder ? "" : (placeholder ?? label))}
           required={required}
           readOnly={readOnly}
+          disabled={disabled}
           autoComplete="off"
           style={{ backgroundColor: "var(--color-background)", resize: 'none', ...(props.style || {}) }}
           data-test-id={props["data-test-id"]}
@@ -217,8 +238,8 @@ export const TextField: React.FC<TextFieldProps> = ({
             value={type === 'currency' ? displayValue : value}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            onChange={type === "dni" ? handleDNIChange : type === "currency" ? handleCurrencyChange : onChange}
-            className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${(endIcon || type === "password") ? " pr-10" : " pr-3"} ${contrastInput} z-0`}
+            onChange={type === "dni" ? handleDNIChange : type === "currency" ? handleCurrencyChange : handleChange}
+            className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${(endIcon || type === "password") ? " pr-10" : " pr-3"} ${contrastInput} ${disabledStyles} z-0`}
             style={{ backgroundColor: "var(--color-background)", ...(props.style || {}) }}
             placeholder={
               type === "datePicker" ? `Ej: ${new Date().getFullYear()}` :
@@ -226,6 +247,7 @@ export const TextField: React.FC<TextFieldProps> = ({
             }
             required={required}
             readOnly={readOnly}
+            disabled={disabled}
             autoComplete="off"
             min={type === "datePicker" ? "1800" : undefined}
             max={type === "datePicker" ? new Date().getFullYear().toString() : undefined}
@@ -236,12 +258,15 @@ export const TextField: React.FC<TextFieldProps> = ({
           {type === "password" && (
             <button
               type="button"
-              className={`absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 hover:bg-primary/10 active:scale-95 ${focused ? "text-primary" : "text-secondary"} ${showPassword ? "bg-primary/10 text-primary" : "bg-transparent"}`}
+              disabled={isDisabled}
+              className={`absolute right-2 top-1/2 -translate-y-1/2 inline-flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 hover:bg-primary/10 active:scale-95 ${focused ? "text-primary" : "text-secondary"} ${showPassword ? "bg-primary/10 text-primary" : "bg-transparent"} ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
               style={{ padding: 0, zIndex: 10 }}
               onMouseDown={(event) => {
+                if (isDisabled) return;
                 event.preventDefault();
               }}
               onClick={() => {
+                if (isDisabled) return;
                 setShowPassword((prev) => !prev);
                 inputRef.current?.focus();
               }}
@@ -290,7 +315,7 @@ export const TextField: React.FC<TextFieldProps> = ({
       </label>
       {typeof endIcon === 'string' && endIcon.length > 0 && (
         <span
-          className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-xl text-secondary pointer-events-none flex items-center justify-center z-10"
+          className={`material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-xl pointer-events-none flex items-center justify-center z-10 ${isDisabled ? 'text-muted-foreground opacity-50' : 'text-secondary'}`}
           style={{ fontSize: 20, width: 20, height: 20, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
          
         >

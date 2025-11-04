@@ -196,8 +196,24 @@ export default function TextFieldShowcase() {
                 label="Campo deshabilitado"
                 value="No se puede editar"
                 onChange={() => {}}
+                disabled
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Aplica estilos visuales (opacidad, cursor) y previene cambios
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-medium text-gray-700 mb-3">Solo Lectura</h3>
+              <TextField
+                label="Campo de solo lectura"
+                value="Puedes seleccionar pero no editar"
+                onChange={() => {}}
                 readOnly
               />
+              <p className="text-xs text-gray-500 mt-2">
+                Permite selección pero no edición
+              </p>
             </div>
           </div>
         </div>
@@ -323,10 +339,16 @@ export default function TextFieldShowcase() {
                   <td className="px-4 py-2 text-sm text-gray-600">Campo requerido</td>
                 </tr>
                 <tr>
+                  <td className="px-4 py-2 text-sm font-mono text-gray-900">readOnly</td>
+                  <td className="px-4 py-2 text-sm text-gray-600">boolean</td>
+                  <td className="px-4 py-2 text-sm text-gray-600">false</td>
+                  <td className="px-4 py-2 text-sm text-gray-600">Campo de solo lectura</td>
+                </tr>
+                <tr>
                   <td className="px-4 py-2 text-sm font-mono text-gray-900">disabled</td>
                   <td className="px-4 py-2 text-sm text-gray-600">boolean</td>
                   <td className="px-4 py-2 text-sm text-gray-600">false</td>
-                  <td className="px-4 py-2 text-sm text-gray-600">Campo deshabilitado</td>
+                  <td className="px-4 py-2 text-sm text-gray-600">Campo deshabilitado con estilos visuales</td>
                 </tr>
                 <tr>
                   <td className="px-4 py-2 text-sm font-mono text-gray-900">startIcon</td>

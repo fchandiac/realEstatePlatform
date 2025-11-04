@@ -71,6 +71,7 @@ export default function BasicExample() {
 | `rows` | `number` | `undefined` | Número de filas (convierte a textarea) |
 | `required` | `boolean` | `false` | Campo obligatorio |
 | `readOnly` | `boolean` | `false` | Campo de solo lectura |
+| `disabled` | `boolean` | `false` | Campo deshabilitado (combina con readOnly, estilos visuales aplicados) |
 | `style` | `React.CSSProperties` | `undefined` | Estilos inline para el input |
 | `labelStyle` | `React.CSSProperties` | `undefined` | Estilos inline para el label |
 | `placeholderColor` | `string` | `undefined` | Color personalizado del placeholder |
@@ -258,9 +259,17 @@ const [description, setDescription] = useState('');
   label="Campo deshabilitado"
   value="Valor fijo"
   onChange={() => {}}
-  disabled // Prop estándar de HTML
+  disabled // Aplica estilos visuales (opacidad, cursor) y previene cambios
 />
 ```
+
+**Características del estado disabled:**
+- Combina automáticamente con `readOnly` (si `disabled={true}`, se comporta como `readOnly`)
+- Aplica estilos visuales: `opacity-50`, `cursor-not-allowed`, `bg-muted`
+- Previene la ejecución de `onChange` cuando está activo
+- Deshabilita el botón de mostrar/ocultar contraseña
+- Aplica opacidad reducida a iconos
+- Mantiene el atributo `disabled` en elementos HTML para accesibilidad
 
 ## 🎨 Personalización
 
