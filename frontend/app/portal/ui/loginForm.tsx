@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { TextField } from "@/components/TextField/TextField";
 import { useAuth } from "@/app/providers";
 import Logo from "@/components/Logo/Logo";
+import { Button } from "@/components/Button/Button";
 
 interface LoginFormProps {
   onClose?: () => void;
@@ -87,38 +88,41 @@ export default function LoginForm({ onClose, logoSrc, companyName }: LoginFormPr
         </div>
 
       )}
-      <TextField
-        label="Correo electrónico"
-        type="email"
-        required
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        placeholder="nombre@correo.com"
-        className="w-full"
-        data-test-id="portal-login-email"
-      />
-      <TextField
-        label="Contraseña"
-        type="password"
-        required
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-        placeholder="••••••••"
-        className="w-full"
-        data-test-id="portal-login-password"
-      />
-      {error && (
-        <p className="text-sm text-red-600" role="alert">
-          {error}
-        </p>
-      )}
-      <button
-        type="submit"
-        className="btn-contained-primary disabled:opacity-60 disabled:cursor-not-allowed"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? "Ingresando..." : "Ingresar"}
-      </button>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Correo electrónico"
+          type="email"
+          required
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          placeholder="nombre@correo.com"
+          className="w-full"
+          data-test-id="portal-login-email"
+        />
+        <TextField
+          label="Contraseña"
+          type="password"
+          required
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          placeholder="••••••••"
+          className="w-full"
+          data-test-id="portal-login-password"
+        />
+        {error && (
+          <p className="text-sm text-red-600" role="alert">
+            {error}
+          </p>
+        )}
+        <Button
+          variant="primary"
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full mt-4"
+        >
+          {isSubmitting ? "Ingresando..." : "Ingresar"}
+        </Button>
+      </form>
     </div>
   );
 }
