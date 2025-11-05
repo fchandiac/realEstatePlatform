@@ -39,8 +39,8 @@ export class MultimediaController {
   }
 
   @Delete(':id')
-  softDelete(@Param('id') id: string) {
-    return this.multimediaService.softDelete(id);
+  hardDelete(@Param('id') id: string) {
+    return this.multimediaService.hardDelete(id);
   }
 
   @Get(':id/url')

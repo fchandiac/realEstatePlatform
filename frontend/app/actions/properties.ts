@@ -1053,3 +1053,83 @@ export async function getPublishedPropertiesPublic(): Promise<{
     };
   }
 }
+
+export async function updateMainImage(
+  propertyId: string,
+  mainImageUrl: string | null
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No autorizado' };
+    }
+
+    const response = await fetch(`${env.backendApiUrl}/properties/${propertyId}/main-image`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.accessToken}`,
+      },
+      body: JSON.stringify({ mainImageUrl }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        success: false,
+        error: errorData.message || 'Error al actualizar imagen principal'
+      };
+    }
+
+    const updatedProperty = await response.json();
+    return { success: true, data: updatedProperty };
+  } catch (error) {
+    console.error('Error updating main image:', error);
+    return {
+      success: false,
+      error: 'Error inesperado al actualizar imagen principal'
+    };
+  }
+}
+
+export async function uploadPropertyMultimedia(
+  propertyId: string,
+  files: File[]
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No autorizado' };
+    }
+
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('files', file);
+    });
+
+    const response = await fetch(`${env.backendApiUrl}/properties/${propertyId}/multimedia`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        success: false,
+        error: errorData.message || 'Error al subir multimedia'
+      };
+    }
+
+    const uploadedFiles = await response.json();
+    return { success: true, data: uploadedFiles };
+  } catch (error) {
+    console.error('Error uploading multimedia:', error);
+    return {
+      success: false,
+      error: 'Error inesperado al subir multimedia'
+    };
+  }
+}

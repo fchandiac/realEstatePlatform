@@ -165,9 +165,49 @@ export async function getPropertyMultimedia(propertyId: string): Promise<{
 }
 
 /**
- * Delete a multimedia item
+ * Get a specific multimedia item by ID
  */
-export async function deleteMultimedia(id: string): Promise<{
+export async function getMultimedia(multimediaId: string): Promise<{
+  success: boolean;
+  data?: MultimediaItem;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No autorizado' };
+    }
+
+    const response = await fetch(`${env.backendApiUrl}/multimedia/${multimediaId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Error al obtener multimedia: ${response.status}`
+      };
+    }
+
+    const multimedia = await response.json();
+    return { success: true, data: multimedia };
+  } catch (error) {
+    console.error('Error getting multimedia:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    };
+  }
+}
+/**
+ * Delete a multimedia item (hard delete - removes file and record)
+ */
+export async function deleteMultimedia(multimediaId: string): Promise<{
   success: boolean;
   error?: string;
 }> {
@@ -177,7 +217,7 @@ export async function deleteMultimedia(id: string): Promise<{
       return { success: false, error: 'No authenticated' };
     }
 
-    const response = await fetch(`${env.backendApiUrl}/multimedia/${id}`, {
+    const response = await fetch(`${env.backendApiUrl}/multimedia/${multimediaId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,

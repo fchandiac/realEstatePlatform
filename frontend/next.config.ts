@@ -14,6 +14,28 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '70mb',
     },
   },
+  // Configure images to allow loading from backend
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+        pathname: '/uploads/**',
+      },
+    ],
+  },
   /* other config options here */
 };
 

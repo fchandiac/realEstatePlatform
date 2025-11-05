@@ -88,6 +88,7 @@ export interface Property {
   latitude?: string;
   longitude?: string;
   multimedia?: MultimediaItem[];
+  mainImageUrl?: string;
   postRequest?: PostRequest;
   favoritesCount?: number;
   leadsCount?: number;

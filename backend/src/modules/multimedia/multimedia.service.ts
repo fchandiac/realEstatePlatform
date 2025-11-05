@@ -56,6 +56,24 @@ export class MultimediaService {
     await this.multimediaRepository.softDelete(id);
   }
 
+  async hardDelete(id: string): Promise<void> {
+    const multimedia = await this.findOne(id);
+
+    // Eliminar archivo físico si existe
+    try {
+      const filePath = path.join(process.cwd(), 'uploads', multimedia.url.replace('/uploads/', ''));
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    } catch (error) {
+      // Log error but don't fail the operation
+      console.warn(`Could not delete physical file for multimedia ${id}:`, error);
+    }
+
+    // Eliminar registro de la base de datos
+    await this.multimediaRepository.remove(multimedia);
+  }
+
   async getUrl(id: string): Promise<string> {
     const multimedia = await this.findOne(id);
     return multimedia.url;
