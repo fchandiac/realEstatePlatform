@@ -26,6 +26,7 @@ import { MultimediaService as UploadMultimediaService } from '../multimedia/serv
 import { MultimediaUploadMetadata } from '../multimedia/interfaces/multimedia.interface';
 import { ConfigService } from '@nestjs/config';
 import { UploadPropertyMultimediaDto } from './dto/upload-property-multimedia.dto';
+import { FileUploadService } from '../../common/services/file-upload.service';
 
 @Injectable()
 export class PropertyService {
@@ -35,6 +36,7 @@ export class PropertyService {
     private readonly notificationsService: NotificationsService,
     private readonly multimediaService: UploadMultimediaService,
       private readonly config: ConfigService,
+    private readonly fileUploadService: FileUploadService,
     ) {
       this.publicBaseUrl = (
         this.config.get<string>('BACKEND_PUBLIC_URL') ||
@@ -1563,31 +1565,38 @@ export class PropertyService {
         };
 
         console.log('📋 [PropertyService.uploadMultimedia] Metadata created:', metadata);
-        console.log('🚀 [PropertyService.uploadMultimedia] Calling multimediaService.uploadFile...');
+        console.log('🚀 [PropertyService.uploadMultimedia] Creating multimedia entity...');
 
-        // Usar el servicio de multimedia para subir el archivo
-        const multimedia = await this.multimediaService.uploadFile(
-          file,
-          metadata,
-          uploadedBy || property.creatorUserId || 'system'
-        );
-
-        console.log('✅ [PropertyService.uploadMultimedia] File uploaded via service:', {
-          id: multimedia.id,
-          filename: multimedia.filename,
-          currentPropertyId: multimedia.propertyId,
-          targetPropertyId: propertyId
-        });
-
-        // Asignar la propiedad al archivo multimedia
-        console.log('🔗 [PropertyService.uploadMultimedia] Associating with property...');
+        // Crear multimedia directamente con URL correcta
+        const multimedia = new Multimedia();
+        multimedia.filename = file.originalname;
+        
+        // Generar URL correcta basada en tipo de archivo
+        const mimetype = file.mimetype;
+        let urlPath = '/public/';
+        if (mimetype.startsWith('image/')) {
+          urlPath += 'properties/img/';
+        } else if (mimetype.startsWith('video/')) {
+          urlPath += 'properties/video/';
+        } else {
+          urlPath += 'docs/';
+        }
+        multimedia.url = urlPath + file.filename;
+        
+        multimedia.format = file.mimetype.startsWith('image/') ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
+        multimedia.type = multimediaType;
         multimedia.propertyId = propertyId;
+        multimedia.property = property;
 
-        console.log('💾 [PropertyService.uploadMultimedia] Saving multimedia with propertyId:', {
-          multimediaId: multimedia.id,
-          propertyId: multimedia.propertyId,
-          filename: multimedia.filename
+        console.log('✅ [PropertyService.uploadMultimedia] Multimedia entity created:', {
+          filename: multimedia.filename,
+          url: multimedia.url,
+          format: multimedia.format,
+          type: multimedia.type,
+          propertyId: multimedia.propertyId
         });
+
+        console.log('💾 [PropertyService.uploadMultimedia] Saving multimedia...');
 
         const savedMultimedia = await this.multimediaRepository.save(multimedia);
 

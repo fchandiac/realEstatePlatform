@@ -32,10 +32,40 @@ import { Audit } from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UploadPropertyMultimediaDto } from './dto/upload-property-multimedia.dto';
+import { FileUploadService } from '../../common/services/file-upload.service';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+
+// Configuración de storage para uploads de propiedades
+const propertyUploadStorage = diskStorage({
+  destination: (req, file, callback) => {
+    // Determinar carpeta basada en tipo de archivo
+    const mimetype = file.mimetype;
+    let folder = './public/';
+
+    if (mimetype.startsWith('image/')) {
+      folder += 'properties/img';
+    } else if (mimetype.startsWith('video/')) {
+      folder += 'properties/video';
+    } else {
+      folder += 'docs'; // Default para otros tipos
+    }
+
+    callback(null, folder);
+  },
+  filename: (req, file, callback) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = extname(file.originalname);
+    callback(null, `${uniqueSuffix}${ext}`);
+  },
+});
 
 @Controller('properties')
 export class PropertyController {
-  constructor(private readonly propertyService: PropertyService) {}
+  constructor(
+    private readonly propertyService: PropertyService,
+    private readonly fileUploadService: FileUploadService,
+  ) {}
 
   @Get('grid-sale/excel')
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Sale properties Excel exported')
@@ -290,11 +320,8 @@ export class PropertyController {
 
   @Post(':id/multimedia')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FilesInterceptor('files', 10, {
-    limits: { 
-      fileSize: 10 * 1024 * 1024, // 10MB por archivo
-      files: 10 // Máximo 10 archivos
-    },
+  @UseInterceptors(FilesInterceptor('files', 20, {
+    storage: propertyUploadStorage,
     fileFilter: (req, file, callback) => {
       // Validar tipos de archivo permitidos
       const allowedMimes = [
@@ -307,6 +334,10 @@ export class PropertyController {
       } else {
         callback(new Error(`File type ${file.mimetype} not allowed`), false);
       }
+    },
+    limits: { 
+      fileSize: 50 * 1024 * 1024, // 50MB por archivo
+      files: 20 // Máximo 20 archivos
     }
   }))
   @Audit(AuditAction.CREATE, AuditEntityType.MULTIMEDIA, 'Multimedia uploaded to property')

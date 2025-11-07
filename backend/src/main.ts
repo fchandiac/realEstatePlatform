@@ -24,8 +24,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   // Configuración de archivos estáticos
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
-    prefix: '/uploads/',
+  app.useStaticAssets(join(__dirname, '..', 'public'), {
+    prefix: '/public/',
   });
 
   // Configuración de Swagger

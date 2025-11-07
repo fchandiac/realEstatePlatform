@@ -23,6 +23,7 @@ import { DocumentModule } from './modules/document/document.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 import { SlideModule } from './modules/slide/slide.module';
+import { FileUploadService } from './common/services/file-upload.service';
 
 @Module({
   imports: [
@@ -56,6 +57,6 @@ import { SlideModule } from './modules/slide/slide.module';
     // CustomConfigModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, FileUploadService],
 })
 export class AppModule {}
