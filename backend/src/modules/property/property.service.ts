@@ -1201,100 +1201,53 @@ export class PropertyService {
     property: Property,
     files: Express.Multer.File[]
   ): Promise<void> {
-    console.log('📁 [PropertyService.processFiles] ===== PROCESSING MULTIMEDIA FILES =====');
-    console.log('📊 [PropertyService.processFiles] Property ID:', property.id);
-    console.log('📊 [PropertyService.processFiles] Property title:', property.title);
-    console.log('📊 [PropertyService.processFiles] Files count:', files.length);
-    console.log('📋 [PropertyService.processFiles] Files details:', files.map(f => ({
-      originalname: f.originalname,
-      filename: f.filename,
-      mimetype: f.mimetype,
-      size: f.size,
-      path: f.path
-    })));
-    
     if (!property.id) {
-      console.error('❌ [PropertyService.processFiles] CRITICAL ERROR: Property ID is null/undefined!');
       throw new Error('Property ID is required to associate multimedia');
     }
-    
+
+    // Obtener la URL base del backend
+    const backendUrl = this.config.get<string>('BACKEND_PUBLIC_URL') ||
+                      `http://localhost:${this.config.get('PORT', 3001)}`;
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      console.log(`\n📸 [PropertyService.processFiles] Processing file ${i + 1}/${files.length}: ${file.originalname}`);
-      
+
       try {
         // Determinar el tipo de multimedia basado en el mimetype
         const isImage = file.mimetype.startsWith('image/');
         const multimediaType = isImage ? MultimediaType.PROPERTY_IMG : MultimediaType.PROPERTY_VIDEO;
 
-        console.log('🏷️ [PropertyService.processFiles] File type determined:', {
-          isImage,
-          multimediaType,
-          mimetype: file.mimetype
-        });
+        // El archivo ya fue guardado por FilesInterceptor, solo necesitamos crear la entidad multimedia
+        const multimedia = new Multimedia();
+        multimedia.filename = file.filename; // Usar el filename generado por FilesInterceptor
 
-        // Crear metadata para el upload
-        const metadata: MultimediaUploadMetadata = {
-          type: multimediaType,
-          seoTitle: file.originalname,
-          description: `Multimedia for property ${property.title}`,
-        };
+        // Generar URL absoluta con el host del backend
+        const relativePath = file.path.replace(/\\/g, '/').replace(/^.*\/public\//, 'public/');
+        multimedia.url = `${backendUrl}/${relativePath}`;
 
-        console.log('📋 [PropertyService.processFiles] Metadata created:', metadata);
-        console.log('🚀 [PropertyService.processFiles] Calling multimediaService.uploadFile...');
-
-        // Usar el servicio de multimedia para subir el archivo
-        const multimedia = await this.multimediaService.uploadFile(
-          file,
-          metadata,
-          property.creatorUserId || 'system'
-        );
-
-        console.log('✅ [PropertyService.processFiles] File uploaded via service:', {
-          id: multimedia.id,
-          filename: multimedia.filename,
-          currentPropertyId: multimedia.propertyId,
-          targetPropertyId: property.id
-        });
-
-        // Asignar la propiedad al archivo multimedia
-        console.log('🔗 [PropertyService.processFiles] Associating with property...');
+        multimedia.format = file.mimetype.startsWith('image/') ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
+        multimedia.type = multimediaType;
         multimedia.propertyId = property.id;
-        
-        console.log('💾 [PropertyService.processFiles] Saving multimedia with propertyId:', {
-          multimediaId: multimedia.id,
-          propertyId: multimedia.propertyId,
-          filename: multimedia.filename
-        });
-        
+        multimedia.property = property;
+        multimedia.fileSize = file.size;
+        multimedia.seoTitle = file.originalname;
+        multimedia.description = `Multimedia for property ${property.title}`;
+        multimedia.userId = property.creatorUserId || 'system';
+
         const savedMultimedia = await this.multimediaRepository.save(multimedia);
-        
-        console.log('✅ [PropertyService.processFiles] Multimedia saved successfully:', {
+        console.log('✅ [PropertyService.processPropertyMultimediaFiles] Multimedia entity created:', {
           id: savedMultimedia.id,
           filename: savedMultimedia.filename,
-          propertyId: savedMultimedia.propertyId,
-          url: savedMultimedia.url
+          url: savedMultimedia.url,
+          type: savedMultimedia.type
         });
 
       } catch (error) {
-        console.error(`❌ [PropertyService.processFiles] ERROR processing file ${file.originalname}:`, {
-          error: error.message,
-          stack: error.stack,
-          file: {
-            originalname: file.originalname,
-            filename: file.filename,
-            path: file.path
-          }
-        });
+        console.error('❌ [PropertyService.processPropertyMultimediaFiles] Error processing file:', error);
         // Continuar con el siguiente archivo en caso de error
-        console.log('⚠️ [PropertyService.processFiles] Continuing with next file...');
       }
     }
-    
-    console.log('🏁 [PropertyService.processFiles] ===== MULTIMEDIA PROCESSING COMPLETED =====');
-  }
-
-  // Sub-método 4: Asignar agente
+  }  // Sub-método 4: Asignar agente
   private async assignPropertyAgent(property: Property, agentId: string): Promise<void> {
     const agent = await this.propertyRepository.manager.findOne(User, {
       where: { id: agentId }
@@ -1522,17 +1475,7 @@ export class PropertyService {
     dto: UploadPropertyMultimediaDto,
     uploadedBy?: string
   ): Promise<Multimedia[]> {
-    console.log('📁 [PropertyService.uploadMultimedia] ===== UPLOADING MULTIMEDIA TO EXISTING PROPERTY =====');
-    console.log('📊 [PropertyService.uploadMultimedia] Property ID:', propertyId);
-    console.log('📊 [PropertyService.uploadMultimedia] Files count:', files.length);
-    console.log('📋 [PropertyService.uploadMultimedia] Files details:', files.map(f => ({
-      originalname: f.originalname,
-      filename: f.filename,
-      mimetype: f.mimetype,
-      size: f.size,
-      path: f.path
-    })));
-    console.log('📋 [PropertyService.uploadMultimedia] DTO:', dto);
+    console.log('🔥 [PropertyService.uploadMultimedia] METHOD CALLED - Using MultimediaService');
 
     // Verificar que la propiedad existe
     const property = await this.propertyRepository.findOne({ where: { id: propertyId } });
@@ -1544,96 +1487,40 @@ export class PropertyService {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      console.log(`\n📸 [PropertyService.uploadMultimedia] Processing file ${i + 1}/${files.length}: ${file.originalname}`);
 
       try {
         // Determinar el tipo de multimedia basado en el mimetype
         const isImage = file.mimetype.startsWith('image/');
         const multimediaType = dto.type || (isImage ? MultimediaType.PROPERTY_IMG : MultimediaType.PROPERTY_VIDEO);
 
-        console.log('🏷️ [PropertyService.uploadMultimedia] File type determined:', {
-          isImage,
-          multimediaType,
-          mimetype: file.mimetype
-        });
-
         // Crear metadata para el upload
         const metadata: MultimediaUploadMetadata = {
           type: multimediaType,
-          seoTitle: dto.seoTitle || file.originalname,
-          description: dto.description || `Multimedia for property ${property.title}`,
+          seoTitle: file.originalname,
+          description: `Multimedia for property ${property.title}`,
         };
 
-        console.log('📋 [PropertyService.uploadMultimedia] Metadata created:', metadata);
-        console.log('🚀 [PropertyService.uploadMultimedia] Creating multimedia entity...');
+        // Usar el servicio de multimedia para subir el archivo
+        const multimedia = await this.multimediaService.uploadFile(
+          file,
+          metadata,
+          uploadedBy || 'system'
+        );
 
-        // Crear multimedia directamente con URL correcta
-        const multimedia = new Multimedia();
-        multimedia.filename = file.originalname;
-        
-        // Generar URL correcta basada en tipo de archivo
-        const mimetype = file.mimetype;
-        let urlPath = '/public/';
-        if (mimetype.startsWith('image/')) {
-          urlPath += 'properties/img/';
-        } else if (mimetype.startsWith('video/')) {
-          urlPath += 'properties/video/';
-        } else {
-          urlPath += 'docs/';
-        }
-        multimedia.url = urlPath + file.filename;
-        
-        multimedia.format = file.mimetype.startsWith('image/') ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
-        multimedia.type = multimediaType;
+        // Asignar la propiedad al archivo multimedia
         multimedia.propertyId = propertyId;
         multimedia.property = property;
 
-        console.log('✅ [PropertyService.uploadMultimedia] Multimedia entity created:', {
-          filename: multimedia.filename,
-          url: multimedia.url,
-          format: multimedia.format,
-          type: multimedia.type,
-          propertyId: multimedia.propertyId
-        });
-
-        console.log('💾 [PropertyService.uploadMultimedia] Saving multimedia...');
-
         const savedMultimedia = await this.multimediaRepository.save(multimedia);
-
-        console.log('✅ [PropertyService.uploadMultimedia] Multimedia saved successfully:', {
-          id: savedMultimedia.id,
-          filename: savedMultimedia.filename,
-          propertyId: savedMultimedia.propertyId,
-          url: savedMultimedia.url
-        });
+        console.log('💾 [PropertyService.uploadMultimedia] Saved multimedia with URL:', savedMultimedia.url);
 
         uploadedMultimedia.push(savedMultimedia);
 
       } catch (error) {
-        console.error(`❌ [PropertyService.uploadMultimedia] ERROR processing file ${file.originalname}:`, {
-          error: error.message,
-          stack: error.stack,
-          file: {
-            originalname: file.originalname,
-            filename: file.filename,
-            path: file.path
-          }
-        });
+        console.error('❌ [PropertyService.uploadMultimedia] Error:', error);
         // Continuar con el siguiente archivo en caso de error
-        console.log('⚠️ [PropertyService.uploadMultimedia] Continuing with next file...');
       }
     }
-
-    console.log('🏁 [PropertyService.uploadMultimedia] ===== MULTIMEDIA UPLOAD COMPLETED =====');
-    console.log('📊 [PropertyService.uploadMultimedia] Final result:', {
-      uploadedCount: uploadedMultimedia.length,
-      totalFiles: files.length,
-      uploadedItems: uploadedMultimedia.map(m => ({
-        id: m.id,
-        filename: m.filename,
-        propertyId: m.propertyId
-      }))
-    });
 
     return uploadedMultimedia;
   }

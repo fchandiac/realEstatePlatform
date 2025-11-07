@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import IconButton from '@/components/IconButton/IconButton';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import { getMultimedia, deleteMultimedia, type MultimediaItem } from '@/app/actions/multimedia';
@@ -164,12 +163,10 @@ export default function MultimediaPropertyCard({
           }}
         />
       ) : (
-        <Image
+        <img
           src={mediaUrl}
           alt={multimedia.filename}
-          fill
-          className="object-cover transition-transform duration-200 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
           onError={(e) => {
             // Fallback a placeholder SVG si falla la carga
             const target = e.target as HTMLImageElement;

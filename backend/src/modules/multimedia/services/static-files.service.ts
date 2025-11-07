@@ -13,7 +13,7 @@ export class StaticFilesService implements OnModuleInit {
 
   constructor(private configService: ConfigService) {
     // Obtiene la ruta base de uploads desde la configuración o usa el valor por defecto
-    this.uploadBasePath = this.configService.get('UPLOAD_PATH') || 'uploads';
+    this.uploadBasePath = this.configService.get('UPLOAD_PATH') || 'public';
   }
 
   // Se ejecuta cuando el módulo se inicializa
@@ -32,11 +32,10 @@ export class StaticFilesService implements OnModuleInit {
       'web/logos',
       'web/staff',
       'web/partnerships',
-      // Propiedades
-      'properties/images',
-      'properties/videos',
-      'PROPERTY_IMG',
-      'PROPERTY_VIDEO',
+      // Propiedades (consistente con PropertyController)
+      'properties/img',
+      'properties/video',
+      'docs',
     ];
 
     for (const dir of directories) {
@@ -54,21 +53,20 @@ export class StaticFilesService implements OnModuleInit {
       [MultimediaType.LOGO]: 'web/logos',
       [MultimediaType.STAFF]: 'web/staff',
       [MultimediaType.PARTNERSHIP]: 'web/partnerships',
-      [MultimediaType.PROPERTY_IMG]: 'PROPERTY_IMG',
-      [MultimediaType.PROPERTY_VIDEO]: 'PROPERTY_VIDEO',
+      [MultimediaType.PROPERTY_IMG]: 'properties/img',
+      [MultimediaType.PROPERTY_VIDEO]: 'properties/video',
+      [MultimediaType.TESTIMONIAL_IMG]: 'web/testimonials',
+      [MultimediaType.DOCUMENT]: 'docs',
+      [MultimediaType.SLIDER]: 'web/sliders',
     };
 
     return path.join(this.uploadBasePath, paths[type] || '');
   }
 
-  // Genera una URL pública completa para un archivo
+  // Genera una URL pública relativa para un archivo
   getPublicUrl(relativePath: string): string {
-    const protocol = this.configService.get('NODE_ENV') === 'production' ? 'https' : 'http';
-    const host = this.configService.get('HOST') || 'localhost';
-    const port = this.configService.get('PORT') || '3001';
-    const baseUrl = `${protocol}://${host}:${port}`;
-    
-    return `${baseUrl}/uploads/${relativePath}`;
+    // Retornar URL relativa que apunte a /public/ en lugar de URL absoluta
+    return `/public/${relativePath}`;
   }
 
   // Obtiene la ruta completa del sistema de archivos para un archivo

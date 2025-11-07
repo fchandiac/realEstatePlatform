@@ -17,7 +17,6 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Response, Request } from 'express';
-import { Request as NestRequest } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import { Property } from '../../entities/property.entity';
 import { CreatePropertyDto, UpdatePropertyDto, UpdatePropertyCharacteristicsDto } from './dto/property.dto';
@@ -84,7 +83,28 @@ export class PropertyController {
   @Post()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FilesInterceptor('multimediaFiles', 10, {
-    // ❌ REMOVED: dest: './uploads/temp',  // ← ESTO ERA EL PROBLEMA - Archivos se guardaban en disco automáticamente
+    storage: diskStorage({
+      destination: (req, file, callback) => {
+        // Determinar carpeta basada en tipo de archivo
+        const mimetype = file.mimetype;
+        let folder = './public/';
+
+        if (mimetype.startsWith('image/')) {
+          folder += 'properties/img';
+        } else if (mimetype.startsWith('video/')) {
+          folder += 'properties/video';
+        } else {
+          folder += 'docs'; // Default para otros tipos
+        }
+
+        callback(null, folder);
+      },
+      filename: (req, file, callback) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = extname(file.originalname);
+        callback(null, `${uniqueSuffix}${ext}`);
+      },
+    }),
     limits: { 
       fileSize: 10 * 1024 * 1024, // 10MB por archivo
       files: 10 // Máximo 10 archivos
@@ -318,27 +338,33 @@ export class PropertyController {
     return this.propertyService.updateMainImage(id, dto.mainImageUrl, userId);
   }
 
-  @Post(':id/multimedia')
+    @Post(':id/multimedia')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FilesInterceptor('files', 20, {
-    storage: propertyUploadStorage,
+    storage: diskStorage({
+      destination: (req, file, callback) => {
+        let folder = './public/';
+        if (file.mimetype.startsWith('image/')) {
+          folder += 'properties/img';
+        } else if (file.mimetype.startsWith('video/')) {
+          folder += 'properties/video';
+        }
+        callback(null, folder);
+      },
+      filename: (req, file, callback) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = extname(file.originalname);
+        const filename = `${uniqueSuffix}${ext}`;
+        callback(null, filename);
+      },
+    }),
     fileFilter: (req, file, callback) => {
-      // Validar tipos de archivo permitidos
-      const allowedMimes = [
-        'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
-        'video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'
-      ];
-      
-      if (allowedMimes.includes(file.mimetype)) {
+      if (file.mimetype.match(/\/(jpg|jpeg|png|gif|mp4|avi|mov)$/)) {
         callback(null, true);
       } else {
-        callback(new Error(`File type ${file.mimetype} not allowed`), false);
+        callback(new Error('Tipo de archivo no permitido'), false);
       }
     },
-    limits: { 
-      fileSize: 50 * 1024 * 1024, // 50MB por archivo
-      files: 20 // Máximo 20 archivos
-    }
   }))
   @Audit(AuditAction.CREATE, AuditEntityType.MULTIMEDIA, 'Multimedia uploaded to property')
   async uploadMultimedia(
@@ -347,22 +373,17 @@ export class PropertyController {
     @UploadedFiles() files: Express.Multer.File[],
     @Req() req: any,
   ) {
-    console.log('📁 [PropertyController.uploadMultimedia] ===== UPLOAD MULTIMEDIA REQUEST =====');
-    console.log('📊 [PropertyController.uploadMultimedia] Property ID:', propertyId);
-    console.log('📊 [PropertyController.uploadMultimedia] Files received:', files?.length || 0);
-    console.log('📋 [PropertyController.uploadMultimedia] DTO:', dto);
-
+    console.log(`� Endpoint llamado: POST /properties/${propertyId}/multimedia`);
+    console.log(`� Usuario: ${req.user?.id}`);
+    console.log(`� Archivos recibidos: ${files?.length || 0}`);
+    
     if (!files || files.length === 0) {
-      throw new BadRequestException('No files provided');
+      console.error('❌ No se recibieron archivos');
+      throw new BadRequestException('No se recibieron archivos');
     }
 
     const userId = this.extractUserId(req);
     const uploadedMultimedia = await this.propertyService.uploadMultimedia(propertyId, files, dto, userId);
-
-    console.log('✅ [PropertyController.uploadMultimedia] Upload completed:', {
-      uploadedCount: uploadedMultimedia.length,
-      propertyId
-    });
 
     return {
       message: 'Multimedia uploaded successfully',
