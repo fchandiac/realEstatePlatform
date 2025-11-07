@@ -6,6 +6,7 @@ import IconButton from '@/components/IconButton/IconButton';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import { getMultimedia, deleteMultimedia, type MultimediaItem } from '@/app/actions/multimedia';
 import { updateMainImage } from '@/app/actions/properties';
+import { useAuthRedirect } from '@/app/hooks/useAuthRedirect';
 
 interface MultimediaPropertyCardProps {
   multimediaId: string;
@@ -26,6 +27,8 @@ export default function MultimediaPropertyCard({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+
+  const { handleAuthError } = useAuthRedirect();
 
   useEffect(() => {
     loadMultimedia();
@@ -61,9 +64,19 @@ export default function MultimediaPropertyCard({
       if (result.success) {
         onDelete?.(multimediaId);
       } else {
+        // Verificar error de autenticación
+        if (handleAuthError(result.error || 'Error desconocido')) {
+          return;
+        }
+
         alert(result.error || 'Error al eliminar multimedia');
       }
     } catch (err) {
+      // Verificar error de autenticación
+      if (handleAuthError('Error inesperado al eliminar multimedia')) {
+        return;
+      }
+
       alert('Error inesperado al eliminar multimedia');
     } finally {
       setDeleting(false);
@@ -83,9 +96,19 @@ export default function MultimediaPropertyCard({
       if (result.success) {
         onMainChange?.(mediaUrl);
       } else {
+        // Verificar error de autenticación
+        if (handleAuthError(result.error || 'Error desconocido')) {
+          return;
+        }
+
         alert(result.error || 'Error al establecer multimedia principal');
       }
     } catch (err) {
+      // Verificar error de autenticación
+      if (handleAuthError('Error inesperado al establecer multimedia principal')) {
+        return;
+      }
+
       alert('Error inesperado al establecer multimedia principal');
     }
   };

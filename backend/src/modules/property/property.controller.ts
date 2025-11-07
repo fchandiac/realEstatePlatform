@@ -13,6 +13,7 @@ import {
   UploadedFiles,
   Req,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Response, Request } from 'express';
@@ -30,6 +31,7 @@ import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { Audit } from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UploadPropertyMultimediaDto } from './dto/upload-property-multimedia.dto';
 
 @Controller('properties')
 export class PropertyController {
@@ -284,6 +286,57 @@ export class PropertyController {
   ): Promise<Property> {
     const userId = this.extractUserId(req);
     return this.propertyService.updateMainImage(id, dto.mainImageUrl, userId);
+  }
+
+  @Post(':id/multimedia')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FilesInterceptor('files', 10, {
+    limits: { 
+      fileSize: 10 * 1024 * 1024, // 10MB por archivo
+      files: 10 // Máximo 10 archivos
+    },
+    fileFilter: (req, file, callback) => {
+      // Validar tipos de archivo permitidos
+      const allowedMimes = [
+        'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+        'video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'
+      ];
+      
+      if (allowedMimes.includes(file.mimetype)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`File type ${file.mimetype} not allowed`), false);
+      }
+    }
+  }))
+  @Audit(AuditAction.CREATE, AuditEntityType.MULTIMEDIA, 'Multimedia uploaded to property')
+  async uploadMultimedia(
+    @Param('id') propertyId: string,
+    @Body(new ValidationPipe({ transform: true })) dto: UploadPropertyMultimediaDto,
+    @UploadedFiles() files: Express.Multer.File[],
+    @Req() req: any,
+  ) {
+    console.log('📁 [PropertyController.uploadMultimedia] ===== UPLOAD MULTIMEDIA REQUEST =====');
+    console.log('📊 [PropertyController.uploadMultimedia] Property ID:', propertyId);
+    console.log('📊 [PropertyController.uploadMultimedia] Files received:', files?.length || 0);
+    console.log('📋 [PropertyController.uploadMultimedia] DTO:', dto);
+
+    if (!files || files.length === 0) {
+      throw new BadRequestException('No files provided');
+    }
+
+    const userId = this.extractUserId(req);
+    const uploadedMultimedia = await this.propertyService.uploadMultimedia(propertyId, files, dto, userId);
+
+    console.log('✅ [PropertyController.uploadMultimedia] Upload completed:', {
+      uploadedCount: uploadedMultimedia.length,
+      propertyId
+    });
+
+    return {
+      message: 'Multimedia uploaded successfully',
+      data: uploadedMultimedia
+    };
   }
 
   /**

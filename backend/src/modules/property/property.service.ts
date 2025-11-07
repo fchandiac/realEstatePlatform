@@ -25,6 +25,7 @@ import { CurrencyPriceEnum } from '../../entities/property.entity';
 import { MultimediaService as UploadMultimediaService } from '../multimedia/services/multimedia.service';
 import { MultimediaUploadMetadata } from '../multimedia/interfaces/multimedia.interface';
 import { ConfigService } from '@nestjs/config';
+import { UploadPropertyMultimediaDto } from './dto/upload-property-multimedia.dto';
 
 @Injectable()
 export class PropertyService {
@@ -1508,6 +1509,124 @@ export class PropertyService {
     }
 
     return this.propertyRepository.save(property);
+  }
+
+  /**
+   * Sube multimedia a una propiedad existente
+   */
+  async uploadMultimedia(
+    propertyId: string,
+    files: Express.Multer.File[],
+    dto: UploadPropertyMultimediaDto,
+    uploadedBy?: string
+  ): Promise<Multimedia[]> {
+    console.log('📁 [PropertyService.uploadMultimedia] ===== UPLOADING MULTIMEDIA TO EXISTING PROPERTY =====');
+    console.log('📊 [PropertyService.uploadMultimedia] Property ID:', propertyId);
+    console.log('📊 [PropertyService.uploadMultimedia] Files count:', files.length);
+    console.log('📋 [PropertyService.uploadMultimedia] Files details:', files.map(f => ({
+      originalname: f.originalname,
+      filename: f.filename,
+      mimetype: f.mimetype,
+      size: f.size,
+      path: f.path
+    })));
+    console.log('📋 [PropertyService.uploadMultimedia] DTO:', dto);
+
+    // Verificar que la propiedad existe
+    const property = await this.propertyRepository.findOne({ where: { id: propertyId } });
+    if (!property) {
+      throw new NotFoundException('Property not found');
+    }
+
+    const uploadedMultimedia: Multimedia[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      console.log(`\n📸 [PropertyService.uploadMultimedia] Processing file ${i + 1}/${files.length}: ${file.originalname}`);
+
+      try {
+        // Determinar el tipo de multimedia basado en el mimetype
+        const isImage = file.mimetype.startsWith('image/');
+        const multimediaType = dto.type || (isImage ? MultimediaType.PROPERTY_IMG : MultimediaType.PROPERTY_VIDEO);
+
+        console.log('🏷️ [PropertyService.uploadMultimedia] File type determined:', {
+          isImage,
+          multimediaType,
+          mimetype: file.mimetype
+        });
+
+        // Crear metadata para el upload
+        const metadata: MultimediaUploadMetadata = {
+          type: multimediaType,
+          seoTitle: dto.seoTitle || file.originalname,
+          description: dto.description || `Multimedia for property ${property.title}`,
+        };
+
+        console.log('📋 [PropertyService.uploadMultimedia] Metadata created:', metadata);
+        console.log('🚀 [PropertyService.uploadMultimedia] Calling multimediaService.uploadFile...');
+
+        // Usar el servicio de multimedia para subir el archivo
+        const multimedia = await this.multimediaService.uploadFile(
+          file,
+          metadata,
+          uploadedBy || property.creatorUserId || 'system'
+        );
+
+        console.log('✅ [PropertyService.uploadMultimedia] File uploaded via service:', {
+          id: multimedia.id,
+          filename: multimedia.filename,
+          currentPropertyId: multimedia.propertyId,
+          targetPropertyId: propertyId
+        });
+
+        // Asignar la propiedad al archivo multimedia
+        console.log('🔗 [PropertyService.uploadMultimedia] Associating with property...');
+        multimedia.propertyId = propertyId;
+
+        console.log('💾 [PropertyService.uploadMultimedia] Saving multimedia with propertyId:', {
+          multimediaId: multimedia.id,
+          propertyId: multimedia.propertyId,
+          filename: multimedia.filename
+        });
+
+        const savedMultimedia = await this.multimediaRepository.save(multimedia);
+
+        console.log('✅ [PropertyService.uploadMultimedia] Multimedia saved successfully:', {
+          id: savedMultimedia.id,
+          filename: savedMultimedia.filename,
+          propertyId: savedMultimedia.propertyId,
+          url: savedMultimedia.url
+        });
+
+        uploadedMultimedia.push(savedMultimedia);
+
+      } catch (error) {
+        console.error(`❌ [PropertyService.uploadMultimedia] ERROR processing file ${file.originalname}:`, {
+          error: error.message,
+          stack: error.stack,
+          file: {
+            originalname: file.originalname,
+            filename: file.filename,
+            path: file.path
+          }
+        });
+        // Continuar con el siguiente archivo en caso de error
+        console.log('⚠️ [PropertyService.uploadMultimedia] Continuing with next file...');
+      }
+    }
+
+    console.log('🏁 [PropertyService.uploadMultimedia] ===== MULTIMEDIA UPLOAD COMPLETED =====');
+    console.log('📊 [PropertyService.uploadMultimedia] Final result:', {
+      uploadedCount: uploadedMultimedia.length,
+      totalFiles: files.length,
+      uploadedItems: uploadedMultimedia.map(m => ({
+        id: m.id,
+        filename: m.filename,
+        propertyId: m.propertyId
+      }))
+    });
+
+    return uploadedMultimedia;
   }
 
 }

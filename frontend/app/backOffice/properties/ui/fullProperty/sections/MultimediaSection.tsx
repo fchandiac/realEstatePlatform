@@ -9,11 +9,14 @@ import Alert from '@/components/Alert/Alert';
 import { updateMainImage, uploadPropertyMultimedia } from '@/app/actions/properties';
 import type { MultimediaSectionProps } from '../types/property.types';
 import { MultimediaPropertyCard } from '../components';
+import { useAuthRedirect } from '@/app/hooks/useAuthRedirect';
 
 export default function MultimediaSection({ property, onChange }: MultimediaSectionProps) {
   const [pendingMultimedia, setPendingMultimedia] = useState<File[]>([]);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateMessage, setUpdateMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const { handleAuthError } = useAuthRedirect();
 
   const handleSetMainImage = async (mediaUrl: string) => {
     try {
@@ -24,9 +27,19 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
         setUpdateMessage({ type: 'success', message: 'Multimedia principal actualizada' });
         setTimeout(() => setUpdateMessage(null), 3000);
       } else {
+        // Verificar si es error de autenticación
+        if (handleAuthError(result.error || 'Error desconocido')) {
+          return; // Ya se redirigió, no mostrar mensaje
+        }
+
         setUpdateMessage({ type: 'error', message: result.error || 'Error al actualizar multimedia principal' });
       }
     } catch (error) {
+      // Verificar si es error de autenticación
+      if (handleAuthError('Error inesperado')) {
+        return; // Ya se redirigió, no mostrar mensaje
+      }
+
       setUpdateMessage({ type: 'error', message: 'Error inesperado' });
     }
   };
@@ -63,9 +76,19 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
         setUpdateMessage({ type: 'success', message: 'Multimedia actualizada correctamente' });
         setTimeout(() => setUpdateMessage(null), 3000);
       } else {
+        // Verificar si es error de autenticación
+        if (handleAuthError(result.error || 'Error desconocido')) {
+          return; // Ya se redirigió, no mostrar mensaje
+        }
+
         setUpdateMessage({ type: 'error', message: result.error || 'Error al actualizar multimedia' });
       }
     } catch (error) {
+      // Verificar si es error de autenticación
+      if (handleAuthError('Error inesperado al actualizar multimedia')) {
+        return; // Ya se redirigió, no mostrar mensaje
+      }
+
       setUpdateMessage({ type: 'error', message: 'Error inesperado al actualizar multimedia' });
     } finally {
       setIsUpdating(false);
@@ -116,8 +139,7 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
 
       {/* Sección de opciones - Agregar multimedia */}
       <div className="border-t pt-4">
-        <div className="flex items-center justify-between mb-4">
-          <h4 className="font-medium">Agregar Multimedia</h4>
+        <div className="flex justify-end mb-4">
           <IconButton
             icon="add"
             variant="containedSecondary"
@@ -129,7 +151,7 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
         {pendingMultimedia.length > 0 && (
           <div className="space-y-2 mb-4">
             {pendingMultimedia.map((file, index) => (
-              <div key={index} className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+              <div key={index} className="flex items-center gap-3 p-3 bg-white border border-secondary border-l-4 border-l-secondary rounded-lg">
                 {/* Preview pequeño */}
                 <div className="w-12 h-12 bg-background rounded overflow-hidden flex-shrink-0">
                   {file.type.startsWith('image/') ? (
@@ -164,42 +186,25 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
                 />
               </div>
             ))}
+
+            {/* Botón de subir multimedia - solo visible cuando hay archivos */}
+            <div className="flex justify-end mt-4">
+              <Button
+                onClick={handleUpdateMultimedia}
+                disabled={isUpdating}
+              >
+                {isUpdating ? (
+                  <>
+                    <CircularProgress size={16} thickness={2} className="mr-2" />
+                    Subiendo...
+                  </>
+                ) : (
+                  'Subir contenido multimedia'
+                )}
+              </Button>
+            </div>
           </div>
         )}
-
-        {/* Mensaje de estado vacío para agregar */}
-        {pendingMultimedia.length === 0 && (
-          <div className="text-center py-4 text-muted-foreground">
-            <span className="material-symbols-outlined text-2xl mb-1">perm_media</span>
-            <p>No hay archivos multimedia seleccionados</p>
-          </div>
-        )}
-      </div>
-
-      {/* Mensaje de actualización */}
-      {updateMessage && (
-        <Alert
-          variant={updateMessage.type}
-        >
-          {updateMessage.message}
-        </Alert>
-      )}
-
-      {/* Botón de subir multimedia */}
-      <div className="flex justify-end">
-        <Button
-          onClick={handleUpdateMultimedia}
-          disabled={isUpdating || pendingMultimedia.length === 0}
-        >
-          {isUpdating ? (
-            <>
-              <CircularProgress size={16} thickness={2} className="mr-2" />
-              Subiendo...
-            </>
-          ) : (
-            'Subir contenido multimedia'
-          )}
-        </Button>
       </div>
     </div>
   );
