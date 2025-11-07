@@ -33,8 +33,8 @@ export const FileImageUploader: React.FC<FileImageUploaderProps> = ({
   // Función para validar tamaño de archivo según tipo
   const validateFileSize = (file: File): string | null => {
     const isVideo = file.type.startsWith('video/');
-    const maxSizeInBytes = isVideo ? 60 * 1024 * 1024 : 10 * 1024 * 1024; // 60MB vs 10MB
-    const maxSizeLabel = isVideo ? '60MB' : '10MB';
+    const maxSizeInBytes = isVideo ? 70 * 1024 * 1024 : 10 * 1024 * 1024; // 70MB para videos, 10MB para imágenes
+    const maxSizeLabel = isVideo ? '70MB' : '10MB';
     const fileType = isVideo ? 'videos' : 'imágenes';
 
     if (file.size > maxSizeInBytes) {
