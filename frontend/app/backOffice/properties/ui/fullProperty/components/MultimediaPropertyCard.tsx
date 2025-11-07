@@ -176,15 +176,12 @@ export default function MultimediaPropertyCard({
           alt={multimedia.filename}
           className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
           onError={(e) => {
-            // Fallback a placeholder SVG si falla la carga
+            // Fallback a placeholder SVG simple si falla la carga
             const target = e.target as HTMLImageElement;
             target.src = `data:image/svg+xml;base64,${btoa(`
               <svg width="400" height="225" viewBox="0 0 400 225" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="400" height="225" fill="#f3f4f6"/>
-                <path d="M160 112.5C160 104.492 166.492 98 174.5 98H225.5C233.508 98 240 104.492 240 112.5V137.5C240 145.508 233.508 152 225.5 152H174.5C166.492 152 160 145.508 160 137.5V112.5Z" fill="#d1d5db"/>
-                <circle cx="200" cy="125" r="15" fill="#9ca3af"/>
-                <path d="M185 125L195 135L215 115" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <text x="200" y="180" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="14">Imagen no disponible</text>
+                <text x="200" y="120" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="16" font-weight="500">Imagen no disponible</text>
               </svg>
             `)}`;
           }}
