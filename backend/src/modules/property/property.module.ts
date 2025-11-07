@@ -9,11 +9,12 @@ import { Multimedia } from '../../entities/multimedia.entity';
 import { AuditModule } from '../../audit/audit.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { MultimediaModule } from '../multimedia/multimedia.module';
+import { FileUploadService } from '../../common/services/file-upload.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Property, User, Multimedia, PropertyType]), AuditModule, NotificationsModule, MultimediaModule],
   controllers: [PropertyController],
-  providers: [PropertyService],
+  providers: [PropertyService, FileUploadService],
   exports: [PropertyService],
 })
 export class PropertyModule {}
