@@ -436,6 +436,20 @@ export class PropertyController {
     return this.propertyService.updateLocation(id, dto, userId);
   }
 
+  /**
+   * Verifica si una multimedia específica es la imagen principal de la propiedad
+   */
+  @Get(':propertyId/multimedia/:multimediaId/is-main')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Multimedia main status checked')
+  async isMultimediaMain(
+    @Param('propertyId') propertyId: string,
+    @Param('multimediaId') multimediaId: string,
+  ): Promise<{ isMain: boolean }> {
+    const isMain = await this.propertyService.isMultimediaMain(propertyId, multimediaId);
+    return { isMain };
+  }
+
   private extractUserId(req: any): string {
     const user = req.user as any;
     if (user?.id) return user.id;

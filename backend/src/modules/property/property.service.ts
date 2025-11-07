@@ -1467,6 +1467,35 @@ export class PropertyService {
   }
 
   /**
+   * Verifica si una multimedia específica es la imagen principal de la propiedad
+   */
+  async isMultimediaMain(propertyId: string, multimediaId: string): Promise<boolean> {
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+      select: ['id', 'mainImageUrl']
+    });
+
+    if (!property || !property.mainImageUrl) {
+      return false;
+    }
+
+    const multimedia = await this.multimediaRepository.findOne({
+      where: { id: multimediaId, propertyId },
+      select: ['id', 'url']
+    });
+
+    if (!multimedia) {
+      return false;
+    }
+
+    // Comparar URLs normalizadas (remover posibles diferencias de formato)
+    const propertyMainUrl = property.mainImageUrl.trim();
+    const multimediaUrl = multimedia.url.trim();
+
+    return propertyMainUrl === multimediaUrl;
+  }
+
+  /**
    * Sube multimedia a una propiedad existente
    */
   async uploadMultimedia(

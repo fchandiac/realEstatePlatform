@@ -1133,3 +1133,47 @@ export async function uploadPropertyMultimedia(
     };
   }
 }
+
+/**
+ * Check if a multimedia item is the main image of a property
+ */
+export async function isMultimediaMain(
+  propertyId: string,
+  multimediaId: string
+): Promise<{
+  success: boolean;
+  isMain?: boolean;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No autorizado' };
+    }
+
+    const response = await fetch(`${env.backendApiUrl}/properties/${propertyId}/multimedia/${multimediaId}/is-main`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        success: false,
+        error: errorData.message || 'Error al verificar si la multimedia es principal'
+      };
+    }
+
+    const result = await response.json();
+    return { success: true, isMain: result.isMain };
+  } catch (error) {
+    console.error('Error checking if multimedia is main:', error);
+    return {
+      success: false,
+      error: 'Error inesperado al verificar multimedia principal'
+    };
+  }
+}

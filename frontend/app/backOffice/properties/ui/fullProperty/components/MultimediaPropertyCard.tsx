@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import IconButton from '@/components/IconButton/IconButton';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import { getMultimedia, deleteMultimedia, type MultimediaItem } from '@/app/actions/multimedia';
-import { updateMainImage } from '@/app/actions/properties';
+import { updateMainImage, isMultimediaMain } from '@/app/actions/properties';
 import { useAuthRedirect } from '@/app/hooks/useAuthRedirect';
 
 interface MultimediaPropertyCardProps {
@@ -26,6 +26,7 @@ export default function MultimediaPropertyCard({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [verifiedIsMain, setVerifiedIsMain] = useState(isMain);
 
   const { handleAuthError } = useAuthRedirect();
 
@@ -41,6 +42,11 @@ export default function MultimediaPropertyCard({
 
       if (result.success && result.data) {
         setMultimedia(result.data);
+        // Verificar si esta multimedia es la principal
+        const mainResult = await isMultimediaMain(propertyId, multimediaId);
+        if (mainResult.success) {
+          setVerifiedIsMain(mainResult.isMain || false);
+        }
       } else {
         setError(result.error || 'Error al cargar multimedia');
       }
@@ -93,6 +99,8 @@ export default function MultimediaPropertyCard({
       const result = await updateMainImage(propertyId, mediaUrl);
 
       if (result.success) {
+        // Actualizar el estado local y notificar al padre
+        setVerifiedIsMain(true);
         onMainChange?.(mediaUrl);
       } else {
         // Verificar error de autenticación
@@ -136,7 +144,7 @@ export default function MultimediaPropertyCard({
     : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'}${multimedia.url}`;
 
   return (
-    <div className="relative group aspect-video min-h-[7rem] bg-muted rounded-lg overflow-hidden">
+    <div className="relative group aspect-video min-h-[7rem] rounded-lg overflow-hidden">
       {/* Contenido multimedia */}
       {multimedia.type === 'VIDEO' ? (
         <video
@@ -183,17 +191,13 @@ export default function MultimediaPropertyCard({
         />
       )}
 
-      {/* Indicador de carga sutil */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-
-      {/* Overlay con acciones */}
-      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 rounded-lg">
+      {/* Botones en esquina superior derecha */}
+      <div className="absolute top-3 right-3 flex items-center gap-2">
         {/* Botón estrella para main */}
         <IconButton
           icon="star"
-          variant={isMain ? "containedPrimary" : "containedSecondary"}
-          size="md"
-          className="bg-white/20 hover:bg-white/30"
+          variant={verifiedIsMain ? "containedPrimary" : "outlined"}
+          size="sm"
           onClick={handleSetMain}
           disabled={deleting}
         />
@@ -202,22 +206,16 @@ export default function MultimediaPropertyCard({
         <IconButton
           icon="delete"
           variant="containedSecondary"
-          size="md"
-          className="bg-red-500/80 hover:bg-red-600"
+          size="sm"
           onClick={handleDelete}
           disabled={deleting}
         >
-          {deleting && <CircularProgress size={16} className="absolute" />}
+          {deleting && <CircularProgress size={12} className="absolute" />}
         </IconButton>
       </div>
 
-      {/* Indicadores */}
-      <div className="absolute top-3 left-3 bg-black/80 text-white text-sm px-3 py-1 rounded-full font-medium">
-        {multimedia.type === 'VIDEO' ? '🎥' : '📷'}
-      </div>
-
-      {isMain && (
-        <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-sm px-3 py-1 rounded-full flex items-center gap-1 font-medium">
+      {verifiedIsMain && (
+        <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-sm px-3 py-1 rounded-full flex items-center gap-1 font-medium">
           <span className="material-symbols-outlined text-base">star</span>
           Principal
         </div>
