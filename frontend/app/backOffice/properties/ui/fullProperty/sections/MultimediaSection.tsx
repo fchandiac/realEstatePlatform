@@ -163,8 +163,8 @@ export default function MultimediaSection({ property, onChange }: MultimediaSect
                       className="object-cover w-full h-full"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="material-symbols-outlined text-lg">videocam</span>
+                    <div className="w-full h-full flex items-center justify-center bg-muted">
+                      {/* Sin ícono, solo placeholder vacío */}
                     </div>
                   )}
                 </div>
