@@ -7,7 +7,7 @@ import DataGrid from '@/components/DataGrid/DataGridWrapper';
 import type { DataGridColumn } from '@/components/DataGrid/DataGrid';
 import { env } from '@/lib/env';
 import type { SalePropertyGridRow } from '@/app/actions/properties';
-import CreateProperty from '../../ui/CreateProperty';
+import CreateProperty from '../../ui/createProperty/CreateProperty';
 import { useAlert } from '@/app/contexts/AlertContext';
 
 type SalesGridProps = {
