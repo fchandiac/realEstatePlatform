@@ -106,7 +106,7 @@ export class PropertyController {
       },
     }),
     limits: { 
-      fileSize: 10 * 1024 * 1024, // 10MB por archivo
+      fileSize: 70 * 1024 * 1024, // Máximo global 70MB (para videos)
       files: 10 // Máximo 10 archivos
     },
     fileFilter: (req, file, callback) => {
@@ -116,11 +116,23 @@ export class PropertyController {
         'video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'
       ];
       
-      if (allowedMimes.includes(file.mimetype)) {
-        callback(null, true);
-      } else {
-        callback(new Error(`File type ${file.mimetype} not allowed`), false);
+      if (!allowedMimes.includes(file.mimetype)) {
+        callback(new Error(`Tipo de archivo ${file.mimetype} no permitido`), false);
+        return;
       }
+
+      // Validar tamaño específico por tipo de archivo
+      const isVideo = file.mimetype.startsWith('video/');
+      const maxSizeInBytes = isVideo ? 70 * 1024 * 1024 : 10 * 1024 * 1024; // 70MB para videos, 10MB para imágenes
+      const maxSizeLabel = isVideo ? '70MB' : '10MB';
+      const fileType = isVideo ? 'videos' : 'imágenes';
+
+      if (file.size > maxSizeInBytes) {
+        callback(new Error(`Archivo demasiado grande. Máximo permitido: ${maxSizeLabel} para ${fileType}`), false);
+        return;
+      }
+
+      callback(null, true);
     }
   }))
   @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Property created')
@@ -358,12 +370,34 @@ export class PropertyController {
         callback(null, filename);
       },
     }),
+    limits: {
+      fileSize: 70 * 1024 * 1024, // Máximo global 70MB (para videos)
+      files: 20 // Máximo 20 archivos
+    },
     fileFilter: (req, file, callback) => {
-      if (file.mimetype.match(/\/(jpg|jpeg|png|gif|mp4|avi|mov)$/)) {
-        callback(null, true);
-      } else {
+      // Validar tipos de archivo permitidos
+      const allowedMimes = [
+        'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+        'video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'
+      ];
+
+      if (!allowedMimes.includes(file.mimetype)) {
         callback(new Error('Tipo de archivo no permitido'), false);
+        return;
       }
+
+      // Validar tamaño específico por tipo de archivo
+      const isVideo = file.mimetype.startsWith('video/');
+      const maxSizeInBytes = isVideo ? 70 * 1024 * 1024 : 10 * 1024 * 1024; // 70MB para videos, 10MB para imágenes
+      const maxSizeLabel = isVideo ? '70MB' : '10MB';
+      const fileType = isVideo ? 'videos' : 'imágenes';
+
+      if (file.size > maxSizeInBytes) {
+        callback(new Error(`Archivo demasiado grande. Máximo permitido: ${maxSizeLabel} para ${fileType}`), false);
+        return;
+      }
+
+      callback(null, true);
     },
   }))
   @Audit(AuditAction.CREATE, AuditEntityType.MULTIMEDIA, 'Multimedia uploaded to property')

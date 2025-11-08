@@ -13,14 +13,22 @@ export interface MultimediaItem {
   id: string;
   propertyId: string;
   url: string;
+  // Original canonical types used by earlier code paths
   type: 'IMAGE' | 'VIDEO' | 'VIRTUAL_TOUR';
-  mimeType: string;
-  filename: string;
-  originalName: string;
-  size: number;
-  isMain: boolean;
-  order: number;
+  // Backend extended types (optional)
+  format?: 'IMG' | 'VIDEO' | 'VIRTUAL_TOUR';
+  // Sometimes backend sends PROPERTY_IMG / PROPERTY_VIDEO through other endpoints; keep loose alias propertyType
+  propertyType?: 'PROPERTY_IMG' | 'PROPERTY_VIDEO';
+  mimeType?: string;
+  filename?: string; // Some legacy endpoints supply filename
+  originalName?: string;
+  size?: number;      // Legacy size
+  fileSize?: number;  // New size field
+  isMain?: boolean;
+  order?: number;
   description?: string;
+  seoTitle?: string;
+  userId?: string;
   metadata?: {
     width?: number;
     height?: number;
@@ -30,6 +38,7 @@ export interface MultimediaItem {
   };
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string | null;
 }
 
 export interface UploadMultimediaRequest {
@@ -99,6 +108,7 @@ export async function uploadPropertyMultimedia(
       propertyId,
       url: doc.url,
       type: type,
+      format: type === 'VIDEO' ? 'VIDEO' : 'IMG', // Agregar format basado en type
       mimeType: doc.mimeType,
       filename: doc.filename,
       originalName: doc.originalName,
@@ -409,7 +419,7 @@ export async function getPropertyMultimediaStats(propertyId: string): Promise<{
     const stats = {
       totalImages: items.filter(item => item.type === 'IMAGE').length,
       totalVideos: items.filter(item => item.type === 'VIDEO').length,
-      totalSize: items.reduce((total, item) => total + item.size, 0),
+      totalSize: items.reduce((total, item) => total + (item.size ?? item.fileSize ?? 0), 0),
       hasMainImage: items.some(item => item.isMain && item.type === 'IMAGE'),
     };
 
