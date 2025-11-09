@@ -70,8 +70,13 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
       }
 
       // Update the multimedia list with the new items
-      if (result.data?.data) {
+      // Backend may return { message, data: [...] } or return an array directly
+      if (Array.isArray(result.data?.data)) {
         setMultimedia(prev => [...prev, ...result.data.data]);
+      } else if (Array.isArray(result.data)) {
+        setMultimedia(prev => [...prev, ...result.data]);
+      } else if (Array.isArray(result)) {
+        setMultimedia(prev => [...prev, ...result]);
       }
 
   // revoke object URLs tracked
