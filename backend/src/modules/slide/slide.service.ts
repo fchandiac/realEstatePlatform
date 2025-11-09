@@ -134,6 +134,14 @@ export class SlideService {
 
   async update(id: string, updateSlideDto: UpdateSlideDto): Promise<Slide> {
     const slide = await this.findOne(id);
+    
+    // Si hay multimediaUrl y no es absoluta, convertirla a absoluta
+    if (updateSlideDto.multimediaUrl && !updateSlideDto.multimediaUrl.startsWith('http')) {
+      updateSlideDto.multimediaUrl = this.staticFilesService.getPublicUrl(
+        updateSlideDto.multimediaUrl.replace(/^\/public\//, '')
+      );
+    }
+    
     Object.assign(slide, updateSlideDto);
     return await this.slideRepository.save(slide);
   }
@@ -184,8 +192,8 @@ export class SlideService {
         if (existingSlide.multimediaUrl) {
           try {
             // Extraer path relativo del archivo anterior
-            // URL format: http://localhost:3000/uploads/web/slides/filename.ext
-            const urlParts = existingSlide.multimediaUrl.split('/uploads/');
+            // URL format: http://localhost:3000/public/web/slides/filename.ext
+            const urlParts = existingSlide.multimediaUrl.split('/public/');
             if (urlParts.length > 1) {
               const relativePath = urlParts[1];
               await this.staticFilesService.deleteFile(relativePath);

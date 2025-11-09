@@ -1048,10 +1048,50 @@ export async function getPublishedPropertiesPublic(): Promise<{
       };
     }
 
-    const data = (await res.json()) as PublicPropertyItem[];
-    return { success: true, data };
+  const payload = await res.json();
+  // Controller returns { success: true, data: [...] }
+  const data = Array.isArray(payload) ? payload : payload?.data ?? [];
+  return { success: true, data };
   } catch (error) {
     console.error('Error fetching published properties (public):', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
+ * Public: list published properties that are featured (highlighted)
+ */
+export async function getPublishedFeaturedPropertiesPublic(): Promise<{
+  success: boolean;
+  data?: PublicPropertyItem[];
+  error?: string;
+}> {
+  try {
+    const res = await fetch(`${env.backendApiUrl}/properties/public/featured`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+      cache: 'no-store',
+      next: { revalidate: 0 },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to fetch featured properties: ${res.status}`,
+      };
+    }
+
+  const payload = await res.json();
+  const data = Array.isArray(payload) ? payload : payload?.data ?? [];
+  return { success: true, data };
+  } catch (error) {
+    console.error('Error fetching published featured properties (public):', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

@@ -224,6 +224,40 @@ export class PropertyService {
   }
 
   /**
+   * Devuelve propiedades públicas que estén publicadas y marcadas como destacadas (featured).
+   * Retorna un conjunto ligero de campos aptos para consumo público.
+   */
+  async findPublishedFeaturedPublic(): Promise<Partial<Property>[]> {
+    // Return published and featured properties using the existing PropertyStatus enum.
+    const qb = this.propertyRepository.createQueryBuilder('p')
+      .leftJoinAndSelect('p.propertyType', 'pt')
+      .select([
+        'p.id',
+        'p.title',
+        'p.price',
+        'p.currencyPrice',
+        'p.city',
+        'p.state',
+        'p.mainImageUrl',
+        'p.isFeatured',
+        'p.publishedAt',
+        'p.bedrooms',
+        'p.bathrooms',
+        'p.builtSquareMeters',
+        'p.landSquareMeters',
+        'p.parkingSpaces',
+        'pt.id',
+        'pt.name'
+      ])
+      // Use the PropertyStatus enum value for published
+      .where('p.status = :status', { status: PropertyStatus.PUBLISHED })
+      .andWhere('p.isFeatured = :isFeatured', { isFeatured: true });
+
+    const rows = await qb.getMany();
+    return rows as Partial<Property>[];
+  }
+
+  /**
    * Devuelve cuántas veces la propiedad ha sido marcada como favorita.
    * Si tienes una tabla/relación de favoritos, ajusta el query.
    */

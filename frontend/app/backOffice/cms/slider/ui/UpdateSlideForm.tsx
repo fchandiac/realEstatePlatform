@@ -218,7 +218,7 @@ export default function UpdateSlideForm({ slide, onSuccess, onCancel }: UpdateSl
         {(showImageUploader || !currentImage) && (
           <div>
             <FileImageUploader
-              uploadPath="/uploads/web/slides"
+              uploadPath="/public/web/slides"
               onChange={handleMultimediaChange}
               accept="image/*,video/*"
               maxFiles={1}

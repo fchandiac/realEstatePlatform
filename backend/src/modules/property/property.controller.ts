@@ -246,6 +246,15 @@ export class PropertyController {
     return await this.propertyService.getFullProperty(id);
   }
 
+  /**
+   * Public endpoint: list published and featured properties
+   */
+  @Get('public/featured')
+  async getPublicFeatured() {
+    const data = await this.propertyService.findPublishedFeaturedPublic();
+    return { success: true, data };
+  }
+
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property updated')

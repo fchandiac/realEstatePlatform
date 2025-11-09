@@ -1,8 +1,8 @@
 import PropertyCard from './ui/PropertyCard';
-import { getPublishedPropertiesPublic } from '@/app/actions/properties';
+import { getPublishedFeaturedPropertiesPublic } from '@/app/actions/properties';
 
 export default async function PortalPage() {
-  const res = await getPublishedPropertiesPublic();
+  const res = await getPublishedFeaturedPropertiesPublic();
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
