@@ -103,26 +103,7 @@ const PortalFooter: React.FC = () => {
                     </div>
                   </div>
                 ))
-              ) : (
-                <>
-                  {/* Tarjeta 1 por defecto */}
-                  <div className="flex items-center gap-3">
-                    <img src="/globe.svg" alt="Cámara Chilena de Propiedades" className="w-12 h-12 object-contain" />
-                    <div>
-                      <div className="text-base font-semibold text-background">Cámara Chilena de Propiedades</div>
-                      <div className="text-xs text-background font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                    </div>
-                  </div>
-                  {/* Tarjeta 2 por defecto */}
-                  <div className="flex items-center gap-3">
-                    <img src="/globe.svg" alt="Alianza Global" className="w-12 h-12 object-contain" />
-                    <div>
-                      <div className="text-base font-semibold text-background">Alianza Global</div>
-                      <div className="text-xs text-background font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-                    </div>
-                  </div>
-                </>
-              )}
+              ) : null}
             </div>
           </div>
           {/* Columna 2: Síguenos en redes sociales (vertical y alineado arriba) */}
