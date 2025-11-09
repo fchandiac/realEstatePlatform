@@ -3,12 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { AboutUs } from '../../entities/about-us.entity';
 import { CreateAboutUsDto, UpdateAboutUsDto } from './dto/about-us.dto';
+import { MultimediaService } from '../multimedia/services/multimedia.service';
+import { StaticFilesService } from '../multimedia/services/static-files.service';
 
 @Injectable()
 export class AboutUsService {
   constructor(
     @InjectRepository(AboutUs)
     private readonly aboutUsRepository: Repository<AboutUs>,
+    private readonly multimediaService: MultimediaService,
+    private readonly staticFilesService: StaticFilesService,
   ) {}
 
   async create(createAboutUsDto: CreateAboutUsDto): Promise<AboutUs> {
@@ -41,8 +45,15 @@ export class AboutUsService {
     return aboutUs;
   }
 
-  async update(updateAboutUsDto: UpdateAboutUsDto): Promise<AboutUs> {
+  async update(updateAboutUsDto: UpdateAboutUsDto, file?: Express.Multer.File): Promise<AboutUs> {
     const aboutUs = await this.findOne();
+
+    // Handle multimedia upload
+    if (file) {
+      const multimediaPath = await this.multimediaService.uploadFileToPath(file, 'web/aboutUs');
+      updateAboutUsDto.multimediaUrl = this.staticFilesService.getPublicUrl(multimediaPath);
+    }
+
     Object.assign(aboutUs, updateAboutUsDto);
     return await this.aboutUsRepository.save(aboutUs);
   }

@@ -108,8 +108,7 @@ export default function AboutUsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-primary">Administrar Sobre Nosotros</h1>
-        <p className="text-muted-foreground">Edita el contenido que se muestra en la página pública</p>
+        <p className="text-muted-foreground">Edita el contenido que se muestra en el portal público</p>
       </div>
 
       {errors.length > 0 && (
@@ -126,18 +125,29 @@ export default function AboutUsPage() {
         {/* Multimedia */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Imagen (opcional)
+            Multimedia (opcional)
           </label>
 
           {/* Mostrar multimedia actual */}
           {currentMultimedia && !showMultimediaUploader && (
             <div className="mb-4">
-              <div className="relative w-48 h-32 bg-gray-100 rounded-lg overflow-hidden border">
-                <img
-                  src={`${env.backendApiUrl}${currentMultimedia}`}
-                  alt="Imagen actual"
-                  className="w-full h-full object-cover"
-                />
+              <div className="relative h-64 md:h-96 rounded-lg overflow-hidden shadow-lg">
+                {currentMultimedia.includes('.mp4') || currentMultimedia.includes('.webm') || currentMultimedia.includes('.ogg') ? (
+                  <video
+                    src={currentMultimedia}
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                  />
+                ) : (
+                  <img
+                    src={currentMultimedia}
+                    alt="Multimedia actual"
+                    className="w-full h-full object-cover"
+                  />
+                )}
+                <div className="absolute inset-0 bg-black/20"></div>
               </div>
               <div className="flex justify-start mt-2">
                 <Button
@@ -158,7 +168,7 @@ export default function AboutUsPage() {
                 uploadPath="/public/web/aboutUs"
                 onChange={handleMultimediaChange}
                 maxFiles={1}
-                accept="image/*"
+                accept="image/*,video/*"
                 maxSize={9}
                 aspectRatio="auto"
                 buttonType="icon"
@@ -166,7 +176,7 @@ export default function AboutUsPage() {
 
               {newMultimediaFile.length > 0 && (
                 <p className="text-sm text-green-600 mt-2">
-                  ✓ Nueva imagen seleccionada: {newMultimediaFile[0].name}
+                  ✓ Nuevo archivo seleccionado: {newMultimediaFile[0].name}
                 </p>
               )}
 
@@ -177,12 +187,12 @@ export default function AboutUsPage() {
                   size="sm"
                   className="mt-2"
                 >
-                  Mantener imagen actual
+                  Mantener multimedia actual
                 </Button>
               )}
 
               <small className="text-xs text-muted-foreground mt-2 block">
-                Máx. 1 imagen (hasta 9MB)
+                Máx. 1 archivo (imagen o video, hasta 9MB)
               </small>
             </div>
           )}

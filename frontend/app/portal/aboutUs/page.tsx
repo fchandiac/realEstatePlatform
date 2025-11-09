@@ -40,15 +40,26 @@ export default async function AboutUsPage() {
         </p>
       </div>
 
-      {/* Hero Image */}
+      {/* Hero Multimedia */}
       {aboutUsData.multimediaUrl && (
         <div className="mb-12">
           <div className="relative h-64 md:h-96 rounded-lg overflow-hidden shadow-lg">
-            <img
-              src={aboutUsData.multimediaUrl}
-              alt="Sobre nosotros"
-              className="w-full h-full object-cover"
-            />
+            {aboutUsData.multimediaUrl.includes('.mp4') || aboutUsData.multimediaUrl.includes('.webm') || aboutUsData.multimediaUrl.includes('.ogg') ? (
+              <video
+                src={aboutUsData.multimediaUrl}
+                className="w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            ) : (
+              <img
+                src={aboutUsData.multimediaUrl}
+                alt="Sobre nosotros"
+                className="w-full h-full object-cover"
+              />
+            )}
             <div className="absolute inset-0 bg-black/20"></div>
           </div>
         </div>
