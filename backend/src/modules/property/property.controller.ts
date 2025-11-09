@@ -38,19 +38,8 @@ import { extname } from 'path';
 // Configuración de storage para uploads de propiedades
 const propertyUploadStorage = diskStorage({
   destination: (req, file, callback) => {
-    // Determinar carpeta basada en tipo de archivo
-    const mimetype = file.mimetype;
-    let folder = './public/';
-
-    if (mimetype.startsWith('image/')) {
-      folder += 'properties/img';
-    } else if (mimetype.startsWith('video/')) {
-      folder += 'properties/video';
-    } else {
-      folder += 'docs'; // Default para otros tipos
-    }
-
-    callback(null, folder);
+    // Todas las imágenes y videos van a ./public/properties
+    callback(null, './public/properties');
   },
   filename: (req, file, callback) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -85,19 +74,8 @@ export class PropertyController {
   @UseInterceptors(FilesInterceptor('multimediaFiles', 10, {
     storage: diskStorage({
       destination: (req, file, callback) => {
-        // Determinar carpeta basada en tipo de archivo
-        const mimetype = file.mimetype;
-        let folder = './public/';
-
-        if (mimetype.startsWith('image/')) {
-          folder += 'properties/img';
-        } else if (mimetype.startsWith('video/')) {
-          folder += 'properties/video';
-        } else {
-          folder += 'docs'; // Default para otros tipos
-        }
-
-        callback(null, folder);
+        // Todas las imágenes y videos van a ./public/properties
+        callback(null, './public/properties');
       },
       filename: (req, file, callback) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -355,13 +333,8 @@ export class PropertyController {
   @UseInterceptors(FilesInterceptor('files', 20, {
     storage: diskStorage({
       destination: (req, file, callback) => {
-        let folder = './public/';
-        if (file.mimetype.startsWith('image/')) {
-          folder += 'properties/img';
-        } else if (file.mimetype.startsWith('video/')) {
-          folder += 'properties/video';
-        }
-        callback(null, folder);
+        // Todas las imágenes y videos van a ./public/properties
+        callback(null, './public/properties');
       },
       filename: (req, file, callback) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
