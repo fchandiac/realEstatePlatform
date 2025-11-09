@@ -99,6 +99,15 @@ export default function MultimediaPropertyCard({
   const normalizedMainImageUrl = normalizeMediaUrl(mainImageUrl);
   const isMainImage = normalizedUrl && normalizedMainImageUrl && normalizedUrl === normalizedMainImageUrl;
 
+  // Re-render cuando cambía mainImageUrl del padre (después de actualización)
+  useEffect(() => {
+    console.log('🔄 [MultimediaPropertyCard] mainImageUrl cambió:', {
+      previousMainImageUrl: normalizeMediaUrl(mainImageUrl),
+      currentUrl: normalizedUrl,
+      isMainImage: isMainImage,
+    });
+  }, [mainImageUrl, normalizedMainImageUrl, isMainImage]);
+
   // Logging para debugging
   useEffect(() => {
     if (multimedia) {
