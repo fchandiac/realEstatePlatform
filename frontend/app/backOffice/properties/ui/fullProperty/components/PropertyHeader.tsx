@@ -33,14 +33,17 @@ export default function PropertyHeader({ property }: PropertyHeaderProps) {
           <h1 className="text-2xl font-bold text-foreground">
             Propiedad: {property.title || 'Sin título'}
           </h1>
-          <p className="text-sm text-muted-foreground flex items-center gap-2">
-            <span className="material-symbols-outlined text-xs">tag</span>
-            ID: {property.id}
-            <span className="mx-2 text-border">•</span>
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(property.status)}`}>
-              {statusInfo?.label || property.status}
-            </span>
-          </p>
+          <div className="flex flex-col gap-2 mt-2">
+            <p className="text-sm text-muted-foreground flex items-center gap-2">
+              <span className="material-symbols-outlined text-xs">tag</span>
+              #{property.id}
+            </p>
+            <div className="flex items-center gap-2">
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(property.status)}`}>
+                {statusInfo?.label || property.status}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
       <div className="flex items-center gap-4" />
