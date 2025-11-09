@@ -2,19 +2,24 @@
 
 import { useState, useEffect, useRef } from 'react';
 import DotProgress from '@/components/DotProgress/DotProgress';
-import { getMultimedia, type MultimediaItem } from '@/app/actions/multimedia';
+import IconButton from '@/components/IconButton/IconButton';
+import { getMultimedia, deleteMultimedia, type MultimediaItem } from '@/app/actions/multimedia';
+import { updateMainImage } from '@/app/actions/properties';
 
 interface MultimediaPropertyCardProps {
   multimediaId: string;
   propertyId: string;
+  onDelete?: (id: string) => void;
 }
 
 export default function MultimediaPropertyCard({
   multimediaId,
   propertyId,
+  onDelete,
 }: MultimediaPropertyCardProps) {
   const [multimedia, setMultimedia] = useState<MultimediaItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Load multimedia on mount
@@ -49,6 +54,34 @@ export default function MultimediaPropertyCard({
     (multimedia?.url || '').toLowerCase().endsWith('.webm') ||
     (multimedia?.url || '').toLowerCase().endsWith('.mov');
 
+  const handleSetMain = async () => {
+    if (!multimedia) return;
+    try {
+      await updateMainImage(propertyId, mediaUrl);
+    } catch (error) {
+      console.error('Error setting main image:', error);
+      alert('Error al establecer como principal');
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm('¿Eliminar esta multimedia?')) return;
+    try {
+      setDeleting(true);
+      const result = await deleteMultimedia(multimediaId);
+      if (result.success) {
+        onDelete?.(multimediaId);
+      } else {
+        alert('Error al eliminar multimedia');
+      }
+    } catch (error) {
+      console.error('Error deleting multimedia:', error);
+      alert('Error al eliminar multimedia');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   // Loading state
   if (loading) {
     return (
@@ -70,7 +103,7 @@ export default function MultimediaPropertyCard({
   }
 
   return (
-    <div className="relative aspect-video min-h-[7rem] rounded-lg overflow-hidden bg-neutral group">
+    <div className="relative aspect-video min-h-[7rem] rounded-lg overflow-hidden bg-neutral">
       {isVideo ? (
         // Video con autoplay
         <video
@@ -103,9 +136,29 @@ export default function MultimediaPropertyCard({
         />
       )}
 
-      {/* Filename overlay - solo visible al hover */}
-      <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-xs p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 max-h-20 overflow-auto break-all">
-        <p className="font-mono">{multimedia.filename}</p>
+      {/* Controls - siempre visibles en la esquina superior derecha */}
+      <div className="absolute top-2 right-2 flex gap-2 z-10">
+        {/* Star button - Set as main */}
+        <IconButton
+          icon="star"
+          variant="containedPrimary"
+          size="sm"
+          onClick={handleSetMain}
+          disabled={deleting}
+          title="Establecer como principal"
+        />
+        
+        {/* Delete button */}
+        <IconButton
+          icon="delete"
+          variant="containedSecondary"
+          size="sm"
+          onClick={handleDelete}
+          disabled={deleting}
+          title="Eliminar"
+        >
+          {deleting && <DotProgress />}
+        </IconButton>
       </div>
     </div>
   );
