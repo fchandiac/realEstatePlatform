@@ -26,6 +26,7 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
                 key={item.id}
                 multimediaId={item.id}
                 propertyId={property.id}
+                mainImageUrl={property.mainImageUrl}
               />
             ))}
           </div>

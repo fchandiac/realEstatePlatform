@@ -5,16 +5,62 @@ import DotProgress from '@/components/DotProgress/DotProgress';
 import IconButton from '@/components/IconButton/IconButton';
 import { getMultimedia, deleteMultimedia, type MultimediaItem } from '@/app/actions/multimedia';
 import { updateMainImage } from '@/app/actions/properties';
+import { env } from '@/lib/env';
 
 interface MultimediaPropertyCardProps {
   multimediaId: string;
   propertyId: string;
+  mainImageUrl?: string;
   onDelete?: (id: string) => void;
+}
+
+/**
+ * Normaliza URLs de multimedia a rutas absolutas
+ * - Si es absoluta (http/https): devuelve tal cual
+ * - Si es relativa (/uploads/...): prepend backendApiUrl
+ * - Si es relativa sin /: prepend backendApiUrl + /
+ */
+function normalizeMediaUrl(url?: string | null): string | undefined {
+  if (!url) return undefined;
+
+  // Sanea rutas con ../
+  const cleaned = url.replace('/../', '/');
+
+  // Intenta parsear como URL absoluta
+  try {
+    new URL(cleaned);
+    return cleaned;
+  } catch {
+    // No es URL absoluta, procesar como relativa
+  }
+
+  // Si empieza con /, prepend backend URL directamente
+  if (cleaned.startsWith('/')) {
+    return `${env.backendApiUrl}${cleaned}`;
+  }
+
+  // Si no empieza con /, asumir que es relativa sin / y agregar /
+  return `${env.backendApiUrl}/${cleaned}`;
+}
+
+/**
+ * Detecta si una URL es un video basándose en:
+ * - type: 'VIDEO'
+ * - extensión del archivo
+ */
+function isVideoUrl(url: string, type?: string): boolean {
+  if (type === 'VIDEO') return true;
+
+  const videoExtensions = ['.mp4', '.webm', '.mov', '.avi', '.mkv', '.flv'];
+  const lowerUrl = url.toLowerCase();
+
+  return videoExtensions.some(ext => lowerUrl.includes(ext));
 }
 
 export default function MultimediaPropertyCard({
   multimediaId,
   propertyId,
+  mainImageUrl,
   onDelete,
 }: MultimediaPropertyCardProps) {
   const [multimedia, setMultimedia] = useState<MultimediaItem | null>(null);
@@ -41,23 +87,33 @@ export default function MultimediaPropertyCard({
     }
   };
 
-  // Build absolute URL for multimedia
-  const mediaUrl = multimedia?.url.startsWith('http')
-    ? multimedia.url
-    : `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'}${multimedia?.url || ''}`;
+  // Normalizar URL usando función mejorada
+  const normalizedUrl = normalizeMediaUrl(multimedia?.url);
 
   // Detectar si es video
-  const isVideo = 
-    multimedia?.type === 'VIDEO' ||
-    multimedia?.url.toLowerCase().includes('/video/') ||
-    (multimedia?.url || '').toLowerCase().endsWith('.mp4') ||
-    (multimedia?.url || '').toLowerCase().endsWith('.webm') ||
-    (multimedia?.url || '').toLowerCase().endsWith('.mov');
+  const isVideo = normalizedUrl ? isVideoUrl(normalizedUrl, multimedia?.type) : false;
+
+  // Detectar si es la imagen principal
+  const normalizedMainImageUrl = normalizeMediaUrl(mainImageUrl);
+  const isMainImage = normalizedUrl && normalizedMainImageUrl && normalizedUrl === normalizedMainImageUrl;
+
+  // Logging para debugging
+  useEffect(() => {
+    if (multimedia) {
+      console.log('🎬 Multimedia Card Debug:', {
+        originalUrl: multimedia.url,
+        normalizedUrl,
+        type: multimedia.type,
+        isVideo,
+        backendApiUrl: env.backendApiUrl,
+      });
+    }
+  }, [multimedia, normalizedUrl, isVideo]);
 
   const handleSetMain = async () => {
-    if (!multimedia) return;
+    if (!normalizedUrl) return;
     try {
-      await updateMainImage(propertyId, mediaUrl);
+      await updateMainImage(propertyId, normalizedUrl);
     } catch (error) {
       console.error('Error setting main image:', error);
       alert('Error al establecer como principal');
@@ -92,11 +148,11 @@ export default function MultimediaPropertyCard({
   }
 
   // Error or no multimedia
-  if (!multimedia) {
+  if (!multimedia || !normalizedUrl) {
     return (
       <div className="aspect-video min-h-[7rem] rounded-lg flex items-center justify-center bg-neutral p-4">
         <div className="text-center text-muted-foreground">
-          <p className="text-xs">No disponible</p>
+          <p className="text-xs">URL inválida</p>
         </div>
       </div>
     );
@@ -105,23 +161,30 @@ export default function MultimediaPropertyCard({
   return (
     <div className="relative aspect-video min-h-[7rem] rounded-lg overflow-hidden bg-neutral">
       {isVideo ? (
-        // Video con autoplay
+        // Video con autoplay, muted y loop
         <video
           ref={videoRef}
-          src={mediaUrl}
+          src={normalizedUrl}
           className="w-full h-full object-cover"
           autoPlay
-          loop
           muted
+          loop
           playsInline
-          onError={() => {
-            console.error('Error cargando video:', mediaUrl);
+          onLoadStart={() => console.log('📹 Video loadStart:', normalizedUrl)}
+          onCanPlay={() => console.log('📹 Video canPlay - autoplay should work')}
+          onError={(e) => {
+            const error = e.currentTarget.error;
+            console.error('❌ Video error:', {
+              url: normalizedUrl,
+              errorCode: error?.code,
+              errorMessage: error?.message,
+            });
           }}
         />
       ) : (
         // Imagen
         <img
-          src={mediaUrl}
+          src={normalizedUrl}
           alt={multimedia.filename || 'Multimedia'}
           className="w-full h-full object-cover"
           onError={(e) => {
@@ -140,8 +203,8 @@ export default function MultimediaPropertyCard({
       <div className="absolute top-2 right-2 flex gap-2 z-10">
         {/* Star button - Set as main */}
         <IconButton
-          icon="star"
-          variant="containedPrimary"
+          icon={isMainImage ? "star" : "star_outline"}
+          variant={isMainImage ? "containedPrimary" : "containedSecondary"}
           size="sm"
           onClick={handleSetMain}
           disabled={deleting}
