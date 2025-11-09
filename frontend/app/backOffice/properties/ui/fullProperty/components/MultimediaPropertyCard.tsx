@@ -62,6 +62,19 @@ function isVideoUrl(url: string, type?: string): boolean {
   return videoExtensions.some(ext => url.toLowerCase().includes(ext));
 }
 
+/**
+ * Compara dos URLs normalizando ambas primero
+ * Maneja URLs absolutas y relativas de manera consistente
+ */
+function urlsAreEqual(url1?: string | null, url2?: string | null): boolean {
+  if (!url1 || !url2) return false;
+
+  const normalized1 = normalizeMediaUrl(url1);
+  const normalized2 = normalizeMediaUrl(url2);
+
+  return normalized1 === normalized2;
+}
+
 export default function MultimediaPropertyCard({
   multimediaId,
   propertyId,
@@ -100,12 +113,8 @@ export default function MultimediaPropertyCard({
   const normalizedUrl = normalizeMediaUrl(multimedia?.url);
   const isVideo = normalizedUrl ? isVideoUrl(normalizedUrl, multimedia?.type) : false;
   
-  const multimediaRelativePath = getRelativePath(multimedia?.url);
-  const mainImageRelativePath = getRelativePath(mainImageUrl);
-  const isMainImage = 
-    multimediaRelativePath && 
-    mainImageRelativePath && 
-    multimediaRelativePath === mainImageRelativePath;
+  // Comparar URLs normalizadas para detectar si es la imagen principal
+  const isMainImage = urlsAreEqual(multimedia?.url, mainImageUrl);
 
   const handleSetMain = async () => {
     if (!normalizedUrl || !propertyId) {
@@ -238,8 +247,8 @@ export default function MultimediaPropertyCard({
         {/* Controls */}
         <div className="absolute top-2 right-2 flex gap-2 z-10">
           <IconButton
-            icon={'star'}
-            variant={isMainImage ? 'containedSecondary': 'containedPrimary'}
+            icon={isMainImage ? 'star' : 'star_outline'}
+            variant={isMainImage ? 'containedPrimary' : 'containedSecondary'}
             size="sm"
             onClick={handleSetMain}
             disabled={updating || deleting || isMainImage}
