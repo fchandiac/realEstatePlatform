@@ -63,16 +63,56 @@ function isVideoUrl(url: string, type?: string): boolean {
 }
 
 /**
- * Compara dos URLs normalizando ambas primero
- * Maneja URLs absolutas y relativas de manera consistente
+ * Compara dos URLs de forma robusta
+ * Normaliza ambas, extrae rutas relativas y compara sin query params
  */
 function urlsAreEqual(url1?: string | null, url2?: string | null): boolean {
-  if (!url1 || !url2) return false;
+  if (!url1 || !url2) {
+    console.warn('⚠️ urlsAreEqual: Una o ambas URLs son null/undefined', { url1, url2 });
+    return false;
+  }
 
-  const normalized1 = normalizeMediaUrl(url1);
-  const normalized2 = normalizeMediaUrl(url2);
+  // Normalizar ambas URLs
+  const norm1 = normalizeMediaUrl(url1);
+  const norm2 = normalizeMediaUrl(url2);
 
-  return normalized1 === normalized2;
+  if (!norm1 || !norm2) {
+    console.warn('⚠️ urlsAreEqual: Normalización falló', { norm1, norm2 });
+    return false;
+  }
+
+  // Extraer pathname (ruta sin protocolo, dominio, ni query params)
+  let path1 = '';
+  let path2 = '';
+
+  try {
+    const urlObj1 = new URL(norm1);
+    const urlObj2 = new URL(norm2);
+    path1 = urlObj1.pathname;
+    path2 = urlObj2.pathname;
+  } catch {
+    // Si falla parsing como URL, comparar strings directamente
+    path1 = norm1;
+    path2 = norm2;
+  }
+
+  // Remover trailing slashes para comparación consistente
+  path1 = path1.replace(/\/$/, '');
+  path2 = path2.replace(/\/$/, '');
+
+  const isEqual = path1 === path2;
+  
+  console.log('✅ urlsAreEqual result:', {
+    url1,
+    url2,
+    norm1,
+    norm2,
+    path1,
+    path2,
+    isEqual,
+  });
+
+  return isEqual;
 }
 
 export default function MultimediaPropertyCard({
@@ -118,14 +158,18 @@ export default function MultimediaPropertyCard({
 
   // DEBUG: Loguear para ver qué está pasando
   useEffect(() => {
-    console.log(`🎬 [${multimedia?.filename}] URL Comparison:`, {
-      multimediaUrl: multimedia?.url,
-      mainImageUrl,
-      normalizedUrl,
-      normalizedMainImageUrl: normalizeMediaUrl(mainImageUrl),
-      isMainImage,
-    });
-  }, [multimedia?.url, mainImageUrl, normalizedUrl, isMainImage]);
+    if (multimedia?.filename) {
+      console.log(`\n📸 [${multimedia.filename}]`, {
+        multimediaUrl: multimedia?.url,
+        mainImageUrl,
+        isMainImage,
+        normalized: {
+          multimediaUrl: normalizeMediaUrl(multimedia?.url),
+          mainImageUrl: normalizeMediaUrl(mainImageUrl),
+        },
+      });
+    }
+  }, [multimedia?.filename, multimedia?.url, mainImageUrl, isMainImage]);
 
   const handleSetMain = async () => {
     if (!normalizedUrl || !propertyId) {
@@ -262,8 +306,7 @@ export default function MultimediaPropertyCard({
             variant={isMainImage ? 'containedPrimary' : 'containedSecondary'}
             size="sm"
             onClick={handleSetMain}
-            disabled={updating || deleting || isMainImage}
-            title={isMainImage ? 'Es la imagen principal' : 'Establecer como principal'}
+
           />
           
           <IconButton
