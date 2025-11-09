@@ -3,6 +3,7 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { env } from '@/lib/env';
+import { revalidatePath } from 'next/cache';
 
 export type GridSort = 'asc' | 'desc';
 
@@ -376,6 +377,10 @@ export async function createProperty(data: FormData): Promise<{
     }
 
     const result = await response.json();
+    
+    // Revalidate the sales properties path
+    revalidatePath('http://localhost:3001/backOffice/properties/sales');
+    
     return { success: true, data: result };
   } catch (error) {
     console.error('Error creating property:', error);

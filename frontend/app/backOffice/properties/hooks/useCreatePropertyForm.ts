@@ -11,8 +11,8 @@ interface UseCreatePropertyFormProps {
   onClose?: () => void;
 }
 
-export const useCreatePropertyForm = (props?: UseCreatePropertyFormProps) => {
-  const onClose = props?.onClose || (() => {});
+export const useCreatePropertyForm = (onCloseCallback?: () => void) => {
+  const onClose = onCloseCallback || (() => {});
   // Estado de datos del formulario
   const [formData, setFormData] = useState<CreatePropertyFormData>({
     title: '',

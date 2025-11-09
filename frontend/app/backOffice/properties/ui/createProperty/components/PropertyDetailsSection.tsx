@@ -30,7 +30,7 @@ export default function PropertyDetailsSection({
           <NumberStepper
             label="Dormitorios"
             value={formData.bedrooms || 0}
-            onChange={(value) => handleChange('bedrooms', value)}
+            onChange={(value) => handleChange('bedrooms', value || null)}
             min={0}
             max={20}
             step={1}
@@ -42,7 +42,7 @@ export default function PropertyDetailsSection({
           <NumberStepper
             label="Baños"
             value={formData.bathrooms || 0}
-            onChange={(value) => handleChange('bathrooms', value)}
+            onChange={(value) => handleChange('bathrooms', value || null)}
             min={0}
             max={20}
             step={1}
@@ -54,7 +54,7 @@ export default function PropertyDetailsSection({
           <NumberStepper
             label="Estacionamientos"
             value={formData.parkingSpaces || 0}
-            onChange={(value) => handleChange('parkingSpaces', value)}
+            onChange={(value) => handleChange('parkingSpaces', value || null)}
             min={0}
             max={20}
             step={1}
@@ -66,7 +66,7 @@ export default function PropertyDetailsSection({
           <NumberStepper
             label="Pisos"
             value={formData.floors || 0}
-            onChange={(value) => handleChange('floors', value)}
+            onChange={(value) => handleChange('floors', value || null)}
             min={0}
             max={50}
             step={1}
@@ -79,10 +79,11 @@ export default function PropertyDetailsSection({
             type="number"
             label="Metros (m²) Construidos"
             placeholder="ej. 120.50"
-            value={formData.builtSquareMeters?.toString() || ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-              handleChange('builtSquareMeters', e.target.value ? parseFloat(e.target.value) : 0)
-            }
+            value={formData.builtSquareMeters ? String(formData.builtSquareMeters) : ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+              const val = e.target.value;
+              handleChange('builtSquareMeters', val ? parseFloat(val) : null);
+            }}
           />
         )}
 
@@ -92,10 +93,11 @@ export default function PropertyDetailsSection({
             type="number"
             label="Terreno (m²)"
             placeholder="ej. 250.75"
-            value={formData.landSquareMeters?.toString() || ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-              handleChange('landSquareMeters', e.target.value ? parseFloat(e.target.value) : 0)
-            }
+            value={formData.landSquareMeters ? String(formData.landSquareMeters) : ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+              const val = e.target.value;
+              handleChange('landSquareMeters', val ? parseFloat(val) : null);
+            }}
           />
         )}
 
@@ -105,10 +107,11 @@ export default function PropertyDetailsSection({
             type="number"
             label="Año de Construcción"
             placeholder="ej. 2020"
-            value={formData.constructionYear?.toString() || ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-              handleChange('constructionYear', e.target.value ? parseInt(e.target.value) : null)
-            }
+            value={formData.constructionYear ? String(formData.constructionYear) : ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+              const val = e.target.value;
+              handleChange('constructionYear', val ? parseInt(val, 10) : null);
+            }}
           />
         )}
       </div>

@@ -34,8 +34,15 @@ export default function CreateProperty({
     isSubmitting,
     submitError,
     handleChange,
-    handleSubmit,
-  } = useCreatePropertyForm();
+    handleSubmit: handleFormSubmit,
+  } = useCreatePropertyForm(() => {
+    // Callback when form is successfully submitted
+    onClose();
+  });
+
+  const handleSubmit = async () => {
+    await handleFormSubmit();
+  };
 
   if (!open) {
     return null;
