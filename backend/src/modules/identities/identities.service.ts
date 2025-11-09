@@ -74,6 +74,10 @@ export class IdentitiesService {
   ): Promise<Identity> {
     const identity = await this.findOne(id);
 
+    console.log('=== UPDATE IDENTITY DEBUG ===');
+    console.log('Current identity partnerships:', identity.partnerships);
+    console.log('Update DTO partnerships:', updateIdentityDto.partnerships);
+
     // Handle logo upload
     if (files?.logo?.[0]) {
       const logoFile = files.logo[0];
@@ -93,8 +97,19 @@ export class IdentitiesService {
       }
     }
 
-    Object.assign(identity, updateIdentityDto);
-    return await this.identityRepository.save(identity);
+    // Create updated identity object to ensure all changes are detected
+    const updatedIdentity = {
+      ...identity,
+      ...updateIdentityDto,
+    };
+
+    console.log('Updated identity partnerships:', updatedIdentity.partnerships);
+
+    const saved = await this.identityRepository.save(updatedIdentity);
+    console.log('Saved identity partnerships:', saved.partnerships);
+    console.log('=== END UPDATE DEBUG ===');
+
+    return saved;
   }
 
   async findLast(): Promise<Identity | null> {

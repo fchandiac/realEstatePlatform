@@ -198,17 +198,11 @@ export default function IdentityPage() {
       formData.append('mail', identity.mail)
       formData.append('businessHours', identity.businessHours)
 
-      if (identity.socialMedia) {
-        formData.append('socialMedia', JSON.stringify(identity.socialMedia))
-      }
+      formData.append('socialMedia', JSON.stringify(identity.socialMedia || {}))
+      formData.append('partnerships', JSON.stringify(identity.partnerships || []))
+      formData.append('faqs', JSON.stringify(identity.faqs || []))
 
-      if (identity.partnerships) {
-        formData.append('partnerships', JSON.stringify(identity.partnerships))
-      }
-
-      if (identity.faqs) {
-        formData.append('faqs', JSON.stringify(identity.faqs))
-      }
+      console.log('Frontend - Sending partnerships:', identity.partnerships)
 
       // Add logo file solo si hay archivo NUEVO
       if (newLogoFile.length > 0) {

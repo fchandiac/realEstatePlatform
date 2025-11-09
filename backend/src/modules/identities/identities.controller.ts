@@ -42,6 +42,8 @@ export class TransformJsonFieldsInterceptor implements NestInterceptor {
         } catch (error) {
           console.warn(`Failed to parse JSON field ${field} in interceptor:`, error);
         }
+      } else {
+        console.log(`${field} not parsed - value:`, body[field], 'type:', typeof body[field]);
       }
     });
 
@@ -116,6 +118,7 @@ export class IdentitiesController {
       partnershipLogos?: Express.Multer.File[];
     },
   ) {
+    console.log('Controller - Update DTO received:', updateIdentityDto);
     return this.identitiesService.update(id, updateIdentityDto, files);
   }
 
