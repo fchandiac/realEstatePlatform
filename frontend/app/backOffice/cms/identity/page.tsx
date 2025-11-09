@@ -382,7 +382,7 @@ export default function IdentityPage() {
                 {(showLogoUploader || !currentLogo) && (
                   <div className="border border-input rounded-md p-4 bg-background">
                     <FileImageUploader
-                      uploadPath="/uploads/web/logos"
+                      uploadPath="/public/web/logos"
                       onChange={handleLogoChange}
                       maxFiles={1}
                       accept="image/*"
@@ -523,7 +523,7 @@ export default function IdentityPage() {
                     {(showPartnershipUploaders[index] || !currentPartnershipLogos[index]) && (
                       <div className="border border-input rounded-md p-4 bg-background">
                         <FileImageUploader
-                          uploadPath="/uploads/web/partnerships"
+                          uploadPath="/public/web/partnerships"
                           onChange={(files) => handlePartnershipLogoChange(index, files)}
                           maxFiles={1}
                           accept="image/*"
