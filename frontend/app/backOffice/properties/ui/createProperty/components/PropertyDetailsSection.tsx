@@ -25,28 +25,6 @@ export default function PropertyDetailsSection({
       <h2 className="text-lg font-semibold">Características</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Built Square Meters */}
-        {propertyType?.hasBuiltSquareMeters && (
-          <NumberStepper
-            label="Metros Cuadrados Construidos (m²)"
-            value={formData.builtSquareMeters || 0}
-            onChange={(value) => handleChange('builtSquareMeters', value)}
-            min={0}
-            step={1}
-          />
-        )}
-
-        {/* Land Square Meters */}
-        {propertyType?.hasLandSquareMeters && (
-          <NumberStepper
-            label="Metros Cuadrados Terreno (m²)"
-            value={formData.landSquareMeters || 0}
-            onChange={(value) => handleChange('landSquareMeters', value)}
-            min={0}
-            step={1}
-          />
-        )}
-
         {/* Bedrooms */}
         {propertyType?.hasBedrooms && (
           <NumberStepper
@@ -92,6 +70,32 @@ export default function PropertyDetailsSection({
             min={0}
             max={50}
             step={1}
+          />
+        )}
+
+        {/* Built Square Meters */}
+        {propertyType?.hasBuiltSquareMeters && (
+          <TextField
+            type="number"
+            label="Metros (m²) Construidos"
+            placeholder="ej. 120.50"
+            value={formData.builtSquareMeters?.toString() || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+              handleChange('builtSquareMeters', e.target.value ? parseFloat(e.target.value) : 0)
+            }
+          />
+        )}
+
+        {/* Land Square Meters */}
+        {propertyType?.hasLandSquareMeters && (
+          <TextField
+            type="number"
+            label="Terreno (m²)"
+            placeholder="ej. 250.75"
+            value={formData.landSquareMeters?.toString() || ''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+              handleChange('landSquareMeters', e.target.value ? parseFloat(e.target.value) : 0)
+            }
           />
         )}
 

@@ -24,6 +24,46 @@ import {
 } from './seeder.types';
 
 export class SeederFactory {
+  private static latinFirstNames = [
+    'Marco', 'Lucia', 'Antonio', 'Carmen', 'Diego', 'Rosa', 'Felipe', 'Isabella',
+    'Ricardo', 'Gabriela', 'Fernando', 'Valentina', 'Alberto', 'Matilde', 'Carlos',
+    'Francesca', 'Javier', 'Antonia', 'Manuel', 'Lorena', 'Enrique', 'Silvia',
+    'Rodrigo', 'Catalina', 'Guillermo', 'Martina', 'Julio', 'Adriana', 'Salvador',
+    'Emilia', 'Andrés', 'Beatriz', 'Pedro', 'Magdalena', 'Jorge', 'Constanza',
+    'Raúl', 'Soledad', 'Víctor', 'Magdalena', 'Ernesto', 'Amparo'
+  ];
+
+  private static latinLastNames = [
+    'Romano', 'Moretti', 'Rossini', 'Benedetti', 'Fontana', 'Toscani', 'Rinaldi',
+    'Colombo', 'Giordano', 'Fabbri', 'Negri', 'Palmieri', 'Rossi', 'Lombardi',
+    'Marino', 'Ferretti', 'Santoro', 'Marini', 'Conte', 'Rizzo', 'Bianchi',
+    'Gatti', 'Neri', 'Marchetti', 'Taverna', 'Valentini', 'Paggi', 'Barbieri',
+    'Conti', 'De Luca', 'Giulio', 'Leone', 'Vitale', 'Simone'
+  ];
+
+  private static companyNames = [
+    'Inmobiliaria Real Estate',
+    'Proyectos Inmobiliarios Chile',
+    'Casa y Hogar SA',
+    'Soluciones Habitacionales',
+    'Grupo Inmobiliario Latino',
+    'Propiedades Premium',
+    'Asesoría Inmobiliaria Total',
+    'Mercado Inmobiliario Nacional',
+    'Expertos en Vivienda',
+    'Desarrollo Urbano Latino'
+  ];
+
+  private static getRandomLatinName(): string {
+    const firstName = faker.helpers.arrayElement(this.latinFirstNames);
+    const lastName = faker.helpers.arrayElement(this.latinLastNames);
+    return `${firstName} ${lastName}`;
+  }
+
+  private static getRandomCompanyName(): string {
+    return faker.helpers.arrayElement(this.companyNames);
+  }
+
   static createAdminUser(): UserSeed {
     return {
       username: 'admin',
@@ -33,8 +73,8 @@ export class SeederFactory {
       status: UserStatus.ACTIVE,
       permissions: Object.values(Permission),
       personalInfo: {
-        firstName: 'Admin',
-        lastName: 'User',
+        firstName: 'Administrador',
+        lastName: 'Sistema',
         phone: '',
         avatarUrl: ''
       },
@@ -47,7 +87,7 @@ export class SeederFactory {
   private static usedDocumentTypes = new Set<string>();
   static createRandomPerson(): PersonSeed {
     return {
-      name: faker.person.fullName(),
+      name: this.getRandomLatinName(),
       dni: faker.string.numeric(8),
       address: faker.location.streetAddress(),
       phone: faker.string.numeric(9),
@@ -63,6 +103,7 @@ export class SeederFactory {
     const roles = Object.values(UserRole);
     const statuses = Object.values(UserStatus);
     const permissions = Object.values(Permission);
+    const nameParts = this.getRandomLatinName().split(' ');
 
     return {
       username: faker.internet.username(),
@@ -72,8 +113,8 @@ export class SeederFactory {
       status: faker.helpers.arrayElement(statuses),
       permissions: faker.helpers.arrayElements(permissions, faker.number.int({ min: 1, max: 5 })),
       personalInfo: {
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
+        firstName: nameParts[0],
+        lastName: nameParts.slice(1).join(' '),
         phone: faker.phone.number(),
         avatarUrl: faker.image.avatar()
       },
@@ -115,7 +156,7 @@ export class SeederFactory {
       postRequest: faker.helpers.maybe(() => ({
         message: faker.lorem.paragraph(),
         contactInfo: {
-          name: faker.person.fullName(),
+          name: this.getRandomLatinName(),
           email: faker.internet.email(),
           phone: faker.phone.number()
         },
@@ -164,17 +205,17 @@ export class SeederFactory {
 
   static createRandomDocumentType() {
     const possibleTypes = [
-      'DNI',
-      'Passport',
-      'Driver License',
-      'Property Title',
-      'Contract',
-      'Insurance Policy',
-      'Tax Declaration'
+      'Cédula de Identidad',
+      'Pasaporte',
+      'Licencia de Conducir',
+      'Título de Propiedad',
+      'Contrato',
+      'Póliza de Seguros',
+      'Declaración de Impuestos'
     ].filter(type => !this.usedDocumentTypes.has(type));
 
     if (possibleTypes.length === 0) {
-      throw new Error('No more unique document types available');
+      throw new Error('No hay más tipos de documentos únicos disponibles');
     }
 
     const selectedType = faker.helpers.arrayElement(possibleTypes);
@@ -191,25 +232,25 @@ export class SeederFactory {
 
   static createRandomPropertyType() {
     const possibleTypes = [
-      'House',
-      'Apartment',
-      'Condo',
-      'Land',
-      'Commercial',
-      'Office',
+      'Casa',
+      'Apartamento',
+      'Condominio',
+      'Terreno',
+      'Comercial',
+      'Oficina',
       'Industrial',
       'Retail',
-      'Warehouse',
-      'Mixed Use',
-      'Multi-Family',
-      'Single Family',
+      'Bodega',
+      'Uso Mixto',
+      'Multi-Familiar',
+      'Unifamiliar',
       'Townhouse',
       'Villa',
-      'Studio'
+      'Estudio'
     ].filter(type => !this.usedPropertyTypes.has(type));
 
     if (possibleTypes.length === 0) {
-      throw new Error('No more unique property types available');
+      throw new Error('No hay más tipos de propiedades únicos disponibles');
     }
 
     const selectedType = faker.helpers.arrayElement(possibleTypes);
@@ -232,9 +273,20 @@ export class SeederFactory {
   }
 
   static createRandomTeamMember() {
+    const positions = [
+      'Agente Inmobiliario',
+      'Gestor de Propiedades',
+      'Especialista en Ventas',
+      'Asesor Inmobiliario',
+      'Coordinador de Contratos',
+      'Evaluador de Propiedades',
+      'Director de Ventas',
+      'Agente Senior'
+    ];
+
     return {
-      name: faker.person.fullName(),
-      position: faker.person.jobTitle(),
+      name: this.getRandomLatinName(),
+      position: faker.helpers.arrayElement(positions),
       bio: faker.lorem.paragraph(),
       email: faker.internet.email(),
       phone: `+56 9 ${faker.string.numeric(4)} ${faker.string.numeric(4)}`,
@@ -247,7 +299,7 @@ export class SeederFactory {
   static createRandomTestimonial(): TestimonialSeed {
     return {
       text: faker.lorem.paragraph(),
-      name: faker.person.fullName(),
+      name: this.getRandomLatinName(),
       createdAt: faker.date.past(),
       updatedAt: new Date()
     };
@@ -299,13 +351,13 @@ export class SeederFactory {
     };
 
     const partnerships = Array.from({ length: faker.number.int({ min: 0, max: 3 }) }, () => ({
-      name: faker.company.name(),
+      name: this.getRandomCompanyName(),
       description: faker.lorem.paragraph(),
       logoUrl: faker.helpers.maybe(() => `uploads/web/partnerships/${faker.system.fileName()}.png`, { probability: 0.8 })
     }));
 
     return {
-      name: faker.company.name(),
+      name: this.getRandomCompanyName(),
       address: faker.location.streetAddress(),
       phone: `+56 9 ${faker.string.numeric(4)} ${faker.string.numeric(4)}`,
       mail: faker.internet.email(),

@@ -108,7 +108,7 @@ export const NumberStepper: React.FC<NumberStepperProps> = ({
   `;
 
   const buttonClasses = `
-    flex items-center justify-center px-3 py-2 bg-transparent hover:bg-gray-50
+    flex items-center justify-center px-3 py-2 bg-transparent
     focus:outline-none
     transition-colors duration-200
     ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
@@ -139,39 +139,42 @@ export const NumberStepper: React.FC<NumberStepperProps> = ({
           type="button"
           onClick={decrement}
           disabled={disabled || (min !== undefined && value <= min)}
-          className={`${buttonClasses} rounded-l-md`}
+          className={`${buttonClasses} rounded-l-md border-r-[1px] border-border`}
           data-test-id={`${props['data-test-id']}-decrement`}
         >
           <span className="material-symbols-outlined text-gray-600">remove</span>
         </button>
 
-        {/* Input numérico */}
-        <input
-          ref={inputRef}
-          type="number"
-          value={value}
-          onChange={handleInputChange}
-          min={min}
-          max={max}
-          step={allowFloat ? step : step}
-          required={required}
-          placeholder={placeholder}
-          disabled={disabled}
-          className={`${baseInputClasses} rounded-none text-center flex-1`}
-          data-test-id={props['data-test-id']}
-        />
+        {/* Input y Label - Contenedor centrado */}
+        <div className="flex flex-col items-center justify-center flex-1 gap-0">
+          {/* Input numérico */}
+          <input
+            ref={inputRef}
+            type="number"
+            value={value}
+            onChange={handleInputChange}
+            min={min}
+            max={max}
+            step={allowFloat ? step : step}
+            required={required}
+            placeholder={placeholder}
+            disabled={disabled}
+            className={`${baseInputClasses} rounded-none text-center w-full`}
+            data-test-id={props['data-test-id']}
+          />
 
-        {/* Label */}
-        <label className={`${labelClasses} px-2`}>
-          {label}
-        </label>
+          {/* Label */}
+          <label className={`${labelClasses} -mt-1 mb-1`}>
+            {label}
+          </label>
+        </div>
 
         {/* Botón incrementar */}
         <button
           type="button"
           onClick={increment}
           disabled={disabled || (max !== undefined && value >= max)}
-          className={`${buttonClasses} rounded-r-md`}
+          className={`${buttonClasses} rounded-r-md border-l-[1px] border-border`}
           data-test-id={`${props['data-test-id']}-increment`}
         >
           <span className="material-symbols-outlined text-gray-600">add</span>
