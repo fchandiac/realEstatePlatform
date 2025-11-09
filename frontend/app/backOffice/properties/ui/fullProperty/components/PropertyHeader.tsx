@@ -36,7 +36,7 @@ export default function PropertyHeader({ property }: PropertyHeaderProps) {
           <div className="flex flex-col gap-2 mt-2">
             <p className="text-sm text-muted-foreground flex items-center gap-2">
               <span className="material-symbols-outlined text-xs">tag</span>
-              #{property.id}
+              {property.id}
             </p>
             <div className="flex items-center gap-2">
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(property.status)}`}>
