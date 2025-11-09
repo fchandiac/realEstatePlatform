@@ -140,6 +140,9 @@ export class GetFullPropertyDto {
   @Type(() => MultimediaDto)
   multimedia?: MultimediaDto[];
 
+  @Expose()
+  mainImageUrl?: string;
+
   // Business Logic Fields
   @Expose()
   postRequest?: PostRequest;

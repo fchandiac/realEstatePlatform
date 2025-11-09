@@ -116,6 +116,17 @@ export default function MultimediaPropertyCard({
   // Comparar URLs normalizadas para detectar si es la imagen principal
   const isMainImage = urlsAreEqual(multimedia?.url, mainImageUrl);
 
+  // DEBUG: Loguear para ver qué está pasando
+  useEffect(() => {
+    console.log(`🎬 [${multimedia?.filename}] URL Comparison:`, {
+      multimediaUrl: multimedia?.url,
+      mainImageUrl,
+      normalizedUrl,
+      normalizedMainImageUrl: normalizeMediaUrl(mainImageUrl),
+      isMainImage,
+    });
+  }, [multimedia?.url, mainImageUrl, normalizedUrl, isMainImage]);
+
   const handleSetMain = async () => {
     if (!normalizedUrl || !propertyId) {
       setAlert({
@@ -247,7 +258,7 @@ export default function MultimediaPropertyCard({
         {/* Controls */}
         <div className="absolute top-2 right-2 flex gap-2 z-10">
           <IconButton
-            icon={isMainImage ? 'star' : 'star_outline'}
+            icon={'star'}
             variant={isMainImage ? 'containedPrimary' : 'containedSecondary'}
             size="sm"
             onClick={handleSetMain}
