@@ -287,7 +287,5 @@ export const useCreatePropertyForm = (props?: UseCreatePropertyFormProps) => {
     selectedPropertyType,
     isSubmitting,
     submitError,
-    formatPriceForDisplay,
-    cleanPriceValue,
   };
 };

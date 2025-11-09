@@ -22,7 +22,7 @@ export default function PropertyDetailsSection({
 
   return (
     <div className="space-y-4 border-b pb-4 mb-4">
-      <h2 className="text-lg font-semibold">Detalles de la Propiedad</h2>
+      <h2 className="text-lg font-semibold">Características</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Built Square Meters */}

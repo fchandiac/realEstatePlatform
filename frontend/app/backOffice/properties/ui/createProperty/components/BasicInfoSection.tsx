@@ -10,8 +10,6 @@ interface BasicInfoSectionProps {
   handleChange: (field: string, value: any) => void;
   propertyTypes: PropertyTypeOption[];
   loadingTypes: boolean;
-  formatPriceForDisplay: (price: string | number) => string;
-  cleanPriceValue: (price: string) => number | undefined;
 }
 
 export default function BasicInfoSection({
@@ -19,8 +17,6 @@ export default function BasicInfoSection({
   handleChange,
   propertyTypes,
   loadingTypes,
-  formatPriceForDisplay,
-  cleanPriceValue,
 }: BasicInfoSectionProps) {
   const propertyTypeOptions = Object.values(PropertyOperationType).map((type) => ({
     id: type as string,
@@ -34,8 +30,11 @@ export default function BasicInfoSection({
 
   const currencyOptions = Object.values(CurrencyPriceEnum).map((currency) => ({
     id: currency as string,
-    label: currency,
+    label: currency === 'CLP' ? 'CLP - Peso Chileno' : 'UF - Unidad de Fomento',
   }));
+
+  // Determinar el símbolo de moneda según el tipo seleccionado
+  const currencySymbol = formData.currencyPrice === 'UF' ? 'UF' : '$';
 
   return (
     <div className="space-y-4 border-b pb-4 mb-4">
@@ -63,17 +62,18 @@ export default function BasicInfoSection({
         required
       />
       
-      <div className="flex space-x-4">
-        <div className="flex-1">
+      <div className="grid grid-cols-2 gap-4">
+        <div>
           <TextField
             label="Precio"
-            value={formatPriceForDisplay(formData.price || '')}
-            onChange={(e) => handleChange('price', cleanPriceValue(e.target.value))}
-            type="text"
+            type="currency"
+            currencySymbol={currencySymbol}
+            value={formData.price?.toString() || ''}
+            onChange={(e) => handleChange('price', e.target.value ? parseFloat(e.target.value) : undefined)}
             required
           />
         </div>
-        <div className="w-32">
+        <div>
           <Select
             placeholder="Moneda"
             options={currencyOptions}

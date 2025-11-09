@@ -24,9 +24,7 @@ export default function InternalNotesSection({
         rows={5}
       />
       
-      <p className="text-sm text-gray-500 italic">
-        Estas notas solo son visibles para administradores y no aparecerán en el portal público.
-      </p>
+ 
     </div>
   );
 }
