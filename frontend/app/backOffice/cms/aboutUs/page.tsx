@@ -63,6 +63,10 @@ export default function AboutUsPage() {
   };
 
   const handleSubmit = async () => {
+    console.log('🔔 handleSubmit called');
+    console.log('Data to send:', data);
+    console.log('New multimedia file:', newMultimediaFile);
+
     setErrors([]);
     setIsSaving(true);
 
@@ -73,14 +77,20 @@ export default function AboutUsPage() {
 
     if (newMultimediaFile.length > 0) {
       formData.append('multimedia', newMultimediaFile[0]);
+      console.log('Appending multimedia:', newMultimediaFile[0].name);
     }
 
+    console.log('Calling updateAboutUs...');
     const result = await updateAboutUs(formData);
+    console.log('updateAboutUs result:', result);
+
     if (result.success) {
+      console.log('Success! Reloading data...');
       await loadData(); // Recargar datos
       setNewMultimediaFile([]);
       setShowMultimediaUploader(false);
     } else {
+      console.log('Error:', result.error);
       setErrors([result.error || 'Error al guardar']);
     }
 
