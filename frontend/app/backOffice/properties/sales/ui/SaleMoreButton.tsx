@@ -32,10 +32,11 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
           onClose={() => setOpen(false)} 
           size="custom"
           maxWidth="1400px"
-          height="700px"
           maxHeight="90vh"
         >
+          <div className="w-full h-full overflow-hidden">
             <FullProperty propertyId={property.id} />
+          </div>
         </Dialog>
       )}
     </div>

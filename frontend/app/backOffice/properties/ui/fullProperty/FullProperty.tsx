@@ -36,7 +36,7 @@ export default function FullProperty({ propertyId, onSave }: FullPropertyProps) 
   // Loading state
   if (loading) {
     return (
-      <div className="flex flex-col h-screen bg-neutral overflow-hidden">
+      <div className="flex flex-col h-full bg-neutral overflow-hidden">
         {/* Header skeleton durante carga */}
         <div className="h-16 bg-background border-b border-border flex items-center px-6">
           <div className="flex items-center space-x-4">
@@ -70,7 +70,7 @@ export default function FullProperty({ propertyId, onSave }: FullPropertyProps) 
   // Error state
   if (error || !formData) {
     return (
-      <div className="flex items-center justify-center h-screen text-red-500">
+      <div className="flex items-center justify-center h-full text-red-500">
         {error || 'No se pudo cargar la propiedad'}
       </div>
     );
@@ -130,11 +130,11 @@ export default function FullProperty({ propertyId, onSave }: FullPropertyProps) 
   };
 
   return (
-    <div className="flex flex-col h-screen bg-neutral overflow-hidden">
+    <div className="flex flex-col h-full bg-neutral overflow-hidden w-full">
       {/* Header */}
       <PropertyHeader property={formData} />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden w-full">
         {/* Sidebar */}
         <PropertySidebar
           sections={SECTIONS}
@@ -143,9 +143,9 @@ export default function FullProperty({ propertyId, onSave }: FullPropertyProps) 
         />
 
         {/* Contenido */}
-        <main className="flex-1 overflow-y-auto bg-background">
-          <div className="p-4">
-            <div className="max-w-5xl mx-auto">
+        <main className="flex-1 overflow-y-auto bg-background w-full">
+          <div className="p-4 w-full">
+            <div className="w-full">
               {renderSection()}
             </div>
           </div>
