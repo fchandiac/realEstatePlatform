@@ -97,10 +97,11 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
   // cleanup object URLs on unmount
   React.useEffect(() => {
     return () => {
-      selectedFiles.forEach(s => { if (s.url) URL.revokeObjectURL(s.url); });
+      createdUrlsRef.current.forEach(u => URL.revokeObjectURL(u));
+      createdUrlsRef.current = [];
     };
-  // we intentionally omit selectedFiles from deps to only run on unmount
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // we intentionally omit deps to only run on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -200,7 +201,7 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
                   </div>
                   <IconButton
                     icon="close"
-                    variant="secondary"
+                    variant="containedSecondary"
                     onClick={() => handleRemoveFile(index)}
                     className="shrink-0"
                   />
