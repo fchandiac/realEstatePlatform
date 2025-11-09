@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import DotProgress from '@/components/DotProgress/DotProgress';
 import IconButton from '@/components/IconButton/IconButton';
+import Alert from '@/components/Alert/Alert';
 import { getMultimedia, deleteMultimedia, type MultimediaItem } from '@/app/actions/multimedia';
 import { updateMainImage } from '@/app/actions/properties';
 import { env } from '@/lib/env';
@@ -17,45 +18,48 @@ interface MultimediaPropertyCardProps {
 
 /**
  * Normaliza URLs de multimedia a rutas absolutas
- * - Si es absoluta (http/https): devuelve tal cual
- * - Si es relativa (/uploads/...): prepend backendApiUrl
- * - Si es relativa sin /: prepend backendApiUrl + /
  */
 function normalizeMediaUrl(url?: string | null): string | undefined {
   if (!url) return undefined;
 
-  // Sanea rutas con ../
   const cleaned = url.replace('/../', '/');
 
-  // Intenta parsear como URL absoluta
   try {
     new URL(cleaned);
     return cleaned;
   } catch {
-    // No es URL absoluta, procesar como relativa
+    // No es URL absoluta
   }
 
-  // Si empieza con /, prepend backend URL directamente
   if (cleaned.startsWith('/')) {
     return `${env.backendApiUrl}${cleaned}`;
   }
 
-  // Si no empieza con /, asumir que es relativa sin / y agregar /
   return `${env.backendApiUrl}/${cleaned}`;
 }
 
 /**
- * Detecta si una URL es un video basándose en:
- * - type: 'VIDEO'
- * - extensión del archivo
+ * Extrae la ruta relativa para comparación
+ */
+function getRelativePath(url?: string | null): string | undefined {
+  if (!url) return undefined;
+
+  try {
+    const urlObj = new URL(url);
+    return urlObj.pathname;
+  } catch {
+    return url;
+  }
+}
+
+/**
+ * Detecta si es video
  */
 function isVideoUrl(url: string, type?: string): boolean {
   if (type === 'VIDEO') return true;
 
   const videoExtensions = ['.mp4', '.webm', '.mov', '.avi', '.mkv', '.flv'];
-  const lowerUrl = url.toLowerCase();
-
-  return videoExtensions.some(ext => lowerUrl.includes(ext));
+  return videoExtensions.some(ext => url.toLowerCase().includes(ext));
 }
 
 export default function MultimediaPropertyCard({
@@ -68,9 +72,13 @@ export default function MultimediaPropertyCard({
   const [multimedia, setMultimedia] = useState<MultimediaItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [alert, setAlert] = useState<{
+    variant: 'success' | 'error' | 'info' | 'warning';
+    message: string;
+  } | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Load multimedia on mount
   useEffect(() => {
     loadMultimedia();
   }, [multimediaId]);
@@ -78,9 +86,9 @@ export default function MultimediaPropertyCard({
   const loadMultimedia = async () => {
     try {
       setLoading(true);
-      const multimediaResult = await getMultimedia(multimediaId);
-      if (multimediaResult.success && multimediaResult.data) {
-        setMultimedia(multimediaResult.data);
+      const result = await getMultimedia(multimediaId);
+      if (result.success && result.data) {
+        setMultimedia(result.data);
       }
     } catch (error) {
       console.error('Error loading multimedia:', error);
@@ -89,76 +97,88 @@ export default function MultimediaPropertyCard({
     }
   };
 
-  // Normalizar URL usando función mejorada
   const normalizedUrl = normalizeMediaUrl(multimedia?.url);
-
-  // Detectar si es video
   const isVideo = normalizedUrl ? isVideoUrl(normalizedUrl, multimedia?.type) : false;
-
-  // Detectar si es la imagen principal
-  const normalizedMainImageUrl = normalizeMediaUrl(mainImageUrl);
-  const isMainImage = normalizedUrl && normalizedMainImageUrl && normalizedUrl === normalizedMainImageUrl;
-
-  // Re-render cuando cambía mainImageUrl del padre (después de actualización)
-  useEffect(() => {
-    console.log('🔄 [MultimediaPropertyCard] mainImageUrl cambió:', {
-      previousMainImageUrl: normalizeMediaUrl(mainImageUrl),
-      currentUrl: normalizedUrl,
-      isMainImage: isMainImage,
-    });
-  }, [mainImageUrl, normalizedMainImageUrl, isMainImage]);
-
-  // Logging para debugging
-  useEffect(() => {
-    if (multimedia) {
-      console.log('🎬 Multimedia Card Debug:', {
-        originalUrl: multimedia.url,
-        normalizedUrl,
-        type: multimedia.type,
-        isVideo,
-        backendApiUrl: env.backendApiUrl,
-      });
-    }
-  }, [multimedia, normalizedUrl, isVideo]);
+  
+  const multimediaRelativePath = getRelativePath(multimedia?.url);
+  const mainImageRelativePath = getRelativePath(mainImageUrl);
+  const isMainImage = 
+    multimediaRelativePath && 
+    mainImageRelativePath && 
+    multimediaRelativePath === mainImageRelativePath;
 
   const handleSetMain = async () => {
-    if (!normalizedUrl) return;
+    if (!normalizedUrl || !propertyId) {
+      setAlert({
+        variant: 'error',
+        message: 'Datos inválidos',
+      });
+      return;
+    }
+
     try {
+      setUpdating(true);
+      
+      // Llamar la acción del servidor
       const result = await updateMainImage(propertyId, normalizedUrl);
+
       if (result.success) {
-        console.log('✅ Main image updated successfully');
-        // Notificar al padre sobre la actualización
+        setAlert({
+          variant: 'success',
+          message: 'Imagen principal actualizada correctamente',
+        });
+        // Notificar al padre
         onUpdate?.(normalizedUrl);
-        alert('Imagen principal actualizada');
+        
+        // Limpiar alerta después de 3 segundos
+        setTimeout(() => setAlert(null), 3000);
       } else {
-        console.error('Error from server:', result.error);
-        alert(`Error: ${result.error || 'No se pudo establecer como principal'}`);
+        setAlert({
+          variant: 'error',
+          message: result.error || 'Error al actualizar imagen principal',
+        });
       }
     } catch (error) {
       console.error('Error setting main image:', error);
-      alert('Error al establecer como principal');
+      setAlert({
+        variant: 'error',
+        message: 'Error al actualizar imagen principal',
+      });
+    } finally {
+      setUpdating(false);
     }
   };
 
   const handleDelete = async () => {
     if (!confirm('¿Eliminar esta multimedia?')) return;
+    
     try {
       setDeleting(true);
       const result = await deleteMultimedia(multimediaId);
+      
       if (result.success) {
+        setAlert({
+          variant: 'success',
+          message: 'Multimedia eliminada',
+        });
         onDelete?.(multimediaId);
       } else {
-        alert('Error al eliminar multimedia');
+        setAlert({
+          variant: 'error',
+          message: 'Error al eliminar multimedia',
+        });
       }
     } catch (error) {
       console.error('Error deleting multimedia:', error);
-      alert('Error al eliminar multimedia');
+      setAlert({
+        variant: 'error',
+        message: 'Error al eliminar multimedia',
+      });
     } finally {
       setDeleting(false);
     }
   };
 
-  // Loading state
   if (loading) {
     return (
       <div className="aspect-video min-h-[7rem] rounded-lg flex items-center justify-center bg-neutral">
@@ -167,7 +187,6 @@ export default function MultimediaPropertyCard({
     );
   }
 
-  // Error or no multimedia
   if (!multimedia || !normalizedUrl) {
     return (
       <div className="aspect-video min-h-[7rem] rounded-lg flex items-center justify-center bg-neutral p-4">
@@ -179,69 +198,63 @@ export default function MultimediaPropertyCard({
   }
 
   return (
-    <div className="relative aspect-video min-h-[7rem] rounded-lg overflow-hidden bg-neutral">
-      {isVideo ? (
-        // Video con autoplay, muted y loop
-        <video
-          ref={videoRef}
-          src={normalizedUrl}
-          className="w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          onLoadStart={() => console.log('📹 Video loadStart:', normalizedUrl)}
-          onCanPlay={() => console.log('📹 Video canPlay - autoplay should work')}
-          onError={(e) => {
-            const error = e.currentTarget.error;
-            console.error('❌ Video error:', {
-              url: normalizedUrl,
-              errorCode: error?.code,
-              errorMessage: error?.message,
-            });
-          }}
-        />
-      ) : (
-        // Imagen
-        <img
-          src={normalizedUrl}
-          alt={multimedia.filename || 'Multimedia'}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = `data:image/svg+xml;base64,${btoa(`
-              <svg width="400" height="225" viewBox="0 0 400 225" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="400" height="225" fill="#f3f4f6"/>
-                <text x="200" y="112" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="14">Imagen no disponible</text>
-              </svg>
-            `)}`;
-          }}
-        />
+    <div className="space-y-2">
+      {/* Alert */}
+      {alert && (
+        <Alert variant={alert.variant}>
+          {alert.message}
+        </Alert>
       )}
 
-      {/* Controls - siempre visibles en la esquina superior derecha */}
-      <div className="absolute top-2 right-2 flex gap-2 z-10">
-        {/* Star button - Set as main */}
-        <IconButton
-          icon={isMainImage ? "star" : "star_outline"}
-          variant={isMainImage ? "containedPrimary" : "containedSecondary"}
-          size="sm"
-          onClick={handleSetMain}
-          disabled={deleting}
-          title="Establecer como principal"
-        />
-        
-        {/* Delete button */}
-        <IconButton
-          icon="delete"
-          variant="containedSecondary"
-          size="sm"
-          onClick={handleDelete}
-          disabled={deleting}
-          title="Eliminar"
-        >
-          {deleting && <DotProgress />}
-        </IconButton>
+      {/* Media container */}
+      <div className="relative aspect-video min-h-[7rem] rounded-lg overflow-hidden bg-neutral">
+        {isVideo ? (
+          <video
+            ref={videoRef}
+            src={normalizedUrl}
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        ) : (
+          <img
+            src={normalizedUrl}
+            alt={multimedia.filename || 'Multimedia'}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = `data:image/svg+xml;base64,${btoa(`
+                <svg width="400" height="225" viewBox="0 0 400 225" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="400" height="225" fill="#f3f4f6"/>
+                  <text x="200" y="112" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="14">Imagen no disponible</text>
+                </svg>
+              `)}`;
+            }}
+          />
+        )}
+
+        {/* Controls */}
+        <div className="absolute top-2 right-2 flex gap-2 z-10">
+          <IconButton
+            icon={'star'}
+            variant={isMainImage ? 'containedSecondary': 'containedPrimary'}
+            size="sm"
+            onClick={handleSetMain}
+            disabled={updating || deleting || isMainImage}
+            title={isMainImage ? 'Es la imagen principal' : 'Establecer como principal'}
+          />
+          
+          <IconButton
+            icon="delete"
+            variant="containedSecondary"
+            size="sm"
+            onClick={handleDelete}
+            disabled={updating || deleting}
+            title="Eliminar"
+          />
+        </div>
       </div>
     </div>
   );

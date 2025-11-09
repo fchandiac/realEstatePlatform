@@ -1087,6 +1087,10 @@ export async function updateMainImage(
     }
 
     const updatedProperty = await response.json();
+    
+    // Revalidate the property page to refresh data
+    revalidatePath(`/backOffice/properties`);
+    
     return { success: true, data: updatedProperty };
   } catch (error) {
     console.error('Error updating main image:', error);
