@@ -82,11 +82,35 @@ export class MultimediaService {
       file.originalname,
       metadata.type as MultimediaType,
     );
-    const relativePath = path.join(relativeDir, uniqueFilename);
+  let relativePath = path.join(relativeDir, uniqueFilename);
 
     try {
-      // Guardar el archivo usando el servicio centralizado (se encarga de la ruta base)
-      await this.staticFilesService.saveFile(file.buffer, relativePath);
+      // If multer used memoryStorage, file.buffer will be available and we should save it
+      if (file.buffer && file.buffer.length) {
+        await this.staticFilesService.saveFile(file.buffer, relativePath);
+      } else {
+        // If diskStorage was used, multer already saved the file to disk.
+        // We'll attempt to use the existing saved file. Multer's diskStorage typically
+        // places files under the configured destination with `file.filename`.
+        // We'll derive a relative path under 'properties' using the filename if present.
+        const existingFilename = (file as any).filename || path.basename((file as any).path || '');
+        if (existingFilename) {
+          // Prefer to use the existing location under ./public/properties
+          // Build relative path as 'properties/<filename>' so getPublicUrl returns the correct URL
+          const existingRelative = path.join('properties', existingFilename);
+          // If the file isn't in the expected final folder, we could move it here.
+          // For now assume controller saved to ./public/properties and leave it as is.
+          // Override relativePath so URL points to existing file
+          // Note: relativePath variable is still the intended destination when buffer is used
+          // but when buffer is absent we'll use existingRelative for the public URL.
+          // Set relativePath to existingRelative so the saved metadata matches actual file.
+          // (no file write performed)
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const _usePath = existingRelative;
+          // We will set multimedia.url using existingRelative below
+          relativePath = existingRelative;
+        }
+      }
 
       // Save metadata to the database
       const multimedia = new Multimedia();
@@ -98,11 +122,16 @@ export class MultimediaService {
       multimedia.format = file.mimetype.startsWith('image')
         ? MultimediaFormat.IMG
         : MultimediaFormat.VIDEO; // Infer format
-      multimedia.filename = uniqueFilename; // Use the unique filename instead of original
+      multimedia.filename = uniqueFilename; // Use the unique filename when buffer path used
+      // If multer provided a filename (diskStorage) prefer that value
+      if ((file as any).filename) {
+        multimedia.filename = (file as any).filename;
+      }
       multimedia.fileSize = file.size;
 
       return await this.multimediaRepository.save(multimedia);
     } catch (error) {
+      console.error('❌ [MultimediaService.uploadFile] Error saving file metadata:', error);
       throw new HttpException(
         'Error uploading file',
         HttpStatus.INTERNAL_SERVER_ERROR,
