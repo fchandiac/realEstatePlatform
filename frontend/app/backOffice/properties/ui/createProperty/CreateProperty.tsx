@@ -12,13 +12,13 @@ import SubmitSection from './components/SubmitSection';
 import Alert from '@/components/Alert/Alert';
 
 interface CreatePropertyProps {
-  open: boolean;
-  onClose: () => void;
-  size: string;
+  open?: boolean;
+  onClose?: () => void;
+  size?: string;
 }
 
 export default function CreateProperty({
-  open,
+  open = true,
   onClose,
   size,
 }: CreatePropertyProps) {
@@ -35,78 +35,68 @@ export default function CreateProperty({
     submitError,
     handleChange,
     handleSubmit: handleFormSubmit,
-  } = useCreatePropertyForm(() => {
-    // Callback when form is successfully submitted
-    onClose();
-  });
+  } = useCreatePropertyForm(onClose);
 
   const handleSubmit = async () => {
     await handleFormSubmit();
   };
 
-  if (!open) {
-    return null;
-  }
-
   return (
-    <div className={`modal ${open ? 'open' : ''}`} style={{ width: size }}>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold mb-6">Crear Propiedad</h1>
 
-      <div className="p-6 max-h-[90vh] overflow-y-auto">
-        <h1 className="text-2xl font-bold mb-6">Crear Propiedad</h1>
+      {submitError && (
+        <div className="mb-6">
+          <Alert variant="error">
+            {submitError}
+          </Alert>
+        </div>
+      )}
 
-        {submitError && (
-          <div className="mb-6">
-            <Alert variant="error">
-              {submitError}
-            </Alert>
-          </div>
-        )}
+      <form className="space-y-6">
+        <BasicInfoSection
+          formData={formData}
+          handleChange={handleChange}
+          propertyTypes={propertyTypes}
+          loadingTypes={loadingTypes}
+        />
 
-        <form className="space-y-6">
-          <BasicInfoSection
-            formData={formData}
-            handleChange={handleChange}
-            propertyTypes={propertyTypes}
-            loadingTypes={loadingTypes}
-          />
+        <PropertyDetailsSection
+          formData={formData}
+          handleChange={handleChange}
+          propertyType={selectedPropertyType}
+        />
 
-          <PropertyDetailsSection
-            formData={formData}
-            handleChange={handleChange}
-            propertyType={selectedPropertyType}
-          />
+        <LocationSection
+          formData={formData}
+          handleChange={handleChange}
+          stateOptions={stateOptions}
+          loadingStates={loadingStates}
+          cityOptions={cityOptions}
+          loadingCities={loadingCities}
+        />
 
-          <LocationSection
-            formData={formData}
-            handleChange={handleChange}
-            stateOptions={stateOptions}
-            loadingStates={loadingStates}
-            cityOptions={cityOptions}
-            loadingCities={loadingCities}
-          />
+        <MultimediaSection
+          formData={formData}
+          handleChange={handleChange}
+        />
 
-          <MultimediaSection
-            formData={formData}
-            handleChange={handleChange}
-          />
+        <SeoSection
+          formData={formData}
+          handleChange={handleChange}
+        />
 
-          <SeoSection
-            formData={formData}
-            handleChange={handleChange}
-          />
+        <InternalNotesSection
+          formData={formData}
+          handleChange={handleChange}
+        />
 
-          <InternalNotesSection
-            formData={formData}
-            handleChange={handleChange}
-          />
-
-          <SubmitSection
-            isSubmitting={isSubmitting}
-            submitError={submitError}
-            onSubmit={handleSubmit}
-          />
-        </form>
-      </div>
+        <SubmitSection
+          isSubmitting={isSubmitting}
+          submitError={submitError}
+          onSubmit={handleSubmit}
+        />
+      </form>
     </div>
   );
 }

@@ -122,7 +122,12 @@ const Header: React.FC<HeaderProps> = ({ title, filterMode = false, onToggleFilt
           scroll="body"
           hideActions={true}
         >
-          {createForm}
+          {/* Wrapper to pass onClose to createForm */}
+          {React.isValidElement(createForm)
+            ? React.cloneElement(createForm, {
+                onClose: () => setIsCreateModalOpen(false),
+              } as any)
+            : createForm}
         </Dialog>
       )}
     </div>
