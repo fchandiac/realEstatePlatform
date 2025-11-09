@@ -23,7 +23,7 @@ export default function SubmitSection({
         </Alert>
       )}
 
-      <div className="flex gap-4">
+      <div className="flex justify-end">
         <Button
           onClick={onSubmit}
           disabled={isSubmitting}
