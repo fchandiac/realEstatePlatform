@@ -6,8 +6,27 @@ import { FileImageUploader } from '@/components/FileUploader/FileImageUploader';
 import { Button } from '@/components/Button/Button';
 import Switch from '@/components/Switch/Switch';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
-import { updateSlideWithMultimedia } from '@/app/actions/slides';
+import { updateSlideWithMultimedia, updateSlide } from '@/app/actions/slides';
 import type { Slide } from '@/app/actions/slides';
+import { env } from '@/lib/env';
+
+const normalizeMediaUrl = (u?: string | null): string | undefined => {
+  if (!u) return undefined
+  const trimmed = u.trim()
+  try {
+    // If it's already absolute, return as is
+    new URL(trimmed)
+    return trimmed
+  } catch {
+    // If it's a relative path (starts with /), prefix backend base URL
+    if (trimmed.startsWith('/')) {
+      // Ensure backend URL has no trailing slash
+      return `${env.backendApiUrl.replace(/\/$/, '')}${trimmed}`
+    }
+    // Otherwise, return as-is
+    return trimmed
+  }
+}
 
 interface UpdateSlideFormProps {
   slide: Slide;
@@ -89,12 +108,12 @@ export default function UpdateSlideForm({ slide, onSuccess, onCancel }: UpdateSl
       newErrors.push('El título debe tener al menos 3 caracteres');
     }
 
-    if (!currentImage && newMultimediaFile.length === 0) {
+    if (!currentImage && newMultimediaFile.length === 0 && !slide.multimediaUrl) {
       newErrors.push('Debe mantener la imagen actual o subir una nueva');
     }
 
-    if (formData.linkUrl.trim() && !formData.linkUrl.match(/^https?:\/\/.+/)) {
-      newErrors.push('La URL debe ser válida (http:// o https://)');
+    if (formData.linkUrl.trim() && !formData.linkUrl.match(/^https?:\/\/.+/) && !formData.linkUrl.match(/^\/.+/)) {
+      newErrors.push('La URL debe ser válida (http://, https:// o comenzar con /)');
     }
 
     if (formData.duration < 1 || formData.duration > 60) {
@@ -114,6 +133,7 @@ export default function UpdateSlideForm({ slide, onSuccess, onCancel }: UpdateSl
 
   // Submit
   const handleSubmit = async () => {
+    console.log('🔔 UpdateSlideForm handleSubmit called');
     const validationErrors = validateForm();
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
@@ -124,26 +144,60 @@ export default function UpdateSlideForm({ slide, onSuccess, onCancel }: UpdateSl
     setErrors([]);
 
     try {
-      const formDataToSend = new FormData();
-      
-      // Campos regulares
-      formDataToSend.append('title', formData.title.trim());
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('duration', formData.duration.toString());
-      formDataToSend.append('isActive', formData.isActive.toString());
-      
-      // Siempre enviar linkUrl, incluso si está vacío (para permitir eliminarlo)
-      formDataToSend.append('linkUrl', formData.linkUrl.trim());
-      
-      if (formData.startDate) formDataToSend.append('startDate', formData.startDate);
-      if (formData.endDate) formDataToSend.append('endDate', formData.endDate);
+      let result;
 
-      // Multimedia solo si hay archivo nuevo
       if (newMultimediaFile.length > 0) {
+        // Update with new multimedia
+        const formDataToSend = new FormData();
+        
+        // Campos regulares
+        formDataToSend.append('title', formData.title.trim());
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('duration', formData.duration.toString());
+        formDataToSend.append('isActive', formData.isActive.toString());
+        
+        // Siempre enviar linkUrl, incluso si está vacío (para permitir eliminarlo)
+        formDataToSend.append('linkUrl', formData.linkUrl.trim());
+        
+        if (formData.startDate) formDataToSend.append('startDate', formData.startDate);
+        if (formData.endDate) formDataToSend.append('endDate', formData.endDate);
+
+        // Multimedia
         formDataToSend.append('multimedia', newMultimediaFile[0]);
+
+        // Debug: log formData keys for inspection
+        try {
+          for (const pair of (formDataToSend as any).entries()) {
+            // entries() yields [key, value]
+            // Avoid logging large File objects fully
+            if (pair[1] instanceof File) {
+              console.log('FormData entry:', pair[0], pair[1].name, pair[1].size);
+            } else {
+              console.log('FormData entry:', pair[0], pair[1]);
+            }
+          }
+        } catch (err) {
+          console.log('Could not enumerate FormData entries', err);
+        }
+
+        result = await updateSlideWithMultimedia(slide.id, formDataToSend);
+      } else {
+        // Update without multimedia (regular update)
+        const updateData = {
+          title: formData.title.trim(),
+          description: formData.description,
+          linkUrl: formData.linkUrl.trim(),
+          duration: formData.duration,
+          startDate: formData.startDate || undefined,
+          endDate: formData.endDate || undefined,
+          isActive: formData.isActive,
+        };
+
+        console.log('Regular update data:', updateData);
+        result = await updateSlide(slide.id, updateData);
       }
 
-      const result = await updateSlideWithMultimedia(slide.id, formDataToSend);
+      console.log('Update result:', result);
 
       if (result.success) {
         onSuccess?.();
@@ -160,6 +214,29 @@ export default function UpdateSlideForm({ slide, onSuccess, onCancel }: UpdateSl
 
   return (
     <div className="space-y-6">
+      {/* Mostrar errores */}
+      {errors.length > 0 && (
+        <div className="bg-red-50 border border-red-200 rounded-md p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <span className="material-symbols-outlined text-red-400">error</span>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">
+                Errores en el formulario
+              </h3>
+              <div className="mt-2 text-sm text-red-700">
+                <ul className="list-disc pl-5 space-y-1">
+                  {errors.map((error, index) => (
+                    <li key={index}>{error}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Campos básicos */}
       <TextField
         label="Título del Slide"
@@ -189,14 +266,14 @@ export default function UpdateSlideForm({ slide, onSuccess, onCancel }: UpdateSl
             <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden">
               {currentImage.includes('.mp4') || currentImage.includes('.webm') ? (
                 <video 
-                  src={currentImage} 
+                  src={normalizeMediaUrl(currentImage)}
                   className="w-full h-full object-cover"
                   controls={false}
                   muted
                 />
               ) : (
                 <img 
-                  src={currentImage} 
+                  src={normalizeMediaUrl(currentImage)}
                   alt="Imagen actual" 
                   className="w-full h-full object-cover"
                 />

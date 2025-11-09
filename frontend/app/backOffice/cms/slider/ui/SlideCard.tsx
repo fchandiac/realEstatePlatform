@@ -3,6 +3,25 @@
 import { useState } from 'react'
 import { Slide } from '@/app/actions/slides'
 import IconButton from '@/components/IconButton/IconButton'
+import { env } from '@/lib/env'
+
+const normalizeMediaUrl = (u?: string | null): string | undefined => {
+  if (!u) return undefined
+  const trimmed = u.trim()
+  try {
+    // If it's already absolute, return as is
+    new URL(trimmed)
+    return trimmed
+  } catch {
+    // If it's a relative path (starts with /), prefix backend base URL
+    if (trimmed.startsWith('/')) {
+      // Ensure backend URL has no trailing slash
+      return `${env.backendApiUrl.replace(/\/$/, '')}${trimmed}`
+    }
+    // Otherwise, return as-is
+    return trimmed
+  }
+}
 
 interface SlideCardProps {
   slide: Slide;
@@ -70,7 +89,7 @@ export default function SlideCard({
           <>
             {isVideo(slide.multimediaUrl) ? (
               <video
-                src={slide.multimediaUrl}
+                src={normalizeMediaUrl(slide.multimediaUrl)}
                 className="w-full h-full object-cover"
                 muted
                 autoPlay
@@ -80,7 +99,7 @@ export default function SlideCard({
               />
             ) : (
               <img
-                src={slide.multimediaUrl}
+                src={normalizeMediaUrl(slide.multimediaUrl)}
                 alt={slide.title}
                 className="w-full h-full object-cover"
                 onError={handleMediaError}
