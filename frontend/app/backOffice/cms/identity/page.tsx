@@ -49,6 +49,28 @@ interface Identity {
   faqs?: FAQItem[]
 }
 
+/**
+ * Normaliza URLs de multimedia a rutas absolutas
+ */
+function normalizeMediaUrl(url?: string | null): string | undefined {
+  if (!url) return undefined;
+
+  const cleaned = url.replace('/../', '/');
+
+  try {
+    new URL(cleaned);
+    return cleaned;
+  } catch {
+    // No es URL absoluta
+  }
+
+  if (cleaned.startsWith('/')) {
+    return `${env.backendApiUrl}${cleaned}`;
+  }
+
+  return `${env.backendApiUrl}/${cleaned}`;
+}
+
 export default function IdentityPage() {
   const socialIcons = {
     instagram: faInstagram,
@@ -361,7 +383,7 @@ export default function IdentityPage() {
                   <div className="mb-4">
                     <div className="relative w-32 h-32 bg-gray-100 rounded-lg overflow-hidden border">
                       <img 
-                        src={currentLogo} 
+                        src={normalizeMediaUrl(currentLogo)} 
                         alt="Logo actual" 
                         className="w-full h-full object-cover"
                       />

@@ -63,10 +63,15 @@ export class StaticFilesService implements OnModuleInit {
     return path.join(this.uploadBasePath, paths[type] || '');
   }
 
-  // Genera una URL pública relativa para un archivo
+  // Genera una URL pública para un archivo
   getPublicUrl(relativePath: string): string {
-    // Retornar URL relativa que apunte a /public/ en lugar de URL absoluta
-    return `/public/${relativePath}`;
+    // Obtener URL base del backend si está configurada
+    const backendUrl = this.configService.get<string>('BACKEND_PUBLIC_URL') ||
+                      this.configService.get<string>('BACKEND_URL') ||
+                      `http://localhost:${this.configService.get('PORT', 3001)}`;
+
+    // Retornar URL absoluta completa
+    return `${backendUrl}/public/${relativePath}`;
   }
 
   // Obtiene la ruta completa del sistema de archivos para un archivo
