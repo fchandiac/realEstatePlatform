@@ -5,64 +5,44 @@ import { authOptions } from '@/lib/auth'
 import { env } from '@/lib/env'
 
 export async function getAboutUs() {
-  // Try to get session, but don't require it for public about us data
-  const session = await getServerSession(authOptions)
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.accessToken) return { success: false, error: 'No autorizado' }
 
-  const headers: Record<string, string> = {}
-  if (session?.accessToken) {
-    headers.Authorization = `Bearer ${session.accessToken}`
+    const res = await fetch(`${env.backendApiUrl}/about-us`, {
+      headers: { Authorization: `Bearer ${session.accessToken}` },
+    })
+
+    if (!res.ok) {
+      const payload = await res.json().catch(() => null)
+      return { success: false, error: payload?.message || `HTTP ${res.status}` }
+    }
+
+    const data = await res.json()
+    return { success: true, data }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Error desconocido' }
   }
-
-  const res = await fetch(`${env.backendApiUrl}/about-us/last`, {
-    headers,
-  })
-
-  if (!res.ok) {
-    if (res.status === 404) return null // No about us found
-    throw new Error('Failed to fetch about us')
-  }
-
-  return res.json()
 }
 
-export async function updateAboutUs(id: string, formData: FormData) {
-  const session = await getServerSession(authOptions)
-  if (!session?.accessToken) throw new Error('Unauthorized')
+export async function updateAboutUs(formData: FormData) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.accessToken) return { success: false, error: 'No autorizado' }
 
-  const res = await fetch(`${env.backendApiUrl}/about-us/${id}`, {
-    method: 'PATCH',
-    headers: {
-      Authorization: `Bearer ${session.accessToken}`,
-    },
-    body: formData,
-  })
+    const res = await fetch(`${env.backendApiUrl}/about-us`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${session.accessToken}` },
+      body: formData,
+    })
 
-  if (!res.ok) {
-    const errorText = await res.text()
-    console.error('Update about us failed:', res.status, errorText)
-    throw new Error(`Failed to update about us: ${res.status} ${errorText}`)
+    if (!res.ok) {
+      const payload = await res.json().catch(() => null)
+      return { success: false, error: payload?.message || `HTTP ${res.status}` }
+    }
+
+    return { success: true }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Error desconocido' }
   }
-
-  return res.json()
-}
-
-export async function createAboutUs(formData: FormData) {
-  const session = await getServerSession(authOptions)
-  if (!session?.accessToken) throw new Error('Unauthorized')
-
-  const res = await fetch(`${env.backendApiUrl}/about-us`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${session.accessToken}`,
-    },
-    body: formData,
-  })
-
-  if (!res.ok) {
-    const errorText = await res.text()
-    console.error('Create about us failed:', res.status, errorText)
-    throw new Error(`Failed to create about us: ${res.status} ${errorText}`)
-  }
-
-  return res.json()
 }

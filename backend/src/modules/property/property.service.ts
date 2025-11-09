@@ -246,6 +246,7 @@ export class PropertyService {
         'p.builtSquareMeters',
         'p.landSquareMeters',
         'p.parkingSpaces',
+        'p.operationType',
         'pt.id',
         'pt.name'
       ])

@@ -36,21 +36,10 @@ export default function NavBar() {
             </span>
           </a>
         </li>
-        <li className="relative hidden sm:flex" ref={nosotrosRef}>
-          <div className="flex items-center gap-1">
-            <a href="#" className="text-sm font-medium text-neutral-900 hover:text-primary">
-              Nosotros
-            </a>
-            <button type="button" aria-label="Desplegar submenú Nosotros" onClick={() => setOpenNosotros((v) => !v)} className="focus:outline-none">
-              <span className="material-symbols-outlined text-base text-primary">arrow_drop_down</span>
-            </button>
-          </div>
-          {openNosotros && (
-            <ul className="absolute left-0 top-full mt-2 w-56 bg-white border border-neutral-200 rounded shadow z-30">
-              <li><a href="#" className="block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10">Nuestro Equipo</a></li>
-              <li><a href="#" className="block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10">Testimonios</a></li>
-            </ul>
-          )}
+        <li className="hidden sm:block">
+          <a href="/portal/aboutUs" className="text-sm font-medium text-neutral-900 hover:text-primary">
+            Sobre nosotros
+          </a>
         </li>
         <li className="relative" ref={propiedadesRef}>
           <div className="flex items-center gap-1">

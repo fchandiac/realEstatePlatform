@@ -117,6 +117,14 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
   const opText = operationLabel(property.operationType);
   const featured = !!property.isFeatured;
 
+  // Debug logging
+  console.log('PropertyCard Debug:', {
+    id: property.id,
+    operationType: property.operationType,
+    opText: opText,
+    hasOpText: !!opText && opText.trim().length > 0
+  });
+
   const propertyTypeName = property.propertyType?.name || '';
   const region = property.state || '';
   const commune = property.city || '';
@@ -193,12 +201,14 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
         </div>
       )}
 
-      <div
-        className="absolute top-2 right-2 bg-accent text-white text-xs font-semibold px-2 py-1 rounded-full"
-        data-test-id="property-card-operation"
-      >
-        {opText}
-      </div>
+      {opText && opText.trim() && (
+        <div
+          className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded-full border-2 border-white shadow-lg z-50"
+          data-test-id="property-card-operation"
+        >
+          {opText}
+        </div>
+      )}
 
       <div
         className="flex items-center justify-center w-full aspect-[16/9] bg-gray-200 text-gray-400 overflow-hidden"

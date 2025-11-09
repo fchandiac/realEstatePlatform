@@ -1,11 +1,14 @@
 import PropertyCard from './ui/PropertyCard';
 import { getPublishedFeaturedPropertiesPublic } from '@/app/actions/properties';
+import Slider from './ui/Slider';
 
 export default async function PortalPage() {
   const res = await getPublishedFeaturedPropertiesPublic();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div>
+      <Slider />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-8 text-center">
         <h1 className="text-3xl md:text-4xl font-bold text-primary">Propiedades destacadas</h1>
         <p className="text-sm md:text-base text-muted-foreground mt-2">Explora nuestras propiedades publicadas recientemente</p>
@@ -30,6 +33,7 @@ export default async function PortalPage() {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

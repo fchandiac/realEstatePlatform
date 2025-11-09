@@ -20,7 +20,6 @@ export default function PortalLayout({ children }: PortalLayoutProps) {
 
       />
 
-          <Slider />
           <NavBar />
       {/* <VisitorSideBar open={sidebarOpen} onClose={() => setSidebarOpen(false)} /> */}
       <main className="flex-1">

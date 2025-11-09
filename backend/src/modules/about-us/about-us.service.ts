@@ -23,30 +23,33 @@ export class AboutUsService {
     });
   }
 
-  async findOne(id: string): Promise<AboutUs> {
-    const aboutUs = await this.aboutUsRepository.findOne({
-      where: { id, deletedAt: IsNull() },
+  async findOne(): Promise<AboutUs> {
+    let aboutUs = await this.aboutUsRepository.findOne({
+      where: { deletedAt: IsNull() },
     });
 
     if (!aboutUs) {
-      throw new NotFoundException('Información corporativa no encontrada.');
+      // Crear registro inicial vacío si no existe
+      aboutUs = this.aboutUsRepository.create({
+        bio: '',
+        mision: '',
+        vision: '',
+      } as Partial<AboutUs>);
+      await this.aboutUsRepository.save(aboutUs);
     }
 
     return aboutUs;
   }
 
-  async update(
-    id: string,
-    updateAboutUsDto: UpdateAboutUsDto,
-  ): Promise<AboutUs> {
-    const aboutUs = await this.findOne(id);
+  async update(updateAboutUsDto: UpdateAboutUsDto): Promise<AboutUs> {
+    const aboutUs = await this.findOne();
     Object.assign(aboutUs, updateAboutUsDto);
     return await this.aboutUsRepository.save(aboutUs);
   }
 
-  async softDelete(id: string): Promise<void> {
-    const aboutUs = await this.findOne(id);
-    await this.aboutUsRepository.softDelete(id);
+  async softDelete(): Promise<void> {
+    const aboutUs = await this.findOne();
+    await this.aboutUsRepository.softDelete(aboutUs.id);
   }
 
   async findLatest(): Promise<AboutUs | null> {
