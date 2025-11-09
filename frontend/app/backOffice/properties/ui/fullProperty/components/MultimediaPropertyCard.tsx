@@ -12,6 +12,7 @@ interface MultimediaPropertyCardProps {
   propertyId: string;
   mainImageUrl?: string;
   onDelete?: (id: string) => void;
+  onUpdate?: (newMainImageUrl: string) => void;
 }
 
 /**
@@ -62,6 +63,7 @@ export default function MultimediaPropertyCard({
   propertyId,
   mainImageUrl,
   onDelete,
+  onUpdate,
 }: MultimediaPropertyCardProps) {
   const [multimedia, setMultimedia] = useState<MultimediaItem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -113,7 +115,16 @@ export default function MultimediaPropertyCard({
   const handleSetMain = async () => {
     if (!normalizedUrl) return;
     try {
-      await updateMainImage(propertyId, normalizedUrl);
+      const result = await updateMainImage(propertyId, normalizedUrl);
+      if (result.success) {
+        console.log('✅ Main image updated successfully');
+        // Notificar al padre sobre la actualización
+        onUpdate?.(normalizedUrl);
+        alert('Imagen principal actualizada');
+      } else {
+        console.error('Error from server:', result.error);
+        alert(`Error: ${result.error || 'No se pudo establecer como principal'}`);
+      }
     } catch (error) {
       console.error('Error setting main image:', error);
       alert('Error al establecer como principal');

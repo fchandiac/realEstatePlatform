@@ -1,9 +1,16 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { MultimediaPropertyCard } from '../components';
 import type { MultimediaSectionProps } from '../types/property.types';
 
 export default function MultimediaSection({ property }: MultimediaSectionProps) {
+  const [localMainImageUrl, setLocalMainImageUrl] = useState(property.mainImageUrl);
   const multimedia = property.multimedia || [];
+
+  const handleMainImageUpdate = (newMainImageUrl: string) => {
+    setLocalMainImageUrl(newMainImageUrl);
+  };
 
   return (
     <div className="space-y-6">
@@ -26,7 +33,8 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
                 key={item.id}
                 multimediaId={item.id}
                 propertyId={property.id}
-                mainImageUrl={property.mainImageUrl}
+                mainImageUrl={localMainImageUrl}
+                onUpdate={handleMainImageUpdate}
               />
             ))}
           </div>

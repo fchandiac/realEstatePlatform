@@ -17,12 +17,14 @@ import {
   CreateNotificationDto,
   UpdateNotificationDto,
 } from './dto/notification.dto';
+import { EmailService } from './email.service';
 
 @Injectable()
 export class NotificationsService {
   constructor(
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
+    private readonly emailService: EmailService,
   ) {}
 
   async create(
@@ -32,14 +34,41 @@ export class NotificationsService {
       ...createNotificationDto,
       status: NotificationStatus.SEND,
     });
-    return await this.notificationRepository.save(notification);
+    const savedNotification = await this.notificationRepository.save(notification);
+
+    // Send emails if targetMails are specified
+    if (createNotificationDto.targetMails && createNotificationDto.targetMails.length > 0) {
+      try {
+        const emailPromises = createNotificationDto.targetMails.map(email =>
+          this.emailService.sendMail({
+            to: email,
+            subject: `Nueva notificación: ${createNotificationDto.type}`,
+            text: `Has recibido una nueva notificación del tipo: ${createNotificationDto.type}`,
+            templateVariables: {
+              notificationType: createNotificationDto.type,
+              notificationId: savedNotification.id,
+            },
+          })
+        );
+        await Promise.all(emailPromises);
+      } catch (error) {
+        // Log email sending error but don't fail the notification creation
+        console.error('Error sending notification emails:', error);
+      }
+    }
+
+    return savedNotification;
   }
 
-  async findAll(): Promise<Notification[]> {
-    return await this.notificationRepository.find({
+  async findAll(page: number = 1, limit: number = 20): Promise<{ data: Notification[], total: number }> {
+    const [data, total] = await this.notificationRepository.findAndCount({
       where: { deletedAt: IsNull() },
       relations: ['multimedia', 'viewer'],
+      take: limit,
+      skip: (page - 1) * limit,
+      order: { createdAt: 'DESC' },
     });
+    return { data, total };
   }
 
   async findOne(id: string): Promise<Notification> {
@@ -84,12 +113,16 @@ export class NotificationsService {
   }
 
   async getNotificationsForUser(userId: string): Promise<Notification[]> {
-    // TODO: Implement proper JSON array querying
-    // For now, get all notifications and filter in memory
-    const allNotifications = await this.findAll();
-    return allNotifications.filter((notification) =>
-      notification.targetUserIds.includes(userId),
-    );
+    return await this.notificationRepository
+      .createQueryBuilder('notification')
+      .where(`JSON_CONTAINS(notification.targetUserIds, JSON_ARRAY(:userId))`, {
+        userId,
+      })
+      .andWhere('notification.deletedAt IS NULL')
+      .leftJoinAndSelect('notification.multimedia', 'multimedia')
+      .leftJoinAndSelect('notification.viewer', 'viewer')
+      .orderBy('notification.createdAt', 'DESC')
+      .getMany();
   }
 
   // Property-related notification methods
