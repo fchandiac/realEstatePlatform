@@ -163,11 +163,11 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
     >
       {/* Overlay al hacer hover */}
       <div
-        className="absolute inset-0 bg-foreground opacity-0 group-hover:opacity-30 transition-opacity duration-200 z-30"
+        className="absolute inset-0 bg-foreground opacity-0 group-hover:opacity-30 transition-opacity duration-200 z-10"
         style={{ pointerEvents: 'none' }}
       />
       {/* Botón centrado sobre el overlay */}
-      <div className="absolute inset-0 flex items-center justify-center z-40 pointer-events-none">
+      <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
         <Button
           variant="primary"
           className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 px-6 py-2 text-base font-semibold pointer-events-auto"

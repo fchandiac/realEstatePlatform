@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Select, { type Option as SelectOption } from '@/components/Select/Select';
 import AutoComplete, { type Option as AutoCompleteOption } from '@/components/AutoComplete/AutoComplete';
@@ -18,7 +18,6 @@ interface PropertyFilterProps {
 }
 
 export default function PropertyFilter({ initialFilters = {} }: PropertyFilterProps) {
-  const router = useRouter();
   const currentParams = useSearchParams();
 
   const [filters, setFilters] = useState(initialFilters);
@@ -77,7 +76,7 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
     fetchCommunes();
   }, [filters.state, originalRegions]);
 
-  // Función para actualizar la URL y recargar la página
+  // Función para actualizar solo la URL sin hacer redirects
   const updateURL = (newFilters: typeof filters) => {
     const params = new URLSearchParams(currentParams);
     
@@ -92,8 +91,9 @@ export default function PropertyFilter({ initialFilters = {} }: PropertyFilterPr
       });
     }
 
-    // Usar router.push para recargar el Server Component
-    router.push(`/portal?${params.toString()}`);
+    // Solo actualizar la URL en el navegador sin hacer redirect
+    const newUrl = `/portal?${params.toString()}`;
+    window.history.replaceState(null, '', newUrl);
   };
 
   const handleFilterChange = (filterName: string, value: string | number | null) => {
