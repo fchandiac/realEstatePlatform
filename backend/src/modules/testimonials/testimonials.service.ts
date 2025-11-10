@@ -16,6 +16,13 @@ import type { Express } from 'express';
 
 @Injectable()
 export class TestimonialsService {
+  // Listar testimonios públicos (activos y no eliminados)
+  async listPublic(): Promise<Testimonial[]> {
+    return await this.testimonialRepository.find({
+      where: { isActive: true, deletedAt: IsNull() },
+      order: { createdAt: 'DESC' },
+    });
+  }
   constructor(
     @InjectRepository(Testimonial)
     private readonly testimonialRepository: Repository<Testimonial>,
@@ -30,26 +37,28 @@ export class TestimonialsService {
 
     if (file) {
       // Guardar el archivo y obtener la URL
-      const filename = `${Date.now()}-${file.originalname}`;
-      const filepath = `uploads/web/testimonials/${filename}`;
-      
-      // Crear directorio si no existe
-      const fs = require('fs').promises;
+      const fs = require('fs');
       const path = require('path');
-      await fs.mkdir(path.dirname(filepath), { recursive: true });
-      
-      // Guardar archivo
-      await fs.writeFile(filepath, file.buffer);
-      
+      const uploadDir = path.join(__dirname, '../../../public/web/testimonials');
+      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+      const filename = `${Date.now()}-${file.originalname}`;
+      const filepath = path.join(uploadDir, filename);
+      fs.writeFileSync(filepath, file.buffer);
+
       // Generar URL pública
       const backendUrl = process.env.BACKEND_PUBLIC_URL || `http://localhost:${process.env.PORT || 3001}`;
-      imageUrl = `${backendUrl}/uploads/web/testimonials/${filename}`;
+      imageUrl = `${backendUrl}/public/web/testimonials/${filename}`;
     }
 
+    // Forzar isActive a booleano si viene en el DTO
+    const createData = { ...createTestimonialDto };
+    if ('isActive' in createData) {
+      createData.isActive = !!createData.isActive;
+    }
     const testimonial = this.testimonialRepository.create({
-      ...createTestimonialDto,
+      ...createData,
       imageUrl,
-      isActive: createTestimonialDto.isActive ?? true,
+      isActive: createData.isActive ?? true,
     });
     return await this.testimonialRepository.save(testimonial);
   }
@@ -83,27 +92,28 @@ export class TestimonialsService {
     let imageUrl: string | undefined;
     if (image) {
       // Guardar el archivo y obtener la URL
-      const filename = `${Date.now()}-${image.originalname}`;
-      const filepath = `uploads/web/testimonials/${filename}`;
-      
-      // Crear directorio si no existe
-      const fs = require('fs').promises;
+      const fs = require('fs');
       const path = require('path');
-      await fs.mkdir(path.dirname(filepath), { recursive: true });
-      
-      // Guardar archivo
-      await fs.writeFile(filepath, image.buffer);
-      
+      const uploadDir = path.join(__dirname, '../../../public/web/testimonials');
+      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+      const filename = `${Date.now()}-${image.originalname}`;
+      const filepath = path.join(uploadDir, filename);
+      fs.writeFileSync(filepath, image.buffer);
+
       // Generar URL pública
       const backendUrl = process.env.BACKEND_PUBLIC_URL || `http://localhost:${process.env.PORT || 3001}`;
-      imageUrl = `${backendUrl}/uploads/web/testimonials/${filename}`;
+      imageUrl = `${backendUrl}/public/web/testimonials/${filename}`;
     }
 
+    // Forzar isActive a booleano si viene en el DTO
+    const updateData = { ...updateTestimonialDto };
+    if ('isActive' in updateData) {
+      updateData.isActive = !!updateData.isActive;
+    }
     Object.assign(testimonial, {
-      ...updateTestimonialDto,
+      ...updateData,
       ...(imageUrl && { imageUrl }),
     });
-    
     return await this.testimonialRepository.save(testimonial);
   }
 

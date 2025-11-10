@@ -19,6 +19,11 @@ import {
 
 @Controller('testimonials')
 export class TestimonialsController {
+  // Endpoint público para listar testimonios activos
+  @Get('public')
+  async listPublicTestimonials() {
+    return await this.testimonialsService.listPublic();
+  }
   constructor(private readonly testimonialsService: TestimonialsService) {}
 
   @Post()

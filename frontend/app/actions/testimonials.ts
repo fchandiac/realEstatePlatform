@@ -1,5 +1,22 @@
 'use server'
 
+// Acción pública para portal
+export async function listPublicTestimonials(): Promise<Testimonial[]> {
+  try {
+    const res = await fetch(`${env.backendApiUrl}/testimonials/public`, {
+      method: 'GET',
+      cache: 'no-store',
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
+
+
+
 import { revalidatePath } from 'next/cache'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'

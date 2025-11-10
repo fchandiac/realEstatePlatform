@@ -28,6 +28,7 @@ const DeleteTestimonialDialog: React.FC<DeleteTestimonialDialogProps> = ({
   testimonial,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { success, error } = require('@/app/contexts/AlertContext').useAlert();
 
   const handleClose = () => {
     onClose();
@@ -39,16 +40,15 @@ const DeleteTestimonialDialog: React.FC<DeleteTestimonialDialogProps> = ({
     setIsSubmitting(true);
     try {
       const result = await deleteTestimonial(testimonial.id);
-
       if (result.success) {
-        alert('Testimonio eliminado exitosamente');
+        success('Testimonio eliminado exitosamente');
         handleClose();
         onSuccess();
       } else {
-        alert(result.error || 'Error al eliminar testimonio');
+        error(result.error || 'Error al eliminar testimonio');
       }
     } catch (err) {
-      alert('Error interno del servidor');
+      error('Error interno del servidor');
     } finally {
       setIsSubmitting(false);
     }
@@ -71,16 +71,9 @@ const DeleteTestimonialDialog: React.FC<DeleteTestimonialDialogProps> = ({
 
         <div className="flex justify-end gap-3 pt-4">
           <Button
-            variant="outlined"
-            onClick={handleClose}
-          >
-            Cancelar
-          </Button>
-          <Button
-            variant="outlined"
+            variant="primary"
             onClick={handleConfirmDelete}
             disabled={isSubmitting}
-            className="text-red-600 border-red-600 hover:bg-red-50"
           >
             {isSubmitting ? 'Eliminando...' : 'Eliminar'}
           </Button>

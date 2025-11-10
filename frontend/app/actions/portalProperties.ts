@@ -1,6 +1,7 @@
 'use server';
 
 import { env } from '@/lib/env';
+import { revalidatePath } from 'next/cache';
 
 export interface PropertyData {
   id: string;
@@ -42,11 +43,20 @@ export async function getPublishedPropertiesFiltered(filters: {
   try {
     const params = new URLSearchParams();
 
-    if (filters.currency) params.append('currency', filters.currency);
+    // Convertir 'rent' -> 'RENT', 'sale' -> 'SALE'
+    if (filters.operation) {
+      const operationMap: { [key: string]: string } = {
+        rent: 'RENT',
+        sale: 'SALE',
+      };
+      const mappedOperation = operationMap[filters.operation.toLowerCase()] || filters.operation;
+      params.append('operation', mappedOperation);
+    }
+
+    if (filters.currency && filters.currency !== 'all') params.append('currency', filters.currency);
     if (filters.state) params.append('state', filters.state);
     if (filters.city) params.append('city', filters.city);
     if (filters.typeProperty) params.append('typeProperty', filters.typeProperty);
-    if (filters.operation) params.append('operation', filters.operation);
     if (filters.page) params.append('page', filters.page.toString());
 
     const url = `${env.backendApiUrl}/properties/published/filtered?${params.toString()}`;
@@ -75,7 +85,7 @@ export async function getPublishedPropertiesFiltered(filters: {
       title: prop.title,
       description: prop.description,
       price: prop.price,
-      currency: prop.currencyPrice || 'CLP',
+      currency: prop.currency || 'CLP',
       operationType: prop.operationType,
       state: prop.state,
       city: prop.city,
@@ -97,4 +107,9 @@ export async function getPublishedPropertiesFiltered(filters: {
     console.error('Failed to fetch published properties:', error);
     return null;
   }
+}
+
+export async function refreshPortalProperties() {
+  'use server';
+  revalidatePath('/portal');
 }

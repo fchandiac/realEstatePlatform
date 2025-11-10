@@ -1,8 +1,7 @@
 import PropertyCard from './ui/PropertyCard';
 import { getPublishedPropertiesFiltered } from '@/app/actions/portalProperties';
 import Slider from './ui/Slider';
-import PropertyFilter from './ui/PropertyFilter';
-import ListProperties from './ui/ListProperties';
+import PortalClient from './PortalClient';
 
 interface PortalPageProps {
   searchParams: Promise<{
@@ -17,6 +16,7 @@ interface PortalPageProps {
 
 export default async function PortalPage({ searchParams }: PortalPageProps) {
   const params = await searchParams;
+
   const operation = params.operation || '';
   const typeProperty = params.typeProperty || '';
   const state = params.state || '';
@@ -70,14 +70,8 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
      
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        <PropertyFilter />
+        <PortalClient initialProperties={properties} />
       </div>
-
-      {!error && properties.length > 0 && (
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-          <ListProperties properties={properties} />
-        </div>
-      )}
     </div>
   );
 }

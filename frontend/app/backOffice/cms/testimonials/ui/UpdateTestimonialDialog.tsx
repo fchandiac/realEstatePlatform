@@ -189,12 +189,6 @@ const UpdateTestimonialDialog: React.FC<UpdateTestimonialDialogProps> = ({
 
           <div className="flex justify-end gap-3 pt-4">
             <Button
-              variant="outlined"
-              onClick={handleClose}
-            >
-              Cancelar
-            </Button>
-            <Button
               variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
