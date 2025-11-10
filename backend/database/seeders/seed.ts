@@ -70,7 +70,7 @@ async function seedDatabase() {
           firstName: 'Agent',
           lastName: 'User',
           phone: '+56 9 9876 5432',
-          avatarUrl: 'https://ui-avatars.com/api/?name=Agent+User'
+          avatarUrl: undefined
         },
         permissions: [Permission.MANAGE_PROPERTIES, Permission.ASSIGN_PROPERTY_AGENT],
         lastLogin: new Date(),

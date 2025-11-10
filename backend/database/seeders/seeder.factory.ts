@@ -77,7 +77,7 @@ export class SeederFactory {
         firstName: 'Administrador',
         lastName: 'Sistema',
         phone: '',
-        avatarUrl: ''
+        avatarUrl: undefined
       },
       lastLogin: new Date(),
       createdAt: new Date(),
@@ -117,7 +117,7 @@ export class SeederFactory {
         firstName: nameParts[0],
         lastName: nameParts.slice(1).join(' '),
         phone: faker.phone.number(),
-        avatarUrl: faker.image.avatar()
+        avatarUrl: undefined
       },
       lastLogin: faker.date.past(),
       createdAt: faker.date.past(),
