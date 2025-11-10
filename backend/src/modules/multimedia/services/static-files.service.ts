@@ -33,6 +33,7 @@ export class StaticFilesService implements OnModuleInit {
       'web/staff',
       'web/partnerships',
       'web/aboutUs',
+      'web/team-members',
       // Propiedades (consistente con PropertyController)
       'properties/img',
       'properties/video',

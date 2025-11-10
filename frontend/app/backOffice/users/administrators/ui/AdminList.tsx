@@ -83,7 +83,7 @@ const AdminList: React.FC<AdminListProps> = ({
                 <div className="flex items-center justify-between mb-4 gap-2">
                     <div>
                         <IconButton
-                            aria-label="Agregar tienda"
+                            aria-label="Agregar administrador"
                             variant="containedPrimary"
                             //   onClick={() => setOpenCreateDialog(true)}
                             icon="add"

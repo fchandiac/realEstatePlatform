@@ -33,10 +33,19 @@ export class TeamMembersService {
     return await this.teamMemberRepository.save(teamMember);
   }
 
-  async findAll(): Promise<TeamMember[]> {
-    return await this.teamMemberRepository.find({
-      where: { deletedAt: IsNull() },
-    });
+  async findAll(search?: string): Promise<TeamMember[]> {
+    const query = this.teamMemberRepository.createQueryBuilder('team_member')
+      .where('team_member.deletedAt IS NULL');
+
+    if (search) {
+      const searchTerm = `%${search}%`;
+      query.andWhere(
+        '(team_member.name LIKE :search OR team_member.position LIKE :search OR team_member.mail LIKE :search)',
+        { search: searchTerm },
+      );
+    }
+
+    return await query.getMany();
   }
 
   async findOne(id: string): Promise<TeamMember> {
