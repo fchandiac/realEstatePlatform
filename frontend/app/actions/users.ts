@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 
 import { authOptions } from '@/lib/auth';
 import { env } from '@/lib/env';
+import { revalidatePath } from 'next/cache';
 
 export type ListAdministratorsParams = {
 	search?: string;
@@ -521,6 +522,48 @@ export async function findUserById(id: string): Promise<{ id: string; name: stri
 		};
 	} catch {
 		return null;
+	}
+}
+
+/**
+ * Update user avatar
+ */
+export async function updateUserAvatar(id: string, formData: FormData): Promise<{
+  success: boolean;
+  data?: { avatarUrl: string };
+  error?: string;
+}> {
+	try {
+		const session = await getServerSession(authOptions);
+		if (!session?.accessToken) {
+			return { success: false, error: 'No authenticated' };
+		}
+
+		const response = await fetch(`${env.backendApiUrl}/users/${id}/avatar`, {
+			method: 'PUT',
+			headers: {
+				Authorization: `Bearer ${session.accessToken}`,
+			},
+			body: formData,
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => null);
+			return { 
+				success: false, 
+				error: errorData?.message || `Failed to update avatar: ${response.status}` 
+			};
+		}
+
+		const result = await response.json();
+		revalidatePath('/backOffice/users/administrators');
+		return { success: true, data: result };
+	} catch (error) {
+		console.error('Error updating avatar:', error);
+		return { 
+			success: false, 
+			error: error instanceof Error ? error.message : 'Unknown error' 
+		};
 	}
 }
 

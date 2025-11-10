@@ -23,9 +23,12 @@ import {
   ChangePasswordDto,
   ListAdminUsersQueryDto,
 } from './dto/user.dto';
+import { UpdateAvatarDto } from './dto/update-avatar.dto';
 import { AuditService } from '../../audit/audit.service';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 import { UserFavoriteData } from '../../common/interfaces/user-favorites.interface';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class UsersService {
@@ -466,5 +469,36 @@ export class UsersService {
       isFavorite: favorites.length > 0,
       favorites
     };
+  }
+
+  async updateUserAvatar(id: string, file: Express.Multer.File): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id, status: UserStatus.ACTIVE } });
+    if (!user) throw new NotFoundException('User not found');
+
+    // Validar tipo de archivo
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.mimetype)) {
+      throw new BadRequestException('Only image files (jpeg, png, webp) are allowed');
+    }
+
+    // Crear directorio
+    const uploadDir = path.join(process.cwd(), 'uploads', 'users', id);
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+
+    // Generar filename y path
+    const ext = path.extname(file.originalname) || '.jpg';
+    const filename = `avatar${ext}`;
+    const filePath = path.join(uploadDir, filename);
+    const publicUrl = `/uploads/users/${id}/${filename}`;
+
+    // Mover archivo
+    fs.writeFileSync(filePath, file.buffer);
+
+    // Actualizar usuario
+    if (!user.personalInfo) user.personalInfo = {};
+    user.personalInfo.avatarUrl = publicUrl;
+    await this.userRepository.save(user);
+
+    return user;
   }
 }

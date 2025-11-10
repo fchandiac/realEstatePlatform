@@ -10,7 +10,11 @@ import {
   HttpCode,
   UseGuards,
   Query,
+  Put,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadedFile } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
   CreateUserDto,
@@ -21,6 +25,7 @@ import {
   UpdatePermissionsDto,
   ListAdminUsersQueryDto,
 } from './dto/user.dto';
+import { UpdateAvatarDto } from './dto/update-avatar.dto';
 import { UserStatus, UserRole, Permission } from '../../entities/user.entity';
 import { JwtAuthGuard } from '../../modules/auth/guards/jwt-auth.guard';
 
@@ -132,5 +137,16 @@ export class UsersController {
   @Delete(':id')
   softDelete(@Param('id') id: string) {
     return this.usersService.softDelete(id);
+  }
+
+  @Put(':id/avatar')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async updateUserAvatar(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<UpdateAvatarDto> {
+    const user = await this.usersService.updateUserAvatar(id, file);
+    return { avatarUrl: user.personalInfo?.avatarUrl };
   }
 }
