@@ -38,7 +38,7 @@ const menuItems = [
       { label: 'Sobre nosotros', url: '/backOffice/cms/aboutUs' },
       { label: 'Nuestro Equipo', url: '/backOffice/cms/ourTeam' },
       { label: 'Testimonios', url: '/backOffice/cms/testimonials' },
-      { label: 'Artículos de blog', url: '/backOffice/cms/blogArticles' },
+      { label: 'Artículos de blog', url: '/backOffice/cms/articles' },
       { label: 'Identidad de la empresa', url: '/backOffice/cms/identity' },
     ],
   },

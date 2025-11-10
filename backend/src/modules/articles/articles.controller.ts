@@ -7,7 +7,11 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  UseInterceptors,
+  UploadedFile,
+  Query,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto, UpdateArticleDto } from './dto/article.dto';
 
@@ -16,13 +20,17 @@ export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
   @Post()
-  create(@Body(ValidationPipe) createArticleDto: CreateArticleDto) {
-    return this.articlesService.create(createArticleDto);
+  @UseInterceptors(FileInterceptor('image'))
+  create(
+    @Body(ValidationPipe) createArticleDto: CreateArticleDto,
+    @UploadedFile() image?: Express.Multer.File,
+  ) {
+    return this.articlesService.create(createArticleDto, image);
   }
 
   @Get()
-  findAll() {
-    return this.articlesService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.articlesService.findAll(search);
   }
 
   @Get(':id')
@@ -31,11 +39,13 @@ export class ArticlesController {
   }
 
   @Patch(':id')
+  @UseInterceptors(FileInterceptor('image'))
   update(
     @Param('id') id: string,
     @Body(ValidationPipe) updateArticleDto: UpdateArticleDto,
+    @UploadedFile() image?: Express.Multer.File,
   ) {
-    return this.articlesService.update(id, updateArticleDto);
+    return this.articlesService.update(id, updateArticleDto, image);
   }
 
   @Delete(':id')

@@ -15,7 +15,10 @@ export class ArticlesService {
     private readonly articleRepository: Repository<Article>,
   ) {}
 
-  async create(createArticleDto: CreateArticleDto): Promise<Article> {
+  async create(
+    createArticleDto: CreateArticleDto,
+    file?: Express.Multer.File,
+  ): Promise<Article> {
     // Check if title already exists
     const existingArticle = await this.articleRepository.findOne({
       where: { title: createArticleDto.title },
@@ -24,15 +27,42 @@ export class ArticlesService {
       throw new ConflictException('Ya existe un artículo con este título.');
     }
 
-    const article = this.articleRepository.create(createArticleDto);
+    let multimediaUrl: string | undefined;
+
+    if (file) {
+      // Guardar el archivo y obtener la URL
+      const fs = require('fs');
+      const path = require('path');
+      const uploadDir = path.join(__dirname, '../../../public/web/articles');
+      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+      const filename = `${Date.now()}-${file.originalname}`;
+      const filepath = path.join(uploadDir, filename);
+      fs.writeFileSync(filepath, file.buffer);
+
+      // Generar URL pública
+      const backendUrl = process.env.BACKEND_PUBLIC_URL || `http://localhost:${process.env.PORT || 3001}`;
+      multimediaUrl = `${backendUrl}/public/web/articles/${filename}`;
+    }
+
+    const article = this.articleRepository.create({
+      ...createArticleDto,
+      multimediaUrl,
+    });
     return await this.articleRepository.save(article);
   }
 
-  async findAll(): Promise<Article[]> {
-    return await this.articleRepository.find({
-      where: { deletedAt: IsNull() },
-      order: { createdAt: 'DESC' },
-    });
+  async findAll(search?: string): Promise<Article[]> {
+    const query = this.articleRepository.createQueryBuilder('article')
+      .where('article.deletedAt IS NULL')
+      .orderBy('article.createdAt', 'DESC');
+
+    if (search) {
+      query.andWhere('(article.title ILIKE :search OR article.subtitle ILIKE :search OR article.text ILIKE :search)', {
+        search: `%${search}%`,
+      });
+    }
+
+    return await query.getMany();
   }
 
   async findOne(id: string): Promise<Article> {
@@ -50,6 +80,7 @@ export class ArticlesService {
   async update(
     id: string,
     updateArticleDto: UpdateArticleDto,
+    file?: Express.Multer.File,
   ): Promise<Article> {
     const article = await this.findOne(id);
 
@@ -63,7 +94,24 @@ export class ArticlesService {
       }
     }
 
-    Object.assign(article, updateArticleDto);
+    let multimediaUrl = article.multimediaUrl;
+
+    if (file) {
+      // Guardar el archivo y obtener la URL
+      const fs = require('fs');
+      const path = require('path');
+      const uploadDir = path.join(__dirname, '../../../public/web/articles');
+      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+      const filename = `${Date.now()}-${file.originalname}`;
+      const filepath = path.join(uploadDir, filename);
+      fs.writeFileSync(filepath, file.buffer);
+
+      // Generar URL pública
+      const backendUrl = process.env.BACKEND_PUBLIC_URL || `http://localhost:${process.env.PORT || 3001}`;
+      multimediaUrl = `${backendUrl}/public/web/articles/${filename}`;
+    }
+
+    Object.assign(article, { ...updateArticleDto, multimediaUrl });
     return await this.articleRepository.save(article);
   }
 

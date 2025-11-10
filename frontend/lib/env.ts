@@ -2,7 +2,7 @@
 const rawBackendApiUrl =
   process.env.NEXT_PUBLIC_AUTH_API_URL ??
   process.env.AUTH_API_URL ??
-  'http://localhost:3001';
+  'http://localhost:3000';
 
 const normalizedBackendApiUrl = rawBackendApiUrl.replace(/\/$/, '');
 

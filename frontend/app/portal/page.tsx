@@ -35,13 +35,9 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
     page: page ? parseInt(page) : 1,
   });
 
-  const properties = result
-    ? Array.isArray(result)
-      ? result
-      : result.data ?? []
-    : [];
-  // If result is not an array and has no data, treat as error
-  const error = result && !Array.isArray(result) && !result.data ? 'Error loading properties' : null;
+  const properties = result?.data ?? [];
+  const pagination = result?.pagination;  // ← Extraer paginación completa
+  const error = !result ? 'Error loading properties' : null;
 
 
 
@@ -70,7 +66,7 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
      
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        <PortalClient initialProperties={properties} />
+        <PortalClient initialProperties={properties} initialPagination={pagination} />
       </div>
     </div>
   );

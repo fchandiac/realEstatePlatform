@@ -15,17 +15,23 @@ interface PropertyFilterProps {
     city?: string;
     currency?: string;
   };
-  onFiltersApplied?: (filters: any) => void;
+  onFiltersChange?: (filters: {
+    operation?: string;
+    typeProperty?: string;
+    state?: string;
+    city?: string;
+    currency?: string;
+  }) => void;
+  isLoading?: boolean;
 }
 
-export default function PropertyFilter({ initialFilters = {}, onFiltersApplied }: PropertyFilterProps) {
+export default function PropertyFilter({ initialFilters = {}, onFiltersChange, isLoading = false }: PropertyFilterProps) {
   const currentParams = useSearchParams();
   const [filters, setFilters] = useState(initialFilters);
   const [regions, setRegions] = useState<AutoCompleteOption[]>([]);
   const [communes, setCommunes] = useState<AutoCompleteOption[]>([]);
   const [isLoadingRegions, setIsLoadingRegions] = useState(false);
   const [isLoadingCommunes, setIsLoadingCommunes] = useState(false);
-  const [isLoadingProperties, setIsLoadingProperties] = useState(false);
   const [originalRegions, setOriginalRegions] = useState<{id: string, name: string}[]>([]);
 
   useEffect(() => {
@@ -70,49 +76,18 @@ export default function PropertyFilter({ initialFilters = {}, onFiltersApplied }
 
   const handleFilterChange = useCallback((filterName: string, value: string | number | null) => {
     const newFilters = { ...filters, [filterName]: value || '' };
-    
+
     if (filterName === 'state') {
       newFilters.city = '';
     }
-    
+
     setFilters(newFilters);
 
-    const params = new URLSearchParams(currentParams.toString());
-    
-    Object.entries(newFilters).forEach(([key, val]) => {
-      if (val) {
-        params.set(key, String(val));
-      } else {
-        params.delete(key);
-      }
-    });
-
-    // Actualizar URL sin reload
-    window.history.replaceState(null, '', `?${params.toString()}`);
-    
-    // Cargar datos directamente en el Client Component - MÁS RÁPIDO
-    setIsLoadingProperties(true);
-    (async () => {
-      try {
-        const result = await getPublishedPropertiesFiltered({
-          currency: newFilters.currency,
-          state: newFilters.state,
-          city: newFilters.city,
-          typeProperty: newFilters.typeProperty,
-          operation: newFilters.operation,
-          page: 1,
-        });
-        
-        if (result && onFiltersApplied) {
-          onFiltersApplied(result);
-        }
-      } catch (error) {
-        console.error('Error fetching properties:', error);
-      } finally {
-        setIsLoadingProperties(false);
-      }
-    })();
-  }, [filters, currentParams, onFiltersApplied]);
+    // Informar al componente padre sobre el cambio de filtros
+    if (onFiltersChange) {
+      onFiltersChange(newFilters);
+    }
+  }, [filters, onFiltersChange]);
 
   const operationOptions: SelectOption[] = [
     { id: 'rent', label: 'Arriendo' },
@@ -135,7 +110,7 @@ export default function PropertyFilter({ initialFilters = {}, onFiltersApplied }
 
   return (
     <div className="w-full max-w-6xl mx-auto">
-      <div className={`p-4 bg-white rounded-lg shadow-md transition-opacity duration-200 ${isLoadingProperties ? 'opacity-70' : 'opacity-100'}`}>
+      <div className={`p-4 bg-white rounded-lg shadow-md transition-opacity duration-200 ${isLoading ? 'opacity-70' : 'opacity-100'}`}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
           <div className="w-full">
             <Select

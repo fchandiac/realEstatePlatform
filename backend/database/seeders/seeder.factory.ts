@@ -22,6 +22,7 @@ import {
   IdentitySeed,
   SlideSeed
 } from './seeder.types';
+import { BlogArticle, BlogCategory } from '../../src/entities/blog-article.entity';
 
 export class SeederFactory {
   private static latinFirstNames = [
@@ -298,7 +299,7 @@ export class SeederFactory {
 
   static createRandomTestimonial(): TestimonialSeed {
     return {
-      text: faker.lorem.paragraph(),
+      content: faker.lorem.paragraph(),
       name: this.getRandomLatinName(),
       createdAt: faker.date.past(),
       updatedAt: new Date()
@@ -327,6 +328,24 @@ export class SeederFactory {
       createdAt: faker.date.past(),
       updatedAt: new Date(),
       deletedAt: null
+    };
+  }
+
+  static createRandomBlogArticle() {
+    return {
+      title: faker.lorem.sentence(),
+      subtitle: faker.lorem.sentence(),
+      content: faker.lorem.paragraphs(5),
+      category: faker.helpers.arrayElement(Object.values(BlogCategory)),
+      imageUrl: faker.helpers.maybe(() => `/uploads/blog/${faker.system.fileName()}.jpg`, { probability: 0.8 }),
+      publishedAt: faker.date.past(),
+      isActive: faker.helpers.weightedArrayElement([
+        { weight: 0.9, value: true },
+        { weight: 0.1, value: false }
+      ]),
+      createdAt: faker.date.past(),
+      updatedAt: new Date(),
+      deletedAt: undefined
     };
   }
 
