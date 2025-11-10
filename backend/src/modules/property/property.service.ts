@@ -1589,6 +1589,93 @@ export class PropertyService {
     return uploadedMultimedia;
   }
 
+  /**
+   * Get published properties with filters and pagination
+   * Limit is fixed at 9 per page
+   */
+  async getPublishedPropertiesFiltered(filters: any) {
+    try {
+      console.log('🔍 [PropertyService.getPublishedPropertiesFiltered] Starting with filters:', filters);
+      
+      const limit = 9;
+      const page = Math.max(1, parseInt(filters?.page) || 1);
+      const skip = (page - 1) * limit;
+
+      let query = this.propertyRepository
+        .createQueryBuilder('property')
+        .where('property.status = :status', { status: PropertyStatus.PUBLISHED })
+        .andWhere('property.deletedAt IS NULL');
+
+      console.log('📋 [PropertyService] Base query created');
+
+      // Filter by operation
+      if (filters?.operation && filters.operation !== '' && filters.operation !== null) {
+        console.log('🔎 Filtering by operation:', filters.operation);
+        query = query.andWhere('property.operationType = :operation', {
+          operation: filters.operation,
+        });
+      }
+
+      // Filter by property type (without join first, just check if needed)
+      if (filters?.typeProperty && filters.typeProperty !== '' && filters.typeProperty !== null) {
+        console.log('🔎 Filtering by typeProperty:', filters.typeProperty);
+        query = query
+          .leftJoin('property.propertyType', 'pt')
+          .andWhere('pt.name = :typeProperty', { typeProperty: filters.typeProperty });
+      }
+
+      // Filter by state (region)
+      if (filters?.state && filters.state !== '' && filters.state !== null) {
+        console.log('🔎 Filtering by state:', filters.state);
+        query = query.andWhere('property.state = :state', { state: filters.state });
+      }
+
+      // Filter by city (commune)
+      if (filters?.city && filters.city !== '' && filters.city !== null) {
+        console.log('🔎 Filtering by city:', filters.city);
+        query = query.andWhere('property.city = :city', { city: filters.city });
+      }
+
+      // Filter by currency
+      if (filters?.currency && filters.currency !== '' && filters.currency !== 'all' && filters.currency !== null) {
+        console.log('🔎 Filtering by currency:', filters.currency);
+        query = query.andWhere('property.currency = :currency', {
+          currency: filters.currency,
+        });
+      }
+
+      console.log('⏳ [PropertyService] Getting count...');
+      const total = await query.getCount();
+      console.log('✅ [PropertyService] Total count:', total);
+
+      console.log('⏳ [PropertyService] Fetching data...');
+      const data = await query
+        .orderBy('property.createdAt', 'DESC')
+        .skip(skip)
+        .take(limit)
+        .getMany();
+
+      console.log('✅ [PropertyService] Data fetched:', data.length, 'properties');
+
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        data,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
+        },
+      };
+    } catch (error) {
+      console.error('❌ Error in getPublishedPropertiesFiltered:', error);
+      throw error;
+    }
+  }
+
 }
 
 function toInt(v: any): number { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }

@@ -122,7 +122,7 @@ export async function createSlide(data: CreateSlideDto, image?: File): Promise<{
     }
 
     let body: any
-    let headers: any = {
+    const headers: any = {
       'Authorization': `Bearer ${session.accessToken}`,
     }
 
@@ -233,7 +233,7 @@ export async function updateSlide(id: string, data: Partial<Slide>, image?: File
     }
 
     let body: any
-    let headers: any = {
+    const headers: any = {
       'Authorization': `Bearer ${session.accessToken}`,
     }
 

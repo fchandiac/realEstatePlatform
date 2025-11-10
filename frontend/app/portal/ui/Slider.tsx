@@ -221,7 +221,7 @@ export default function Slider({ transitionTime = 2000 }: SliderProps) {
       </div>
 
       {/* Overlay content */}
-      <div className="absolute inset-0 z-20 flex flex-col justify-between">
+      <div className="absolute inset-0 z-10 flex flex-col justify-between">
         {/* Navigation arrows */}
         {slides.length > 1 && (
           <>

@@ -92,11 +92,12 @@ const sizeMap: Record<Exclude<IconButtonSize, number>, number> = {
 
 const IconButton: React.FC<IconButtonProps> = ({ icon, variant = "containedPrimary", size = 'md', className = "", onClick, ariaLabel, ...props }) => {
 	const pixelSize = typeof size === 'number' ? size : sizeMap[size] || sizeMap['md'];
+	const sizeClass = size === 'xs' ? 'w-4 h-4' : size === 'sm' ? 'w-5 h-5' : size === 'md' ? 'w-6 h-6' : size === 'lg' ? 'w-8 h-8' : size === 'xl' ? 'w-10 h-10' : `w-[${pixelSize}px] h-[${pixelSize}px]`;
+	
 	return (
 		<button
 			type="button"
-			className={`${variantClasses[variant] || variantClasses["containedPrimary"]} ${className} cursor-pointer`}
-			style={{ width: pixelSize + 8, height: pixelSize + 8, minWidth: pixelSize + 8, minHeight: pixelSize + 8 }}
+			className={`${variantClasses[variant] || variantClasses["containedPrimary"]} ${className} cursor-pointer ${sizeClass}`}
 			data-test-id="icon-button-root"
 			onClick={onClick}
 			aria-label={ariaLabel}
@@ -104,7 +105,7 @@ const IconButton: React.FC<IconButtonProps> = ({ icon, variant = "containedPrima
 		>
 			<span
 				className="material-symbols-outlined select-none"
-				style={{ fontSize: pixelSize, width: pixelSize, height: pixelSize, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+				style={{ fontSize: pixelSize }}
 				aria-hidden
 			>
 				{icon}

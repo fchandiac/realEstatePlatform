@@ -19,7 +19,21 @@ export class Testimonial {
   @Column({ type: 'text' })
   @IsNotEmpty()
   @IsString()
-  text: string;
+  content: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  @IsOptional()
+  @IsString()
+  position?: string;
+
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @Column({ type: 'boolean', default: true })
+  @IsOptional()
+  isActive: boolean;
 
   @Column({ type: 'varchar', length: 255 })
   @IsNotEmpty()

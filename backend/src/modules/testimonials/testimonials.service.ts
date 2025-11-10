@@ -26,24 +26,30 @@ export class TestimonialsService {
     createTestimonialDto: CreateTestimonialDto,
     file?: Express.Multer.File,
   ): Promise<Testimonial> {
-    let multimedia: Multimedia | undefined;
+    let imageUrl: string | undefined;
 
     if (file) {
-      const metadata = {
-        type: MultimediaType.TESTIMONIAL_IMG,
-        seoTitle: '',
-        description: '',
-      };
-      multimedia = await this.uploadMultimediaService.uploadFile(
-        file,
-        metadata,
-        'system',
-      ); // Assuming userId is 'system' for now
+      // Guardar el archivo y obtener la URL
+      const filename = `${Date.now()}-${file.originalname}`;
+      const filepath = `uploads/web/testimonials/${filename}`;
+      
+      // Crear directorio si no existe
+      const fs = require('fs').promises;
+      const path = require('path');
+      await fs.mkdir(path.dirname(filepath), { recursive: true });
+      
+      // Guardar archivo
+      await fs.writeFile(filepath, file.buffer);
+      
+      // Generar URL pública
+      const backendUrl = process.env.BACKEND_PUBLIC_URL || `http://localhost:${process.env.PORT || 3001}`;
+      imageUrl = `${backendUrl}/uploads/web/testimonials/${filename}`;
     }
 
     const testimonial = this.testimonialRepository.create({
       ...createTestimonialDto,
-      multimedia,
+      imageUrl,
+      isActive: createTestimonialDto.isActive ?? true,
     });
     return await this.testimonialRepository.save(testimonial);
   }
@@ -70,9 +76,34 @@ export class TestimonialsService {
   async update(
     id: string,
     updateTestimonialDto: UpdateTestimonialDto,
+    image?: Express.Multer.File,
   ): Promise<Testimonial> {
     const testimonial = await this.findOne(id);
-    Object.assign(testimonial, updateTestimonialDto);
+    
+    let imageUrl: string | undefined;
+    if (image) {
+      // Guardar el archivo y obtener la URL
+      const filename = `${Date.now()}-${image.originalname}`;
+      const filepath = `uploads/web/testimonials/${filename}`;
+      
+      // Crear directorio si no existe
+      const fs = require('fs').promises;
+      const path = require('path');
+      await fs.mkdir(path.dirname(filepath), { recursive: true });
+      
+      // Guardar archivo
+      await fs.writeFile(filepath, image.buffer);
+      
+      // Generar URL pública
+      const backendUrl = process.env.BACKEND_PUBLIC_URL || `http://localhost:${process.env.PORT || 3001}`;
+      imageUrl = `${backendUrl}/uploads/web/testimonials/${filename}`;
+    }
+
+    Object.assign(testimonial, {
+      ...updateTestimonialDto,
+      ...(imageUrl && { imageUrl }),
+    });
+    
     return await this.testimonialRepository.save(testimonial);
   }
 

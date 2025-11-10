@@ -191,7 +191,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
             padding: '0.25rem 2rem',
             transformOrigin: '0% 0%',
             transform: 'translate(-20%, 270%) rotate(-45deg)',
-            zIndex: 20,
+            zIndex: 10,
             boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
             pointerEvents: 'none',
           }}
@@ -203,7 +203,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
 
       {opText && opText.trim() && (
         <div
-          className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded-full border-2 border-white shadow-lg z-50"
+          className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded-full border-2 border-white shadow-lg z-10"
           data-test-id="property-card-operation"
         >
           {opText}

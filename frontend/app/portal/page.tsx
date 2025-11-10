@@ -1,39 +1,83 @@
 import PropertyCard from './ui/PropertyCard';
-import { getPublishedFeaturedPropertiesPublic } from '@/app/actions/properties';
+import { getPublishedPropertiesFiltered } from '@/app/actions/portalProperties';
 import Slider from './ui/Slider';
+import PropertyFilter from './ui/PropertyFilter';
+import ListProperties from './ui/ListProperties';
 
-export default async function PortalPage() {
-  const res = await getPublishedFeaturedPropertiesPublic();
+interface PortalPageProps {
+  searchParams: Promise<{
+    operation?: string;
+    typeProperty?: string;
+    state?: string;
+    city?: string;
+    currency?: string;
+    page?: string;
+  }>;
+}
+
+export default async function PortalPage({ searchParams }: PortalPageProps) {
+  const params = await searchParams;
+  const operation = params.operation || '';
+  const typeProperty = params.typeProperty || '';
+  const state = params.state || '';
+  const city = params.city || '';
+  const currency = params.currency || '';
+  const page = params.page || '';
+
+  
+  // Siempre llamar a getPublishedPropertiesFiltered
+  const result = await getPublishedPropertiesFiltered({
+    currency: currency,
+    state: state,
+    city: city,
+    typeProperty: typeProperty,
+    operation: operation,
+    page: page ? parseInt(page) : 1,
+  });
+
+  const properties = result
+    ? Array.isArray(result)
+      ? result
+      : result.data ?? []
+    : [];
+  // If result is not an array and has no data, treat as error
+  const error = result && !Array.isArray(result) && !result.data ? 'Error loading properties' : null;
+
+
+
+
+
+
 
   return (
     <div>
       <Slider />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary">Propiedades destacadas</h1>
-        <p className="text-sm md:text-base text-muted-foreground mt-2">Explora nuestras propiedades publicadas recientemente</p>
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-extrabold text-gray-900">
+            Propiedades destacadas
+          </h1>
+          <p className="mt-4 text-gray-600">
+            Explora nuestras propiedades más destacadas seleccionadas especialmente para ti.
+          </p>
+        </div>
+      
+      </div>
+      
+
+     
+
+     
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+        <PropertyFilter />
       </div>
 
-      {!res.success && (
-        <div className="bg-red-50 text-red-700 border border-red-200 rounded p-4 text-sm">
-          Ocurrió un error al cargar las propiedades: {res.error}
+      {!error && properties.length > 0 && (
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+          <ListProperties properties={properties} />
         </div>
       )}
-
-      {res.success && (!res.data || res.data.length === 0) && (
-        <div className="bg-card text-foreground border border-border rounded p-6 text-center text-sm">
-          Aún no hay propiedades publicadas.
-        </div>
-      )}
-
-      {res.success && res.data && res.data.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {res.data.map((p) => (
-            <PropertyCard key={p.id} property={p as any} />
-          ))}
-        </div>
-      )}
-      </div>
     </div>
   );
 }

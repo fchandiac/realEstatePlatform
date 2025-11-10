@@ -17,7 +17,7 @@ if (
   process.env.AUTH_API_URL &&
   process.env.NEXT_PUBLIC_AUTH_API_URL.replace(/\/$/, '') !== process.env.AUTH_API_URL.replace(/\/$/, '')
 ) {
-  // eslint-disable-next-line no-console
+   
   console.warn(
     '[env] NEXT_PUBLIC_AUTH_API_URL and AUTH_API_URL differ. Using NEXT_PUBLIC_AUTH_API_URL to keep SSR/Client consistent:',
     {

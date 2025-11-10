@@ -466,6 +466,17 @@ export class PropertyController {
     return { isMain };
   }
 
+  /**
+   * Get published properties with filters and pagination (9 per page)
+   * Query params: currency, state, city, typeProperty, operation, page
+   */
+  @Get('published/filtered')
+  async getPublishedPropertiesFiltered(
+    @Query(new ValidationPipe({ transform: true })) filters: any,
+  ) {
+    return this.propertyService.getPublishedPropertiesFiltered(filters);
+  }
+
   private extractUserId(req: any): string {
     const user = req.user as any;
     if (user?.id) return user.id;

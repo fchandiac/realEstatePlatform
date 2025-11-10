@@ -61,7 +61,7 @@ export default function RegisterForm({ onRegister, onLogin, loading = false }: R
 			}
 		} catch (err) {
 			// Log the error for debugging and keep user-friendly message
-			// eslint-disable-next-line no-console
+			 
 			console.error(err);
 			setError('Error al registrar usuario. Inténtalo de nuevo.');
 		}

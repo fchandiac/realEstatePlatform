@@ -22,12 +22,12 @@ export class TestimonialsController {
   constructor(private readonly testimonialsService: TestimonialsService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('image'))
   create(
     @Body(ValidationPipe) createTestimonialDto: CreateTestimonialDto,
-    @UploadedFile() file?: Express.Multer.File,
+    @UploadedFile() image?: Express.Multer.File,
   ) {
-    return this.testimonialsService.create(createTestimonialDto, file);
+    return this.testimonialsService.create(createTestimonialDto, image);
   }
 
   @Get()
@@ -41,11 +41,13 @@ export class TestimonialsController {
   }
 
   @Patch(':id')
+  @UseInterceptors(FileInterceptor('image'))
   update(
     @Param('id') id: string,
     @Body(ValidationPipe) updateTestimonialDto: UpdateTestimonialDto,
+    @UploadedFile() image?: Express.Multer.File,
   ) {
-    return this.testimonialsService.update(id, updateTestimonialDto);
+    return this.testimonialsService.update(id, updateTestimonialDto, image);
   }
 
   @Delete(':id')
