@@ -23,31 +23,61 @@ const AdminCard: React.FC<AdminCardProps> = ({ admin, onEdit }) => {
   };
 
   return (
-  <article className="border border-neutral-200 bg-white rounded-lg shadow-sm p-4 flex flex-col justify-between">
-      <div className="grid grid-cols-[1fr_auto] gap-4 items-start">
-        <div className="flex items-start gap-4 min-w-0">
-          <div className="h-12 w-12 rounded-full bg-neutral-100 flex items-center justify-center overflow-hidden flex-shrink-0">
-          {admin.personalInfo?.avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={admin.personalInfo.avatarUrl as string} alt={`Avatar ${fullName}`} className="h-full w-full object-cover" />
-          ) : (
-            <span className="material-symbols-outlined text-2xl text-neutral-400">admin_panel_settings</span>
-          )}
-        </div>
-
-          <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-semibold text-foreground break-words whitespace-normal">{fullName}</h3>
-          <p className="text-sm text-neutral-500 break-words whitespace-normal">{admin.email}</p>
-          {admin.personalInfo?.phone ? (
-            <p className="text-sm text-neutral-500 break-words whitespace-normal">{admin.personalInfo.phone}</p>
-          ) : null}
+  <article className="border border-neutral-200 bg-white rounded-lg shadow-sm p-2 flex flex-col justify-between">
+      <div className="grid grid-cols-[30%_70%] gap-4 items-center">
+        {/* Columna del Avatar */}
+        <div className="flex justify-center items-center">
+          <div className="relative flex-shrink-0">
+            <div className="h-24 w-24 rounded-full bg-neutral-100 border-4 border-secondary flex items-center justify-center overflow-hidden">
+              {admin.personalInfo?.avatarUrl ? (
+                // eslint-disable-next-line @next/next/next/no-img-element
+                <img src={admin.personalInfo.avatarUrl as string} alt={`Avatar ${fullName}`} className="h-full w-full object-cover" />
+              ) : (
+                <span className="material-symbols-outlined text-secondary" style={{ fontSize: '4rem' }}>person</span>
+              )}
+            </div>
+            {!admin.personalInfo?.avatarUrl && (
+              <IconButton
+                icon="add"
+                variant="primary"
+                size="xs"
+                className="absolute bottom-0 right-2 z-10"
+                aria-label="Agregar avatar"
+                title="Agregar avatar"
+                onClick={() => {}}
+              />
+            )}
           </div>
         </div>
 
-        <div className="flex items-start justify-end flex-shrink-0">
-          <span className={`text-[11px] font-semibold uppercase px-3 py-1 rounded-full ${status.className}`}>
-            {status.label}
-          </span>
+        {/* Columna de Información */}
+        <div className="flex flex-col gap-2">
+          {/* Status alineado a la derecha */}
+          <div className="flex justify-end mr-4">
+            <span className={`text-[11px] font-semibold uppercase px-3 py-2 rounded-full ${status.className}`}>
+              {status.label}
+            </span>
+          </div>
+
+          {/* Nombre */}
+          <h3 className="text-lg font-semibold text-foreground break-words whitespace-normal">{fullName}</h3>
+
+          {/* Nombre de usuario */}
+          <p className="text-sm text-neutral-600 break-words whitespace-normal">@{admin.username}</p>
+
+          {/* Correo con icono */}
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-neutral-500" style={{ fontSize: '1rem' }}>email</span>
+            <p className="text-sm text-neutral-500 break-words whitespace-normal">{admin.email}</p>
+          </div>
+
+          {/* Teléfono con icono */}
+          {admin.personalInfo?.phone && (
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-neutral-500" style={{ fontSize: '1rem' }}>phone</span>
+              <p className="text-sm text-neutral-500 break-words whitespace-normal">{admin.personalInfo.phone}</p>
+            </div>
+          )}
         </div>
       </div>
 

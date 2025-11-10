@@ -91,7 +91,7 @@ export class SeederFactory {
       name: this.getRandomLatinName(),
       dni: faker.string.numeric(8),
       address: faker.location.streetAddress(),
-      phone: faker.string.numeric(9),
+      phone: '+56 9 ' + faker.string.numeric(8),
       email: faker.internet.email(),
       verified: faker.datatype.boolean(),
       verificationRequest: faker.helpers.arrayElement([undefined, faker.date.past()]),
@@ -116,7 +116,7 @@ export class SeederFactory {
       personalInfo: {
         firstName: nameParts[0],
         lastName: nameParts.slice(1).join(' '),
-        phone: faker.phone.number(),
+        phone: '+56 9 ' + faker.string.numeric(8),
         avatarUrl: undefined
       },
       lastLogin: faker.date.past(),
@@ -159,7 +159,7 @@ export class SeederFactory {
         contactInfo: {
           name: this.getRandomLatinName(),
           email: faker.internet.email(),
-          phone: faker.phone.number()
+          phone: '+56 9 ' + faker.string.numeric(8)
         },
         requestedAt: faker.date.recent()
       }), { probability: 0.3 }), // Some properties have post requests
