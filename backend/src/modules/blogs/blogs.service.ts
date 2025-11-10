@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { BlogArticle } from '../../entities/blog-article.entity';
 import { ListBlogsQueryDto } from './dto/list-blogs-query.dto';
 import { BlogArticleDto } from './dto/blog-article.dto';
+import { GetBlogArticleDto } from './dto/get-blog-article.dto';
 
 @Injectable()
 export class BlogsService {
@@ -83,5 +84,35 @@ export class BlogsService {
       createdAt: art.createdAt,
       updatedAt: art.updatedAt,
     }));
+  }
+
+  async getBlogArticle(id: string): Promise<GetBlogArticleDto> {
+    const article = await this.blogArticleRepository.findOne({
+      where: {
+        id,
+        isActive: true,
+        deletedAt: IsNull(),
+      },
+    });
+
+    if (!article) {
+      throw new NotFoundException('Blog article not found');
+    }
+
+    const relatedArticles = await this.getRelatedArticles(id, article.category);
+
+    return {
+      id: article.id,
+      title: article.title,
+      subtitle: article.subtitle,
+      content: article.content,
+      category: article.category,
+      imageUrl: article.imageUrl,
+      publishedAt: article.publishedAt,
+      isActive: article.isActive,
+      createdAt: article.createdAt,
+      updatedAt: article.updatedAt,
+      relatedArticles,
+    };
   }
 }

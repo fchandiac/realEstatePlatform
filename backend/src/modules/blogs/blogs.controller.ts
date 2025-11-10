@@ -1,4 +1,4 @@
-import { Controller, Get, Query, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Query, Param, ValidationPipe } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { ListBlogsQueryDto } from './dto/list-blogs-query.dto';
 import { Audit } from '../../common/interceptors/audit.interceptor';
@@ -12,5 +12,11 @@ export class BlogsController {
   @Audit(AuditAction.READ, AuditEntityType.ARTICLE, 'Blogs listed')
   async listBlogs(@Query(ValidationPipe) query: ListBlogsQueryDto) {
     return this.blogsService.listBlogs(query);
+  }
+
+  @Get(':id')
+  @Audit(AuditAction.READ, AuditEntityType.ARTICLE, 'Blog article retrieved')
+  async getBlogArticle(@Param('id') id: string) {
+    return this.blogsService.getBlogArticle(id);
   }
 }

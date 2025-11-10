@@ -108,7 +108,6 @@ export default function BlogList({ articles, currentCategory }: BlogListProps) {
 
           <div className="mt-16">
             <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">Artículos relacionados</h3>
               <p className="text-gray-600">Descubre más contenido que puede interesarte</p>
             </div>
 

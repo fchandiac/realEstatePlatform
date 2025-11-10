@@ -43,3 +43,19 @@ export async function listBlogs(params: ListBlogsParams = {}): Promise<BlogArtic
   const data = await response.json();
   return data;
 }
+
+export async function getBlogArticle(id: string): Promise<BlogArticle> {
+  const response = await fetch(`${env.backendApiUrl}/blogs/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch blog article: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data;
+}
