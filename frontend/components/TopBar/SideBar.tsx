@@ -60,7 +60,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose,
       return (
         <li key={id}>
           <button
-            className="block p-2 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm"
+            className="block px-4 py-2 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm"
             onClick={() => toggleOpen(id)}
             aria-expanded={isOpen}
             data-test-id={`side-bar-parent-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
@@ -114,19 +114,19 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose,
     >
       <div className="mb-6 text-center">
         {logoUrl ? (
-          <div className="mb-4">
+          <div className="">
             <img
               src={logoUrl}
               alt={`${APP_NAME} Logo`}
-              className="h-12 w-auto mx-auto object-contain"
+              className="h-20 w-auto mx-auto object-contain"
               data-test-id="side-bar-logo"
             />
           </div>
         ) : null}
-        <div className="text-xl font-bold" data-test-id="side-bar-app-name">{APP_NAME}</div>
-        <div className="text-sm opacity-70" data-test-id="side-bar-app-version">{APP_VERSION}</div>
+        {/* <div className="text-xl font-bold" data-test-id="side-bar-app-name">{APP_NAME}</div> */}
+        {/* <div className="text-sm opacity-70" data-test-id="side-bar-app-version">{'1.2.12'}</div> */}
       </div>
-
+{/* 
       {user && (() => {
         const u = user as unknown as { userName?: string; role?: string };
         return (
@@ -140,7 +140,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose,
             </div>
           </div>
         );
-      })()}
+      })()} */}
 
       <nav className="w-full px-4 flex-1 mt-2 overflow-y-auto">
         <ul className="flex flex-col gap-2 w-full">
