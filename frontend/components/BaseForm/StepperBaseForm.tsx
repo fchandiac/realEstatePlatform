@@ -545,27 +545,52 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 			{totalSteps > 0 && (
 				<div className="mb-6">
-					{/* Primer row: Dots que representan los steps */}
-					<div className="flex justify-start items-center gap-4 mb-4">
-						{steps.map((step, index) => {
-							const isStepActive = index === activeStepIndex;
-							const isStepCompleted = step.status
-								? step.status === "completed"
-								: index < activeStepIndex;
+					{/* Primer row: Dots + Botones de navegación */}
+					<div className="flex justify-between items-center mb-4">
+						{/* Dots que representan los steps */}
+						<div className="flex items-center gap-4">
+							{steps.map((step, index) => {
+								const isStepActive = index === activeStepIndex;
+								const isStepCompleted = step.status
+									? step.status === "completed"
+									: index < activeStepIndex;
 
 							const dotClasses = [
 								"w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border-2 transition-all duration-200",
 								isStepCompleted ? "bg-black border-black text-white" : "",
-								isStepActive && !isStepCompleted ? "bg-black border-black text-white" : "",
+								isStepActive && !isStepCompleted ? "bg-black border-black text-gray-400" : "",
 								!isStepActive && !isStepCompleted ? "bg-gray-300 border-gray-300 text-gray-600" : "",
-							].filter(Boolean).join(" ");
+							].filter(Boolean).join(" ");								return (
+									<div key={`dot-${index}`} className={dotClasses}>
+										{index + 1}
+									</div>
+								);
+							})}
+						</div>
 
-							return (
-								<div key={`dot-${index}`} className={dotClasses}>
-									{index + 1}
-								</div>
-							);
-						})}
+						{/* Botones de navegación */}
+						<div className="flex gap-2">
+							{!isFirstStep && (
+								<Button
+									variant="secondary"
+									type="button"
+									onClick={() => {
+										void handlePrevious();
+									}}
+									disabled={isProcessing}
+									size="sm"
+								>
+									← Anterior
+								</Button>
+							)}
+							{isProcessing ? (
+								<DotProgress size={18} />
+							) : (
+								<Button variant="primary" type="submit" size="sm">
+									{isLastStep ? submitLabel ?? "Guardar" : "Siguiente →"}
+								</Button>
+							)}
+						</div>
 					</div>
 
 					{/* Segundo row: Información del step actual */}
@@ -632,28 +657,8 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 								{closeButtonText}
 							</Button>
 						)}
-						{!isFirstStep && (
-							<Button
-								variant="secondary"
-								type="button"
-								onClick={() => {
-									void handlePrevious();
-								}}
-								disabled={isProcessing}
-							>
-								← Anterior
-							</Button>
-						)}
 					</div>
-					<div className="flex gap-2">
-						{isProcessing ? (
-							<DotProgress size={18} />
-						) : (
-							<Button variant="primary" type="submit">
-								{isLastStep ? submitLabel ?? "Guardar" : "Siguiente →"}
-							</Button>
-						)}
-					</div>
+					{/* Los botones Anterior/Siguiente ahora están arriba */}
 				</div>
 
 				{errors.length > 0 && (
