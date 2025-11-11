@@ -84,28 +84,24 @@ const DeleteBaseForm: React.FC<DeleteBaseFormProps> = ({
                 </Alert>
             </div>
 
-            <div className="flex justify-between gap-3">
-                <div>
-                    {showCloseButton && onClose && (
-                        <Button
-                            variant="outlined"
-                            type="button"
-                            onClick={onClose}
-                            disabled={isSubmitting}
-                        >
-                            {closeButtonText}
-                        </Button>
-                    )}
-                </div>
-                <div>
-                    {isSubmitting ? (
-                        <DotProgress size={18} className="self-end" />
-                    ) : (
-                        <Button variant="primary" type="submit">
-                            {submitLabel ?? "Eliminar"}
-                        </Button>
-                    )}
-                </div>
+            <div className="flex justify-end gap-2">
+                {isSubmitting ? (
+                    <DotProgress size={18} className="self-end" />
+                ) : (
+                    <Button variant="primary" type="submit">
+                        {submitLabel ?? "Eliminar"}
+                    </Button>
+                )}
+                {showCloseButton && onClose && (
+                    <Button
+                        variant="outlined"
+                        type="button"
+                        onClick={onClose}
+                        disabled={isSubmitting}
+                    >
+                        {closeButtonText}
+                    </Button>
+                )}
             </div>
         </form>
     );
