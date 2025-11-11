@@ -199,15 +199,20 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 	const navigateToStep = useCallback(
 		(targetIndex: number) => {
+			console.log(`🧭 [StepperBaseForm] navigateToStep called: ${activeStepIndex} -> ${targetIndex}`);
+
 			if (targetIndex < 0 || targetIndex >= totalSteps) {
+				console.log(`❌ [StepperBaseForm] Invalid target index: ${targetIndex}, total steps: ${totalSteps}`);
 				return;
 			}
 
 			if (targetIndex === activeStepIndex) {
+				console.log(`⚠️ [StepperBaseForm] Target index same as current: ${targetIndex}`);
 				return;
 			}
 
 			if (steps[targetIndex]?.disabled) {
+				console.log(`🚫 [StepperBaseForm] Target step is disabled: ${targetIndex}`);
 				return;
 			}
 
@@ -217,7 +222,10 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 			onStepChange?.(targetIndex, activeStepIndex);
 
 			if (!isControlled) {
+				console.log(`✅ [StepperBaseForm] Setting internal step to: ${targetIndex}`);
 				setInternalStep(targetIndex);
+			} else {
+				console.log(`ℹ️ [StepperBaseForm] Component is controlled, external handler should update currentStep prop`);
 			}
 		},
 		[activeStepIndex, isControlled, onStepChange, steps, totalSteps]
@@ -240,13 +248,26 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 			return;
 		}
 
+		// TEMPORALMENTE DESHABILITAR VALIDACIÓN PARA DEBUG
+		/*
 		// Validar campos requeridos del step actual antes de proceder
 		const currentStepFields = currentStepData?.fields ?? [];
 		const requiredFields = currentStepFields.filter(field => field.required);
+
+		console.log('🔍 [StepperBaseForm] Validating required fields:', requiredFields.map(f => f.name));
+		console.log('📊 [StepperBaseForm] Current values:', values);
+
 		const missingFields = requiredFields.filter(field => {
 			const fieldValue = values[field.name];
-			return fieldValue === undefined || fieldValue === null || fieldValue === '';
+			const isEmpty = fieldValue === undefined || fieldValue === null || fieldValue === '' ||
+				(typeof fieldValue === 'string' && fieldValue.trim() === '');
+
+			console.log(`🔍 [StepperBaseForm] Field "${field.name}": value=${fieldValue}, isEmpty=${isEmpty}`);
+
+			return isEmpty;
 		});
+
+		console.log('❌ [StepperBaseForm] Missing fields:', missingFields.map(f => f.name));
 
 		if (missingFields.length > 0) {
 			// Mostrar error de validación
@@ -256,6 +277,9 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 		// Limpiar errores de validación previos
 		setValidationErrors([]);
+		*/
+
+		console.log('✅ [StepperBaseForm] Validation bypassed for debug, proceeding to next step');
 
 		if (isLastStep) {
 			await runSubmit();
