@@ -1,0 +1,64 @@
+'use client';
+
+import React, { useState } from 'react';
+import { DeleteBaseForm } from '@/components/BaseForm';
+import { deleteUser } from '@/app/actions/users';
+import type { AdministratorType } from './types';
+
+interface DeleteAdminFormProps {
+	administrator: AdministratorType | null;
+	onSubmitSuccess: () => void;
+	onError: (error: string) => void;
+	onClose?: () => void;
+}
+
+const DeleteAdminForm: React.FC<DeleteAdminFormProps> = ({
+	administrator,
+	onSubmitSuccess,
+	onError,
+	onClose,
+}) => {
+	const [loading, setLoading] = useState(false);
+
+	const handleSubmit = async () => {
+		if (!administrator) return;
+
+		setLoading(true);
+		try {
+			const result = await deleteUser(administrator.id);
+			if (!result.success) {
+				onError(result.error || 'Error al eliminar el administrador');
+				setLoading(false);
+				return;
+			}
+
+			onSubmitSuccess();
+		} catch (err) {
+			onError('Error inesperado al eliminar el administrador');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const fullName = administrator
+		? `${administrator.personalInfo?.firstName ?? ''} ${administrator.personalInfo?.lastName ?? ''}`.trim() ||
+		  administrator.username ||
+		  administrator.email
+		: '';
+
+	return (
+		<DeleteBaseForm
+			title="Eliminar Administrador"
+			message={`¿Estás seguro de que quieres eliminar al administrador "${fullName}"?`}
+			subtitle="Esta acción no se puede deshacer."
+			isSubmitting={loading}
+			submitLabel="Eliminar"
+			onSubmit={handleSubmit}
+			showCloseButton={true}
+			closeButtonText="Cancelar"
+			onClose={onClose}
+		/>
+	);
+};
+
+export default DeleteAdminForm;

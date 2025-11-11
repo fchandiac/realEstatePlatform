@@ -6,6 +6,7 @@ import { TextField } from '@/components/TextField/TextField';
 import { useRouter, useSearchParams } from "next/navigation";
 import AdminCard from "./AdminCard";
 import UpdateAdminDialog from "./UpdateAdminDialog";
+import DeleteAdminDialog from "./DeleteAdminDialog";
 
 export interface AdminListProps {
     administrators: AdministratorType[];
@@ -40,6 +41,7 @@ const AdminList: React.FC<AdminListProps> = ({
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [selectedAdmin, setSelectedAdmin] = useState<AdministratorType | null>(null);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
    
     useEffect(() => {
         setSearch(searchParams.get("search") || "");
@@ -64,6 +66,16 @@ const AdminList: React.FC<AdminListProps> = ({
 
   const handleEditDialogClose = () => {
     setEditDialogOpen(false);
+    setSelectedAdmin(null);
+  };
+
+  const handleDeleteAdmin = (admin: AdministratorType) => {
+    setSelectedAdmin(admin);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteDialogClose = () => {
+    setDeleteDialogOpen(false);
     setSelectedAdmin(null);
   };
 
@@ -105,7 +117,7 @@ const AdminList: React.FC<AdminListProps> = ({
                     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full"
                 >
                     {administrators.map(admin => (
-                        <AdminCard key={admin.id} admin={admin} onEdit={handleEditAdmin} />
+                        <AdminCard key={admin.id} admin={admin} onEdit={handleEditAdmin} onDelete={handleDeleteAdmin} />
                     ))}
                 </div>
             </div>
@@ -115,6 +127,13 @@ const AdminList: React.FC<AdminListProps> = ({
             <UpdateAdminDialog
                 open={editDialogOpen}
                 onClose={handleEditDialogClose}
+                administrator={selectedAdmin}
+                onSave={handleRefreshList}
+            />
+
+            <DeleteAdminDialog
+                open={deleteDialogOpen}
+                onClose={handleDeleteDialogClose}
                 administrator={selectedAdmin}
                 onSave={handleRefreshList}
             />

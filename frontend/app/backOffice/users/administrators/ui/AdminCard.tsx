@@ -7,6 +7,7 @@ import { env } from '@/lib/env';
 export interface AdminCardProps {
   admin: AdministratorType;
   onEdit?: (admin: AdministratorType) => void;
+  onDelete?: (admin: AdministratorType) => void;
 }
 
 const STATUS_STYLES: Record<AdministratorStatus, { className: string; label: string }> = {
@@ -16,7 +17,7 @@ const STATUS_STYLES: Record<AdministratorStatus, { className: string; label: str
   SUSPENDED: { className: 'bg-rose-600 text-white', label: 'SUSPENDIDO' },
 };
 
-const AdminCard: React.FC<AdminCardProps> = ({ admin, onEdit }) => {
+const AdminCard: React.FC<AdminCardProps> = ({ admin, onEdit, onDelete }) => {
   const [showAvatarDialog, setShowAvatarDialog] = useState(false);
   const fullName = `${admin.personalInfo?.firstName ?? ''} ${admin.personalInfo?.lastName ?? ''}`.trim() || admin.username || admin.email;
 
@@ -103,7 +104,7 @@ const AdminCard: React.FC<AdminCardProps> = ({ admin, onEdit }) => {
             size="sm"
             aria-label={`Eliminar ${fullName}`}
             title="Eliminar"
-            onClick={() => {}}
+            onClick={() => onDelete?.(admin)}
           />
         </div>
       </article>
