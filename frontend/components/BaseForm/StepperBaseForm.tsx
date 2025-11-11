@@ -1,15 +1,33 @@
 "use client";
-import React, { useState } from "react";
+
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { TextField } from "../TextField/TextField";
-import AutoComplete, { Option } from "../AutoComplete/AutoComplete";
+import AutoComplete from "../AutoComplete/AutoComplete";
 import { Button } from "../Button/Button";
-import CircularProgress from "../CircularProgress/CircularProgress";
 import DotProgress from "../DotProgress/DotProgress";
 import Alert from "../Alert/Alert";
 import Switch from "../Switch/Switch";
 import Select from "../Select/Select";
 import RangeSlider from "../RangeSlider/RangeSlider";
 import CreateLocationPicker from "../LocationPicker/CreateLocationPickerWrapper";
+import { MultimediaUploader } from "../FileUploader/MultimediaUploader";
+
+type FormValues = Record<string, unknown>;
+
+export interface BaseFormOption {
+	id: string | number;
+	label: string;
+	[key: string]: unknown;
+}
+
+type FieldRenderFn = (props: {
+	name: string;
+	label: string;
+	value: unknown;
+	onChange: (value: unknown) => void;
+	field: BaseFormField;
+	values: FormValues;
+}) => React.ReactNode;
 
 export interface BaseFormField {
 	name: string;
@@ -26,10 +44,13 @@ export interface BaseFormField {
 	| "range"
 	| "location"
 	| "dni"
-	| "currency";
+	| "currency"
+	| "multimedia"
+	| "avatar"
+	| "custom";
 	required?: boolean;
 	autoFocus?: boolean;
-	options?: Option[];
+	options?: BaseFormOption[];
 	multiline?: boolean;
 	rows?: number;
 	formatFn?: (input: string) => string;
@@ -38,201 +59,559 @@ export interface BaseFormField {
 	min?: number;
 	max?: number;
 	col?: number;
+	labelPosition?: "left" | "right";
+	renderComponent?: FieldRenderFn;
+	props?: Record<string, unknown>;
+}
+
+export interface StepRenderContext {
+	index: number;
+	step: StepperStep;
+	isActive: boolean;
+	isCompleted: boolean;
+	isLastStep: boolean;
+	values: FormValues;
+	onChange: (field: string, value: unknown) => void;
+	goToStep: (index: number) => void;
 }
 
 export interface StepperStep {
 	title: string;
 	description?: string;
-	fields: BaseFormField[];
+	fields?: BaseFormField[];
+	renderContent?: (context: StepRenderContext) => React.ReactNode;
+	status?: "pending" | "active" | "completed";
+	disabled?: boolean;
+	columns?: number;
 }
 
 export interface StepperBaseFormProps {
 	steps: StepperStep[];
-	values: Record<string, any>;
-	onChange: (field: string, value: any) => void;
-	onSubmit: () => void;
+	values: FormValues;
+	onChange: (field: string, value: unknown) => void;
+	onSubmit: () => Promise<void> | void;
+	currentStep?: number;
+	defaultStep?: number;
 	isSubmitting?: boolean;
 	submitLabel?: string;
 	title?: string;
 	subtitle?: string;
 	errors?: string[];
-	["data-test-id"]?: string;
 	columns?: number;
 	showCloseButton?: boolean;
 	closeButtonText?: string;
 	onClose?: () => void;
+	onNext?: (currentStep: number) => Promise<void> | void;
+	onPrevious?: (currentStep: number) => Promise<void> | void;
+	onFinish?: () => Promise<void> | void;
+	onStepChange?: (nextStep: number, previousStep: number) => void;
+	renderStepContent?: (step: StepperStep, context: StepRenderContext) => React.ReactNode;
+	["data-test-id"]?: string;
+	className?: string;
+	formClassName?: string;
 }
+
+const groupFieldsByColumns = (fields: BaseFormField[], columns: number): BaseFormField[][] => {
+	const safeColumns = Math.max(1, columns);
+	const columnGroups: BaseFormField[][] = Array.from({ length: safeColumns }, () => []);
+
+	fields.forEach((field) => {
+		const preferredColumn = field.col ? field.col - 1 : 0;
+		const columnIndex = Math.min(Math.max(preferredColumn, 0), safeColumns - 1);
+		columnGroups[columnIndex].push(field);
+	});
+
+	return columnGroups;
+};
 
 const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 	steps,
 	values,
 	onChange,
 	onSubmit,
+	currentStep: controlledStep,
+	defaultStep = 0,
 	isSubmitting = false,
 	submitLabel,
 	title = "",
 	subtitle = "",
 	errors = [],
-	columns = 1,
+	columns: defaultColumns = 1,
 	showCloseButton = false,
 	closeButtonText = "cerrar",
 	onClose,
-	...props
+	onNext,
+	onPrevious,
+	onFinish,
+	onStepChange,
+	renderStepContent,
+	className,
+	formClassName,
+	...rest
 }) => {
-	const dataTestId = props["data-test-id"];
-	const [currentStep, setCurrentStep] = useState(0);
+	const dataTestId = rest["data-test-id"];
+	const [internalStep, setInternalStep] = useState(defaultStep);
+	const [isTransitioning, setIsTransitioning] = useState(false);
+	const isControlled = controlledStep !== undefined;
+	const totalSteps = steps.length;
+	const rawStep = isControlled ? controlledStep ?? 0 : internalStep;
+	const activeStepIndex = totalSteps > 0 ? Math.min(Math.max(rawStep, 0), totalSteps - 1) : 0;
 
-	// Función para agrupar campos por columnas
-	const groupFieldsByColumns = (fields: BaseFormField[], columns: number) => {
-		const columnGroups: BaseFormField[][] = Array.from({ length: columns }, () => []);
+	useEffect(() => {
+		if (isControlled) {
+			return;
+		}
 
-		fields.forEach((field) => {
-			const colIndex = field.col ? Math.max(0, Math.min(field.col - 1, columns - 1)) : 0;
-			columnGroups[colIndex].push(field);
-		});
+		if (totalSteps === 0) {
+			setInternalStep(0);
+			return;
+		}
 
-		return columnGroups;
-	};
+		if (internalStep >= totalSteps) {
+			setInternalStep(totalSteps - 1);
+		}
+	}, [internalStep, isControlled, totalSteps]);
 
-	const currentStepData = steps[currentStep];
-	const columnGroups = groupFieldsByColumns(currentStepData.fields, columns);
-
-	// Función para renderizar un campo individual
-	const renderField = (field: BaseFormField) => (
-		<div key={field.name} className="mb-2">
-			{field.type === "location" ? (
-				<CreateLocationPicker
-					onChange={coords => onChange(field.name, coords)}
-				/>
-			) : field.type === "range" ? (
-				<RangeSlider
-					min={field.min ?? 0}
-					max={field.max ?? 100}
-					value={values[field.name]}
-					onChange={val => onChange(field.name, val)}
-				/>
-			) : field.type === "select" ? (
-				<Select
-					options={field.options || []}
-					placeholder={field.label}
-					value={values[field.name]}
-					onChange={(id: string | number | null) => onChange(field.name, id)}
-					required={field.required}
-					data-test-id={`select-${field.name}`}
-				/>
-			) : field.type === "autocomplete" ? (
-				<AutoComplete
-					options={field.options || []}
-					label={field.label}
-					value={field.options?.find(opt => opt.id === values[field.name]) || null}
-					onChange={opt => onChange(field.name, opt?.id || "")}
-					required={field.required}
-					name={field.name}
-					data-test-id={`autocomplete-${field.name}`}
-				/>
-			) : field.type === "switch" ? (
-				<Switch
-					checked={Boolean(values[field.name])}
-					onChange={val => onChange(field.name, val)}
-					label={field.label}
-					data-test-id={`switch-${field.name}`}
-				/>
-			) : (
-				<TextField
-					label={field.label}
-					value={values[field.name] || ""}
-					onChange={e => onChange(field.name, field.formatFn ? field.formatFn(e.target.value) : e.target.value)}
-					type={field.type}
-					name={field.name}
-					rows={field.multiline ? field.rows : undefined}
-					startIcon={field.startIcon}
-					endIcon={field.endIcon}
-					required={field.required}
-					data-test-id={`input-${field.name}`}
-				/>
-			)}
-		</div>
+	const currentStepData = steps[activeStepIndex];
+	const effectiveColumns = currentStepData?.columns ?? defaultColumns;
+	const safeColumns = Math.max(1, effectiveColumns || 1);
+	const currentStepFields = useMemo(
+		() => currentStepData?.fields ?? [],
+		[currentStepData]
 	);
 
-	const handleNext = () => {
-		if (currentStep < steps.length - 1) {
-			setCurrentStep(currentStep + 1);
-		}
-	};
+	const columnGroups = useMemo(
+		() => groupFieldsByColumns(currentStepFields, safeColumns),
+		[currentStepFields, safeColumns]
+	);
 
-	const handlePrevious = () => {
-		if (currentStep > 0) {
-			setCurrentStep(currentStep - 1);
-		}
-	};
+	const isLastStep = totalSteps === 0 ? true : activeStepIndex >= totalSteps - 1;
+	const isFirstStep = activeStepIndex <= 0;
+	const isProcessing = isSubmitting || isTransitioning;
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		if (currentStep === steps.length - 1) {
-			onSubmit();
-		} else {
-			handleNext();
-		}
-	};
+	const navigateToStep = useCallback(
+		(targetIndex: number) => {
+			if (targetIndex < 0 || targetIndex >= totalSteps) {
+				return;
+			}
 
-	const isLastStep = currentStep === steps.length - 1;
-	const isFirstStep = currentStep === 0;
+			if (targetIndex === activeStepIndex) {
+				return;
+			}
+
+			if (steps[targetIndex]?.disabled) {
+				return;
+			}
+
+			onStepChange?.(targetIndex, activeStepIndex);
+
+			if (!isControlled) {
+				setInternalStep(targetIndex);
+			}
+		},
+		[activeStepIndex, isControlled, onStepChange, steps, totalSteps]
+	);
+
+	const runSubmit = useCallback(async () => {
+		setIsTransitioning(true);
+		try {
+			await onSubmit();
+			if (onFinish) {
+				await onFinish();
+			}
+		} finally {
+			setIsTransitioning(false);
+		}
+	}, [onFinish, onSubmit]);
+
+	const handleNext = useCallback(async () => {
+		if (isTransitioning) {
+			return;
+		}
+
+		if (isLastStep) {
+			await runSubmit();
+			return;
+		}
+
+		setIsTransitioning(true);
+		try {
+			if (onNext) {
+				await onNext(activeStepIndex);
+			}
+			navigateToStep(activeStepIndex + 1);
+		} finally {
+			setIsTransitioning(false);
+		}
+	}, [activeStepIndex, isLastStep, isTransitioning, navigateToStep, onNext, runSubmit]);
+
+	const handlePrevious = useCallback(async () => {
+		if (isTransitioning || isFirstStep) {
+			return;
+		}
+
+		setIsTransitioning(true);
+		try {
+			if (onPrevious) {
+				await onPrevious(activeStepIndex);
+			}
+			navigateToStep(activeStepIndex - 1);
+		} finally {
+			setIsTransitioning(false);
+		}
+	}, [activeStepIndex, isFirstStep, isTransitioning, navigateToStep, onPrevious]);
+
+	const handleSubmit = useCallback(
+		async (event: React.FormEvent<HTMLFormElement>) => {
+			event.preventDefault();
+			await handleNext();
+		},
+		[handleNext]
+	);
+
+	const activeStepContext: StepRenderContext | null = useMemo(() => {
+		if (!currentStepData) {
+			return null;
+		}
+
+		const isCompleted = currentStepData.status === "completed";
+
+		return {
+			index: activeStepIndex,
+			step: currentStepData,
+			isActive: true,
+			isCompleted,
+			isLastStep,
+			values,
+			onChange,
+			goToStep: navigateToStep,
+		};
+	}, [activeStepIndex, currentStepData, isLastStep, navigateToStep, onChange, values]);
+
+	const stepCustomContent = useMemo(() => {
+		if (!currentStepData || !activeStepContext) {
+			return null;
+		}
+
+		return (
+			renderStepContent?.(currentStepData, activeStepContext) ??
+			currentStepData.renderContent?.(activeStepContext) ??
+			null
+		);
+	}, [activeStepContext, currentStepData, renderStepContent]);
+
+	const hasCustomContent = Boolean(stepCustomContent);
+
+	const baseFormLayoutClass = hasCustomContent
+		? "w-full flex flex-col gap-4"
+		: safeColumns > 1
+		? "w-full grid gap-4"
+		: "w-full flex flex-col gap-2";
+
+	const resolvedFormClassName = [baseFormLayoutClass, formClassName].filter(Boolean).join(" ");
+
+	const formStyle = !hasCustomContent && safeColumns > 1
+		? { gridTemplateColumns: `repeat(${safeColumns}, 1fr)`, gap: "1rem" }
+		: undefined;
+
+	const renderField = useCallback(
+		(field: BaseFormField) => {
+			const fieldValue = values[field.name];
+			const commonProps = (field.props ?? {}) as Record<string, unknown>;
+
+			if (field.type === "custom" && field.renderComponent) {
+				return (
+					<div key={field.name} className="mb-2">
+						{field.renderComponent({
+							name: field.name,
+							label: field.label,
+							value: fieldValue,
+							onChange: (value: unknown) => onChange(field.name, value),
+							field,
+							values,
+						})}
+					</div>
+				);
+			}
+
+			if (field.type === "location") {
+				return (
+					<div key={field.name} className="mb-2">
+						<CreateLocationPicker
+							onChange={(coords) => onChange(field.name, coords)}
+							{...commonProps}
+						/>
+					</div>
+				);
+			}
+
+			if (field.type === "multimedia") {
+				const multimediaValue = Array.isArray(fieldValue) ? (fieldValue as File[]) : [];
+				const rawProps = field.props ?? {};
+				const { label: customLabel, ...rest } = rawProps as Record<string, unknown> & { label?: string };
+				const typedProps = rest as {
+					uploadPath?: string;
+					accept?: string;
+					maxFiles?: number;
+					maxSize?: number;
+					aspectRatio?: "square" | "video" | "auto";
+					buttonType?: "icon" | "normal";
+					variant?: "default" | "avatar";
+				};
+
+				return (
+					<div key={field.name} className="mb-2 flex flex-col gap-2">
+						{(customLabel ?? field.label) && (
+							<span className="text-sm font-medium text-gray-700">
+								{(customLabel as string | undefined) ?? field.label}
+							</span>
+						)}
+						<MultimediaUploader
+							uploadPath={typedProps.uploadPath ?? "/uploads/media"}
+							label={(customLabel as string | undefined) ?? field.label}
+							accept={typedProps.accept ?? "image/*,video/*"}
+							maxFiles={typedProps.maxFiles}
+							maxSize={typedProps.maxSize}
+							aspectRatio={typedProps.aspectRatio}
+							buttonType={typedProps.buttonType}
+							variant={typedProps.variant}
+							onChange={(files: File[]) => onChange(field.name, files)}
+						/>
+						{multimediaValue.length > 0 && (
+							<ul className="text-xs text-gray-500 space-y-1">
+								{multimediaValue.map((file, idx) => (
+									<li key={`${file.name}-${idx}`}>
+										• {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+									</li>
+								))}
+							</ul>
+						)}
+					</div>
+				);
+			}
+
+			if (field.type === "avatar") {
+				const rawProps = field.props ?? {};
+				const { label: customLabel, ...rest } = rawProps as Record<string, unknown> & { label?: string };
+				const typedProps = rest as {
+					uploadPath?: string;
+				};
+
+				return (
+					<div key={field.name} className="mb-2 flex flex-col gap-2">
+						{(customLabel ?? field.label) && (
+							<span className="text-sm font-medium text-gray-700">
+								{(customLabel as string | undefined) ?? field.label}
+							</span>
+						)}
+						<MultimediaUploader
+							variant="avatar"
+							uploadPath={typedProps.uploadPath ?? "/uploads/avatars"}
+							label={(customLabel as string | undefined) ?? field.label}
+							onChange={(files: File[]) => onChange(field.name, files[0] ?? null)}
+						/>
+					</div>
+				);
+			}
+
+			if (field.type === "range") {
+				const rangeValue = Array.isArray(fieldValue)
+					? (fieldValue.slice(0, 2) as [number, number])
+					: undefined;
+
+				return (
+					<div key={field.name} className="mb-2">
+						<RangeSlider
+							min={field.min ?? 0}
+							max={field.max ?? 100}
+							value={rangeValue}
+							onChange={(val) => onChange(field.name, val)}
+							{...commonProps}
+						/>
+					</div>
+				);
+			}
+
+			if (field.type === "select") {
+				const selectValue =
+					typeof fieldValue === "string" || typeof fieldValue === "number"
+						? fieldValue
+						: null;
+
+				return (
+					<div key={field.name} className="mb-2">
+						<Select
+							options={field.options || []}
+							placeholder={field.label}
+							value={selectValue ?? undefined}
+							onChange={(id: string | number | null) => onChange(field.name, id)}
+							required={field.required}
+							data-test-id={`select-${field.name}`}
+							{...commonProps}
+						/>
+					</div>
+				);
+			}
+
+			if (field.type === "autocomplete") {
+				const optionId =
+					typeof fieldValue === "string" || typeof fieldValue === "number"
+						? fieldValue
+						: undefined;
+				const selectedOption = optionId !== undefined
+					? field.options?.find((opt) => opt.id === optionId) ?? null
+					: null;
+
+				return (
+					<div key={field.name} className="mb-2">
+						<AutoComplete
+							options={field.options || []}
+							label={field.label}
+							value={selectedOption}
+							onChange={(opt) => onChange(field.name, opt ? opt.id : null)}
+							required={field.required}
+							name={field.name}
+							data-test-id={`autocomplete-${field.name}`}
+							{...commonProps}
+						/>
+					</div>
+				);
+			}
+
+			if (field.type === "switch") {
+				return (
+					<div key={field.name} className="mb-2">
+						<Switch
+							checked={Boolean(fieldValue)}
+							onChange={(val) => onChange(field.name, val)}
+							label={field.label}
+							labelPosition={field.labelPosition}
+							data-test-id={`switch-${field.name}`}
+							{...commonProps}
+						/>
+					</div>
+				);
+			}
+
+			const resolvedValue = (() => {
+				if (typeof fieldValue === "string") {
+					return fieldValue;
+				}
+				if (typeof fieldValue === "number") {
+					return String(fieldValue);
+				}
+				if (fieldValue === undefined || fieldValue === null) {
+					return "";
+				}
+				return String(fieldValue);
+			})();
+
+			return (
+				<div key={field.name} className="mb-2">
+					<TextField
+						label={field.label}
+						value={resolvedValue}
+						onChange={(event) =>
+							onChange(
+								field.name,
+								field.formatFn ? field.formatFn(event.target.value) : event.target.value
+							)
+						}
+						type={field.type}
+						name={field.name}
+						rows={field.multiline ? field.rows : undefined}
+						startIcon={field.startIcon}
+						endIcon={field.endIcon}
+						required={field.required}
+						data-test-id={`input-${field.name}`}
+						{...commonProps}
+					/>
+				</div>
+			);
+		},
+		[onChange, values]
+	);
+
+	const containerClassName = ["flex flex-col", className].filter(Boolean).join(" ");
 
 	return (
-		<>
-			{title && title !== "" && (
+		<div className={containerClassName}>
+			{title && (
 				<div className="title p-1 pb-0 w-full mb-0 leading-tight">{title}</div>
 			)}
-			{subtitle && subtitle !== "" && (
+			{subtitle && (
 				<div className="subtitle p-1 pt-0 w-full mb-3 leading-snug">{subtitle}</div>
 			)}
 
-			{/* Stepper Header */}
-			<div className="mb-6">
-				<div className="flex items-center justify-between mb-4">
-					{steps.map((step, index) => (
-						<div key={index} className="flex items-center flex-1">
-							{/* Step Circle */}
-							<div
-								className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-medium border-2 mr-4 ${
-									index < currentStep
-										? 'bg-green-500 border-green-500 text-white'
-										: index === currentStep
-										? 'border-primary text-primary'
-										: 'border-gray-300 text-gray-400'
-								}`}
-							>
-								{index < currentStep ? '✓' : index + 1}
-							</div>
+			{totalSteps > 0 && (
+				<div className="mb-6">
+					{/* Primer row: Dots que representan los steps */}
+					<div className="flex justify-start items-center gap-4 mb-4">
+						{steps.map((step, index) => {
+							const isStepActive = index === activeStepIndex;
+							const isStepCompleted = step.status
+								? step.status === "completed"
+								: index < activeStepIndex;
 
-							{/* Step Information */}
-							<div className="flex-1">
-								<h4 className={`text-sm font-medium mb-1 ${
-									index === currentStep ? 'text-primary' : 'text-gray-600'
-								}`}>
-									{step.title}
-								</h4>
-								{step.description && (
-									<p className={`text-xs ${
-										index === currentStep ? 'text-primary text-opacity-80' : 'text-gray-500'
-									}`}>
-										{step.description}
-									</p>
-								)}
-							</div>
-						</div>
-					))}
+							const dotClasses = [
+								"w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border-2 transition-all duration-200",
+								isStepCompleted ? "bg-black border-black text-white" : "",
+								isStepActive && !isStepCompleted ? "bg-black border-black text-white" : "",
+								!isStepActive && !isStepCompleted ? "bg-gray-300 border-gray-300 text-gray-600" : "",
+							].filter(Boolean).join(" ");
+
+							return (
+								<div key={`dot-${index}`} className={dotClasses}>
+									{index + 1}
+								</div>
+							);
+						})}
+					</div>
+
+					{/* Segundo row: Información del step actual */}
+					<div className="text-center">
+						{(() => {
+							const currentStep = steps[activeStepIndex];
+							if (!currentStep) return null;
+
+							const isStepActive = true;
+							const isStepCompleted = currentStep.status
+								? currentStep.status === "completed"
+								: false;
+
+							const titleClasses = [
+								"text-lg font-semibold mb-2",
+								isStepActive ? "text-primary" : "text-gray-600",
+							].join(" ");
+
+							const descriptionClasses = [
+								"text-sm",
+								isStepActive ? "text-primary text-opacity-80" : "text-gray-500",
+							].join(" ");
+
+							return (
+								<div>
+									<div className={titleClasses}>{currentStep.title}</div>
+									{currentStep.description && (
+										<p className={descriptionClasses}>{currentStep.description}</p>
+									)}
+								</div>
+							);
+						})()}
+					</div>
 				</div>
-			</div>
+			)}
 
 			<form
 				onSubmit={handleSubmit}
-				className={`w-full ${columns > 1 ? 'grid' : 'flex flex-col'} gap-2`}
-				style={columns > 1 ? { gridTemplateColumns: `repeat(${columns}, 1fr)`, gap: '1rem' } : {}}
-				{...(dataTestId ? { 'data-test-id': dataTestId } : {})}
+				className={resolvedFormClassName}
+				style={formStyle}
+				{...(dataTestId ? { "data-test-id": dataTestId } : {})}
 			>
-				{columns === 1 ? (
-					currentStepData.fields.map(renderField)
+				{hasCustomContent ? (
+					<div className="w-full">{stepCustomContent}</div>
+				) : safeColumns === 1 ? (
+					currentStepFields.map(renderField)
 				) : (
 					columnGroups.map((columnFields, columnIndex) => (
 						<div key={columnIndex} className="flex flex-col gap-2 w-full">
@@ -241,7 +620,6 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 					))
 				)}
 
-				{/* Navigation Buttons */}
 				<div className="col-span-full flex justify-between mt-6">
 					<div className="flex gap-2">
 						{showCloseButton && onClose && (
@@ -249,7 +627,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 								variant="outlined"
 								type="button"
 								onClick={onClose}
-								disabled={isSubmitting}
+								disabled={isProcessing}
 							>
 								{closeButtonText}
 							</Button>
@@ -258,19 +636,21 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 							<Button
 								variant="secondary"
 								type="button"
-								onClick={handlePrevious}
-								disabled={isSubmitting}
+								onClick={() => {
+									void handlePrevious();
+								}}
+								disabled={isProcessing}
 							>
 								← Anterior
 							</Button>
 						)}
 					</div>
 					<div className="flex gap-2">
-						{isSubmitting ? (
+						{isProcessing ? (
 							<DotProgress size={18} />
 						) : (
 							<Button variant="primary" type="submit">
-								{isLastStep ? (submitLabel ?? "Guardar") : "Siguiente →"}
+								{isLastStep ? submitLabel ?? "Guardar" : "Siguiente →"}
 							</Button>
 						)}
 					</div>
@@ -278,13 +658,15 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 				{errors.length > 0 && (
 					<div className="col-span-full flex flex-col gap-2 mt-4">
-						{errors.map((err, i) => (
-							<Alert key={i} variant="error">{err}</Alert>
+						{errors.map((err, index) => (
+							<Alert key={index} variant="error">
+								{err}
+							</Alert>
 						))}
 					</div>
 				)}
 			</form>
-		</>
+		</div>
 	);
 };
 
