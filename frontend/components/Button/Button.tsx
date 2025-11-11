@@ -1,8 +1,10 @@
 import React from "react";
 
+export type ButtonVariant = "primary" | "secondary" | "outlined" | "text";
+
 interface ButtonProps {
   children: React.ReactNode;
-  variant?: "primary" | "secondary" | "outlined" | "text";
+  variant?: ButtonVariant;
   className?: string;
   [key: string]: any;
 }

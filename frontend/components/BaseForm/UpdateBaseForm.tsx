@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { TextField } from "../TextField/TextField";
 import AutoComplete, { Option } from "../AutoComplete/AutoComplete";
 import { Button } from "../Button/Button";
-import CircularProgress from "../CircularProgress/CircularProgress";
+import type { ButtonVariant } from "../Button/Button";
 import DotProgress from "../DotProgress/DotProgress";
 import Alert from "../Alert/Alert";
 import Switch from "../Switch/Switch";
@@ -22,6 +22,37 @@ export interface BaseUpdateFormFieldGroup {
 }
 
 type UpdateBaseFormFields = BaseUpdateFormField[] | BaseUpdateFormFieldGroup[];
+
+type FormValues = Record<string, unknown>;
+
+const isLatLng = (value: unknown): value is { lat: number; lng: number } => {
+	return (
+		typeof value === "object" &&
+		value !== null &&
+		"lat" in value &&
+		"lng" in value &&
+		typeof (value as { lat: unknown }).lat === "number" &&
+		typeof (value as { lng: unknown }).lng === "number"
+	);
+};
+
+const isRangeTuple = (value: unknown): value is [number, number] => {
+	return Array.isArray(value) && value.length === 2 && value.every((item) => typeof item === "number");
+};
+
+const getSelectableValue = (value: unknown): string | number | null => {
+	return typeof value === "string" || typeof value === "number" ? value : null;
+};
+
+const getStringValue = (value: unknown): string => {
+	if (typeof value === "string") return value;
+	if (typeof value === "number") return String(value);
+	return "";
+};
+
+const getMediaUrl = (value: unknown): string | undefined => {
+	return typeof value === "string" ? value : undefined;
+};
 
 export interface BaseUpdateFormField {
 	name: string;
@@ -64,13 +95,14 @@ export interface BaseUpdateFormField {
 
 export interface UpdateBaseFormProps {
 	fields: UpdateBaseFormFields;
-	initialState: Record<string, any>;
-	onSubmit: (values: Record<string, any>) => void;
+	initialState: FormValues;
+	onSubmit: (values: FormValues) => void;
 	isSubmitting?: boolean;
 	errors?: string[];
 	title?: string;
 	subtitle?: string;
 	submitLabel?: string;
+	submitVariant?: ButtonVariant;
 	["data-test-id"]?: string;
 	columns?: number;
 	showCloseButton?: boolean;
@@ -92,6 +124,7 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 	title = "Elemento",
 	subtitle,
 	submitLabel,
+	submitVariant = "primary",
 	columns = 1,
 	showCloseButton = false,
 	closeButtonText = "cerrar",
@@ -99,13 +132,13 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 	...props
 }) => {
 	const dataTestId = props["data-test-id"];
-	const [values, setValues] = useState(initialState);
+	const [values, setValues] = useState<FormValues>(initialState);
 
 	useEffect(() => {
 		setValues(initialState);
 	}, [initialState]);
 
-	const handleChange = (field: string, value: any) => {
+	const handleChange = (field: string, value: unknown) => {
 		setValues((prev) => ({ ...prev, [field]: value }));
 	};
 
@@ -115,45 +148,71 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 	};
 
 	// Renderizar campo individual
-	const renderField = (field: BaseUpdateFormField) => (
-		<>
-			{field.type === "location" ? (
+	const renderField = (field: BaseUpdateFormField) => {
+		const fieldValue = values[field.name];
+
+		if (field.type === "location") {
+			const coordinates = isLatLng(fieldValue) ? fieldValue : { lat: 0, lng: 0 };
+			return (
 				<UpdateLocationPicker
-					initialCoordinates={values[field.name]}
-					onChange={coords => handleChange(field.name, coords)}
+					initialCoordinates={coordinates}
+					onChange={coords => handleChange(field.name, coords ?? coordinates)}
 				/>
-			) : field.type === "range" ? (
+			);
+		}
+
+		if (field.type === "range") {
+			const rangeValue = isRangeTuple(fieldValue) ? fieldValue : undefined;
+			return (
 				<RangeSlider
 					min={field.min ?? 0}
 					max={field.max ?? 100}
-					value={values[field.name]}
+					value={rangeValue}
 					onChange={val => handleChange(field.name, val)}
 				/>
-			) : field.type === "select" ? (
+			);
+		}
+
+		if (field.type === "select") {
+			const selectValue = getSelectableValue(fieldValue);
+			return (
 				<Select
 					options={field.options || []}
 					placeholder={field.label}
-					value={values[field.name]}
+					value={selectValue}
 					onChange={(id: string | number | null) => handleChange(field.name, id)}
 				/>
-			) : field.type === "autocomplete" ? (
+			);
+		}
+
+		if (field.type === "autocomplete") {
+			const selectedId = getSelectableValue(fieldValue) ?? undefined;
+			return (
 				<AutoComplete
 					options={field.options || []}
 					label={field.label}
-					value={field.options?.find(opt => opt.id === values[field.name]) || null}
-					onChange={opt => handleChange(field.name, opt?.id || "")}
+					value={field.options?.find(opt => opt.id === selectedId) || null}
+					onChange={opt => handleChange(field.name, opt?.id ?? null)}
 					required={field.required}
 					name={field.name}
 				/>
-			) : field.type === "switch" ? (
+			);
+		}
+
+		if (field.type === "switch") {
+			return (
 				<Switch
-					checked={Boolean(values[field.name])}
+					checked={Boolean(fieldValue)}
 					onChange={val => handleChange(field.name, val)}
 					label={field.label}
 				/>
-			) : field.type === "image" || field.type === "video" || field.type === "avatar" ? (
+			);
+		}
+
+		if (field.type === "image" || field.type === "video" || field.type === "avatar") {
+			return (
 				<MultimediaUpdater
-					currentUrl={field.currentUrl || values[field.name]}
+					currentUrl={field.currentUrl ?? getMediaUrl(fieldValue)}
 					currentType={field.currentType || (field.type === 'video' ? 'video' : 'image')}
 					variant={field.type === 'avatar' ? 'avatar' : 'default'}
 					acceptedTypes={field.acceptedTypes || (field.type === 'video' ? ['video/*'] : ['image/*'])}
@@ -162,33 +221,33 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 					buttonText={field.buttonText || (field.type === 'avatar' ? 'Cambiar avatar' : field.type === 'video' ? 'Actualizar video' : 'Actualizar imagen')}
 					labelText={field.labelText ?? field.label}
 					onFileChange={(file) => {
-						// Actualizar el estado con el archivo seleccionado (para upload en submit)
-						handleChange(`${field.name}File`, file);
-						// Opcional: Generar preview URL
+						handleChange(`${field.name}File`, file ?? null);
 						if (file) {
 							const previewUrl = URL.createObjectURL(file);
 							handleChange(field.name, previewUrl);
 						} else {
-							handleChange(field.name, field.currentUrl || '');
+							handleChange(field.name, field.currentUrl ?? null);
 						}
 					}}
 				/>
-			) : (
-				<TextField
-					label={field.label}
-					value={values[field.name] || ""}
-					onChange={e => handleChange(field.name, field.formatFn ? field.formatFn(e.target.value) : e.target.value)}
-					type={field.type}
-					name={field.name}
-					rows={field.multiline ? field.rows : undefined}
-					startIcon={field.startIcon}
-					endIcon={field.endIcon}
-					required={field.required}
-					disabled={field.disabled}
-				/>
-			)}
-		</>
-	);
+			);
+		}
+
+		return (
+			<TextField
+				label={field.label}
+				value={field.formatFn ? field.formatFn(getStringValue(fieldValue)) : getStringValue(fieldValue)}
+				onChange={e => handleChange(field.name, field.formatFn ? field.formatFn(e.target.value) : e.target.value)}
+				type={field.type}
+				name={field.name}
+				rows={field.multiline ? field.rows : undefined}
+				startIcon={field.startIcon}
+				endIcon={field.endIcon}
+				required={field.required}
+				disabled={field.disabled}
+			/>
+		);
+	};
 
 	const resolvedGroups = React.useMemo(() => {
 		if (isFieldGroupArray(fields)) {
@@ -261,7 +320,7 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 					{isSubmitting ? (
 						<DotProgress size={18} className="self-end" />
 					) : (
-						<Button variant="primary" type="submit">
+						<Button variant={submitVariant} type="submit">
 							{submitLabel ?? "Actualizar"}
 						</Button>
 					)}

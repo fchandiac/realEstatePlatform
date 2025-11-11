@@ -393,6 +393,7 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
                                 initialState={initialData}
                                 onSubmit={handleUserSubmit}
                                 submitLabel="Actualizar Usuario"
+                                submitVariant="outlined"
                                 isSubmitting={loading}
                                 showCloseButton={false}
                             />
@@ -409,6 +410,7 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
                                 initialState={initialData}
                                 onSubmit={handlePersonalSubmit}
                                 submitLabel="Actualizar Información"
+                                submitVariant="outlined"
                                 isSubmitting={loading}
                                 showCloseButton={false}
                             />
@@ -425,6 +427,7 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
                                 initialState={initialData}
                                 onSubmit={handleIdentitySubmit}
                                 submitLabel="Actualizar Validación"
+                                submitVariant="outlined"
                                 isSubmitting={loading}
                                 showCloseButton={false}
                             />

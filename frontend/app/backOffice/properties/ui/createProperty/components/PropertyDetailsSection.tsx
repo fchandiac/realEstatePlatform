@@ -25,7 +25,7 @@ export default function PropertyDetailsSection({
       <h2 className="text-lg font-semibold">Características</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Bedrooms */}
+        {/* Dormitorios */}
         {propertyType?.hasBedrooms && (
           <NumberStepper
             label="Dormitorios"
@@ -37,7 +37,7 @@ export default function PropertyDetailsSection({
           />
         )}
 
-        {/* Bathrooms */}
+        {/* Baños */}
         {propertyType?.hasBathrooms && (
           <NumberStepper
             label="Baños"
@@ -49,7 +49,7 @@ export default function PropertyDetailsSection({
           />
         )}
 
-        {/* Parking Spaces */}
+        {/* Estacionamientos */}
         {propertyType?.hasParkingSpaces && (
           <NumberStepper
             label="Estacionamientos"
@@ -61,7 +61,7 @@ export default function PropertyDetailsSection({
           />
         )}
 
-        {/* Floors */}
+        {/* Pisos */}
         {propertyType?.hasFloors && (
           <NumberStepper
             label="Pisos"
@@ -73,7 +73,7 @@ export default function PropertyDetailsSection({
           />
         )}
 
-        {/* Built Square Meters */}
+        {/* Metros Construidos */}
         {propertyType?.hasBuiltSquareMeters && (
           <TextField
             type="number"
@@ -87,7 +87,7 @@ export default function PropertyDetailsSection({
           />
         )}
 
-        {/* Land Square Meters */}
+        {/* Terreno */}
         {propertyType?.hasLandSquareMeters && (
           <TextField
             type="number"
@@ -101,7 +101,7 @@ export default function PropertyDetailsSection({
           />
         )}
 
-        {/* Construction Year */}
+        {/* Año de Construcción */}
         {propertyType?.hasConstructionYear && (
           <TextField
             type="number"

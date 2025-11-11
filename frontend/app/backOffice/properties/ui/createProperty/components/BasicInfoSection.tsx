@@ -25,7 +25,15 @@ export default function BasicInfoSection({
 
   const statusOptions = Object.values(PropertyStatus).map((status) => ({
     id: status as string,
-    label: status.replace(/_/g, ' ').toLowerCase(),
+    label: {
+      REQUEST: 'Solicitud',
+      'PRE-APPROVED': 'Pre-aprobado',
+      PUBLISHED: 'Publicado',
+      INACTIVE: 'Inactivo',
+      SOLD: 'Vendido',
+      RENTED: 'Rentado',
+      'CONTRACT-IN-PROGRESS': 'Contrato en progreso',
+    }[status] || status,
   }));
 
   const currencyOptions = Object.values(CurrencyPriceEnum).map((currency) => ({
