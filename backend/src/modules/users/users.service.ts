@@ -475,7 +475,7 @@ export class UsersService {
     console.log('Updating avatar for user:', id);
     console.log('File received:', { originalname: file.originalname, mimetype: file.mimetype, size: file.size, buffer: !!file.buffer });
 
-    const user = await this.userRepository.findOne({ where: { id, status: UserStatus.ACTIVE } });
+    const user = await this.userRepository.findOne({ where: { id, deletedAt: IsNull() } });
     if (!user) throw new NotFoundException('User not found');
 
     // Validar tipo de archivo
