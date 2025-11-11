@@ -2,6 +2,7 @@
 import React, { useState, useContext } from 'react';
 import SideBar, { SideBarMenuItem } from './SideBar';
 import Logo from '../Logo/Logo';
+import NotificationButton from './NotificationButton';
 
 interface TopBarProps {
   title?: string;
@@ -34,37 +35,6 @@ const SideBarContext = React.createContext<SideBarControl>({
 export function useSideBar() {
   return useContext(SideBarContext);
 }
-
-// Reusable notification button component
-interface NotificationButtonProps {
-  count?: number;
-  onClick?: () => void;
-  className?: string;
-}
-
-const NotificationButton: React.FC<NotificationButtonProps> = ({ count = 0, onClick, className = '' }) => {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`relative p-2 rounded-full transition-colors text-background hover:text-accent focus:outline-none ${className}`}
-      aria-label="Notificaciones"
-    >
-      <span
-        className="material-symbols-outlined cursor-pointer"
-        style={{ fontSize: 24, width: 24, height: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-        aria-hidden
-      >
-        notifications
-      </span>
-      {count > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center min-w-[20px]">
-          {count > 99 ? '99+' : count}
-        </span>
-      )}
-    </button>
-  );
-};
 
 const TopBar: React.FC<TopBarProps> = ({
   title = 'title',
