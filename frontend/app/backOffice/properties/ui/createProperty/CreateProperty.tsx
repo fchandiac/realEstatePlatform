@@ -1,14 +1,17 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useCreatePropertyForm } from '../../hooks/useCreatePropertyForm';
-import BasicInfoSection from './components/BasicInfoSection';
-import LocationSection from './components/LocationSection';
-import MultimediaSection from './components/MultimediaSection';
-import PropertyDetailsSection from './components/PropertyDetailsSection';
-import SeoSection from './components/SeoSection';
-import InternalNotesSection from './components/InternalNotesSection';
-import SubmitSection from './components/SubmitSection';
+import StepperBaseForm from '../../../../../components/BaseForm/StepperBaseForm';
+import {
+  getBasicInfoFields,
+  getPropertyDetailsFields,
+  getLocationFields,
+  getMultimediaFields,
+  getSeoFields,
+  getInternalNotesFields,
+  PropertyFormData
+} from './propertyFormFields';
 import Alert from '@/components/Alert/Alert';
 
 interface CreatePropertyProps {
@@ -37,9 +40,55 @@ export default function CreateProperty({
     handleSubmit: handleFormSubmit,
   } = useCreatePropertyForm(onClose);
 
+  // Definir los pasos del stepper
+  const steps = useMemo(() => [
+    {
+      title: 'Información Básica',
+      description: 'Título, descripción, tipo y precio de la propiedad',
+      fields: getBasicInfoFields(propertyTypes),
+    },
+    {
+      title: 'Detalles de la Propiedad',
+      description: 'Características específicas según el tipo de propiedad',
+      fields: getPropertyDetailsFields(selectedPropertyType),
+    },
+    {
+      title: 'Ubicación',
+      description: 'Estado, ciudad, dirección y coordenadas',
+      fields: getLocationFields(stateOptions, cityOptions),
+    },
+    {
+      title: 'Multimedia',
+      description: 'Imágenes y videos de la propiedad',
+      fields: getMultimediaFields(),
+    },
+    {
+      title: 'SEO y Marketing',
+      description: 'Optimización para motores de búsqueda',
+      fields: getSeoFields(),
+    },
+    {
+      title: 'Notas Internas',
+      description: 'Información adicional para el equipo interno',
+      fields: getInternalNotesFields(),
+    },
+  ], [propertyTypes, selectedPropertyType, stateOptions, cityOptions]);
+
   const handleSubmit = async () => {
     await handleFormSubmit();
   };
+
+  // Mostrar loading si están cargando los tipos de propiedad o estados
+  if (loadingTypes || loadingStates) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p>Cargando datos...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -53,50 +102,17 @@ export default function CreateProperty({
         </div>
       )}
 
-      <form className="space-y-6">
-        <BasicInfoSection
-          formData={formData}
-          handleChange={handleChange}
-          propertyTypes={propertyTypes}
-          loadingTypes={loadingTypes}
-        />
-
-        <PropertyDetailsSection
-          formData={formData}
-          handleChange={handleChange}
-          propertyType={selectedPropertyType}
-        />
-
-        <LocationSection
-          formData={formData}
-          handleChange={handleChange}
-          stateOptions={stateOptions}
-          loadingStates={loadingStates}
-          cityOptions={cityOptions}
-          loadingCities={loadingCities}
-        />
-
-        <MultimediaSection
-          formData={formData}
-          handleChange={handleChange}
-        />
-
-        <SeoSection
-          formData={formData}
-          handleChange={handleChange}
-        />
-
-        <InternalNotesSection
-          formData={formData}
-          handleChange={handleChange}
-        />
-
-        <SubmitSection
-          isSubmitting={isSubmitting}
-          submitError={submitError}
-          onSubmit={handleSubmit}
-        />
-      </form>
+      <StepperBaseForm
+        steps={steps}
+        values={formData as unknown as Record<string, unknown>}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
+        submitLabel="Crear Propiedad"
+        showCloseButton={true}
+        closeButtonText="Cancelar"
+        onClose={onClose}
+      />
     </div>
   );
 }

@@ -583,23 +583,25 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 									? step.status === "completed"
 									: index < activeStepIndex;
 
-							const baseDotClasses = "w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-200";
-							const stateClasses = (() => {
-								if (isStepActive) {
-									return "bg-black border-2 border-black text-secondary";
-								}
+								const baseDotClasses = "w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-200";
+								const stateClasses = (() => {
+									if (isStepActive) {
+										return "bg-primary border-2 border-primary";
+									}
 
-								if (isStepCompleted) {
-									return "bg-transparent border-2 border-secondary text-secondary";
-								}
+									if (isStepCompleted) {
+										return "bg-gray-300 border-2 border-gray-300";
+									}
 
-								return "bg-transparent border border-gray-300 text-gray-500";
-							})();								return (
+									return "bg-transparent border border-gray-300 text-gray-500";
+								})();
+
+								return (
 									<div
 										key={`dot-${index}`}
 										className={`${baseDotClasses} ${stateClasses}`}
 									>
-										{isStepActive || (!isStepCompleted && !isStepActive) ? (index + 1) : ""}
+										{!isStepActive && !isStepCompleted && (index + 1)}
 									</div>
 								);
 							})}
@@ -609,38 +611,44 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 					{/* Segundo row: Información del step actual + Dot grande */}
 					<div className="flex justify-between items-start gap-6">
 						{/* Columna izquierda: Información del step */}
-						<div className="flex-1 text-left">
-							{(() => {
-								const currentStep = steps[activeStepIndex];
-								if (!currentStep) return null;
+						<div className="flex-1 text-left flex items-start gap-4">
+							{/* Barra vertical de color secondary */}
+							<div className="w-1.5 bg-secondary rounded-full self-stretch"></div>
 
-								const isStepActive = true;
-								const isStepCompleted = currentStep.status
-									? currentStep.status === "completed"
-									: false;
+							{/* Información del step */}
+							<div className="flex-1">
+								{(() => {
+									const currentStep = steps[activeStepIndex];
+									if (!currentStep) return null;
 
-								const titleClasses = [
-									"text-xl font-semibold text-primary",
-								].join(" ");
+									const isStepActive = true;
+									const isStepCompleted = currentStep.status
+										? currentStep.status === "completed"
+										: false;
 
-								const descriptionClasses = [
-									"text-sm text-primary text-opacity-80 mt-1",
-								].join(" ");
+									const titleClasses = [
+										"text-xl font-semibold text-primary",
+									].join(" ");
 
-								return (
-									<div>
-										<div className={titleClasses}>{currentStep.title}</div>
-										{currentStep.description && (
-											<p className={descriptionClasses}>{currentStep.description}</p>
-										)}
-									</div>
-								);
-							})()}
+									const descriptionClasses = [
+										"text-sm text-primary text-opacity-80 mt-1",
+									].join(" ");
+
+									return (
+										<div>
+											<div className={titleClasses}>{currentStep.title}</div>
+											{currentStep.description && (
+												<p className={descriptionClasses}>{currentStep.description}</p>
+											)}
+										</div>
+									);
+								})()}
+							</div>
 						</div>
 
 						{/* Columna derecha: Dot grande del step activo */}
 						<div className="flex-shrink-0">
-							<div className="w-12 h-12 rounded-full bg-transparent border-2 border-primary flex items-center justify-center text-secondary text-lg font-semibold">
+							<div className="w-12 h-12 rounded-full bg-transparent border border-gray-300 flex items-center justify-center text-secondary text-xl font-bold">
 								{activeStepIndex + 1}
 							</div>
 						</div>
