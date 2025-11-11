@@ -204,7 +204,7 @@ export const getLocationFields = (
   cityOptions: LocationOption[]
 ): BaseFormField[] => [
   {
-    name: 'stateId',
+    name: 'state',
     label: 'Estado/Región',
     type: 'select',
     required: true,
@@ -212,8 +212,8 @@ export const getLocationFields = (
     col: 1,
   },
   {
-    name: 'cityId',
-    label: 'Ciudad',
+    name: 'city',
+    label: 'Comuna',
     type: 'select',
     required: true,
     options: mapLocationOptions(cityOptions),
