@@ -50,9 +50,18 @@ const menuItems = [
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
-      <TopBar menuItems={menuItems} />
+      <TopBar
+        menuItems={menuItems}
+        showNotifications={true}
+        notificationCount={0}
+        onNotificationsClick={() => {}}
+        showUserButton={true}
+        onUserClick={() => {}}
+        userName="Usuario Demo"
+      />
 
       <main className="container mx-auto mt-20">{children}</main>
     </div>
   );
 }
+
