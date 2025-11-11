@@ -744,3 +744,69 @@ export async function uploadMultimedia(file: File): Promise<{
 	}
 }
 
+/**
+ * Get current user profile (for MyAccount)
+ */
+export async function getCurrentUserProfile(): Promise<{
+  success: boolean;
+  data?: {
+    id: string;
+    username: string;
+    email: string;
+    personalInfo?: {
+      firstName?: string;
+      lastName?: string;
+      phone?: string;
+      avatarUrl?: string;
+    };
+    person?: {
+      id: string;
+      dni?: string;
+      address?: string;
+      phone?: string;
+      email?: string;
+      dniCardFrontUrl?: string;
+      dniCardRearUrl?: string;
+      verified: boolean;
+    };
+    role: string;
+    status: string;
+    lastLogin?: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  error?: string;
+}> {
+	try {
+		const session = await getServerSession(authOptions);
+		if (!session?.accessToken) {
+			return { success: false, error: 'No authenticated' };
+		}
+
+		const response = await fetch(`${env.backendApiUrl}/users/profile`, {
+			method: 'GET',
+			headers: {
+				'Authorization': `Bearer ${session.accessToken}`,
+				'Content-Type': 'application/json',
+			},
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => null);
+			return { 
+				success: false, 
+				error: errorData?.message || `Failed to get profile: ${response.status}` 
+			};
+		}
+
+		const result = await response.json();
+		return { success: true, data: result };
+	} catch (error) {
+		console.error('Error getting current user profile:', error);
+		return { 
+			success: false, 
+			error: error instanceof Error ? error.message : 'Unknown error' 
+		};
+	}
+}
+

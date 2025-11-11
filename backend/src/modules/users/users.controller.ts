@@ -12,9 +12,10 @@ import {
   Query,
   Put,
   UseInterceptors,
+  Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadedFile } from '@nestjs/common';
+import { UploadedFile, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
   CreateUserDto,
@@ -26,6 +27,7 @@ import {
   ListAdminUsersQueryDto,
 } from './dto/user.dto';
 import { UpdateAvatarDto } from './dto/update-avatar.dto';
+import { UserProfileResponseDto } from './dto/user-profile-response.dto';
 import { UserStatus, UserRole, Permission } from '../../entities/user.entity';
 import { JwtAuthGuard } from '../../modules/auth/guards/jwt-auth.guard';
 
@@ -49,6 +51,13 @@ export class UsersController {
   @Get('admins')
   listAdmins(@Query(ValidationPipe) filters: ListAdminUsersQueryDto) {
     return this.usersService.findAdminUsers(filters);
+  }
+
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  async getProfile(@Req() req: any): Promise<UserProfileResponseDto> {
+    const userId = req.user.id;
+    return this.usersService.getUserProfile(userId);
   }
 
   @Get('admins-agents')
@@ -83,7 +92,7 @@ export class UsersController {
   }
 
   @Get(':id/profile')
-  getProfile(@Param('id') id: string) {
+  getUserProfileById(@Param('id') id: string) {
     return this.usersService.getProfile(id);
   }
 

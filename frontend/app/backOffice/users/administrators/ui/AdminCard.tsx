@@ -36,7 +36,15 @@ const AdminCard: React.FC<AdminCardProps> = ({ admin, onEdit, onDelete }) => {
               <div className="h-24 w-24 rounded-full bg-neutral-100 border-4 border-secondary flex items-center justify-center overflow-hidden">
                 {admin.personalInfo?.avatarUrl ? (
                   // eslint-disable-next-line @next/next/next/no-img-element
-                  <img src={`${env.backendApiUrl}${admin.personalInfo.avatarUrl}`} alt={`Avatar ${fullName}`} className="h-full w-full object-cover" />
+                  <img 
+                    src={
+                      admin.personalInfo.avatarUrl.startsWith('http') 
+                        ? admin.personalInfo.avatarUrl 
+                        : `${env.backendApiUrl}${admin.personalInfo.avatarUrl}`
+                    } 
+                    alt={`Avatar ${fullName}`} 
+                    className="h-full w-full object-cover" 
+                  />
                 ) : (
                   <span className="material-symbols-outlined text-secondary" style={{ fontSize: '4rem' }}>person</span>
                 )}

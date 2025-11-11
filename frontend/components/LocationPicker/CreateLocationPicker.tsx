@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 
 interface CreateLocationPickerMapProps {
@@ -7,6 +7,9 @@ interface CreateLocationPickerMapProps {
   markerPosition?: [number, number] | null;
   onLocationSelect?: (lat: number, lng: number) => void;
   shouldSetView?: boolean;
+  flyToTarget?: [number, number] | null;
+  onFlyEnd?: () => void;
+  flyToDuration?: number;
 }
 
 const CreateLocationPickerMap = dynamic(() => import('./CreateLocationPickerMap'), { ssr: false });
@@ -32,9 +35,17 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
   const [mapCenter, setMapCenter] = useState<[number, number]>([-33.45, -70.6667]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUserSelected, setIsUserSelected] = useState(false);
-  const [locationSource, setLocationSource] = useState<'auto' | 'user' | 'default'>('auto');
-  const [updateKey, setUpdateKey] = useState(0); // Para forzar re-render
   const [shouldCenterMap, setShouldCenterMap] = useState(true); // Controlar centrado automático
+  const [flyToTarget, setFlyToTarget] = useState<[number, number] | null>(null);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+
+  const handleFlyEnd = useCallback(() => {
+    setFlyToTarget(null);
+  }, []);
 
   // Obtener ubicación actual del usuario automáticamente al cargar
   useEffect(() => {
@@ -61,13 +72,11 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
             setMapCenter(userLocation);
             setMarkerPosition(userLocation);
             setIsLoading(false);
-            setLocationSource('auto');
             setShouldCenterMap(true); // Permitir centrado para ubicación inicial
+            setFlyToTarget(null);
 
             console.log('CreateLocationPicker - ✅ Ubicación obtenida del navegador:', newCoords, `Precisión: ${accuracy}m`);
-            if (onChange) {
-              onChange(newCoords);
-            }
+            onChangeRef.current?.(newCoords);
           },
           async (error) => {
             console.warn('CreateLocationPicker - ❌ Error en geolocalización del navegador:', error);
@@ -86,13 +95,11 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
                 setMapCenter(systemLocationArr);
                 setMarkerPosition(systemLocationArr);
                 setIsLoading(false);
-                setLocationSource('auto');
                 setShouldCenterMap(true); // Permitir centrado para ubicación inicial
+                setFlyToTarget(null);
 
                 console.log('CreateLocationPicker - ✅ Ubicación obtenida del sistema:', systemCoords, `Fuente: ${systemLocation.source}`);
-                if (onChange) {
-                  onChange(systemCoords);
-                }
+                onChangeRef.current?.(systemCoords);
                 return;
               }
             } catch (systemError) {
@@ -107,13 +114,11 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
             setMapCenter(defaultLocation);
             setMarkerPosition(defaultLocation);
             setIsLoading(false);
-            setLocationSource('default');
             setShouldCenterMap(true); // Permitir centrado para ubicación inicial
+            setFlyToTarget(null);
 
             console.log('CreateLocationPicker - ⚠️ Usando ubicación por defecto:', defaultCoords);
-            if (onChange) {
-              onChange(defaultCoords);
-            }
+            onChangeRef.current?.(defaultCoords);
           },
           {
             enableHighAccuracy: true,
@@ -134,13 +139,10 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
             setMapCenter(systemLocationArr);
             setMarkerPosition(systemLocationArr);
             setIsLoading(false);
-            setLocationSource('auto');
             setShouldCenterMap(true); // Permitir centrado para ubicación inicial
 
             console.log('CreateLocationPicker - ✅ Ubicación obtenida del sistema:', systemCoords);
-            if (onChange) {
-              onChange(systemCoords);
-            }
+            onChangeRef.current?.(systemCoords);
             return;
           }
         } catch (systemError) {
@@ -155,13 +157,11 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
         setMapCenter(defaultLocation);
         setMarkerPosition(defaultLocation);
         setIsLoading(false);
-        setLocationSource('default');
         setShouldCenterMap(true); // Permitir centrado para ubicación inicial
+    setFlyToTarget(null);
 
         console.log('CreateLocationPicker - ⚠️ Usando ubicación por defecto:', defaultCoords);
-        if (onChange) {
-          onChange(defaultCoords);
-        }
+        onChangeRef.current?.(defaultCoords);
       }
     };
 
@@ -175,15 +175,16 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
     console.log('CreateLocationPicker - Actualizando estado con:', newCoords);
     setCurrentCoordinates(newCoords);
     setMarkerPosition([lat, lng]);
+    setMapCenter([lat, lng]);
     // NO centrar el mapa automáticamente al seleccionar nueva ubicación
     setShouldCenterMap(false); // Desactivar centrado automático tras click del usuario
     setIsUserSelected(true);
-    setLocationSource('user');
-    setUpdateKey(prev => prev + 1); // Forzar re-render
+    setFlyToTarget([lat, lng]);
 
-    if (onChange) {
+    const changeHandler = onChangeRef.current;
+    if (changeHandler) {
       console.log('CreateLocationPicker - Notificando cambio a padre:', newCoords);
-      onChange(newCoords);
+      changeHandler(newCoords);
     } else {
       console.log('CreateLocationPicker - No hay función onChange definida');
     }
@@ -208,11 +209,12 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
             className="cursor-crosshair hover:cursor-pointer"
           >
             <TypedCreateLocationPickerMap
-              key={updateKey}
               center={mapCenter}
               markerPosition={markerPosition}
               onLocationSelect={handleLocationSelect}
               shouldSetView={shouldCenterMap}
+              flyToTarget={flyToTarget}
+              onFlyEnd={handleFlyEnd}
             />
           </div>
         </div>
@@ -221,14 +223,12 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
       
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <TextField
-            key={`lat-${updateKey}`}
             label="Latitud"
             value={currentCoordinates ? currentCoordinates.lat.toFixed(6) : ''}
             onChange={() => {}}
             readOnly={true}
           />
           <TextField
-            key={`lng-${updateKey}`}
             label="Longitud"
             value={currentCoordinates ? currentCoordinates.lng.toFixed(6) : ''}
             onChange={() => {}}

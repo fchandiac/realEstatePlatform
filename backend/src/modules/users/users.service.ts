@@ -24,11 +24,14 @@ import {
   ListAdminUsersQueryDto,
 } from './dto/user.dto';
 import { UpdateAvatarDto } from './dto/update-avatar.dto';
+import { UserProfileResponseDto } from './dto/user-profile-response.dto';
 import { AuditService } from '../../audit/audit.service';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 import { UserFavoriteData } from '../../common/interfaces/user-favorites.interface';
 import * as fs from 'fs';
 import * as path from 'path';
+import { plainToInstance } from 'class-transformer';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
@@ -39,6 +42,7 @@ export class UsersService {
     private readonly personRepository: Repository<Person>,
     @Inject(AuditService)
     private readonly auditService: AuditService,
+    private readonly configService: ConfigService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -497,22 +501,65 @@ export class UsersService {
     const filename = `avatar-${id}${ext}`;
     const filePath = path.join(uploadDir, filename);
     
-    // Generar URL relativa
-    const publicUrl = `/public/users/${filename}`;
+    // Generar URL absoluta completa usando BACKEND_PUBLIC_URL
+    const backendUrl = this.configService.get<string>('BACKEND_PUBLIC_URL') || 'http://localhost:3000';
+    const absoluteUrl = `${backendUrl}/public/users/${filename}`;
 
     console.log('Saving file to:', filePath);
-    console.log('Public URL will be:', publicUrl);
+    console.log('Absolute URL will be:', absoluteUrl);
 
     // Mover archivo
     fs.writeFileSync(filePath, file.buffer);
     console.log('File saved successfully');
 
-    // Actualizar usuario
+    // Actualizar usuario con URL absoluta
     if (!user.personalInfo) user.personalInfo = {};
-    user.personalInfo.avatarUrl = publicUrl;
+    user.personalInfo.avatarUrl = absoluteUrl;
     await this.userRepository.save(user);
-    console.log('User updated with new avatar URL');
-
     return user;
+  }
+
+  async getUserProfile(userId: string): Promise<UserProfileResponseDto> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId, deletedAt: IsNull() },
+      relations: ['person'],
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    // Las URLs ya están guardadas como absolutas en la base de datos
+    const backendUrl = this.configService.get<string>('BACKEND_PUBLIC_URL') || 'http://localhost:3000';
+
+    const profile: UserProfileResponseDto = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      personalInfo: {
+        ...user.personalInfo,
+        // Las URLs del avatar ya son absolutas, no necesitamos reconstruirlas
+        avatarUrl: user.personalInfo?.avatarUrl,
+      },
+      person: user.person ? {
+        id: user.person.id,
+        dni: user.person.dni,
+        address: user.person.address,
+        phone: user.person.phone,
+        email: user.person.email,
+        verified: user.person.verified,
+        dniCardFrontUrl: user.person.dniCardFront ?
+          `${backendUrl}/public/${user.person.dniCardFront.id}` : undefined,
+        dniCardRearUrl: user.person.dniCardRear ?
+          `${backendUrl}/public/${user.person.dniCardRear.id}` : undefined,
+      } : undefined,
+      role: user.role,
+      status: user.status,
+      lastLogin: user.lastLogin,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+
+    return plainToInstance(UserProfileResponseDto, profile, { excludeExtraneousValues: true });
   }
 }

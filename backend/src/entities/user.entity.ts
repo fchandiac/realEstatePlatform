@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   OneToMany,
+  OneToOne,
   JoinColumn,
 } from 'typeorm';
 import {
@@ -24,6 +25,7 @@ import { Document } from './document.entity';
 import { Notification } from './notification.entity';
 import { Article } from './article.entity';
 import { Testimonial } from './testimonial.entity';
+import { Person } from './person.entity';
 
 export enum UserStatus {
   ACTIVE = 'ACTIVE',
@@ -117,6 +119,9 @@ export class User {
   @Column({ type: 'timestamp', nullable: true })
   lastLogin?: Date;
 
+  @Column({ type: 'uuid', nullable: true })
+  personId?: string;
+
   // Relaciones navegables (OneToMany)
   @OneToMany(() => Property, (p) => p.creatorUser)
   createdProperties?: Property[];
@@ -146,6 +151,11 @@ export class User {
 
   @OneToMany(() => Testimonial, (t) => t.id)
   testimonials?: Testimonial[];
+
+  // Relación con Person
+  @OneToOne(() => Person, { nullable: true })
+  @JoinColumn({ name: 'personId' })
+  person?: Person;
 
   // Authentication methods
   async setPassword(plainPassword: string): Promise<void> {

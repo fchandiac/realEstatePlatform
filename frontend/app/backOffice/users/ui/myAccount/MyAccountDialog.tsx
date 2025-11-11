@@ -8,7 +8,7 @@ import Alert from '@/components/Alert/Alert';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import { Button } from '@/components/Button/Button';
 import { BaseUpdateFormField, BaseUpdateFormFieldGroup } from '@/components/BaseForm/UpdateBaseForm';
-import { updateUserProfile, changePassword, uploadMultimedia, updateUserAvatar } from '@/app/actions/users';
+import { updateUserProfile, changePassword, uploadMultimedia, updateUserAvatar, getCurrentUserProfile } from '@/app/actions/users';
 
 interface MyAccountDialogProps {
     open: boolean;
@@ -46,6 +46,9 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
     const [passwordLoading, setPasswordLoading] = useState(false);
     const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
     const [initialData, setInitialData] = useState<Partial<MyAccountData>>({});
+    const [currentAvatarUrl, setCurrentAvatarUrl] = useState<string | undefined>();
+    const [currentDniFrontUrl, setCurrentDniFrontUrl] = useState<string | undefined>();
+    const [currentDniRearUrl, setCurrentDniRearUrl] = useState<string | undefined>();
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
         newPassword: '',
@@ -55,34 +58,49 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
     const loadUserData = useCallback(async () => {
         try {
             setLoading(true);
-            // Aquí cargarías los datos del usuario y persona desde el backend
-            // Por ahora usamos datos de ejemplo basados en la sesión
-            const user = session?.user as {
-                username?: string;
-                email?: string;
-                personalInfo?: {
-                    firstName?: string;
-                    lastName?: string;
-                    phone?: string;
-                };
-            };
+            setAlert(null);
+            
+            // Llamar a la server action para obtener datos completos
+            const profileResult = await getCurrentUserProfile();
+            
+            if (!profileResult.success || !profileResult.data) {
+                throw new Error(profileResult.error || 'Error al obtener el perfil del usuario');
+            }
+            
+            const profileData = profileResult.data;
 
+            console.log('Datos del perfil obtenidos:', profileData);
+            
+            // Mapear los datos del backend a los campos del formulario
             setInitialData({
-                username: user?.username || '',
-                email: user?.email || '',
-                firstName: user?.personalInfo?.firstName || '',
-                lastName: user?.personalInfo?.lastName || '',
-                phone: user?.personalInfo?.phone || '',
-                dni: '', // Cargar desde persona
-                address: '', // Cargar desde persona
+                username: profileData.username || '',
+                email: profileData.email || '',
+                firstName: profileData.personalInfo?.firstName || '',
+                lastName: profileData.personalInfo?.lastName || '',
+                phone: profileData.personalInfo?.phone || '',
+                dni: profileData.person?.dni || '',
+                address: profileData.person?.address || '',
+                // Nota: personPhone y personEmail no se usan actualmente en el componente
+                avatar: null, // Se maneja por separado para mostrar la imagen actual
+                dniCardFront: null, // Se maneja por separado para mostrar la imagen actual
+                dniCardRear: null, // Se maneja por separado para mostrar la imagen actual
             });
+            
+            // Establecer las URLs actuales para mostrar las imágenes
+            setCurrentAvatarUrl(profileData.personalInfo?.avatarUrl);
+            setCurrentDniFrontUrl(profileData.person?.dniCardFrontUrl);
+            setCurrentDniRearUrl(profileData.person?.dniCardRearUrl);
+            
         } catch (error: unknown) {
             console.error('Error loading user data:', error);
-            setAlert({ type: 'error', message: 'Error al cargar los datos del usuario' });
+            setAlert({ 
+                type: 'error', 
+                message: error instanceof Error ? error.message : 'Error al cargar los datos del usuario' 
+            });
         } finally {
             setLoading(false);
         }
-    }, [session]);
+    }, []); // Remover dependencias ya que ahora usa server action
 
     // Cargar datos iniciales cuando se abre el dialog
     useEffect(() => {
@@ -111,6 +129,7 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
             type: 'avatar',
             maxSize: 2,
             buttonText: 'Cambiar foto de perfil',
+            currentUrl: currentAvatarUrl,
         },
     ];
 
@@ -166,6 +185,7 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
                     maxSize: 2,
                     buttonText: 'Subir frente del DNI',
                     labelText: 'Frente del DNI',
+                    currentUrl: currentDniFrontUrl,
                 },
                 {
                     name: 'dniCardRear',
@@ -174,6 +194,7 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
                     maxSize: 2,
                     buttonText: 'Subir reverso del DNI',
                     labelText: 'Reverso del DNI',
+                    currentUrl: currentDniRearUrl,
                 },
             ],
         },
@@ -426,7 +447,7 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
                                 fields={identityFieldGroups}
                                 initialState={initialData}
                                 onSubmit={handleIdentitySubmit}
-                                submitLabel="Actualizar Validación"
+                                submitLabel="Validar"
                                 submitVariant="outlined"
                                 isSubmitting={loading}
                                 showCloseButton={false}
