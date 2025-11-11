@@ -9,12 +9,14 @@ interface UpdateAdminFormProps {
 	administrator: AdministratorType | null;
 	onSubmitSuccess: () => void; // Callback after successful update
 	onError: (error: string) => void; // Callback for errors
+	onClose?: () => void; // Callback for close button
 }
 
 const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 	administrator,
 	onSubmitSuccess,
 	onError,
+	onClose,
 }) => {
 	const [formData, setFormData] = useState<Record<string, any>>({});
 	const [loading, setLoading] = useState(false);
@@ -153,6 +155,9 @@ const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 			subtitle=""
 			errors={[]} // Errors handled via onError prop
 			columns={1}
+			showCloseButton={true}
+			closeButtonText="Cancelar"
+			onClose={onClose}
 		/>
 	);
 };
