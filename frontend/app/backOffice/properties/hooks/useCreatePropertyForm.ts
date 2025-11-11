@@ -98,17 +98,21 @@ export const useCreatePropertyForm = (onCloseCallback?: () => void) => {
   // Cargar comunas cuando cambia la región
   useEffect(() => {
     const loadCities = async () => {
+      console.log('🔍 [useCreatePropertyForm] loadCities triggered, formData.state:', formData.state);
       if (!formData.state || !formData.state.id) {
+        console.log('❌ [useCreatePropertyForm] No state selected, clearing cities');
         setCityOptions([]);
         return;
       }
 
+      console.log('📡 [useCreatePropertyForm] Loading cities for region:', formData.state.id);
       setLoadingCities(true);
       try {
         const cities = await getComunasByRegion(formData.state.id);
+        console.log('✅ [useCreatePropertyForm] Cities loaded:', cities.length, 'cities');
         setCityOptions(cities);
       } catch (error) {
-        console.error('Error loading cities:', error);
+        console.error('❌ [useCreatePropertyForm] Error loading cities:', error);
         setCityOptions([]);
       } finally {
         setLoadingCities(false);
@@ -139,6 +143,8 @@ export const useCreatePropertyForm = (onCloseCallback?: () => void) => {
   }, [formData.propertyTypeId]);
 
   const handleChange = (field: string, value: any) => {
+    console.log('🔄 [useCreatePropertyForm] handleChange called:', { field, value, type: typeof value });
+
     const numericFields = [
       'bedrooms',
       'bathrooms',
@@ -161,10 +167,23 @@ export const useCreatePropertyForm = (onCloseCallback?: () => void) => {
     }
 
     if (field === 'state') {
+      // El Select devuelve el id de la opción seleccionada
+      console.log('🏛️ [useCreatePropertyForm] Processing state change, value:', value);
+      const selectedState = stateOptions.find(state => state.id === value);
+      console.log('🏛️ [useCreatePropertyForm] Found state:', selectedState);
       setFormData({
         ...formData,
-        [field]: value || { id: '', label: '' },
+        [field]: selectedState || { id: '', label: '' },
         city: { id: '', label: '' },
+      });
+    } else if (field === 'city') {
+      // El Select devuelve el id de la opción seleccionada
+      console.log('🏙️ [useCreatePropertyForm] Processing city change, value:', value);
+      const selectedCity = cityOptions.find(city => city.id === value);
+      console.log('🏙️ [useCreatePropertyForm] Found city:', selectedCity);
+      setFormData({
+        ...formData,
+        [field]: selectedCity || { id: '', label: '' },
       });
     } else {
       setFormData({ ...formData, [field]: processedValue });
