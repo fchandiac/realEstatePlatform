@@ -152,6 +152,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 	const dataTestId = rest["data-test-id"];
 	const [internalStep, setInternalStep] = useState(defaultStep);
 	const [isTransitioning, setIsTransitioning] = useState(false);
+	const [validationErrors, setValidationErrors] = useState<string[]>([]);
 	const isControlled = controlledStep !== undefined;
 	const totalSteps = steps.length;
 	const rawStep = isControlled ? controlledStep ?? 0 : internalStep;
@@ -171,6 +172,13 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 			setInternalStep(totalSteps - 1);
 		}
 	}, [internalStep, isControlled, totalSteps]);
+
+	// Limpiar errores de validación cuando cambian los valores
+	useEffect(() => {
+		if (validationErrors.length > 0) {
+			setValidationErrors([]);
+		}
+	}, [values]);
 
 	const currentStepData = steps[activeStepIndex];
 	const effectiveColumns = currentStepData?.columns ?? defaultColumns;
@@ -203,6 +211,9 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 				return;
 			}
 
+			// Limpiar errores de validación al cambiar de step
+			setValidationErrors([]);
+
 			onStepChange?.(targetIndex, activeStepIndex);
 
 			if (!isControlled) {
@@ -229,6 +240,23 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 			return;
 		}
 
+		// Validar campos requeridos del step actual antes de proceder
+		const currentStepFields = currentStepData?.fields ?? [];
+		const requiredFields = currentStepFields.filter(field => field.required);
+		const missingFields = requiredFields.filter(field => {
+			const fieldValue = values[field.name];
+			return fieldValue === undefined || fieldValue === null || fieldValue === '';
+		});
+
+		if (missingFields.length > 0) {
+			// Mostrar error de validación
+			setValidationErrors([`Por favor complete los siguientes campos requeridos: ${missingFields.map(f => f.label).join(', ')}`]);
+			return;
+		}
+
+		// Limpiar errores de validación previos
+		setValidationErrors([]);
+
 		if (isLastStep) {
 			await runSubmit();
 			return;
@@ -243,7 +271,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 		} finally {
 			setIsTransitioning(false);
 		}
-	}, [activeStepIndex, isLastStep, isTransitioning, navigateToStep, onNext, runSubmit]);
+	}, [activeStepIndex, isLastStep, isTransitioning, navigateToStep, onNext, runSubmit, currentStepData, values]);
 
 	const handlePrevious = useCallback(async () => {
 		if (isTransitioning || isFirstStep) {
@@ -672,6 +700,16 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 					<div className="col-span-full flex flex-col gap-2 mt-4">
 						{errors.map((err, index) => (
 							<Alert key={index} variant="error">
+								{err}
+							</Alert>
+						))}
+					</div>
+				)}
+
+				{validationErrors.length > 0 && (
+					<div className="col-span-full flex flex-col gap-2 mt-4">
+						{validationErrors.map((err, index) => (
+							<Alert key={`validation-${index}`} variant="error">
 								{err}
 							</Alert>
 						))}
