@@ -59,6 +59,7 @@ export interface BaseFormField {
 	min?: number;
 	max?: number;
 	col?: number;
+	width?: string; // NUEVA PROPIEDAD para controlar el ancho
 	labelPosition?: "left" | "right";
 	renderComponent?: FieldRenderFn;
 	props?: Record<string, unknown>;
@@ -78,7 +79,7 @@ export interface StepRenderContext {
 export interface StepperStep {
 	title: string;
 	description?: string;
-	fields?: BaseFormField[];
+	fields?: BaseFormField[] | BaseFormField[][]; // Acepta ambos formatos
 	renderContent?: (context: StepRenderContext) => React.ReactNode;
 	status?: "pending" | "active" | "completed";
 	disabled?: boolean;
@@ -110,19 +111,6 @@ export interface StepperBaseFormProps {
 	className?: string;
 	formClassName?: string;
 }
-
-const groupFieldsByColumns = (fields: BaseFormField[], columns: number): BaseFormField[][] => {
-	const safeColumns = Math.max(1, columns);
-	const columnGroups: BaseFormField[][] = Array.from({ length: safeColumns }, () => []);
-
-	fields.forEach((field) => {
-		const preferredColumn = field.col ? field.col - 1 : 0;
-		const columnIndex = Math.min(Math.max(preferredColumn, 0), safeColumns - 1);
-		columnGroups[columnIndex].push(field);
-	});
-
-	return columnGroups;
-};
 
 const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 	steps,
@@ -183,15 +171,20 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 	const currentStepData = steps[activeStepIndex];
 	const effectiveColumns = currentStepData?.columns ?? defaultColumns;
 	const safeColumns = Math.max(1, effectiveColumns || 1);
-	const currentStepFields = useMemo(
-		() => currentStepData?.fields ?? [],
-		[currentStepData]
-	);
 
-	const columnGroups = useMemo(
-		() => groupFieldsByColumns(currentStepFields, safeColumns),
-		[currentStepFields, safeColumns]
-	);
+	// Normaliza el formato de los campos a un arreglo de filas (BaseFormField[][])
+	const normalizedFields = useMemo(() => {
+		const fields = currentStepData?.fields ?? [];
+		if (fields.length === 0) {
+			return [];
+		}
+		// Si el primer elemento no es un arreglo, es el formato antiguo (plano)
+		if (!Array.isArray(fields[0])) {
+			// Para retrocompatibilidad, convierte el formato plano a un campo por fila
+			return (fields as BaseFormField[]).map(field => [field]);
+		}
+		return fields as BaseFormField[][];
+	}, [currentStepData]);
 
 	const isLastStep = totalSteps === 0 ? true : activeStepIndex >= totalSteps - 1;
 	const isFirstStep = activeStepIndex <= 0;
@@ -241,8 +234,8 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 		}
 
 		// Validar campos requeridos del step actual antes de proceder
-		const currentStepFields = currentStepData?.fields ?? [];
-		const requiredFields = currentStepFields.filter(field => field.required);
+		const allFields = normalizedFields.flat();
+		const requiredFields = allFields.filter(field => field.required);
 		const missingFields = requiredFields.filter(field => {
 			const fieldValue = values[field.name];
 			return fieldValue === undefined || fieldValue === null || fieldValue === '';
@@ -333,14 +326,12 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 	const baseFormLayoutClass = hasCustomContent
 		? "w-full flex flex-col gap-4"
 		: safeColumns > 1
-		? "w-full grid gap-4"
+		? `w-full grid grid-cols-${safeColumns} gap-4`
 		: "w-full flex flex-col gap-2";
 
 	const resolvedFormClassName = [baseFormLayoutClass, formClassName].filter(Boolean).join(" ");
 
-	const formStyle = !hasCustomContent && safeColumns > 1
-		? { gridTemplateColumns: `repeat(${safeColumns}, 1fr)`, gap: "1rem" }
-		: undefined;
+	const formStyle = undefined;
 
 	const renderField = useCallback(
 		(field: BaseFormField) => {
@@ -349,7 +340,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 			if (field.type === "custom" && field.renderComponent) {
 				return (
-					<div key={field.name} className="mb-2">
+					<div key={field.name}>
 						{field.renderComponent({
 							name: field.name,
 							label: field.label,
@@ -364,7 +355,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 			if (field.type === "location") {
 				return (
-					<div key={field.name} className="mb-2">
+					<div key={field.name}>
 						<CreateLocationPicker
 							onChange={(coords) => onChange(field.name, coords)}
 							{...commonProps}
@@ -388,7 +379,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 				};
 
 				return (
-					<div key={field.name} className="mb-2 flex flex-col gap-2">
+					<div key={field.name} className="flex flex-col gap-2">
 						{(customLabel ?? field.label) && (
 							<span className="text-sm font-medium text-gray-700">
 								{(customLabel as string | undefined) ?? field.label}
@@ -426,7 +417,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 				};
 
 				return (
-					<div key={field.name} className="mb-2 flex flex-col gap-2">
+					<div key={field.name} className="flex flex-col gap-2">
 						{(customLabel ?? field.label) && (
 							<span className="text-sm font-medium text-gray-700">
 								{(customLabel as string | undefined) ?? field.label}
@@ -448,7 +439,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 					: undefined;
 
 				return (
-					<div key={field.name} className="mb-2">
+					<div key={field.name}>
 						<RangeSlider
 							min={field.min ?? 0}
 							max={field.max ?? 100}
@@ -461,13 +452,19 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 			}
 
 			if (field.type === "select") {
-				const selectValue =
-					typeof fieldValue === "string" || typeof fieldValue === "number"
-						? fieldValue
-						: null;
+				// Handle both primitive values and object values with id/label structure
+				let selectValue: string | number | null = null;
+				if (typeof fieldValue === "string" || typeof fieldValue === "number") {
+					selectValue = fieldValue;
+				} else if (fieldValue && typeof fieldValue === "object" && "id" in fieldValue) {
+					const id = (fieldValue as { id: unknown }).id;
+					if (typeof id === "string" || typeof id === "number") {
+						selectValue = id;
+					}
+				}
 
 				return (
-					<div key={field.name} className="mb-2">
+					<div key={field.name}>
 						<Select
 							options={field.options || []}
 							placeholder={field.label}
@@ -491,7 +488,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 					: null;
 
 				return (
-					<div key={field.name} className="mb-2">
+					<div key={field.name}>
 						<AutoComplete
 							options={field.options || []}
 							label={field.label}
@@ -508,13 +505,65 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 			if (field.type === "switch") {
 				return (
-					<div key={field.name} className="mb-2">
+					<div key={field.name}>
 						<Switch
 							checked={Boolean(fieldValue)}
 							onChange={(val) => onChange(field.name, val)}
 							label={field.label}
 							labelPosition={field.labelPosition}
 							data-test-id={`switch-${field.name}`}
+							{...commonProps}
+						/>
+					</div>
+				);
+			}
+
+			if (field.type === "currency") {
+				const rawProps = field.props ?? {};
+				const typedProps = rawProps as {
+					currencyField?: string;
+					currencies?: Array<{ id: string; symbol: string; label: string }>;
+				};
+
+				const currencyField = typedProps.currencyField;
+				const currencies = typedProps.currencies || [];
+				const currentCurrency = currencyField ? values[currencyField] : 'CLP';
+				const currencySymbol = currencies.find(c => c.id === currentCurrency)?.symbol || '$';
+
+				const displayValue = (() => {
+					if (typeof fieldValue === "string") {
+						// Si ya tiene el símbolo, lo mantenemos
+						if (fieldValue.startsWith('$') || fieldValue.startsWith('UF')) {
+							return fieldValue;
+						}
+						// Si no tiene símbolo, lo agregamos
+						return `${currencySymbol} ${fieldValue}`;
+					}
+					if (typeof fieldValue === "number") {
+						return `${currencySymbol} ${fieldValue}`;
+					}
+					return "";
+				})();
+
+				return (
+					<div key={field.name}>
+						<TextField
+							label={field.label}
+							value={displayValue}
+							onChange={(event) => {
+								let value = event.target.value;
+								// Remover el símbolo si está presente para guardar solo el número
+								if (value.startsWith('$ ')) {
+									value = value.replace('$ ', '');
+								} else if (value.startsWith('UF ')) {
+									value = value.replace('UF ', '');
+								}
+								onChange(field.name, value);
+							}}
+							type="text"
+							name={field.name}
+							required={field.required}
+							data-test-id={`currency-${field.name}`}
 							{...commonProps}
 						/>
 					</div>
@@ -535,7 +584,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 			})();
 
 			return (
-				<div key={field.name} className="mb-2">
+				<div key={field.name}>
 					<TextField
 						label={field.label}
 						value={resolvedValue}
@@ -658,18 +707,25 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 			<form
 				onSubmit={handleSubmit}
-				className={resolvedFormClassName}
+				className="w-full flex flex-col gap-4" // Contenedor principal de filas
 				style={formStyle}
 				{...(dataTestId ? { "data-test-id": dataTestId } : {})}
 			>
 				{hasCustomContent ? (
 					<div className="w-full">{stepCustomContent}</div>
-				) : safeColumns === 1 ? (
-					currentStepFields.map(renderField)
 				) : (
-					columnGroups.map((columnFields, columnIndex) => (
-						<div key={columnIndex} className="flex flex-col gap-2 w-full">
-							{columnFields.map(renderField)}
+					// Nueva lógica de renderizado por filas
+					normalizedFields.map((row, rowIndex) => (
+						<div key={`row-${rowIndex}`} className="flex items-start gap-4 w-full">
+							{row.map((field) => (
+								<div
+									key={field.name}
+									className="flex-grow" // Permite que los campos crezcan
+									style={{ width: field.width ?? 'auto', flexBasis: field.width ?? 'auto' }} // Aplica el ancho
+								>
+									{renderField(field)}
+								</div>
+							))}
 						</div>
 					))
 				)}

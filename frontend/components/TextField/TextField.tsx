@@ -19,6 +19,8 @@ interface TextFieldProps {
   labelStyle?: React.CSSProperties;
   placeholderColor?: string;
   currencySymbol?: string; // Símbolo de moneda personalizado (default: "$")
+  currencyField?: string; // Para identificar el campo de moneda asociado
+  currencies?: Array<{ id: string; symbol: string; label: string }>; // Lista de monedas
   ["data-test-id"]?: string;
 }
 
@@ -40,6 +42,8 @@ export const TextField: React.FC<TextFieldProps> = ({
   labelStyle,
   placeholderColor,
   currencySymbol = "$", // Default: peso chileno
+  currencyField, // <--- Añadido para consumir la prop
+  currencies, // <--- Añadido para consumir la prop
   ...props
 }) => {
   const [focused, setFocused] = useState(false);
@@ -195,6 +199,8 @@ export const TextField: React.FC<TextFieldProps> = ({
     ? "opacity-50 cursor-not-allowed bg-muted"
     : "";
 
+  const isTextArea = type === "textarea" || typeof rows === "number";
+
   return (
     <div className="relative w-full pt-2">
       <div className={`relative ${className}`} data-test-id="text-field-root"> 
@@ -207,7 +213,7 @@ export const TextField: React.FC<TextFieldProps> = ({
           {startIcon}
         </span>
       )}
-      {typeof rows === "number" ? (
+      {isTextArea ? (
         <textarea
           name={name}
           value={value}

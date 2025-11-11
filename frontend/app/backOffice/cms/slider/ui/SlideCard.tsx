@@ -61,7 +61,9 @@ export default function SlideCard({
   }
 
   return (
-    <div className={`h-full bg-white rounded-lg w-full border-l-4 border-secondary border-t border-b border-r border-border shadow-lg text-left relative transition-all duration-200 flex flex-col ${isDragging ? 'opacity-50' : ''}`}>
+    <div
+      className={`h-full bg-card rounded-lg w-full border border-border shadow-sm hover:shadow-md text-left relative transition-shadow duration-200 flex flex-col ${isDragging ? 'opacity-50' : ''}`}
+    >
       
 
       {/* Drag handle */}
@@ -187,7 +189,7 @@ export default function SlideCard({
           </div>
           
           {/* Divider */}
-          <div className="border-t border-gray-100 pt-2">
+          <div className="pt-2">
             {/* Actions - Below divider, right aligned */}
             <div className="flex justify-end items-center gap-1">
               <IconButton

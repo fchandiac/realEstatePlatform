@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Dialog from '@/components/Dialog/Dialog'; // Importar Dialog
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import DotProgress from '@/components/DotProgress/DotProgress';
 import { PropertyHeader, PropertySidebar } from './components';
@@ -21,9 +22,11 @@ import { SECTIONS } from './utils/constants';
 interface FullPropertyProps {
   propertyId: string;
   onSave?: (data: any) => void;
+  open: boolean;
+  onClose: () => void;
 }
 
-export default function FullProperty({ propertyId, onSave }: FullPropertyProps) {
+export default function FullProperty({ propertyId, onSave, open, onClose }: FullPropertyProps) {
   const [activeSection, setActiveSection] = useState('basic');
   
   // Custom hooks para separar lógica
@@ -36,43 +39,47 @@ export default function FullProperty({ propertyId, onSave }: FullPropertyProps) 
   // Loading state
   if (loading) {
     return (
-      <div className="flex flex-col h-full bg-neutral overflow-hidden">
-        {/* Header skeleton durante carga */}
-        <div className="h-16 bg-background border-b border-border flex items-center px-6">
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-neutral-200 rounded animate-pulse"></div>
-            <div className="h-6 bg-neutral-200 rounded w-48 animate-pulse"></div>
-          </div>
-        </div>
-
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar skeleton durante carga */}
-          <div className="w-64 bg-background border-r border-border p-4">
-            <div className="space-y-2">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="h-10 bg-neutral-200 rounded animate-pulse"></div>
-              ))}
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="90vw">
+        <div className="flex flex-col h-full bg-neutral overflow-hidden">
+          {/* Header skeleton durante carga */}
+          <div className="h-16 bg-background border-b border-border flex items-center px-6">
+            <div className="flex items-center space-x-4">
+              <div className="w-8 h-8 bg-neutral-200 rounded animate-pulse"></div>
+              <div className="h-6 bg-neutral-200 rounded w-48 animate-pulse"></div>
             </div>
           </div>
 
-          {/* Contenido con loading */}
-          <main className="flex-1 overflow-y-auto bg-background flex items-center justify-center">
-            <div className="flex flex-col items-center space-y-4">
-              <DotProgress size={24} />
-              <p className="text-sm text-muted-foreground">Cargando propiedad...</p>
+          <div className="flex flex-1 overflow-hidden">
+            {/* Sidebar skeleton durante carga */}
+            <div className="w-64 bg-background border-r border-border p-4">
+              <div className="space-y-2">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="h-10 bg-neutral-200 rounded animate-pulse"></div>
+                ))}
+              </div>
             </div>
-          </main>
+
+            {/* Contenido con loading */}
+            <main className="flex-1 overflow-y-auto bg-background flex items-center justify-center">
+              <div className="flex flex-col items-center space-y-4">
+                <DotProgress size={24} />
+                <p className="text-sm text-muted-foreground">Cargando propiedad...</p>
+              </div>
+            </main>
+          </div>
         </div>
-      </div>
+      </Dialog>
     );
   }
 
   // Error state
   if (error || !formData) {
     return (
-      <div className="flex items-center justify-center h-full text-red-500">
-        {error || 'No se pudo cargar la propiedad'}
-      </div>
+      <Dialog open={open} onClose={onClose} title="Error" fullWidth maxWidth="sm">
+        <div className="flex items-center justify-center h-full text-red-500 p-8">
+          {error || 'No se pudo cargar la propiedad'}
+        </div>
+      </Dialog>
     );
   }
 
@@ -130,27 +137,29 @@ export default function FullProperty({ propertyId, onSave }: FullPropertyProps) 
   };
 
   return (
-    <div className="flex flex-col h-full bg-neutral overflow-hidden w-full">
-      {/* Header */}
-      <PropertyHeader property={formData} />
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="90vw">
+      <div className="flex flex-col h-full bg-neutral overflow-hidden w-full">
+        {/* Header */}
+        <PropertyHeader property={formData} />
 
-      <div className="flex flex-1 overflow-hidden w-full">
-        {/* Sidebar */}
-        <PropertySidebar
-          sections={SECTIONS}
-          activeSection={activeSection}
-          onSectionChange={setActiveSection}
-        />
+        <div className="flex flex-1 overflow-hidden w-full">
+          {/* Sidebar */}
+          <PropertySidebar
+            sections={SECTIONS}
+            activeSection={activeSection}
+            onSectionChange={setActiveSection}
+          />
 
-        {/* Contenido */}
-        <main className="flex-1 overflow-y-auto bg-background w-full">
-          <div className="p-4 w-full">
-            <div className="w-full">
-              {renderSection()}
+          {/* Contenido */}
+          <main className="flex-1 overflow-y-auto bg-background w-full">
+            <div className="p-4 w-full">
+              <div className="w-full">
+                {renderSection()}
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
-    </div>
+    </Dialog>
   );
 }

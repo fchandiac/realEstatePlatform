@@ -32,7 +32,7 @@ export interface PropertyFormData {
   description: string;
   propertyTypeId: string; // Cambiado a string para coincidir con el hook
   price: number;
-  currencyPrice: number; // Cambiado a number para las opciones
+  currencyPrice: string; // Cambiado a string para usar 'CLP' y 'UF'
 
   // Detalles dinámicos (dependen del tipo de propiedad)
   builtSquareMeters?: number;
@@ -65,74 +65,82 @@ export interface PropertyFormData {
 export const getBasicInfoFields = (
   propertyTypes: PropertyTypeOption[],
   currencies: ExtendedOption[] = [
-    { id: 1, label: 'Pesos Chilenos (CLP)' },
-    { id: 2, label: 'Unidad de Fomento (UF)' }
+    { id: 'CLP', label: 'Pesos Chilenos (CLP)' },
+    { id: 'UF', label: 'Unidad de Fomento (UF)' }
   ]
-): BaseFormField[] => [
-  {
+): BaseFormField[][] => [
+  [{
     name: 'title',
     label: 'Título de la Propiedad',
     type: 'text',
     required: true,
-    col: 1,
-  },
-  {
+    width: '100%',
+  }],
+  [{
     name: 'description',
     label: 'Descripción',
     type: 'textarea',
     required: true,
-    rows: 4,
-    col: 1,
-  },
-  {
+    rows: 3,
+    width: '100%',
+  }],
+  [{
     name: 'propertyTypeId',
     label: 'Tipo de Propiedad',
     type: 'select',
     required: true,
     options: mapPropertyTypeOptions(propertyTypes),
-    col: 1,
-  },
-  {
-    name: 'price',
-    label: 'Precio',
-    type: 'number',
-    required: true,
-    min: 0,
-    col: 1,
-  },
-  {
-    name: 'currencyPrice',
-    label: 'Moneda',
-    type: 'select',
-    required: true,
-    options: mapExtendedOptions(currencies),
-    col: 2,
-  },
+    width: '100%',
+  }],
+  [
+    {
+      name: 'price',
+      label: 'Precio',
+      type: 'currency',
+      required: true,
+      width: '50%',
+      props: {
+        currencyField: 'currencyPrice',
+        currencies: [
+          { id: 'CLP', symbol: '$', label: 'CLP' },
+          { id: 'UF', symbol: 'UF', label: 'UF' }
+        ]
+      }
+    },
+    {
+      name: 'currencyPrice',
+      label: 'Moneda',
+      type: 'select',
+      required: true,
+      options: mapExtendedOptions(currencies),
+      width: '50%',
+    }
+  ],
 ];
 
 // Función para obtener campos de detalles dinámicos basados en el tipo de propiedad
 export const getPropertyDetailsFields = (
   selectedPropertyType?: { name?: string | null } | null,
-): BaseFormField[] => {
-  const fields: BaseFormField[] = [];
+): BaseFormField[][] => {
+  const fields: BaseFormField[][] = [];
 
   // Campos comunes para todas las propiedades
-  fields.push(
+  fields.push([
     {
       name: 'builtSquareMeters',
       label: 'Metros Construidos (m²)',
       type: 'number',
       min: 0,
-      col: 1,
+      width: '50%',
     },
     {
       name: 'landSquareMeters',
       label: 'Metros de Terreno (m²)',
       type: 'number',
       min: 0,
-      col: 1,
+      width: '50%',
     }
-  );
+  ]);
 
   // Campos específicos según el tipo de propiedad
   const normalizedName = selectedPropertyType?.name?.toLowerCase() ?? '';
@@ -143,27 +151,27 @@ export const getPropertyDetailsFields = (
       normalizedName.includes(type)
     )) {
       fields.push(
-        {
+        [{
           name: 'bedrooms',
           label: 'Dormitorios',
           type: 'number',
           min: 0,
-          col: 2,
+          width: '33.33%',
         },
         {
           name: 'bathrooms',
           label: 'Baños',
           type: 'number',
           min: 0,
-          col: 2,
+          width: '33.33%',
         },
         {
           name: 'parkingSpaces',
           label: 'Estacionamientos',
           type: 'number',
           min: 0,
-          col: 2,
-        }
+          width: '33.33%',
+        }]
       );
     }
 
@@ -172,26 +180,26 @@ export const getPropertyDetailsFields = (
       normalizedName.includes(type)
     )) {
       fields.push(
-        {
+        [{
           name: 'floors',
           label: 'Número de Pisos',
           type: 'number',
           min: 1,
-          col: 2,
-        }
+          width: '50%',
+        }]
       );
     }
 
     // Campo común: año de construcción
     fields.push(
-      {
+      [{
         name: 'constructionYear',
         label: 'Año de Construcción',
         type: 'number',
         min: 1800,
         max: new Date().getFullYear(),
-        col: 2,
-      }
+        width: '50%',
+      }]
     );
   }
 
@@ -202,45 +210,47 @@ export const getPropertyDetailsFields = (
 export const getLocationFields = (
   stateOptions: LocationOption[],
   cityOptions: LocationOption[]
-): BaseFormField[] => [
-  {
-    name: 'state',
-    label: 'Estado/Región',
-    type: 'select',
-    required: true,
-    options: mapLocationOptions(stateOptions),
-    col: 1,
-  },
-  {
-    name: 'city',
-    label: 'Comuna',
-    type: 'select',
-    required: true,
-    options: mapLocationOptions(cityOptions),
-    col: 1,
-  },
-  {
+): BaseFormField[][] => [
+  [
+    {
+      name: 'state',
+      label: 'Estado/Región',
+      type: 'select',
+      required: true,
+      options: mapLocationOptions(stateOptions),
+      width: '50%',
+    },
+    {
+      name: 'city',
+      label: 'Comuna',
+      type: 'select',
+      required: true,
+      options: mapLocationOptions(cityOptions),
+      width: '50%',
+    },
+  ],
+  [{
     name: 'address',
     label: 'Dirección Completa',
     type: 'textarea',
     required: true,
     rows: 3,
-    col: 1,
-  },
-  {
+    width: '100%',
+  }],
+  [{
     name: 'coordinates',
     label: 'Ubicación en Mapa',
     type: 'location',
     required: true,
-    col: 2,
-  },
+    width: '100%',
+  }],
 ];
 
 // Función para obtener campos de multimedia
-export const getMultimediaFields = (): BaseFormField[] => [
-  {
+export const getMultimediaFields = (): BaseFormField[][] => [
+  [{
     name: 'multimedia',
-    label: 'Imágenes y Videos de la Propiedad',
+    label: '',
     type: 'multimedia',
     required: true,
     props: {
@@ -249,40 +259,40 @@ export const getMultimediaFields = (): BaseFormField[] => [
       maxFiles: 20,
       maxSize: 10, // 10MB por archivo
     },
-    col: 1,
-  },
+    width: '100%',
+  }],
 ];
 
 // Función para obtener campos de SEO
-export const getSeoFields = (): BaseFormField[] => [
-  {
+export const getSeoFields = (): BaseFormField[][] => [
+  [{
     name: 'seoTitle',
     label: 'Título SEO',
     type: 'text',
-    col: 1,
-  },
-  {
+    width: '100%',
+  }],
+  [{
     name: 'seoDescription',
     label: 'Descripción SEO',
     type: 'textarea',
     rows: 3,
-    col: 1,
-  },
-  {
+    width: '100%',
+  }],
+  [{
     name: 'seoKeywords',
     label: 'Palabras Clave SEO',
     type: 'text',
-    col: 2,
-  },
+    width: '100%',
+  }],
 ];
 
 // Función para obtener campos de notas internas
-export const getInternalNotesFields = (): BaseFormField[] => [
-  {
+export const getInternalNotesFields = (): BaseFormField[][] => [
+  [{
     name: 'internalNotes',
     label: 'Notas Internas',
     type: 'textarea',
     rows: 4,
-    col: 1,
-  },
+    width: '100%',
+  }],
 ];

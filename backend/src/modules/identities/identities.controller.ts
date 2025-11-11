@@ -79,6 +79,28 @@ export class IdentitiesController {
     return this.identitiesService.create(createIdentityDto, files);
   }
 
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.UPDATE, AuditEntityType.IDENTITY, 'Identity updated')
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'logo', maxCount: 1 },
+      { name: 'partnershipLogos', maxCount: 10 },
+    ]),
+    TransformJsonFieldsInterceptor,
+  )
+  update(
+    @Param('id') id: string,
+    @Body(ValidationPipe) updateIdentityDto: UpdateIdentityDto,
+    @UploadedFiles()
+    files?: {
+      logo?: Express.Multer.File[];
+      partnershipLogos?: Express.Multer.File[];
+    },
+  ) {
+    return this.identitiesService.update(id, updateIdentityDto, files);
+  }
+
   @Get()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.READ, AuditEntityType.IDENTITY, 'Identities listed')

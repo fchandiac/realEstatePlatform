@@ -490,7 +490,7 @@ export default function IdentityPage() {
           </div>
           <div className="space-y-4">
             {identity.partnerships?.map((partnership, index) => (
-              <div key={index} className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg">
+              <div key={index} className="rounded-lg p-4 bg-background shadow-sm">
                 <div className="flex items-start justify-between mb-4">
                   <h3 className="text-lg font-medium">Alianza {index + 1}</h3>
                   <IconButton

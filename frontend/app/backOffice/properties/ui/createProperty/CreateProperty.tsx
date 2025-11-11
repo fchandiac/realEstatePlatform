@@ -45,6 +45,7 @@ export default function CreateProperty({
     {
       title: 'Información Básica',
       description: 'Título, descripción, tipo y precio de la propiedad',
+      columns: 2,
       fields: getBasicInfoFields(propertyTypes),
     },
     {

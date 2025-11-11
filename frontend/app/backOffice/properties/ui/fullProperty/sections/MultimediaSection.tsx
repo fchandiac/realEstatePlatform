@@ -5,10 +5,10 @@ import { MultimediaPropertyCard } from '../components';
 import type { MultimediaSectionProps } from '../types/property.types';
 import { Button } from '@/components/Button/Button';
 import IconButton from '@/components/IconButton/IconButton';
-import Alert from '@/components/Alert/Alert';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import { uploadPropertyMultimedia } from '@/app/actions/properties';
-import { revalidatePath } from 'next/cache';
+import { deleteMultimedia } from '@/app/actions/multimedia';
+import { useAlert } from '@/app/contexts/AlertContext';
 
 export default function MultimediaSection({ property }: MultimediaSectionProps) {
   const [localMainImageUrl, setLocalMainImageUrl] = useState(property.mainImageUrl);
@@ -16,11 +16,33 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
   const [selectedFiles, setSelectedFiles] = useState<Array<{ file: File; url: string }>>([]);
   const createdUrlsRef = React.useRef<string[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [alert, setAlert] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { success, error: showError } = useAlert();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleMainImageUpdate = (newMainImageUrl: string) => {
     setLocalMainImageUrl(newMainImageUrl);
+  };
+
+  const handleDeleteMultimedia = async (multimediaId: string) => {
+    setDeletingId(multimediaId);
+    try {
+      const result = await deleteMultimedia(multimediaId);
+      if (!result.success) {
+        showError(result.error || 'Error al eliminar el archivo.');
+      } else {
+        setMultimedia(prev => prev.filter(m => m.id !== multimediaId));
+        success('Archivo eliminado correctamente.');
+        const deletedItem = multimedia.find(m => m.id === multimediaId);
+        if (deletedItem && localMainImageUrl && deletedItem.url === localMainImageUrl) {
+          setLocalMainImageUrl(undefined);
+        }
+      }
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Error desconocido.');
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handleAddMultimediaClick = () => {
@@ -53,109 +75,54 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
 
   const handleUploadMultimedia = async () => {
     if (selectedFiles.length === 0) {
-      setAlert({ type: 'error', message: 'Por favor selecciona al menos un archivo' });
+      showError('Por favor selecciona al menos un archivo');
       return;
     }
 
     setUploading(true);
-  try {
-  // send raw File objects to the upload action
-  const filesToUpload = selectedFiles.map(s => s.file);
-  const result = await uploadPropertyMultimedia(property.id, filesToUpload as File[]);
+    try {
+      const filesToUpload = selectedFiles.map(s => s.file);
+      const result = await uploadPropertyMultimedia(property.id, filesToUpload);
 
       if (!result.success) {
-        setAlert({ type: 'error', message: result.error || 'Error al subir multimedia' });
+        showError(result.error || 'Error al subir multimedia');
         setUploading(false);
         return;
       }
 
-      // Update the multimedia list with the new items
-      // Backend may return { message, data: [...] } or return an array directly
-      if (Array.isArray(result.data?.data)) {
-        setMultimedia(prev => [...prev, ...result.data.data]);
-      } else if (Array.isArray(result.data)) {
+      if (Array.isArray(result.data)) {
         setMultimedia(prev => [...prev, ...result.data]);
-      } else if (Array.isArray(result)) {
-        setMultimedia(prev => [...prev, ...result]);
       }
 
-  // revoke object URLs tracked
-  createdUrlsRef.current.forEach(u => URL.revokeObjectURL(u));
-  createdUrlsRef.current = [];
-  setSelectedFiles([]);
-      setAlert({ type: 'success', message: 'Multimedia subida exitosamente' });
+      createdUrlsRef.current.forEach(u => URL.revokeObjectURL(u));
+      createdUrlsRef.current = [];
+      setSelectedFiles([]);
+      success('Multimedia subida exitosamente');
       
-      // Clear file input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-    } catch (error) {
-      setAlert({ 
-        type: 'error', 
-        message: error instanceof Error ? error.message : 'Error desconocido' 
-      });
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
       setUploading(false);
     }
   };
 
-  // cleanup object URLs on unmount
   React.useEffect(() => {
     return () => {
       createdUrlsRef.current.forEach(u => URL.revokeObjectURL(u));
       createdUrlsRef.current = [];
     };
-    // we intentionally omit deps to only run on unmount
-     
   }, []);
 
   return (
     <div className="space-y-6">
-      {/* Multimedia Grid */}
       <div>
-        <h2 className="text-xl font-semibold text-foreground mb-4">
-          Multimedia ({multimedia.length})
-        </h2>
-
-        {multimedia.length === 0 ? (
-          <div className="flex items-center justify-center h-48 rounded-lg border border-dashed border-border bg-neutral/50">
-            <div className="text-center text-muted-foreground">
-              <span className="material-symbols-outlined text-4xl mb-2 block">image</span>
-              <p className="text-sm">No hay multimedia asociada a esta propiedad</p>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {multimedia.map((item) => (
-              <MultimediaPropertyCard
-                key={item.id}
-                multimediaId={item.id}
-                propertyId={property.id}
-                mainImageUrl={localMainImageUrl}
-                onUpdate={handleMainImageUpdate}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Divisor */}
-      <div className="border-t border-border my-6" />
-
-      {/* Alert */}
-      {alert && (
-        <Alert 
-          variant={alert.type} 
-          className={alert.type === 'error' ? 'alert-error' : alert.type === 'success' ? 'alert-success' : 'alert-info'}
-        >
-          {alert.message}
-        </Alert>
-      )}
-
-      {/* Upload Section */}
-      <div className="space-y-4">
-        {/* Row 1: Plus Icon Button */}
-        <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-foreground">
+            Multimedia ({multimedia.length})
+          </h2>
           <IconButton
             icon="add"
             onClick={handleAddMultimediaClick}
@@ -172,8 +139,37 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
             disabled={uploading}
           />
         </div>
+       
 
-        {/* Row 2: Selected Files Preview */}
+        {multimedia.length === 0 ? (
+          <div className="flex items-center justify-center h-48 rounded-lg border border-dashed border-border bg-neutral/50">
+            <div className="text-center text-muted-foreground">
+              <span className="material-symbols-outlined text-4xl mb-2 block">image</span>
+              <p className="text-sm">No hay multimedia asociada a esta propiedad</p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {multimedia.map((item) => (
+              <MultimediaPropertyCard
+                key={item.id}
+                multimediaItem={item}
+                propertyId={property.id}
+                mainImageUrl={localMainImageUrl}
+                isDeleting={deletingId === item.id}
+                onSetMain={handleMainImageUpdate}
+                onDelete={handleDeleteMultimedia}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="border-t border-border my-6" />
+
+      <div className="space-y-4">
+      
+
         {selectedFiles.length > 0 && (
           <div className="bg-neutral/50 rounded-lg border border-border p-4">
             <h3 className="text-sm font-semibold mb-3 text-foreground">
@@ -189,7 +185,6 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
                   className="flex items-center justify-between bg-white rounded p-2 border border-border"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    {/* Preview thumbnail */}
                     {file.type.startsWith('image/') ? (
                       <img src={url} alt={file.name} className="w-16 h-10 object-cover rounded" />
                     ) : (
@@ -217,7 +212,6 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
           </div>
         )}
 
-        {/* Row 3: Upload Button */}
         {selectedFiles.length > 0 && (
           <Button
             variant="primary"

@@ -4,6 +4,52 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { env } from '@/lib/env'
 
+type IdentityPayload = FormData | Record<string, unknown>
+
+function ensureFormData(payload: IdentityPayload): FormData {
+  if (payload instanceof FormData) {
+    return payload
+  }
+
+  const formData = new FormData()
+
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value === undefined || value === null) {
+      return
+    }
+
+    if (value instanceof Blob) {
+      formData.append(key, value)
+      return
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        if (item === undefined || item === null) {
+          return
+        }
+
+        if (item instanceof Blob) {
+          formData.append(key, item)
+        } else if (typeof item === 'object') {
+          formData.append(key, JSON.stringify(item))
+        } else {
+          formData.append(key, String(item))
+        }
+      })
+      return
+    }
+
+    if (typeof value === 'object') {
+      formData.append(key, JSON.stringify(value))
+    } else {
+      formData.append(key, String(value))
+    }
+  })
+
+  return formData
+}
+
 // Acción pública para obtener solo la URL del logo
 export async function getIdentityLogoUrl(): Promise<string | null> {
   const res = await fetch(`${env.backendApiUrl}/identities/logo-url`, {
@@ -35,9 +81,11 @@ export async function getIdentity() {
   return res.json()
 }
 
-export async function updateIdentity(id: string, formData: FormData) {
+export async function updateIdentity(id: string, payload: IdentityPayload) {
   const session = await getServerSession(authOptions)
   if (!session?.accessToken) throw new Error('Unauthorized')
+
+  const formData = ensureFormData(payload)
 
   const res = await fetch(`${env.backendApiUrl}/identities/${id}`, {
     method: 'PATCH',
@@ -56,9 +104,11 @@ export async function updateIdentity(id: string, formData: FormData) {
   return res.json()
 }
 
-export async function createIdentity(formData: FormData) {
+export async function createIdentity(payload: IdentityPayload) {
   const session = await getServerSession(authOptions)
   if (!session?.accessToken) throw new Error('Unauthorized')
+
+  const formData = ensureFormData(payload)
 
   const res = await fetch(`${env.backendApiUrl}/identities`, {
     method: 'POST',

@@ -223,6 +223,7 @@ export const SlideList: React.FC<SlideListProps> = ({
             variant="containedPrimary"
             onClick={handleAddSlide}
             icon="add"
+            size={'lg'}
           />
         </div>
         <div className="flex-1 min-w-0 max-w-xs sm:max-w-sm">
