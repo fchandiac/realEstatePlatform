@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { getTitleFromPath } from '../../lib/routeTitles';
 import { useSession } from "next-auth/react";
 import {getIdentityLogoUrl} from '../actions/identity';
+import MyAccountDialog from './users/ui/myAccount/MyAccountDialog';
 
 const menuItems = [
   { label: 'Dashboard' },
@@ -59,6 +60,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   // State to store the logo URL
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
+  // State for MyAccount dialog
+  const [showMyAccountDialog, setShowMyAccountDialog] = useState(false);
+
   // Fetch the logo URL on component mount
   useEffect(() => {
     async function fetchLogo() {
@@ -84,12 +88,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         notificationCount={9}
         onNotificationsClick={() => {}}
         showUserButton={true}
-        onUserClick={() => {}}
+        onUserClick={() => setShowMyAccountDialog(true)}
         userName={userName}
         logoSrc={logoUrl || undefined} // Convert null to undefined
       />
 
       <main className="container mx-auto mt-20">{children}</main>
+
+      <MyAccountDialog
+        open={showMyAccountDialog}
+        onClose={() => setShowMyAccountDialog(false)}
+      />
     </div>
   );
 }
