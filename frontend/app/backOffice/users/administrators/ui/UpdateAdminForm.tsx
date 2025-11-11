@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { UpdateBaseForm, BaseUpdateFormField } from '@/components/BaseForm';
 import { updateUser, setUserStatus, updateUserAvatar } from '@/app/actions/users';
+import { env } from '@/lib/env';
 import type { AdministratorType } from './types';
 
 interface UpdateAdminFormProps {
@@ -29,6 +30,16 @@ const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 			'INACTIVE': 2,
 		};
 
+		// Build full avatar URL if it exists
+		let avatarUrl = '';
+		if (administrator.personalInfo?.avatarUrl) {
+			if (administrator.personalInfo.avatarUrl.startsWith('http')) {
+				avatarUrl = administrator.personalInfo.avatarUrl;
+			} else {
+				avatarUrl = `${env.backendApiUrl}${administrator.personalInfo.avatarUrl}`;
+			}
+		}
+
 		return {
 			username: administrator.username || '',
 			email: administrator.email || '',
@@ -36,7 +47,7 @@ const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 			lastName: administrator.personalInfo?.lastName || '',
 			phone: administrator.personalInfo?.phone || '',
 			status: statusMap[administrator.status] || 1,
-			avatar: administrator.personalInfo?.avatarUrl || '',
+			avatar: avatarUrl,
 			avatarFile: null,
 		};
 	};
@@ -148,7 +159,13 @@ const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 			name: 'avatar',
 			label: 'Avatar',
 			type: 'avatar',
-			currentUrl: administrator?.personalInfo?.avatarUrl || undefined,
+			currentUrl: (() => {
+				if (!administrator?.personalInfo?.avatarUrl) return undefined;
+				if (administrator.personalInfo.avatarUrl.startsWith('http')) {
+					return administrator.personalInfo.avatarUrl;
+				}
+				return `${env.backendApiUrl}${administrator.personalInfo.avatarUrl}`;
+			})(),
 		},
 		{
 			name: 'status',

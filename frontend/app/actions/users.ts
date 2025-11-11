@@ -330,6 +330,7 @@ export async function updateUser(id: string, data: UpdateUserDto): Promise<{
 		}
 
 		const result = await response.json();
+		revalidatePath('/backOffice/users/administrators', 'page');
 		return { success: true, data: result };
 	} catch (error) {
 		console.error('Error updating user:', error);
@@ -369,6 +370,7 @@ export async function deleteUser(id: string): Promise<{
 			};
 		}
 
+		revalidatePath('/backOffice/users/administrators', 'page');
 		return { success: true };
 	} catch (error) {
 		console.error('Error deleting user:', error);
@@ -451,6 +453,7 @@ export async function assignUserRole(id: string, role: 'ADMIN' | 'AGENT'): Promi
 		}
 
 		const result = await response.json();
+		revalidatePath('/backOffice/users/administrators', 'page');
 		return { success: true, data: result };
 	} catch (error) {
 		console.error('Error assigning role:', error);
@@ -493,6 +496,7 @@ export async function setUserStatus(id: string, status: 'ACTIVE' | 'INACTIVE'): 
 		}
 
 		const result = await response.json();
+		revalidatePath('/backOffice/users/administrators', 'page');
 		return { success: true, data: result };
 	} catch (error) {
 		console.error('Error setting status:', error);
@@ -556,7 +560,7 @@ export async function updateUserAvatar(id: string, formData: FormData): Promise<
 		}
 
 		const result = await response.json();
-		revalidatePath('/backOffice/users/administrators');
+		revalidatePath('/backOffice/users/administrators', 'page');
 		return { success: true, data: result };
 	} catch (error) {
 		console.error('Error updating avatar:', error);
