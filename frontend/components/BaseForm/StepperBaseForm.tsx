@@ -562,7 +562,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 								!isStepActive && !isStepCompleted ? "bg-transparent border border-gray-400 text-gray-500" : "",
 							].filter(Boolean).join(" ");								return (
 									<div key={`dot-${index}`} className={dotClasses}>
-										{index + 1}
+										{isStepActive ? "" : (index + 1)}
 									</div>
 								);
 							})}
@@ -587,42 +587,50 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 								<DotProgress size={18} />
 							) : (
 								<Button variant="primary" type="submit" size="sm">
-									{isLastStep ? submitLabel ?? "Guardar" : "Siguiente →"}
+									{isLastStep ? submitLabel ?? "Guardar" : "→"}
 								</Button>
 							)}
 						</div>
 					</div>
 
-					{/* Segundo row: Información del step actual */}
-					<div className="text-center">
-						{(() => {
-							const currentStep = steps[activeStepIndex];
-							if (!currentStep) return null;
+					{/* Segundo row: Información del step actual + Dot grande */}
+					<div className="flex justify-between items-start gap-6">
+						{/* Columna izquierda: Información del step */}
+						<div className="flex-1 text-left">
+							{(() => {
+								const currentStep = steps[activeStepIndex];
+								if (!currentStep) return null;
 
-							const isStepActive = true;
-							const isStepCompleted = currentStep.status
-								? currentStep.status === "completed"
-								: false;
+								const isStepActive = true;
+								const isStepCompleted = currentStep.status
+									? currentStep.status === "completed"
+									: false;
 
-							const titleClasses = [
-								"text-lg font-semibold mb-2",
-								isStepActive ? "text-primary" : "text-gray-600",
-							].join(" ");
+								const titleClasses = [
+									"text-xl font-semibold text-primary",
+								].join(" ");
 
-							const descriptionClasses = [
-								"text-sm",
-								isStepActive ? "text-primary text-opacity-80" : "text-gray-500",
-							].join(" ");
+								const descriptionClasses = [
+									"text-sm text-primary text-opacity-80 mt-1",
+								].join(" ");
 
-							return (
-								<div>
-									<div className={titleClasses}>{currentStep.title}</div>
-									{currentStep.description && (
-										<p className={descriptionClasses}>{currentStep.description}</p>
-									)}
-								</div>
-							);
-						})()}
+								return (
+									<div>
+										<div className={titleClasses}>{currentStep.title}</div>
+										{currentStep.description && (
+											<p className={descriptionClasses}>{currentStep.description}</p>
+										)}
+									</div>
+								);
+							})()}
+						</div>
+
+						{/* Columna derecha: Dot grande del step activo */}
+						<div className="flex-shrink-0">
+							<div className="w-12 h-12 rounded-full bg-transparent border-2 border-primary flex items-center justify-center text-secondary text-lg font-semibold">
+								{activeStepIndex + 1}
+							</div>
+						</div>
 					</div>
 				</div>
 			)}
