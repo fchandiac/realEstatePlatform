@@ -37,6 +37,9 @@ export interface DeleteBaseFormProps {
     submitLabel?: string;
     errors?: string[];
     ["data-test-id"]?: string;
+    showCloseButton?: boolean;
+    closeButtonText?: string;
+    onClose?: () => void;
 }
 
 const DeleteBaseForm: React.FC<DeleteBaseFormProps> = ({
@@ -47,6 +50,9 @@ const DeleteBaseForm: React.FC<DeleteBaseFormProps> = ({
     subtitle,
     submitLabel,
     errors = [],
+    showCloseButton = false,
+    closeButtonText = "cerrar",
+    onClose,
     ...props
 }) => {
     const dataTestId = props["data-test-id"];
@@ -78,14 +84,28 @@ const DeleteBaseForm: React.FC<DeleteBaseFormProps> = ({
                 </Alert>
             </div>
 
-            <div className="flex justify-end gap-3">
-                {isSubmitting ? (
-                    <DotProgress size={18} className="self-end" />
-                ) : (
-                    <Button variant="primary" type="submit">
-                        {submitLabel ?? "Eliminar"}
-                    </Button>
-                )}
+            <div className="flex justify-between gap-3">
+                <div>
+                    {showCloseButton && onClose && (
+                        <Button
+                            variant="outlined"
+                            type="button"
+                            onClick={onClose}
+                            disabled={isSubmitting}
+                        >
+                            {closeButtonText}
+                        </Button>
+                    )}
+                </div>
+                <div>
+                    {isSubmitting ? (
+                        <DotProgress size={18} className="self-end" />
+                    ) : (
+                        <Button variant="primary" type="submit">
+                            {submitLabel ?? "Eliminar"}
+                        </Button>
+                    )}
+                </div>
             </div>
         </form>
     );

@@ -55,6 +55,9 @@ export interface CreateBaseFormProps {
 	errors?: string[];
 	["data-test-id"]?: string;
 	columns?: number;
+	showCloseButton?: boolean;
+	closeButtonText?: string;
+	onClose?: () => void;
 }
 
 const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
@@ -68,6 +71,9 @@ const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 	subtitle = "",
 	errors = [],
 	columns = 1,
+	showCloseButton = false,
+	closeButtonText = "cerrar",
+	onClose,
 	...props
 }) => {
 	const dataTestId = props["data-test-id"];
@@ -169,14 +175,28 @@ const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 						</div>
 					))
 				)}
-				<div className="col-span-full flex justify-end mt-4">
-					{isSubmitting ? (
-						<DotProgress size={18} className="self-end" />
-					) : (
-						<Button variant="primary" type="submit">
-							{submitLabel ?? "Guardar"}
-						</Button>
-					)}
+				<div className="col-span-full flex justify-between mt-4">
+					<div>
+						{showCloseButton && onClose && (
+							<Button
+								variant="outlined"
+								type="button"
+								onClick={onClose}
+								disabled={isSubmitting}
+							>
+								{closeButtonText}
+							</Button>
+						)}
+					</div>
+					<div>
+						{isSubmitting ? (
+							<DotProgress size={18} className="self-end" />
+						) : (
+							<Button variant="primary" type="submit">
+								{submitLabel ?? "Guardar"}
+							</Button>
+						)}
+					</div>
 				</div>
 				{errors.length > 0 && (
 					<div className="col-span-full flex flex-col gap-2 mt-4">

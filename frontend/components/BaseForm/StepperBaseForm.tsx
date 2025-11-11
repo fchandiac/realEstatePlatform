@@ -58,6 +58,9 @@ export interface StepperBaseFormProps {
 	errors?: string[];
 	["data-test-id"]?: string;
 	columns?: number;
+	showCloseButton?: boolean;
+	closeButtonText?: string;
+	onClose?: () => void;
 }
 
 const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
@@ -71,6 +74,9 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 	subtitle = "",
 	errors = [],
 	columns = 1,
+	showCloseButton = false,
+	closeButtonText = "cerrar",
+	onClose,
 	...props
 }) => {
 	const dataTestId = props["data-test-id"];
@@ -237,7 +243,17 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 				{/* Navigation Buttons */}
 				<div className="col-span-full flex justify-between mt-6">
-					<div>
+					<div className="flex gap-2">
+						{showCloseButton && onClose && (
+							<Button
+								variant="outlined"
+								type="button"
+								onClick={onClose}
+								disabled={isSubmitting}
+							>
+								{closeButtonText}
+							</Button>
+						)}
 						{!isFirstStep && (
 							<Button
 								variant="secondary"
