@@ -3,11 +3,12 @@ import { getArticles } from '@/app/actions/articles'
 import ListArticles from './ui/ListArticles'
 
 interface PageProps {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export default async function ArticlesPage({ searchParams }: PageProps) {
-  const search = typeof searchParams.search === 'string' ? searchParams.search : undefined
+  const params = await searchParams
+  const search = typeof params.search === 'string' ? params.search : undefined
 
   const result = await getArticles({ search })
 

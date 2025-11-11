@@ -2,11 +2,12 @@ import { listBlogs } from '@/app/actions/blogs';
 import BlogList from '@/components/BlogList/BlogList';
 
 interface BlogPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const category = typeof searchParams.category === 'string' ? searchParams.category : undefined;
+  const params = await searchParams;
+  const category = typeof params.category === 'string' ? params.category : undefined;
 
   const articles = await listBlogs({ category });
 

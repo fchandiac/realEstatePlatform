@@ -156,7 +156,7 @@ const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 			errors={[]} // Errors handled via onError prop
 			columns={1}
 			showCloseButton={true}
-			closeButtonText="Cancelar"
+			closeButtonText="Cerrar"
 			onClose={onClose}
 		/>
 	);

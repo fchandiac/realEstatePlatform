@@ -47,6 +47,7 @@ const UpdateAdminDialog: React.FC<UpdateAdminDialogProps> = ({
 					administrator={administrator}
 					onSubmitSuccess={handleSubmitSuccess}
 					onError={handleError}
+					onClose={onClose}
 				/>
 			</div>
 		</Dialog>
