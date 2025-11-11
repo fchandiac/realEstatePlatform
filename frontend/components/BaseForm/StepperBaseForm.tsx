@@ -653,7 +653,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 					))
 				)}
 
-				<div className="col-span-full flex justify-between mt-6">
+				<div className="col-span-full flex justify-end mt-6">
 					<div className="flex gap-2">
 						{showCloseButton && onClose && (
 							<Button
@@ -666,7 +666,6 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 							</Button>
 						)}
 					</div>
-					{/* Los botones Anterior/Siguiente ahora están arriba */}
 				</div>
 
 				{errors.length > 0 && (
