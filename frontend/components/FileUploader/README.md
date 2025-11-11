@@ -635,3 +635,248 @@ Para contribuir al componente FileImageUploader:
 4. Actualiza esta documentación cuando agregues nuevas funcionalidades
 5. Asegura que el manejo de memoria sea eficiente (URLs de object)
 6. Prueba el componente con diferentes tipos y tamaños de archivo
+
+---
+
+# MultimediaUpdater Component
+
+Componente reutilizable para actualizar multimedia existente (imágenes y videos) con vista previa, selección de archivos, validación y soporte para drag & drop. Perfecto para formularios de edición donde necesitas mostrar el contenido actual y permitir actualizaciones.
+
+## 🚀 Características Principales
+
+- ✅ **Vista Previa**: Muestra la multimedia actual (imagen/video) antes de actualizar
+- ✅ **Selección de Archivos**: Botón para seleccionar nuevos archivos con validación
+- ✅ **Validación Completa**: Tipo de archivo, tamaño máximo y formato
+- ✅ **Soporte Drag & Drop**: Opcional, arrastra archivos directamente al componente
+- ✅ **Variante Avatar**: Estilo especial para avatares de usuario (como AdminCard)
+- ✅ **Reset Opcional**: Botón para restaurar la multimedia original
+- ✅ **Aspect Ratio**: Soporte para diferentes proporciones (1:1, 16:9, 9:16)
+- ✅ **TypeScript**: Completamente tipado con interfaces dedicadas
+- ✅ **Responsive**: Se adapta a diferentes tamaños de pantalla
+
+## 📦 Instalación
+
+```bash
+# El componente ya está incluido en el proyecto
+import MultimediaUpdater from '@/components/FileUploader/MultimediaUpdater';
+```
+
+## 🎯 Uso Básico
+
+```tsx
+import React, { useState } from 'react';
+import MultimediaUpdater from '@/components/FileUploader/MultimediaUpdater';
+
+export default function ProfileUpdate() {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileChange = (file: File | null) => {
+    setSelectedFile(file);
+    console.log('Archivo seleccionado:', file);
+  };
+
+  return (
+    <div className="max-w-md mx-auto p-6">
+      <h2 className="text-xl font-semibold mb-4">Actualizar Foto de Perfil</h2>
+
+      <MultimediaUpdater
+        currentUrl="https://example.com/current-avatar.jpg"
+        currentType="image"
+        onFileChange={handleFileChange}
+        buttonText="Cambiar foto"
+        acceptedTypes={['image/*']}
+        maxSize={2}
+        variant="avatar"
+        showReset={true}
+      />
+
+      {selectedFile && (
+        <div className="mt-4 p-4 bg-green-50 rounded-lg">
+          <p className="text-green-800">
+            ✓ Nuevo archivo seleccionado: {selectedFile.name}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## 🔧 API Reference
+
+### Props del MultimediaUpdater
+
+| Prop | Tipo | Default | Descripción |
+|------|------|---------|-------------|
+| `currentUrl` | `string` | - | URL de la multimedia actual a mostrar |
+| `currentType` | `'image' \| 'video'` | - | Tipo de la multimedia actual |
+| `onFileChange` | `(file: File \| null) => void` | - | Callback cuando cambia el archivo seleccionado |
+| `buttonText` | `string` | `"Actualizar multimedia"` | Texto del botón de selección |
+| `acceptedTypes` | `string[]` | `['image/*', 'video/*']` | Tipos MIME aceptados |
+| `maxSize` | `number` | `5` | Tamaño máximo en MB |
+| `aspectRatio` | `'1:1' \| '16:9' \| '9:16'` | `'1:1'` | Proporción del contenedor de preview |
+| `variant` | `'default' \| 'avatar'` | `'default'` | Estilo visual (avatar usa border-4 border-secondary rounded-full) |
+| `showReset` | `boolean` | `false` | Mostrar botón de reset para restaurar original |
+| `allowDragDrop` | `boolean` | `false` | Habilitar arrastrar y soltar archivos |
+| `className` | `string` | `''` | Clases CSS adicionales |
+
+## 🎯 Casos de Uso Comunes
+
+### Actualización de Avatar de Usuario
+
+```tsx
+import React, { useState } from 'react';
+import MultimediaUpdater from '@/components/FileUploader/MultimediaUpdater';
+import { Button } from '@/components/Button';
+
+export default function UserAvatarUpdate() {
+  const [newAvatar, setNewAvatar] = useState<File | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const handleAvatarChange = (file: File | null) => {
+    setNewAvatar(file);
+  };
+
+  const handleUpdate = async () => {
+    if (!newAvatar) return;
+
+    setIsUpdating(true);
+    try {
+      const formData = new FormData();
+      formData.append('avatar', newAvatar);
+
+      const response = await fetch('/api/user/avatar', {
+        method: 'PUT',
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert('Avatar actualizado exitosamente');
+        setNewAvatar(null);
+        // Recargar la página o actualizar el estado global
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error al actualizar avatar:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  return (
+    <div className="max-w-sm mx-auto p-6 space-y-4">
+      <h2 className="text-lg font-semibold text-center">Cambiar Avatar</h2>
+
+      <MultimediaUpdater
+        currentUrl="/api/user/current-avatar"
+        currentType="image"
+        onFileChange={handleAvatarChange}
+        buttonText="Seleccionar nueva foto"
+        acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
+        maxSize={1}
+        variant="avatar"
+        showReset={true}
+      />
+
+      <Button
+        variant="primary"
+        onClick={handleUpdate}
+        disabled={!newAvatar || isUpdating}
+        className="w-full"
+      >
+        {isUpdating ? 'Actualizando...' : 'Actualizar Avatar'}
+      </Button>
+    </div>
+  );
+}
+```
+
+### Edición de Video de Producto
+
+```tsx
+import React, { useState } from 'react';
+import MultimediaUpdater from '@/components/FileUploader/MultimediaUpdater';
+
+interface ProductVideoUpdateProps {
+  productId: string;
+  currentVideoUrl?: string;
+}
+
+export default function ProductVideoUpdate({ productId, currentVideoUrl }: ProductVideoUpdateProps) {
+  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+
+  const handleVideoChange = (file: File | null) => {
+    setSelectedVideo(file);
+  };
+
+  const handleSave = async () => {
+    if (!selectedVideo) return;
+
+    const formData = new FormData();
+    formData.append('video', selectedVideo);
+    formData.append('productId', productId);
+
+    try {
+      const response = await fetch('/api/products/video', {
+        method: 'PUT',
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert('Video actualizado exitosamente');
+        setSelectedVideo(null);
+      }
+    } catch (error) {
+      console.error('Error al actualizar video:', error);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <h3 className="text-lg font-medium">Video del Producto</h3>
+
+      <MultimediaUpdater
+        currentUrl={currentVideoUrl}
+        currentType="video"
+        onFileChange={handleVideoChange}
+        buttonText="Cambiar video del producto"
+        acceptedTypes={['video/mp4', 'video/webm', 'video/ogg']}
+        maxSize={50}
+        aspectRatio="16:9"
+        allowDragDrop={true}
+      />
+
+      {selectedVideo && (
+        <div className="flex gap-2">
+          <Button variant="primary" onClick={handleSave}>
+            Guardar Cambios
+          </Button>
+          <Button variant="outlined" onClick={() => setSelectedVideo(null)}>
+            Cancelar
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## 📚 Ejemplos Completos
+
+Para ver ejemplos completos de uso, revisa:
+
+- `app/components/FileUploader/MultimediaUpdaterExample.tsx` - Showcase completo con diferentes configuraciones
+- `app/components/BaseForm/` - Ejemplos de integración con formularios
+- `app/backOffice/users/administrators/` - Uso en formularios de administración
+
+## 🤝 Contribución
+
+Para contribuir al componente MultimediaUpdater:
+
+1. Mantén la compatibilidad con la API existente
+2. Agrega nuevas validaciones manteniendo la simplicidad
+3. Incluye ejemplos de uso para nuevas características
+4. Actualiza esta documentación cuando agregues nuevas funcionalidades
+5. Asegura que el manejo de memoria sea eficiente (URLs de object)
+6. Prueba el componente con diferentes tipos y tamaños de archivo
+7. Verifica la accesibilidad con herramientas como WAVE o axe

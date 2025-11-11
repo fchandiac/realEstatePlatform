@@ -96,6 +96,7 @@ const AdminCard: React.FC<AdminCardProps> = ({ admin, onEdit, onDelete }) => {
             aria-label={`Editar ${fullName}`}
             title="Editar"
             onClick={() => onEdit?.(admin)}
+            className='text-secondary'
           />
 
           <IconButton
@@ -105,6 +106,7 @@ const AdminCard: React.FC<AdminCardProps> = ({ admin, onEdit, onDelete }) => {
             aria-label={`Eliminar ${fullName}`}
             title="Eliminar"
             onClick={() => onDelete?.(admin)}
+               className='text-secondary'
           />
         </div>
       </article>

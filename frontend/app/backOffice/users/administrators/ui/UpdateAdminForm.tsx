@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { CreateBaseForm, BaseFormField } from '@/components/BaseForm';
-import { updateUser, setUserStatus } from '@/app/actions/users';
+import React, { useState } from 'react';
+import { UpdateBaseForm, BaseUpdateFormField } from '@/components/BaseForm';
+import { updateUser, setUserStatus, updateUserAvatar } from '@/app/actions/users';
 import type { AdministratorType } from './types';
 
 interface UpdateAdminFormProps {
@@ -18,63 +18,76 @@ const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 	onError,
 	onClose,
 }) => {
-	const [formData, setFormData] = useState<Record<string, any>>({});
 	const [loading, setLoading] = useState(false);
 
 	// Initialize form with administrator data
-	useEffect(() => {
-		if (administrator) {
-			const statusMap: Record<string, number> = {
-				'ACTIVE': 1,
-				'INACTIVE': 2,
-			};
-			setFormData({
-				username: administrator.username || '',
-				email: administrator.email || '',
-				firstName: administrator.personalInfo?.firstName || '',
-				lastName: administrator.personalInfo?.lastName || '',
-				phone: administrator.personalInfo?.phone || '',
-				status: statusMap[administrator.status] || 1,
-			});
-		}
-	}, [administrator]);
+	const getInitialState = () => {
+		if (!administrator) return {};
 
-	const handleFieldChange = (field: string, value: any) => {
-		setFormData(prev => ({ ...prev, [field]: value }));
+		const statusMap: Record<string, number> = {
+			'ACTIVE': 1,
+			'INACTIVE': 2,
+		};
+
+		return {
+			username: administrator.username || '',
+			email: administrator.email || '',
+			firstName: administrator.personalInfo?.firstName || '',
+			lastName: administrator.personalInfo?.lastName || '',
+			phone: administrator.personalInfo?.phone || '',
+			status: statusMap[administrator.status] || 1,
+			avatar: administrator.personalInfo?.avatarUrl || '',
+			avatarFile: null,
+		};
 	};
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (values: Record<string, any>) => {
 		if (!administrator) return;
 
 		setLoading(true);
 		try {
 			// Basic validations
-			if (!formData.username?.trim()) {
+			if (!values.username?.trim()) {
 				onError('El nombre de usuario es obligatorio');
 				setLoading(false);
 				return;
 			}
-			if (!formData.email?.trim()) {
+			if (!values.email?.trim()) {
 				onError('El email es obligatorio');
 				setLoading(false);
 				return;
+			}
+
+			// Upload avatar if changed
+			let avatarUrl = administrator.personalInfo?.avatarUrl;
+			if (values.avatarFile) {
+				const avatarFormData = new FormData();
+				avatarFormData.append('file', values.avatarFile);
+				const avatarResult = await updateUserAvatar(administrator.id, avatarFormData);
+				if (!avatarResult.success) {
+					onError(avatarResult.error || 'Error al actualizar el avatar');
+					setLoading(false);
+					return;
+				}
+				avatarUrl = avatarResult.data?.avatarUrl;
 			}
 
 			const statusMap: Record<number, string> = {
 				1: 'ACTIVE',
 				2: 'INACTIVE',
 			};
-			const newStatus = statusMap[formData.status] || 'ACTIVE';
+			const newStatus = statusMap[values.status] || 'ACTIVE';
 			const currentStatus = administrator.status;
 
 			// Update user data (excluding status)
 			const updateData = {
-				username: formData.username.trim(),
-				email: formData.email.trim(),
+				username: values.username.trim(),
+				email: values.email.trim(),
 				personalInfo: {
-					firstName: formData.firstName?.trim() || undefined,
-					lastName: formData.lastName?.trim() || undefined,
-					phone: formData.phone?.trim() || undefined,
+					firstName: values.firstName?.trim() || undefined,
+					lastName: values.lastName?.trim() || undefined,
+					phone: values.phone?.trim() || undefined,
+					avatarUrl: avatarUrl || undefined,
 				},
 			};
 
@@ -103,7 +116,7 @@ const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 		}
 	};
 
-	const fields: BaseFormField[] = [
+	const fields: BaseUpdateFormField[] = [
 		{
 			name: 'username',
 			label: 'Nombre de usuario',
@@ -132,6 +145,12 @@ const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 			type: 'text',
 		},
 		{
+			name: 'avatar',
+			label: 'Avatar',
+			type: 'avatar',
+			currentUrl: administrator?.personalInfo?.avatarUrl || undefined,
+		},
+		{
 			name: 'status',
 			label: 'Estado',
 			type: 'select',
@@ -144,10 +163,9 @@ const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 	];
 
 	return (
-		<CreateBaseForm
+		<UpdateBaseForm
 			fields={fields}
-			values={formData}
-			onChange={handleFieldChange}
+			initialState={getInitialState()}
 			onSubmit={handleSubmit}
 			isSubmitting={loading}
 			submitLabel="Guardar Cambios"

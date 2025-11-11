@@ -1,33 +1,3 @@
-/**
- * UpdateBaseForm
- *
- * Formulario flexible para edición, usando componentes personalizados.
- *
- * Props:
- * - fields: Array de objetos BaseUpdateFormField que definen cada campo.
- * - initialState: Objeto con los valores iniciales.
- * - onSubmit: Función que recibe los valores actualizados.
- * - isSubmitting: (opcional) boolean para mostrar loading.
- * - errors: (opcional) array de strings para mostrar errores.
- * - title: (opcional) título del formulario.
- */
-
-// Ejemplo de uso:
-// import UpdateBaseForm, { BaseUpdateFormField } from './BaseForm/UpdateBaseForm';
-// const fields: BaseUpdateFormField[] = [
-//   { name: 'nombre', label: 'Nombre', type: 'text', required: true },
-//   { name: 'opcion', label: 'Opción', type: 'autocomplete', options: [{ id: 1, name: 'A' }, { id: 2, name: 'B' }] },
-//   { name: 'activo', label: 'Activo', type: 'switch' },
-// ];
-// const [isSubmitting, setIsSubmitting] = useState(false);
-// <UpdateBaseForm
-//   fields={fields}
-//   initialState={{ nombre: '', opcion: null, activo: false }}
-//   onSubmit={values => { /* lógica de actualización */ }}
-//   isSubmitting={isSubmitting}
-//   errors={[]}
-//   title="Ejemplo"
-// />
 
 import React, { useState, useEffect } from "react";
 import { TextField } from "../TextField/TextField";
@@ -40,6 +10,7 @@ import Switch from "../Switch/Switch";
 import Select from "../Select/Select";
 import RangeSlider from "../RangeSlider/RangeSlider";
 import UpdateLocationPicker from "../LocationPicker/UpdateLocationPickerWrapper";
+import MultimediaUpdater from "../FileUploader/MultimediaUpdater";
 
 export interface BaseUpdateFormField {
 	name: string;
@@ -56,7 +27,10 @@ export interface BaseUpdateFormField {
 		| "range"
 		| "location"
 		| "dni"
-		| "currency";
+		| "currency"
+		| "image"
+		| "video"
+		| "avatar";
 	required?: boolean;
 	options?: Option[];
 	multiline?: boolean;
@@ -67,6 +41,13 @@ export interface BaseUpdateFormField {
 	endIcon?: string;
 	min?: number;
 	max?: number;
+	// Props para campos multimedia
+	currentUrl?: string;
+	currentType?: 'image' | 'video';
+	acceptedTypes?: string[];
+	maxSize?: number;
+	aspectRatio?: '1:1' | '16:9' | '9:16';
+	buttonText?: string;
 }
 
 export interface UpdateBaseFormProps {
@@ -164,6 +145,27 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 					checked={Boolean(values[field.name])}
 					onChange={val => handleChange(field.name, val)}
 					label={field.label}
+				/>
+			) : field.type === "image" || field.type === "video" || field.type === "avatar" ? (
+				<MultimediaUpdater
+					currentUrl={field.currentUrl || values[field.name]}
+					currentType={field.currentType || (field.type === 'video' ? 'video' : 'image')}
+					variant={field.type === 'avatar' ? 'avatar' : 'default'}
+					acceptedTypes={field.acceptedTypes || (field.type === 'video' ? ['video/*'] : ['image/*'])}
+					maxSize={field.maxSize || (field.type === 'avatar' ? 2 : 5)}
+					aspectRatio={field.aspectRatio || (field.type === 'avatar' ? '1:1' : '16:9')}
+					buttonText={field.buttonText || (field.type === 'avatar' ? 'Cambiar avatar' : field.type === 'video' ? 'Actualizar video' : 'Actualizar imagen')}
+					onFileChange={(file) => {
+						// Actualizar el estado con el archivo seleccionado (para upload en submit)
+						handleChange(`${field.name}File`, file);
+						// Opcional: Generar preview URL
+						if (file) {
+							const previewUrl = URL.createObjectURL(file);
+							handleChange(field.name, previewUrl);
+						} else {
+							handleChange(field.name, field.currentUrl || '');
+						}
+					}}
 				/>
 			) : (
 				<TextField
