@@ -48,9 +48,9 @@ const DeleteAdminForm: React.FC<DeleteAdminFormProps> = ({
 
 	return (
 		<DeleteBaseForm
-			title="Eliminar Administrador"
 			message={`¿Estás seguro de que quieres eliminar al administrador "${fullName}"?`}
 			subtitle="Esta acción no se puede deshacer."
+            title=''
 			isSubmitting={loading}
 			submitLabel="Eliminar"
 			onSubmit={handleSubmit}
