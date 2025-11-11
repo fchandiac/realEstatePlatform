@@ -4,6 +4,14 @@ import { RegionEnum } from '../../common/regions/regions.enum';
 
 @Controller('config')
 export class ConfigController {
+  @Get('regiones')
+  getRegiones() {
+    return Object.entries(RegionEnum).map(([key, value]) => ({
+      id: value,
+      label: value
+    }));
+  }
+
   @Get('comunas')
   getComunasByRegion(@Query('region') region: RegionEnum) {
     console.log('Received region:', region); // Depurar valor recibido

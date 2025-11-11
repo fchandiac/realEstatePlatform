@@ -58,14 +58,6 @@ export default function FullProperty({ propertyId, onSave, open, onClose }: Full
                 ))}
               </div>
             </div>
-
-            {/* Contenido con loading */}
-            <main className="flex-1 overflow-y-auto bg-background flex items-center justify-center">
-              <div className="flex flex-col items-center space-y-4">
-                <DotProgress size={24} />
-                <p className="text-sm text-muted-foreground">Cargando propiedad...</p>
-              </div>
-            </main>
           </div>
         </div>
       </Dialog>

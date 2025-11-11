@@ -31,11 +31,11 @@ export default function BasicSection({
       isFeatured: property.isFeatured || false,
     };
 
-    onSave();
+    await onSave();
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
         {/* Título - ancho completo */}
         <div className="w-full">
           <TextField 

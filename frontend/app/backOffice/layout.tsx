@@ -14,26 +14,26 @@ const menuItems = [
     label: 'Propiedades',
     children: [
       { label: 'Venta', url: '/backOffice/properties/sales' },
-      { label: 'Arriendo' },
+      // { label: 'Arriendo' },
       { label: 'Tipos de propiedad', url: '/backOffice/properties/propertyTypes' },
-      { label: 'Solicitudes de publicación' },
-      { label: 'Valoraciones' },
+      // { label: 'Solicitudes de publicación' },
+      // { label: 'Valoraciones' },
     ],
   },
-  {
-    label: 'Contratos',
-    children: [
-      { label: 'Contratos' },
-      { label: 'Personas' },
-      { label: 'Documentos' },
-    ],
-  },
+  // {
+  //   label: 'Contratos',
+  //   children: [
+  //     { label: 'Contratos' },
+  //     { label: 'Personas' },
+  //     { label: 'Documentos' },
+  //   ],
+  // },
   {
     label: 'Usuarios',
     children: [
       { label: 'Administradores', url: '/backOffice/users/administrators' },
-      { label: 'Agentes' },
-      { label: 'Comunidad' },
+      // { label: 'Agentes' },
+      // { label: 'Comunidad' },
     ],
   },
   {
@@ -47,9 +47,9 @@ const menuItems = [
       { label: 'Identidad de la empresa', url: '/backOffice/cms/identity' },
     ],
   },
-  { label: 'Reportes' },
-  { label: 'Auditoría' },
-  { label: 'Notificaciones' },
+  // { label: 'Reportes' },
+  // { label: 'Auditoría' },
+  // { label: 'Notificaciones' },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -84,7 +84,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <TopBar
         title={currentTitle}
         menuItems={menuItems}
-        showNotifications={true}
+        showNotifications={false}
         notificationCount={9}
         onNotificationsClick={() => {}}
         showUserButton={true}

@@ -1676,6 +1676,95 @@ export class PropertyService {
     }
   }
 
+  /**
+   * Crea una nueva propiedad en estado REQUEST desde el portal
+   * Se registra en postRequest para revisión de admins
+   */
+  async createPropertyRequest(
+    createPropertyRequestDto: any,
+    userId: string,
+  ): Promise<Property> {
+    const {
+      title,
+      description,
+      propertyTypeId,
+      operationType,
+      builtSquareMeters,
+      landSquareMeters,
+      bedrooms,
+      bathrooms,
+      parkingSpaces,
+      floors,
+      constructionYear,
+      price,
+      currencyPrice,
+      region,
+      city,
+      address,
+      contactName,
+      contactPhone,
+      contactEmail,
+      multimediaIds,
+    } = createPropertyRequestDto;
+
+    console.log('📝 [createPropertyRequest] Iniciando creación de solicitud de propiedad');
+
+    // Crear la propiedad en estado REQUEST
+    const property = this.propertyRepository.create({
+      title,
+      description,
+      propertyTypeId,
+      operationType: operationType === 'SALE' ? PropertyOperationType.SALE : PropertyOperationType.RENT,
+      status: PropertyStatus.REQUEST, // Estado inicial: solicitud
+      price: parseFloat(price),
+      currencyPrice: currencyPrice as CurrencyPriceEnum,
+      builtSquareMeters: builtSquareMeters || null,
+      landSquareMeters: landSquareMeters || null,
+      bedrooms: bedrooms || null,
+      bathrooms: bathrooms || null,
+      parkingSpaces: parkingSpaces || null,
+      floors: floors || null,
+      constructionYear: constructionYear || null,
+      state: region, // región
+      city, // comuna
+      address,
+      creatorUserId: userId,
+      changeHistory: [
+        {
+          timestamp: new Date(),
+          changedBy: userId,
+          field: 'status',
+          previousValue: null,
+          newValue: PropertyStatus.REQUEST,
+        },
+      ],
+      postRequest: {
+        requestedAt: new Date(),
+        requestedBy: userId,
+        contactName,
+        contactEmail,
+        contactPhone,
+        status: 'PENDING' as any,
+      },
+      views: [],
+      leads: [],
+    });
+
+    const savedProperty = await this.propertyRepository.save(property);
+    console.log('✅ [createPropertyRequest] Propiedad creada:', savedProperty.id);
+
+    // Asociar multimedia si se proporcionó
+    if (multimediaIds && multimediaIds.length > 0) {
+      console.log('📸 [createPropertyRequest] Asociando', multimediaIds.length, 'archivos multimedia');
+      // TODO: Asociar multimedia a la propiedad
+    }
+
+    // TODO: Enviar notificación a admins para revisar la solicitud
+    console.log('📧 [createPropertyRequest] TODO: Notificar a admins');
+
+    return this.propertyRepository.findOneBy({ id: savedProperty.id }) as Promise<Property>;
+  }
+
 }
 
 function toInt(v: any): number { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }

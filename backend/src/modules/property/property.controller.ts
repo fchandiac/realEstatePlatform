@@ -477,6 +477,20 @@ export class PropertyController {
     return this.propertyService.getPublishedPropertiesFiltered(filters);
   }
 
+  /**
+   * Crear una solicitud de publicación de propiedad desde el portal
+   */
+  @Post('request')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Property request created from portal')
+  async createPropertyRequest(
+    @Body(ValidationPipe) dto: any,
+    @Req() req: any,
+  ): Promise<Property> {
+    const userId = this.extractUserId(req);
+    return this.propertyService.createPropertyRequest(dto, userId);
+  }
+
   private extractUserId(req: any): string {
     const user = req.user as any;
     if (user?.id) return user.id;

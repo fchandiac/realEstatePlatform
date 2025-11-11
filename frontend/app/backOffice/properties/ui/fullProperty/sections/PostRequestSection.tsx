@@ -15,20 +15,26 @@ export default function PostRequestSection({ property }: PostRequestSectionProps
           readOnly 
         />
         <TextField 
+          label="Estado de la solicitud"
+          value={property.postRequest?.status || 'Estado no disponible'}
+          onChange={() => {}}
+          readOnly
+        />
+        <TextField 
           label="Nombre Contacto" 
-          value={property.postRequest?.contactInfo?.name || ''} 
+          value={property.postRequest?.contactName || ''} 
           onChange={() => {}} 
           readOnly 
         />
         <TextField 
           label="Email Contacto" 
-          value={property.postRequest?.contactInfo?.email || ''} 
+          value={property.postRequest?.contactEmail || ''} 
           onChange={() => {}} 
           readOnly 
         />
         <TextField 
           label="Teléfono Contacto" 
-          value={property.postRequest?.contactInfo?.phone || ''} 
+          value={property.postRequest?.contactPhone || ''} 
           onChange={() => {}} 
           readOnly 
         />

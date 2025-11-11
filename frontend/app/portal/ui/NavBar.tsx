@@ -99,11 +99,11 @@ export default function NavBar() {
             Publica tu propiedad
           </button>
         </li>
-        <li>
+        {/* <li>
           <button onClick={() => handleNavigation('/portal/valuation')} className="text-sm font-medium text-neutral-900 hover:text-primary">
             Valoriza tu propiedad
           </button>
-        </li>
+        </li> */}
         <li className="hidden sm:block">
           <button onClick={() => handleNavigation('/portal/blog')} className="text-sm font-medium text-neutral-900 hover:text-primary">
             Blog

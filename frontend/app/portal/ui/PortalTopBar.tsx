@@ -74,8 +74,8 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
         </span>
       </div>
 
-      {/* Centro: contacto y teléfono */}
-      <div className="hidden md:flex flex-col items-center justify-center flex-1">
+  {/* Centro: contacto y teléfono */}
+  <div className="hidden lg:flex flex-col items-center justify-center flex-1">
         <div className="flex items-center gap-6 justify-center">
           <span className="flex items-center gap-1 text-xs text-foreground whitespace-nowrap">
             <span className="material-symbols-outlined text-base">mail</span>
@@ -98,10 +98,10 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
           <Button variant="text" className="text-xs text-foreground px-2" onClick={() => setLoginDialogOpen(true)}>
             Ingresar
           </Button>
-          <div className="h-6 w-px bg-foreground mx-2" />
-          <Button variant="text" className="text-xs text-foreground px-2" onClick={() => setRegisterDialogOpen(true)}>
+          {/* <div className="h-6 w-px bg-foreground mx-2" /> */}
+          {/* <Button variant="text" className="text-xs text-foreground px-2" onClick={() => setRegisterDialogOpen(true)}>
             Registrarse
-          </Button>
+          </Button> */}
         </div>
       </div>
 

@@ -3,6 +3,10 @@ import { PostRequestStatus } from '../enums/post-request-status.enum';
 export interface PostRequest {
   requestedAt: Date;
   requestedBy: string; // User ID of the requester
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  message?: string;
   notes?: string;
   status: PostRequestStatus;
 }

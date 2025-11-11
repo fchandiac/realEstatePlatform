@@ -156,11 +156,9 @@ export class SeederFactory {
       // propertyType will be assigned in the seeder after property types are created
       postRequest: faker.helpers.maybe(() => ({
         message: faker.lorem.paragraph(),
-        contactInfo: {
-          name: this.getRandomLatinName(),
-          email: faker.internet.email(),
-          phone: '+56 9 ' + faker.string.numeric(8)
-        },
+        contactName: this.getRandomLatinName(),
+        contactEmail: faker.internet.email(),
+        contactPhone: '+56 9 ' + faker.string.numeric(8),
         requestedAt: faker.date.recent()
       }), { probability: 0.3 }), // Some properties have post requests
       isFeatured: faker.helpers.maybe(() => true, { probability: 0.2 }), // Some properties are featured

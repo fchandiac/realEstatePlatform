@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import IconButton from '@/components/IconButton/IconButton';
 import FullProperty from '../../ui/fullProperty/FullProperty';
 
@@ -7,7 +7,23 @@ interface SaleMoreButtonProps {
 }
 
 const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
-  const [open, setOpen] = useState(false);
+  const [openDialogs, setOpenDialogs] = useState<Record<string, boolean>>({});
+
+  const isOpen = openDialogs[property.id] || false;
+
+  const handleOpen = useCallback(() => {
+    setOpenDialogs(prev => ({
+      ...prev,
+      [property.id]: true
+    }));
+  }, [property.id]);
+
+  const handleClose = useCallback(() => {
+    setOpenDialogs(prev => ({
+      ...prev,
+      [property.id]: false
+    }));
+  }, [property.id]);
 
   return (
     <div className="flex-shrink-0 w-fit">
@@ -15,7 +31,7 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
         icon="more_horiz"
         variant="text"
         ariaLabel="Ver más detalles"
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
         data-test-id="sale-more-btn"
         style={{
           minWidth: 32,
@@ -25,11 +41,11 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
           padding: 4
         }}
       />
-      {open && (
+      {isOpen && (
         <FullProperty
           propertyId={property.id}
-          open={open}
-          onClose={() => setOpen(false)}
+          open={isOpen}
+          onClose={handleClose}
         />
       )}
     </div>

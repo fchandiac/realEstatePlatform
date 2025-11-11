@@ -51,13 +51,14 @@ export interface LeadEntry {
 }
 
 export interface PostRequest {
-  message: string;
-  contactInfo: {
-    name: string;
-    email: string;
-    phone: string;
-  };
-  requestedAt: string;
+  requestedAt?: string;
+  requestedBy?: string;
+  contactName?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  message?: string;
+  notes?: string;
+  status?: string;
 }
 
 export interface Property {

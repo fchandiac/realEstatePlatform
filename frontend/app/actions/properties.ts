@@ -138,6 +138,18 @@ export async function getSalePropertiesCountFeatured(): Promise<number> {
   return data.total;
 }
 
+export interface PropertyTypeWithFeatures {
+  id: string;
+  name: string;
+  hasBedrooms: boolean;
+  hasBathrooms: boolean;
+  hasBuiltSquareMeters: boolean;
+  hasLandSquareMeters: boolean;
+  hasParkingSpaces: boolean;
+  hasFloors: boolean;
+  hasConstructionYear: boolean;
+}
+
 export async function listPropertyTypes(): Promise<{
   success: boolean;
   data?: Array<{ id: string; name: string }>;
@@ -174,6 +186,172 @@ export async function listPropertyTypes(): Promise<{
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Unknown error' 
+    };
+  }
+}
+
+export async function getPropertyTypeCharacteristics(id: string): Promise<{
+  success: boolean;
+  data?: PropertyTypeWithFeatures;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' };
+    }
+
+    const response = await fetch(`${env.backendApiUrl}/property-types/${id}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `HTTP ${response.status}`,
+      };
+    }
+
+    const data = await response.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error fetching property type characteristics:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+export interface PublishPropertyPayload {
+  title: string;
+  propertyTypeId: string;
+  operationType: string;
+  builtSquareMeters?: number;
+  landSquareMeters?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  parkingSpaces?: number;
+  floors?: number;
+  constructionYear?: number;
+  price: string;
+  currencyPrice: string;
+  region: string;
+  city: string;
+  address: string;
+  coordinates?: { latitude: number; longitude: number };
+  contactName: string;
+  contactPhone: string;
+  contactEmail: string;
+  multimediaFiles?: File[];
+}
+
+export async function publishProperty(
+  payload: PublishPropertyPayload,
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.accessToken) {
+      return { success: false, error: 'No autorizado' };
+    }
+
+    console.log('[publishProperty] Iniciando publicación de propiedad');
+
+    // Paso 1: Crear la propiedad SIN multimedia primero
+    console.log('[publishProperty] Creando solicitud de propiedad');
+    
+    const response = await fetch(
+      `${env.backendApiUrl}/properties/request`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.accessToken}`,
+        },
+        body: JSON.stringify({
+          title: payload.title,
+          propertyTypeId: payload.propertyTypeId,
+          operationType: payload.operationType || 'SALE',
+          builtSquareMeters: payload.builtSquareMeters,
+          landSquareMeters: payload.landSquareMeters,
+          bedrooms: payload.bedrooms,
+          bathrooms: payload.bathrooms,
+          parkingSpaces: payload.parkingSpaces,
+          floors: payload.floors,
+          constructionYear: payload.constructionYear,
+          price: payload.price,
+          currencyPrice: payload.currencyPrice,
+          region: payload.region,
+          city: payload.city,
+          address: payload.address,
+          coordinates: payload.coordinates,
+          contactName: payload.contactName,
+          contactPhone: payload.contactPhone,
+          contactEmail: payload.contactEmail,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => null);
+      console.error('[publishProperty] Error al crear propiedad:', error);
+      return {
+        success: false,
+        error: error?.message || 'Error al crear la solicitud',
+      };
+    }
+
+    const propertyData = await response.json();
+    const propertyId = propertyData.id;
+    console.log('[publishProperty] Propiedad creada:', propertyId);
+
+    // Paso 2: Subir multimedia si existen archivos
+    if (payload.multimediaFiles && payload.multimediaFiles.length > 0) {
+      console.log('[publishProperty] Subiendo', payload.multimediaFiles.length, 'imágenes');
+      
+      const formData = new FormData();
+      payload.multimediaFiles.forEach((file) => {
+        formData.append('files', file);
+      });
+
+      const uploadResponse = await fetch(
+        `${env.backendApiUrl}/properties/${propertyId}/multimedia`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${session.accessToken}`,
+          },
+          body: formData,
+        },
+      );
+
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json().catch(() => null);
+        console.error('[publishProperty] Error al subir imágenes:', errorData);
+        // No retornamos error aquí, la propiedad ya fue creada
+        // Solo logueamos el error
+      } else {
+        const uploadedData = await uploadResponse.json();
+        console.log('[publishProperty] Imágenes subidas:', uploadedData);
+      }
+    }
+
+    console.log('[publishProperty] ✅ Propiedad publicada:', propertyId);
+    return { success: true, data: propertyData };
+  } catch (error) {
+    console.error('[publishProperty] Error:', error);
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Error al publicar la propiedad',
     };
   }
 }
