@@ -12,6 +12,17 @@ import RangeSlider from "../RangeSlider/RangeSlider";
 import UpdateLocationPicker from "../LocationPicker/UpdateLocationPickerWrapper";
 import MultimediaUpdater from "../FileUploader/MultimediaUpdater";
 
+export interface BaseUpdateFormFieldGroup {
+	id?: string;
+	title?: string;
+	subtitle?: string;
+	columns?: number;
+	gap?: number;
+	fields: BaseUpdateFormField[];
+}
+
+type UpdateBaseFormFields = BaseUpdateFormField[] | BaseUpdateFormFieldGroup[];
+
 export interface BaseUpdateFormField {
 	name: string;
 	label: string;
@@ -48,10 +59,11 @@ export interface BaseUpdateFormField {
 	maxSize?: number;
 	aspectRatio?: '1:1' | '16:9' | '9:16';
 	buttonText?: string;
+	labelText?: string;
 }
 
 export interface UpdateBaseFormProps {
-	fields: BaseUpdateFormField[];
+	fields: UpdateBaseFormFields;
 	initialState: Record<string, any>;
 	onSubmit: (values: Record<string, any>) => void;
 	isSubmitting?: boolean;
@@ -66,6 +78,10 @@ export interface UpdateBaseFormProps {
 	onClose?: () => void;
 }
 
+
+const isFieldGroupArray = (items: UpdateBaseFormFields): items is BaseUpdateFormFieldGroup[] => {
+	return Array.isArray(items) && items.length > 0 && Boolean((items[0] as BaseUpdateFormFieldGroup).fields);
+};
 
 const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 	fields,
@@ -98,20 +114,9 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 		onSubmit(values);
 	};
 
-	// Agrupar campos por columna
-	const groupFieldsByColumns = (fields: BaseUpdateFormField[], columns: number) => {
-		const columnGroups: BaseUpdateFormField[][] = Array.from({ length: columns }, () => []);
-		fields.forEach((field) => {
-			const colIndex = (field as any).col ? Math.max(0, Math.min((field as any).col - 1, columns - 1)) : 0;
-			columnGroups[colIndex].push(field);
-		});
-		return columnGroups;
-	};
-	const columnGroups = groupFieldsByColumns(fields, columns);
-
 	// Renderizar campo individual
 	const renderField = (field: BaseUpdateFormField) => (
-		<div key={field.name} className="mb-2">
+		<>
 			{field.type === "location" ? (
 				<UpdateLocationPicker
 					initialCoordinates={values[field.name]}
@@ -155,6 +160,7 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 					maxSize={field.maxSize || (field.type === 'avatar' ? 2 : 5)}
 					aspectRatio={field.aspectRatio || (field.type === 'avatar' ? '1:1' : '16:9')}
 					buttonText={field.buttonText || (field.type === 'avatar' ? 'Cambiar avatar' : field.type === 'video' ? 'Actualizar video' : 'Actualizar imagen')}
+					labelText={field.labelText ?? field.label}
 					onFileChange={(file) => {
 						// Actualizar el estado con el archivo seleccionado (para upload en submit)
 						handleChange(`${field.name}File`, file);
@@ -178,16 +184,38 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 					startIcon={field.startIcon}
 					endIcon={field.endIcon}
 					required={field.required}
+					disabled={field.disabled}
 				/>
 			)}
-		</div>
+		</>
 	);
+
+	const resolvedGroups = React.useMemo(() => {
+		if (isFieldGroupArray(fields)) {
+			return fields.map((group, index) => ({
+				id: group.id ?? `group-${index}`,
+				title: group.title,
+				subtitle: group.subtitle,
+				columns: Math.max(1, group.columns ?? columns ?? 1),
+				gap: group.gap ?? 16,
+				fields: group.fields,
+			}));
+		}
+
+		return [{
+			id: "group-default",
+			title: undefined,
+			subtitle: undefined,
+			columns: Math.max(1, columns ?? 1),
+			gap: 16,
+			fields: fields as BaseUpdateFormField[],
+		}];
+	}, [fields, columns]);
 
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className={`w-full ${columns > 1 ? 'grid' : 'flex flex-col'} gap-2`}
-			style={columns > 1 ? { gridTemplateColumns: `repeat(${columns}, 1fr)`, gap: '1rem' } : {}}
+			className="w-full flex flex-col gap-4"
 			{...(dataTestId ? { 'data-test-id': dataTestId } : {})}
 		>
 			{title && title !== "" && (
@@ -196,16 +224,27 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 			{subtitle && subtitle !== "" && (
 				<div className="subtitle p-1 pt-0 w-full mb-3 leading-snug">{subtitle}</div>
 			)}
-			{columns === 1 ? (
-				fields.map(renderField)
-			) : (
-				columnGroups.map((columnFields, columnIndex) => (
-					<div key={columnIndex} className="flex flex-col gap-2 w-full">
-						{columnFields.map(renderField)}
+			{resolvedGroups.map((group) => {
+				const columnCount = Math.max(1, group.columns);
+				const gapValue = typeof group.gap === "number" ? `${group.gap}px` : group.gap;
+				const containerClass = columnCount > 1 ? "grid" : "flex flex-col";
+				const containerStyle = columnCount > 1 ? { gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`, gap: gapValue ?? "1rem" } : { gap: gapValue ?? "0.5rem" };
+
+				return (
+					<div key={group.id} className="flex flex-col gap-3 w-full">
+						{group.title && <h4 className="text-base font-semibold text-gray-900">{group.title}</h4>}
+						{group.subtitle && <p className="text-sm text-gray-600">{group.subtitle}</p>}
+						<div className={`${containerClass}`} style={containerStyle as React.CSSProperties}>
+							{group.fields.map((field, index) => (
+								<div key={`${group.id}-${field.name}-${index}`} className="mb-2">
+									{renderField(field)}
+								</div>
+							))}
+						</div>
 					</div>
-				))
-			)}
-			<div className="col-span-full flex justify-between mt-4">
+				);
+			})}
+			<div className="flex justify-between mt-4 w-full">
 				<div>
 					{showCloseButton && onClose && (
 						<Button
@@ -229,7 +268,7 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 				</div>
 			</div>
 			{errors.length > 0 && (
-				<div className="col-span-full flex flex-col gap-2 mt-4">
+				<div className="flex flex-col gap-2 mt-4">
 					{errors.map((err, i) => (
 						<Alert key={i} variant="error">{err}</Alert>
 					))}

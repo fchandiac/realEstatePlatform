@@ -114,7 +114,7 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
             ? `w-24 h-24 mx-auto rounded-full border-4 border-secondary ${
                 !previewUrl ? 'bg-neutral-100' : ''
               } ${isDragOver ? 'border-blue-500 bg-blue-50' : ''} flex items-center justify-center`
-            : `border-2 border-dashed border-gray-300 rounded-lg ${aspectRatioClass} ${isDragOver ? 'border-blue-500 bg-blue-50' : ''}`
+            : `border-2 border-dashed border-gray-300 rounded-lg ${aspectRatioClass} max-w-32 max-h-32 mx-auto ${isDragOver ? 'border-blue-500 bg-blue-50' : ''}`
         }`}
         onClick={() => fileInputRef.current?.click()}
         onDragOver={handleDragOver}
