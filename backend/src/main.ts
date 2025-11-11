@@ -18,7 +18,12 @@ async function bootstrap() {
   }));
 
   // Configuración de CORS
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:3001', 'http://localhost:3000'], // Permitir frontend en ambos puertos
+    credentials: true, // Importante para NextAuth cookies
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  });
 
   // Configuración de validación global
   app.useGlobalPipes(new ValidationPipe());
