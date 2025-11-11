@@ -556,10 +556,10 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 									: index < activeStepIndex;
 
 							const dotClasses = [
-								"w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border-2 transition-all duration-200",
-								isStepCompleted ? "bg-black border-black text-white" : "",
-								isStepActive && !isStepCompleted ? "bg-black border-black text-gray-400" : "",
-								!isStepActive && !isStepCompleted ? "bg-gray-300 border-gray-300 text-gray-600" : "",
+								"w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-200",
+								isStepCompleted ? "bg-black border-2 border-black text-white" : "",
+								isStepActive && !isStepCompleted ? "bg-black border-2 border-black text-secondary" : "",
+								!isStepActive && !isStepCompleted ? "bg-transparent border border-gray-400 text-gray-500" : "",
 							].filter(Boolean).join(" ");								return (
 									<div key={`dot-${index}`} className={dotClasses}>
 										{index + 1}
