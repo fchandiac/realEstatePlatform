@@ -2,6 +2,8 @@
 
 import TopBar from '../../components/TopBar/TopBar';
 import React from 'react';
+import { usePathname } from 'next/navigation';
+import { getTitleFromPath } from '../../lib/routeTitles';
 
 const menuItems = [
   { label: 'Dashboard' },
@@ -48,9 +50,13 @@ const menuItems = [
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const currentTitle = getTitleFromPath(pathname);
+
   return (
     <div>
       <TopBar
+        title={currentTitle}
         menuItems={menuItems}
         showNotifications={true}
         notificationCount={9}
