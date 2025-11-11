@@ -16,6 +16,7 @@ interface SideBarProps {
   onClose?: () => void;
   className?: string;
   style?: React.CSSProperties;
+  logoUrl?: string;
 }
 
 const ROLE_LABELS: Record<string, string> = {
@@ -28,7 +29,7 @@ const ROLE_LABELS: Record<string, string> = {
 const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'App';
 const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION || '0.0.0';
 
-const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose }) => {
+const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose, logoUrl }) => {
   const router = useRouter();
   const { data: session } = useSession();
   const user = session?.user;
@@ -112,6 +113,16 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose 
       data-test-id="side-bar-root"
     >
       <div className="mb-6 text-center">
+        {logoUrl ? (
+          <div className="mb-4">
+            <img
+              src={logoUrl}
+              alt={`${APP_NAME} Logo`}
+              className="h-12 w-auto mx-auto object-contain"
+              data-test-id="side-bar-logo"
+            />
+          </div>
+        ) : null}
         <div className="text-xl font-bold" data-test-id="side-bar-app-name">{APP_NAME}</div>
         <div className="text-sm opacity-70" data-test-id="side-bar-app-version">{APP_VERSION}</div>
       </div>

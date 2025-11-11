@@ -136,7 +136,7 @@ const TopBar: React.FC<TopBarProps> = ({
             {SideBarComponent ? (
               <SideBarComponent onClose={close} />
             ) : menuItems ? (
-              <SideBar menuItems={menuItems} onClose={close} />
+              <SideBar menuItems={menuItems} onClose={close} logoUrl={logoSrc} />
             ) : null}
           </>
         )}
