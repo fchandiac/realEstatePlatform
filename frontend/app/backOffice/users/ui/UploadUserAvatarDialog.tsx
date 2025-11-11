@@ -104,31 +104,24 @@ const UploadUserAvatarDialog: React.FC<UploadUserAvatarDialogProps> = ({
       onClose={handleClose}
       title="Actualizar Avatar"
       size="sm"
+      showCloseButton={true}
+      closeButtonText="Cerrar"
       actions={
-        <div className="flex justify-between gap-3">
+        <div className="flex justify-end gap-3">
           <Button
             variant="outlined"
             onClick={handleClose}
             disabled={isLoading}
           >
-            Cerrar
+            Cancelar
           </Button>
-          <div className="flex gap-3">
-            <Button
-              variant="outlined"
-              onClick={handleClose}
-              disabled={isLoading}
-            >
-              Cancelar
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleUpload}
-              disabled={!selectedFile || isLoading}
-            >
-              {isLoading ? 'Guardando...' : 'Guardar'}
-            </Button>
-          </div>
+          <Button
+            variant="primary"
+            onClick={handleUpload}
+            disabled={!selectedFile || isLoading}
+          >
+            {isLoading ? 'Guardando...' : 'Guardar'}
+          </Button>
         </div>
       }
     >

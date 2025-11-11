@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/Button/Button';
 
 interface ResponsiveWidth {
   xs?: string | number;
@@ -105,6 +106,12 @@ interface DialogProps {
   actions?: React.ReactNode;
   // Hide the actions area (useful when actions are handled internally by children)
   hideActions?: boolean;
+  // Show close button in the top-right corner
+  showCloseButton?: boolean;
+  // Text for the close button (default: "cerrar")
+  closeButtonText?: string;
+  // Callback when close button is clicked (in addition to onClose)
+  onCloseButtonClick?: () => void;
 }
 
 const presetSizeClasses: Record<'sm' | 'md' | 'lg' | 'xl', string> = {
@@ -150,6 +157,9 @@ const Dialog: React.FC<DialogProps> = ({
   allowOverflowX = false,
   actions,
   hideActions = false,
+  showCloseButton = false,
+  closeButtonText = 'cerrar',
+  onCloseButtonClick,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
@@ -291,6 +301,13 @@ const Dialog: React.FC<DialogProps> = ({
     transitionDuration: `${animationDuration}ms`,
   };
 
+  const handleCloseButtonClick = () => {
+    if (onCloseButtonClick) {
+      onCloseButtonClick();
+    }
+    onClose();
+  };
+
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget && !disableBackdropClick && !persistent) {
       onClose();
@@ -314,9 +331,21 @@ const Dialog: React.FC<DialogProps> = ({
         data-test-id="dialog-content"
       >
         {title && title !== '' && (
-          <h2 className="title p-1 w-full" data-test-id="dialog-title">
-            {title}
-          </h2>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="title p-1 flex-1" data-test-id="dialog-title">
+              {title}
+            </h2>
+            {showCloseButton && (
+              <Button
+                variant="outlined"
+                size="sm"
+                onClick={handleCloseButtonClick}
+                className="ml-2"
+              >
+                {closeButtonText}
+              </Button>
+            )}
+          </div>
         )}
 
         <div
