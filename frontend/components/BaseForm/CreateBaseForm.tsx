@@ -175,28 +175,24 @@ const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 						</div>
 					))
 				)}
-				<div className="col-span-full flex justify-between mt-4">
-					<div>
-						{showCloseButton && onClose && (
-							<Button
-								variant="outlined"
-								type="button"
-								onClick={onClose}
-								disabled={isSubmitting}
-							>
-								{closeButtonText}
-							</Button>
-						)}
-					</div>
-					<div>
-						{isSubmitting ? (
-							<DotProgress size={18} className="self-end" />
-						) : (
-							<Button variant="primary" type="submit">
-								{submitLabel ?? "Guardar"}
-							</Button>
-						)}
-					</div>
+				<div className="col-span-full flex justify-end gap-2 mt-4">
+					{showCloseButton && onClose && (
+						<Button
+							variant="outlined"
+							type="button"
+							onClick={onClose}
+							disabled={isSubmitting}
+						>
+							{closeButtonText}
+						</Button>
+					)}
+					{isSubmitting ? (
+						<DotProgress size={18} className="self-end" />
+					) : (
+						<Button variant="primary" type="submit">
+							{submitLabel ?? "Guardar"}
+						</Button>
+					)}
 				</div>
 				{errors.length > 0 && (
 					<div className="col-span-full flex flex-col gap-2 mt-4">
