@@ -92,40 +92,16 @@ export class IdentitiesController {
     return this.identitiesService.findLast();
   }
 
+  @Get('logo-url')
+  @UseGuards()
+  async getLogoUrl() {
+    return await this.identitiesService.getLogoUrl();
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.READ, AuditEntityType.IDENTITY, 'Identity viewed')
   findOne(@Param('id') id: string) {
     return this.identitiesService.findOne(id);
-  }
-
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  @Audit(AuditAction.UPDATE, AuditEntityType.IDENTITY, 'Identity updated')
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'logo', maxCount: 1 },
-      { name: 'partnershipLogos', maxCount: 10 },
-    ]),
-    TransformJsonFieldsInterceptor,
-  )
-  update(
-    @Param('id') id: string,
-    @Body(ValidationPipe) updateIdentityDto: UpdateIdentityDto,
-    @UploadedFiles()
-    files?: {
-      logo?: Express.Multer.File[];
-      partnershipLogos?: Express.Multer.File[];
-    },
-  ) {
-    console.log('Controller - Update DTO received:', updateIdentityDto);
-    return this.identitiesService.update(id, updateIdentityDto, files);
-  }
-
-  @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  @Audit(AuditAction.DELETE, AuditEntityType.IDENTITY, 'Identity deleted')
-  softDelete(@Param('id') id: string) {
-    return this.identitiesService.softDelete(id);
   }
 }

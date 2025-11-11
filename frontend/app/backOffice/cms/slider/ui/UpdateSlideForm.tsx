@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { TextField } from '@/components/TextField/TextField';
-import { FileImageUploader } from '@/components/FileUploader/FileImageUploader';
+import { MultimediaUploader } from '@/components/FileUploader/MultimediaUploader';
 import { Button } from '@/components/Button/Button';
 import Switch from '@/components/Switch/Switch';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
@@ -294,7 +294,7 @@ export default function UpdateSlideForm({ slide, onSuccess, onCancel }: UpdateSl
         {/* Uploader para nueva imagen */}
         {(showImageUploader || !currentImage) && (
           <div>
-            <FileImageUploader
+            <MultimediaUploader
               uploadPath="/public/web/slides"
               onChange={handleMultimediaChange}
               accept="image/*,video/*"

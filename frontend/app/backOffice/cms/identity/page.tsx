@@ -10,7 +10,7 @@ import Switch from '@/components/Switch/Switch'
 import IconButton from '@/components/IconButton/IconButton'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram, faFacebook, faLinkedin, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import FileImageUploader from '@/components/FileUploader/FileImageUploader'
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader'
 import { useAlert } from '@/app/contexts/AlertContext'
 
 interface SocialMediaItem {
@@ -397,7 +397,7 @@ export default function IdentityPage() {
                 {/* Mostrar uploader cuando se necesita */}
                 {(showLogoUploader || !currentLogo) && (
                   <div className="border border-input rounded-md p-4 bg-background">
-                    <FileImageUploader
+                    <MultimediaUploader
                       uploadPath="/public/web/logos"
                       onChange={handleLogoChange}
                       maxFiles={1}
@@ -538,7 +538,7 @@ export default function IdentityPage() {
                     {/* Mostrar uploader cuando se necesita */}
                     {(showPartnershipUploaders[index] || !currentPartnershipLogos[index]) && (
                       <div className="border border-input rounded-md p-4 bg-background">
-                        <FileImageUploader
+                        <MultimediaUploader
                           uploadPath="/public/web/partnerships"
                           onChange={(files) => handlePartnershipLogoChange(index, files)}
                           maxFiles={1}

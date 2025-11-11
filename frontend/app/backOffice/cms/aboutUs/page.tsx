@@ -6,7 +6,7 @@ import { Button } from '@/components/Button/Button';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import { getAboutUs, updateAboutUs } from '@/app/actions/aboutUs';
 import { env } from '@/lib/env';
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 
 interface AboutUsData {
   bio: string;
@@ -164,7 +164,7 @@ export default function AboutUsPage() {
           {/* Mostrar uploader cuando se necesita */}
           {(showMultimediaUploader || !currentMultimedia) && (
             <div className="border border-input rounded-md p-4 bg-background">
-              <FileImageUploader
+              <MultimediaUploader
                 uploadPath="/public/web/aboutUs"
                 onChange={handleMultimediaChange}
                 maxFiles={1}

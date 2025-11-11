@@ -1,9 +1,11 @@
 "use client";
 
 import TopBar from '../../components/TopBar/TopBar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { getTitleFromPath } from '../../lib/routeTitles';
+import { useSession } from "next-auth/react";
+import {getIdentityLogoUrl} from '../actions/identity';
 
 const menuItems = [
   { label: 'Dashboard' },
@@ -52,6 +54,26 @@ const menuItems = [
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const currentTitle = getTitleFromPath(pathname);
+  const { data: session } = useSession();
+
+  // State to store the logo URL
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+
+  // Fetch the logo URL on component mount
+  useEffect(() => {
+    async function fetchLogo() {
+      const url = await getIdentityLogoUrl();
+      setLogoUrl(url);
+
+      console.log("Fetched logo URL:", url);
+    }
+    fetchLogo();
+  }, []);
+
+  // Extrae el nombre de la persona desde la sesión NextAuth
+  const userName =
+    session?.user?.name ||
+    "Invitado";
 
   return (
     <div>
@@ -63,7 +85,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         onNotificationsClick={() => {}}
         showUserButton={true}
         onUserClick={() => {}}
-        userName="Usuario Demo"
+        userName={userName}
+        logoSrc={logoUrl || undefined} // Convert null to undefined
       />
 
       <main className="container mx-auto mt-20">{children}</main>

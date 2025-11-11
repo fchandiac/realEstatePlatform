@@ -1,6 +1,6 @@
 'use client';
 
-import { FileImageUploader } from '@/components/FileUploader/FileImageUploader';
+import { MultimediaUploader } from '@/components/FileUploader/MultimediaUploader';
 import { CreatePropertyFormData } from '../types';
 
 interface MultimediaSectionProps {
@@ -16,7 +16,7 @@ export default function MultimediaSection({
     <div className="space-y-4 border-b pb-4 mb-4">
       <h2 className="text-lg font-semibold">Multimedia</h2>
       
-      <FileImageUploader
+      <MultimediaUploader
         uploadPath="/uploads/media"
         label="Subir Multimedia (Imágenes y Videos)"
         accept="image/*,video/*"

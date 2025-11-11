@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { TextField } from '@/components/TextField/TextField';
-import { FileImageUploader } from '@/components/FileUploader/FileImageUploader';
+import { MultimediaUploader } from '@/components/FileUploader/MultimediaUploader';
 import { createSlideWithMultimedia } from '@/app/actions/slides';
 import { Button } from '@/components/Button/Button';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
@@ -182,7 +182,7 @@ export default function CreateSlideForm({ onSuccess, onCancel }: CreateSlideForm
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Imagen o Video *
         </label>
-        <FileImageUploader
+        <MultimediaUploader
           uploadPath="/uploads/web/slides"
           onChange={handleMultimediaChange}
           label="Subir multimedia"

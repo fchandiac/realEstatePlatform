@@ -3,7 +3,7 @@ import Dialog from '@/components/Dialog/Dialog';
 import { Button } from '@/components/Button/Button';
 import { TextField } from '@/components/TextField/TextField';
 import Switch from '@/components/Switch/Switch';
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 import { createTestimonial } from '@/app/actions/testimonials';
 
 export interface CreateTestimonialDialogProps {
@@ -117,7 +117,7 @@ const CreateTestimonialDialog: React.FC<CreateTestimonialDialogProps> = ({
           <label className="block text-sm font-medium text-foreground mb-2">
             Imagen del testigo (opcional)
           </label>
-          <FileImageUploader
+          <MultimediaUploader
             uploadPath="/public/web/testimonials"
             onChange={handleImageChange}
             accept="image/*"

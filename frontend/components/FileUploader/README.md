@@ -1,6 +1,6 @@
-# FileImageUploader Component
+# MultimediaUploader Component
 
-Componente avanzado para subir imágenes con vista previa, eliminación individual y gestión de archivos múltiples. Ideal para formularios que requieren carga de imágenes con feedback visual inmediato.
+Componente avanzado para subir multimedia (imágenes y videos) con vista previa, eliminación individual y gestión de archivos múltiples. Ideal para formularios que requieren carga de archivos multimedia con feedback visual inmediato.
 
 ## 🚀 Características Principales
 
@@ -17,14 +17,14 @@ Componente avanzado para subir imágenes con vista previa, eliminación individu
 
 ```bash
 # El componente ya está incluido en el proyecto
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 ```
 
 ## 🎯 Uso Básico
 
 ```tsx
 import React, { useState } from 'react';
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 
 export default function BasicImageUpload() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -36,12 +36,12 @@ export default function BasicImageUpload() {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h2 className="text-xl font-semibold mb-4">Subir Imágenes del Producto</h2>
+      <h2 className="text-xl font-semibold mb-4">Subir Multimedia del Producto</h2>
 
-      <FileImageUploader
+      <MultimediaUploader
         uploadPath="/api/products/images"
         onChange={handleFilesChange}
-        label="Selecciona imágenes del producto"
+        label="Selecciona multimedia del producto"
         maxFiles={5}
       />
 
@@ -62,7 +62,7 @@ export default function BasicImageUpload() {
 
 ## 🔧 API Reference
 
-### Props del FileImageUploader
+### Props del MultimediaUploader
 
 | Prop | Tipo | Default | Descripción |
 |------|------|---------|-------------|
@@ -74,11 +74,51 @@ export default function BasicImageUpload() {
 
 ## 🎯 Casos de Uso Comunes
 
+### Subida de Avatar de Usuario
+
+```tsx
+import React, { useState } from 'react';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
+
+export default function UserAvatarUpload() {
+  const [avatarFile, setAvatarFile] = useState<File[]>([]);
+
+  const handleAvatarChange = (files: File[]) => {
+    setAvatarFile(files);
+    console.log('Avatar seleccionado:', files[0]);
+  };
+
+  return (
+    <div className="max-w-sm mx-auto p-6">
+      <h2 className="text-xl font-semibold mb-4 text-center">Subir Avatar</h2>
+
+      <MultimediaUploader
+        uploadPath="/api/user/avatar"
+        onChange={handleAvatarChange}
+        label="Selecciona tu foto de perfil"
+        variant="avatar"
+        accept="image/*"
+        maxFiles={1}
+        maxSize={2}
+      />
+
+      {avatarFile.length > 0 && (
+        <div className="mt-4 text-center">
+          <p className="text-sm text-green-600">
+            ✓ Avatar seleccionado: {avatarFile[0].name}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
 ### Formulario de Perfil de Usuario
 
 ```tsx
 import React, { useState } from 'react';
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 import { Button } from '@/components/Button';
 
 export default function UserProfileForm() {
@@ -105,11 +145,11 @@ export default function UserProfileForm() {
       });
 
       if (response.ok) {
-        alert('Imágenes de perfil actualizadas exitosamente');
+        alert('Multimedia de perfil actualizada exitosamente');
         setProfileImages([]);
       }
     } catch (error) {
-      console.error('Error al subir imágenes:', error);
+      console.error('Error al subir multimedia:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -119,13 +159,13 @@ export default function UserProfileForm() {
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-6 space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Actualizar Perfil</h2>
-        <p className="text-gray-600">Sube hasta 3 fotos para tu perfil</p>
+        <p className="text-gray-600">Sube hasta 3 archivos multimedia para tu perfil</p>
       </div>
 
-      <FileImageUploader
+      <MultimediaUploader
         uploadPath="/api/user/profile/images"
         onChange={handleImagesChange}
-        label="Fotos de perfil"
+        label="Multimedia de perfil"
         maxFiles={3}
         accept="image/jpeg,image/png,image/webp"
       />
@@ -157,7 +197,7 @@ export default function UserProfileForm() {
 
 ```tsx
 import React, { useState } from 'react';
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 import { Button } from '@/components/Button';
 import { TextField } from '@/components/TextField';
 
@@ -221,10 +261,10 @@ export default function ProductGalleryForm() {
         </div>
 
         <div>
-          <FileImageUploader
+          <MultimediaUploader
             uploadPath="/api/products/images"
             onChange={handleImagesChange}
-            label="Imágenes del producto (máximo 8)"
+            label="Multimedia del producto (máximo 8)"
             maxFiles={8}
             accept="image/jpeg,image/png,image/webp,image/gif"
           />
@@ -245,7 +285,7 @@ export default function ProductGalleryForm() {
 
 ```tsx
 import React, { useState } from 'react';
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 
 interface DocumentWithImages {
   title: string;
@@ -286,7 +326,7 @@ export default function DocumentScanner() {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
-          <FileImageUploader
+          <MultimediaUploader
             uploadPath="/api/documents/scan"
             onChange={handleImagesChange}
             label="Escanear páginas del documento"
@@ -323,7 +363,7 @@ export default function DocumentScanner() {
 
 ```tsx
 import React, { useState } from 'react';
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 
 export default function ValidatedImageUpload() {
   const [files, setFiles] = useState<File[]>([]);
@@ -370,12 +410,12 @@ export default function ValidatedImageUpload() {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h2 className="text-xl font-semibold mb-4">Subir Imágenes con Validación</h2>
+      <h2 className="text-xl font-semibold mb-4">Subir Multimedia con Validación</h2>
 
-      <FileImageUploader
+      <MultimediaUploader
         uploadPath="/api/validated-images"
         onChange={handleFilesChange}
-        label="Selecciona imágenes (JPG, PNG, WebP - máx. 5MB cada una)"
+        label="Selecciona archivos multimedia (JPG, PNG, WebP - máx. 5MB cada uno)"
         maxFiles={10}
         accept="image/jpeg,image/png,image/webp"
       />
@@ -627,7 +667,7 @@ Para ver ejemplos completos de uso, revisa:
 
 ## 🤝 Contribución
 
-Para contribuir al componente FileImageUploader:
+Para contribuir al componente MultimediaUploader:
 
 1. Mantén la compatibilidad con la API existente
 2. Agrega validaciones adicionales manteniendo la simplicidad

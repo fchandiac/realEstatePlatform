@@ -3,7 +3,7 @@ import Dialog from '@/components/Dialog/Dialog';
 import { Button } from '@/components/Button/Button';
 import { TextField } from '@/components/TextField/TextField';
 import Select from '@/components/Select/Select';
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 import { createArticle } from '@/app/actions/articles';
 import { ArticleCategory } from '@/app/types/article';
 import { useAlert } from '@/app/contexts/AlertContext';
@@ -141,7 +141,7 @@ const CreateArticleDialog: React.FC<CreateArticleDialogProps> = ({
           <label className="block text-sm font-medium text-foreground mb-2">
             Imagen del artículo (opcional)
           </label>
-          <FileImageUploader
+          <MultimediaUploader
             uploadPath="/public/web/articles"
             onChange={handleImageChange}
             accept="image/*"

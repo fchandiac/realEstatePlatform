@@ -6,7 +6,7 @@ import { Button } from '@/components/Button/Button';
 import Dialog from '@/components/Dialog/Dialog';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import Alert from '@/components/Alert/Alert';
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 import { createTeamMember, type TeamMember } from '@/app/actions/ourTeam';
 
 interface CreateTeamMemberDialogProps {
@@ -139,7 +139,7 @@ export default function CreateTeamMemberDialog({
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Foto del miembro *
           </label>
-          <FileImageUploader
+          <MultimediaUploader
             accept="image/*"
             maxFiles={1}
             maxSize={5}

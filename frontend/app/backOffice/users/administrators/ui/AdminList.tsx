@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import AdminCard from "./AdminCard";
 import UpdateAdminDialog from "./UpdateAdminDialog";
 import DeleteAdminDialog from "./DeleteAdminDialog";
+import CreateAdminFormDialog from "./CreateAdminFormDialog";
 
 export interface AdminListProps {
     administrators: AdministratorType[];
@@ -36,53 +37,54 @@ const getDisplayName = (admin: AdministratorType): string => {
 const AdminList: React.FC<AdminListProps> = ({
     administrators,
 }) => {
-     const router = useRouter();
+    const router = useRouter();
     const searchParams = useSearchParams();
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [selectedAdmin, setSelectedAdmin] = useState<AdministratorType | null>(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-   
+    const [openCreateDialog, setOpenCreateDialog] = useState(false);
+
     useEffect(() => {
         setSearch(searchParams.get("search") || "");
     }, [searchParams]);
 
-     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    setSearch(value);
-    const params = new URLSearchParams(Array.from(searchParams.entries()));
-    if (value) {
-      params.set("search", value);
-    } else {
-      params.delete("search");
-    }
-    router.replace(`?${params.toString()}`);
-  };
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const value = e.target.value;
+        setSearch(value);
+        const params = new URLSearchParams(Array.from(searchParams.entries()));
+        if (value) {
+            params.set("search", value);
+        } else {
+            params.delete("search");
+        }
+        router.replace(`?${params.toString()}`);
+    };
 
-  const handleEditAdmin = (admin: AdministratorType) => {
-    setSelectedAdmin(admin);
-    setEditDialogOpen(true);
-  };
+    const handleEditAdmin = (admin: AdministratorType) => {
+        setSelectedAdmin(admin);
+        setEditDialogOpen(true);
+    };
 
-  const handleEditDialogClose = () => {
-    setEditDialogOpen(false);
-    setSelectedAdmin(null);
-  };
+    const handleEditDialogClose = () => {
+        setEditDialogOpen(false);
+        setSelectedAdmin(null);
+    };
 
-  const handleDeleteAdmin = (admin: AdministratorType) => {
-    setSelectedAdmin(admin);
-    setDeleteDialogOpen(true);
-  };
+    const handleDeleteAdmin = (admin: AdministratorType) => {
+        setSelectedAdmin(admin);
+        setDeleteDialogOpen(true);
+    };
 
-  const handleDeleteDialogClose = () => {
-    setDeleteDialogOpen(false);
-    setSelectedAdmin(null);
-  };
+    const handleDeleteDialogClose = () => {
+        setDeleteDialogOpen(false);
+        setSelectedAdmin(null);
+    };
 
-  const handleRefreshList = () => {
-    // Refresh the page to reload the administrators list
-    router.refresh();
-  };
+    const handleRefreshList = () => {
+        // Refresh the page to reload the administrators list
+        router.refresh();
+    };
 
 
     return (
@@ -97,7 +99,7 @@ const AdminList: React.FC<AdminListProps> = ({
                         <IconButton
                             aria-label="Agregar administrador"
                             variant="containedPrimary"
-                            //   onClick={() => setOpenCreateDialog(true)}
+                            onClick={() => setOpenCreateDialog(true)}
                             icon="add"
                             size={'lg'}
                         />
@@ -108,8 +110,8 @@ const AdminList: React.FC<AdminListProps> = ({
                             value={search}
                             onChange={handleSearchChange}
                             startIcon="search"
-                            placeholder="Buscar..." 
-                            />
+                            placeholder="Buscar..."
+                        />
                     </div>
                 </div>
                 {/* Segunda fila: grid de tarjetas con ancho estable */}
@@ -136,6 +138,12 @@ const AdminList: React.FC<AdminListProps> = ({
                 onClose={handleDeleteDialogClose}
                 administrator={selectedAdmin}
                 onSave={handleRefreshList}
+            />
+
+            <CreateAdminFormDialog
+                open={openCreateDialog}
+                onClose={() => setOpenCreateDialog(false)}
+                onSuccess={handleRefreshList}
             />
         </>
     );

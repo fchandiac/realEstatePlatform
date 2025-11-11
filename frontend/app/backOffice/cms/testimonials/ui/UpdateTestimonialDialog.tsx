@@ -3,7 +3,7 @@ import Dialog from '@/components/Dialog/Dialog';
 import { Button } from '@/components/Button/Button';
 import { TextField } from '@/components/TextField/TextField';
 import Switch from '@/components/Switch/Switch';
-import FileImageUploader from '@/components/FileUploader/FileImageUploader';
+import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 import { updateTestimonial } from '@/app/actions/testimonials';
 import { normalizeMediaUrl } from './utils';
 import { useAlert } from '@/app/contexts/AlertContext';
@@ -163,7 +163,7 @@ const UpdateTestimonialDialog: React.FC<UpdateTestimonialDialogProps> = ({
             <label className="block text-sm font-medium text-foreground mb-2">
               Cambiar imagen (opcional)
             </label>
-            <FileImageUploader
+            <MultimediaUploader
               uploadPath="/public/web/testimonials"
               onChange={handleImageChange}
               accept="image/*"

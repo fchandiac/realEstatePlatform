@@ -123,4 +123,12 @@ export class IdentitiesService {
     const identity = await this.findOne(id);
     await this.identityRepository.softDelete(id);
   }
+
+  async getLogoUrl(): Promise<{ logoUrl: string | null }> {
+    const identity = await this.identityRepository.findOne({
+      where: { deletedAt: IsNull() },
+      order: { createdAt: 'DESC' },
+    });
+    return { logoUrl: identity?.urlLogo ?? null };
+  }
 }

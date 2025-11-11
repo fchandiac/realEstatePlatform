@@ -4,6 +4,16 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { env } from '@/lib/env'
 
+// Acción pública para obtener solo la URL del logo
+export async function getIdentityLogoUrl(): Promise<string | null> {
+  const res = await fetch(`${env.backendApiUrl}/identities/logo-url`, {
+    cache: 'no-store',
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.logoUrl ?? null;
+}
+
 export async function getIdentity() {
   // Try to get session, but don't require it for public identity data
   const session = await getServerSession(authOptions)

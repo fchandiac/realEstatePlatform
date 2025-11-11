@@ -216,9 +216,17 @@ export interface ChangePasswordDto {
 }
 
 /**
- * Create a new user
+ * Create a new admin user
  */
-export async function createUser(data: CreateUserDto): Promise<{
+export async function createAdmin(data: {
+	username: string;
+	email: string;
+	password: string;
+	firstName: string;
+	lastName: string;
+	phone?: string;
+	avatarFile?: File;
+}): Promise<{
   success: boolean;
   data?: BackendAdministrator;
   error?: string;
@@ -229,27 +237,68 @@ export async function createUser(data: CreateUserDto): Promise<{
 			return { success: false, error: 'No authenticated' };
 		}
 
-		const response = await fetch(`${env.backendApiUrl}/users`, {
+		// First create the user
+		const createUserData: CreateUserDto = {
+			username: data.username,
+			email: data.email,
+			password: data.password,
+			role: 'ADMIN',
+			personalInfo: {
+				firstName: data.firstName,
+				lastName: data.lastName,
+				phone: data.phone,
+			},
+		};
+
+		const createResponse = await fetch(`${env.backendApiUrl}/users`, {
 			method: 'POST',
 			headers: {
 				'Authorization': `Bearer ${session.accessToken}`,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(data),
+			body: JSON.stringify(createUserData),
 		});
 
-		if (!response.ok) {
-			const errorData = await response.json().catch(() => null);
+		if (!createResponse.ok) {
+			const errorData = await createResponse.json().catch(() => null);
 			return { 
 				success: false, 
-				error: errorData?.message || `Failed to create user: ${response.status}` 
+				error: errorData?.message || `Failed to create admin: ${createResponse.status}` 
 			};
 		}
 
-		const result = await response.json();
-		return { success: true, data: result };
+		const user = await createResponse.json();
+
+		// If avatar file is provided, upload it
+		if (data.avatarFile && user.id) {
+			const avatarFormData = new FormData();
+			avatarFormData.append('file', data.avatarFile);
+
+			const avatarResponse = await fetch(`${env.backendApiUrl}/users/${user.id}/avatar`, {
+				method: 'PUT',
+				headers: {
+					'Authorization': `Bearer ${session.accessToken}`,
+				},
+				body: avatarFormData,
+			});
+
+			if (avatarResponse.ok) {
+				const avatarData = await avatarResponse.json();
+				// Update the user object with the new avatar URL
+				if (user.personalInfo) {
+					user.personalInfo.avatarUrl = avatarData.avatarUrl;
+				} else {
+					user.personalInfo = { avatarUrl: avatarData.avatarUrl };
+				}
+			} else {
+				console.warn('Avatar upload failed, but user was created successfully');
+			}
+		}
+
+		revalidatePath('/backOffice/users/administrators', 'page');
+		return { success: true, data: user };
 	} catch (error) {
-		console.error('Error creating user:', error);
+		console.error('Error creating admin:', error);
 		return { 
 			success: false, 
 			error: error instanceof Error ? error.message : 'Unknown error' 

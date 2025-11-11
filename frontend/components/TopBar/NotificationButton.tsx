@@ -17,7 +17,7 @@ const NotificationButton: React.FC<NotificationButtonProps> = ({
     <button
       type="button"
       onClick={onClick}
-      className={`relative  rounded-full transition-colors text-background hover:text-accent focus:outline-none ${className}`}
+  className={`relative  rounded-full transition-colors text-background hover:text-secondary focus:outline-none ${className}`}
       data-test-id={dataTestId}
       aria-label="Notificaciones"
     >
