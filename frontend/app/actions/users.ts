@@ -620,3 +620,127 @@ export async function updateUserAvatar(id: string, formData: FormData): Promise<
 	}
 }
 
+// ===================================
+// MyAccount Functions
+// ===================================
+
+/**
+ * Update user profile (for MyAccount)
+ */
+export async function updateUserProfile(userId: string, data: Partial<UpdateUserDto>): Promise<{
+  success: boolean;
+  data?: BackendAdministrator;
+  error?: string;
+}> {
+	return updateUser(userId, data);
+}
+
+/**
+ * Update person information
+ */
+export async function updatePerson(personId: string, data: {
+	dni?: string;
+	address?: string;
+	phone?: string;
+	email?: string;
+	dniCardFrontId?: string;
+	dniCardRearId?: string;
+}): Promise<{
+  success: boolean;
+  data?: any;
+  error?: string;
+}> {
+	try {
+		const session = await getServerSession(authOptions);
+		if (!session?.accessToken) {
+			return { success: false, error: 'No authenticated' };
+		}
+
+		const response = await fetch(`${env.backendApiUrl}/people/${personId}`, {
+			method: 'PATCH',
+			headers: {
+				'Authorization': `Bearer ${session.accessToken}`,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => null);
+			return { 
+				success: false, 
+				error: errorData?.message || `Failed to update person: ${response.status}` 
+			};
+		}
+
+		const result = await response.json();
+		return { success: true, data: result };
+	} catch (error) {
+		console.error('Error updating person:', error);
+		return { 
+			success: false, 
+			error: error instanceof Error ? error.message : 'Unknown error' 
+		};
+	}
+}
+
+/**
+ * Change password (for MyAccount)
+ */
+export async function changePassword(userId: string, data: {
+	currentPassword: string;
+	newPassword: string;
+}): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+	return changeUserPassword(userId, {
+		oldPassword: data.currentPassword,
+		newPassword: data.newPassword,
+	});
+}
+
+/**
+ * Upload multimedia file
+ */
+export async function uploadMultimedia(file: File): Promise<{
+  success: boolean;
+  data?: { id: string; url: string };
+  error?: string;
+}> {
+	try {
+		const session = await getServerSession(authOptions);
+		if (!session?.accessToken) {
+			return { success: false, error: 'No authenticated' };
+		}
+
+		const formData = new FormData();
+		formData.append('file', file);
+
+		const response = await fetch(`${env.backendApiUrl}/multimedia/upload`, {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${session.accessToken}`,
+			},
+			body: formData,
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => null);
+			return { 
+				success: false, 
+				error: errorData?.message || `Failed to upload file: ${response.status}` 
+			};
+		}
+
+		const result = await response.json();
+		return { success: true, data: result };
+	} catch (error) {
+		console.error('Error uploading multimedia:', error);
+		return { 
+			success: false, 
+			error: error instanceof Error ? error.message : 'Unknown error' 
+		};
+	}
+}
+
