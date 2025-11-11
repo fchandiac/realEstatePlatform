@@ -53,7 +53,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <TopBar
         menuItems={menuItems}
         showNotifications={true}
-        notificationCount={0}
+        notificationCount={9}
         onNotificationsClick={() => {}}
         showUserButton={true}
         onUserClick={() => {}}

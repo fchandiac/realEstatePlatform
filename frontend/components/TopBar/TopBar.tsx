@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useContext } from 'react';
 import SideBar, { SideBarMenuItem } from './SideBar';
-import Logo from '../Logo/Logo';
 import NotificationButton from './NotificationButton';
 
 interface TopBarProps {
@@ -57,14 +56,28 @@ const TopBar: React.FC<TopBarProps> = ({
   return (
     <SideBarContext.Provider value={{ open, close, isOpen: showSidebar }}>
       <div data-test-id="top-bar-root">
-  <header className={`w-full flex items-center justify-between px-4 py-2 bg-primary border-b-[5px] border-accent fixed top-0 left-0 z-40 ${className}`}>
-          <div className="flex items-center gap-2">
-            <Logo src={logoSrc} className="w-10 h-10" data-test-id="top-bar-logo" />
-            <span className="ml-2 text-lg font-bold text-background" data-test-id="top-bar-title">{title}</span>
+  <header className={`w-full flex items-center justify-between px-4 pt-2 bg-primary border-b-[5px] border-accent fixed top-0 left-0 z-40 ${className}`}>
+          <div className="flex items-center gap-3">
+            {logoSrc && (
+              <img
+                src={logoSrc}
+                alt="Logo"
+                className="h-10 w-10 object-contain"
+                data-test-id="top-bar-logo"
+              />
+            )}
+            <span className="text-lg font-bold text-background" data-test-id="top-bar-title">{title}</span>
           </div>
 
           {/* Right side elements */}
           <div className="flex items-center gap-2">
+            {/* User name */}
+            {userName && (
+              <span className="text-sm font-medium text-background" data-test-id="top-bar-user-name">
+                {userName}
+              </span>
+            )}
+
             {/* Notification button */}
             {showNotifications && (
               <NotificationButton
@@ -74,25 +87,18 @@ const TopBar: React.FC<TopBarProps> = ({
               />
             )}
 
-            {/* User name */}
-            {userName && (
-              <span className="text-sm font-medium text-background" data-test-id="top-bar-user-name">
-                {userName}
-              </span>
-            )}
-
             {/* User button */}
             {showUserButton && (
               <button
                 type="button"
                 onClick={onUserClick}
-                className="p-2 rounded-full transition-colors text-background hover:text-accent focus:outline-none"
+                className="rounded-full transition-colors text-background hover:text-accent focus:outline-none"
                 data-test-id="top-bar-user-button"
                 aria-label="Perfil de usuario"
               >
                 <span
                   className="material-symbols-outlined cursor-pointer"
-                  style={{ fontSize: 24, width: 24, height: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                  style={{ fontSize: 32, width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                   aria-hidden
                 >
                   person
@@ -104,13 +110,13 @@ const TopBar: React.FC<TopBarProps> = ({
             <button
               type="button"
               onClick={open}
-              className="p-2 rounded-full transition-colors text-background hover:text-accent focus:outline-none"
+              className=" rounded-full transition-colors text-background hover:text-accent focus:outline-none"
               data-test-id="top-bar-menu-button"
               aria-label="Abrir menú"
             >
               <span
                 className="material-symbols-outlined cursor-pointer"
-                style={{ fontSize: 28, width: 28, height: 28, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                style={{ fontSize: 36, width: 36, height: 36, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                 aria-hidden
               >
                 menu

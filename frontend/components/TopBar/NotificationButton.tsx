@@ -17,19 +17,19 @@ const NotificationButton: React.FC<NotificationButtonProps> = ({
     <button
       type="button"
       onClick={onClick}
-      className={`relative p-2 rounded-full transition-colors text-background hover:text-accent focus:outline-none ${className}`}
+      className={`relative  rounded-full transition-colors text-background hover:text-accent focus:outline-none ${className}`}
       data-test-id={dataTestId}
       aria-label="Notificaciones"
     >
       <span
         className="material-symbols-outlined cursor-pointer"
-        style={{ fontSize: 24, width: 24, height: 24, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+        style={{ fontSize: 32, width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
         aria-hidden
       >
         notifications
       </span>
       {count > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center min-w-[20px]">
+        <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center min-w-[18px]">
           {count > 99 ? '99+' : count}
         </span>
       )}
