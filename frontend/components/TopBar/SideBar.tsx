@@ -59,7 +59,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose 
       return (
         <li key={id}>
           <button
-            className="block p-2 rounded-lg text-white/90 hover:bg-white/10 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm"
+            className="block p-2 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm"
             onClick={() => toggleOpen(id)}
             aria-expanded={isOpen}
             data-test-id={`side-bar-parent-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
@@ -79,7 +79,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose 
             {item.children!.map((child, cIdx) => (
               <li key={(child.id ?? `${child.label}-${cIdx}`)}>
                 <button
-                  className="w-full text-left px-4 py-2 rounded hover:bg-white/10 transition-colors font-medium cursor-pointer text-sm"
+                  className="w-full text-left px-4 py-2 rounded hover:bg-gray-100 transition-colors font-medium cursor-pointer text-sm"
                   onClick={() => handleNavigate(child.url)}
                   data-test-id={`side-bar-child-${child.label.toLowerCase().replace(/\s+/g, '-')}`}
                 >
@@ -95,7 +95,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose 
     return (
       <li key={id}>
         <button
-          className="w-full text-left px-4 py-2 rounded hover:bg-white/10 transition-colors font-medium cursor-pointer text-sm"
+          className="w-full text-left px-4 py-2 rounded hover:bg-gray-100 transition-colors font-medium cursor-pointer text-sm"
           onClick={() => handleNavigate(item.url)}
           data-test-id={`side-bar-menu-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
         >
@@ -107,7 +107,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose 
 
   return (
     <aside
-      className={`fixed top-0 left-0 z-50 w-64 h-full bg-primary text-background flex flex-col items-center py-6 shadow-lg ${className ? className : ''}`}
+      className={`fixed top-0 left-0 z-50 w-64 h-full bg-white/70 backdrop-blur backdrop-saturate-150 text-black flex flex-col items-center py-6 shadow-xl border border-white/20 ${className ? className : ''}`}
       style={style}
       data-test-id="side-bar-root"
     >
@@ -120,8 +120,8 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose 
         const u = user as unknown as { userName?: string; role?: string };
         return (
           <div className="w-full px-6 mb-6">
-            <div className="flex items-center border border-white rounded-lg px-3 py-2 gap-3" style={{ background: 'transparent', borderWidth: '0.3px' }}>
-              <span className="material-symbols-outlined text-white text-3xl">person</span>
+            <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 gap-3" style={{ background: 'transparent', borderWidth: '0.3px' }}>
+              <span className="material-symbols-outlined text-black text-3xl">person</span>
               <div className="flex flex-col min-w-0">
                 <span className="text-base font-bold truncate">{u.userName}</span>
                 <span className="text-xs opacity-60 capitalize truncate">{ROLE_LABELS[u.role as keyof typeof ROLE_LABELS] || u.role}</span>

@@ -73,7 +73,7 @@ const TopBar: React.FC<TopBarProps> = ({
           <div className="flex items-center gap-2">
             {/* User name */}
             {userName && (
-              <span className="text-sm font-medium text-background" data-test-id="top-bar-user-name">
+              <span className="text-sm font-weight-300 text-background" data-test-id="top-bar-user-name">
                 {userName}
               </span>
             )}
@@ -92,7 +92,7 @@ const TopBar: React.FC<TopBarProps> = ({
               <button
                 type="button"
                 onClick={onUserClick}
-                className="rounded-full transition-colors text-background hover:text-accent focus:outline-none"
+                className="rounded-full transition-colors text-background hover:text-secondary focus:outline-none"
                 data-test-id="top-bar-user-button"
                 aria-label="Perfil de usuario"
               >
@@ -110,7 +110,7 @@ const TopBar: React.FC<TopBarProps> = ({
             <button
               type="button"
               onClick={open}
-              className=" rounded-full transition-colors text-background hover:text-accent focus:outline-none"
+              className=" rounded-full transition-colors text-background hover:text-secondary focus:outline-none"
               data-test-id="top-bar-menu-button"
               aria-label="Abrir menú"
             >
@@ -128,7 +128,7 @@ const TopBar: React.FC<TopBarProps> = ({
         {showSidebar && (
           <>
             <div
-              className="fixed inset-0 z-50 bg-black opacity-60"
+              className="fixed inset-0 z-50 bg-transparent"
               onClick={close}
             />
 
