@@ -484,21 +484,21 @@ export class UsersService {
       throw new BadRequestException('Only image files (jpeg, png, webp) are allowed');
     }
 
-    // Crear directorio absoluto
-    const uploadDir = path.join(process.cwd(), 'public', 'users', id);
+    // Crear directorio absoluto (sin subcarpetas por usuario)
+    const uploadDir = path.join(process.cwd(), 'public', 'users');
     console.log('Upload directory:', uploadDir);
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
       console.log('Created upload directory');
     }
 
-    // Generar filename y path
+    // Generar filename con ID del usuario y path
     const ext = path.extname(file.originalname) || '.jpg';
-    const filename = `avatar${ext}`;
+    const filename = `avatar-${id}${ext}`;
     const filePath = path.join(uploadDir, filename);
     
-    // Generar URL relativa (como esperan otros servicios)
-    const publicUrl = `/public/users/${id}/${filename}`;
+    // Generar URL relativa
+    const publicUrl = `/public/users/${filename}`;
 
     console.log('Saving file to:', filePath);
     console.log('Public URL will be:', publicUrl);
