@@ -87,9 +87,10 @@ const AdminList: React.FC<AdminListProps> = ({
                             variant="containedPrimary"
                             //   onClick={() => setOpenCreateDialog(true)}
                             icon="add"
+                            size={'lg'}
                         />
                     </div>
-                    <div className="flex-1 flex justify-end">
+                    <div className="w-full max-w-sm">
                         <TextField
                             label="Buscar"
                             value={search}

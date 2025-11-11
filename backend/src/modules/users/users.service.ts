@@ -472,6 +472,9 @@ export class UsersService {
   }
 
   async updateUserAvatar(id: string, file: Express.Multer.File): Promise<User> {
+    console.log('Updating avatar for user:', id);
+    console.log('File received:', { originalname: file.originalname, mimetype: file.mimetype, size: file.size, buffer: !!file.buffer });
+
     const user = await this.userRepository.findOne({ where: { id, status: UserStatus.ACTIVE } });
     if (!user) throw new NotFoundException('User not found');
 
@@ -481,23 +484,34 @@ export class UsersService {
       throw new BadRequestException('Only image files (jpeg, png, webp) are allowed');
     }
 
-    // Crear directorio
-    const uploadDir = path.join(process.cwd(), 'uploads', 'users', id);
-    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+    // Crear directorio absoluto
+    const uploadDir = path.join(process.cwd(), 'public', 'users', id);
+    console.log('Upload directory:', uploadDir);
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+      console.log('Created upload directory');
+    }
 
     // Generar filename y path
     const ext = path.extname(file.originalname) || '.jpg';
     const filename = `avatar${ext}`;
     const filePath = path.join(uploadDir, filename);
-    const publicUrl = `/uploads/users/${id}/${filename}`;
+    
+    // Generar URL relativa (como esperan otros servicios)
+    const publicUrl = `/public/users/${id}/${filename}`;
+
+    console.log('Saving file to:', filePath);
+    console.log('Public URL will be:', publicUrl);
 
     // Mover archivo
     fs.writeFileSync(filePath, file.buffer);
+    console.log('File saved successfully');
 
     // Actualizar usuario
     if (!user.personalInfo) user.personalInfo = {};
     user.personalInfo.avatarUrl = publicUrl;
     await this.userRepository.save(user);
+    console.log('User updated with new avatar URL');
 
     return user;
   }

@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MulterModule } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ormConfig } from './config/ormconfig';
@@ -37,6 +39,7 @@ import { FileUploadService } from './common/services/file-upload.service';
       useFactory: ormConfig,
       inject: [ConfigService],
     }),
+    MulterModule.register({ storage: memoryStorage() }),
     TeamMembersModule,
     ArticlesModule,
     TestimonialsModule,

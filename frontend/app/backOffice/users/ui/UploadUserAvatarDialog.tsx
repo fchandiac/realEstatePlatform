@@ -77,7 +77,8 @@ const UploadUserAvatarDialog: React.FC<UploadUserAvatarDialogProps> = ({
         error(result.error || 'Error al actualizar el avatar');
       }
     } catch (err) {
-      error('Error inesperado al actualizar el avatar');
+      console.error('Upload error:', err);
+      error('Error al actualizar el avatar');
     } finally {
       setIsLoading(false);
     }
@@ -139,13 +140,7 @@ const UploadUserAvatarDialog: React.FC<UploadUserAvatarDialogProps> = ({
                 </span>
               )}
             </div>
-            {selectedFile && (
-              <div className="absolute -bottom-2 -right-2 bg-green-500 text-white rounded-full p-1">
-                <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>
-                  check
-                </span>
-              </div>
-            )}
+         
           </div>
 
           <div className="text-center">

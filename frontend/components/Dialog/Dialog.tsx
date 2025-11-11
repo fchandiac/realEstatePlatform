@@ -260,8 +260,8 @@ const Dialog: React.FC<DialogProps> = ({
       : `flex ${getPositioningClasses()}`;
 
   const contentClass = [
-    'bg-white rounded-lg shadow-lg p-4 sm:p-6',
-    fullWidth ? 'w-full mx-4 sm:mx-6 md:mx-8' : baseXsMargins,
+    'bg-white rounded-lg shadow-lg p-4 sm:p-4',
+    fullWidth ? 'w-full mx-4 sm:mx-4 md:mx-4' : baseXsMargins,
     preset,
     buildResponsiveWidthClasses(),
     buildResponsiveBehaviorClasses(),
@@ -328,7 +328,7 @@ const Dialog: React.FC<DialogProps> = ({
 
         {/* Actions area - conditionally rendered */}
         {!hideActions && actions && (
-          <div className="w-full pt-4 border-t border-gray-200 mt-4" data-test-id="dialog-actions">
+          <div className="w-full pt-4 mt-4" data-test-id="dialog-actions">
             {actions}
           </div>
         )}
