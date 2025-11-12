@@ -25,7 +25,7 @@ export interface BlogCardProps {
 const FALLBACK_IMAGE_DATA_URL =
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+    `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400">
       <rect width="100%" height="100%" fill="#f3f4f6"/>
       <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9ca3af" font-size="16" font-family="Arial, Helvetica, sans-serif">
         Imagen no disponible
@@ -60,7 +60,7 @@ export default function BlogCard({
   const CardInner = (
     <div
       className="relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
-      style={{ aspectRatio: '4/3' }}
+      style={{ aspectRatio: '3/4' }}
       onClick={href ? undefined : handleClick}
       role={href ? undefined : 'button'}
       tabIndex={href ? -1 : 0}
