@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import IconButton from '@/components/IconButton/IconButton';
+import Dialog from '@/components/Dialog/Dialog';
 import FullProperty from '../../ui/fullProperty/FullProperty';
 
 interface SaleMoreButtonProps {
@@ -41,13 +42,21 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
           padding: 4
         }}
       />
-      {isOpen && (
+      <Dialog
+        open={isOpen}
+        onClose={handleClose}
+        size="custom"
+        maxWidth="95vw"
+        fullWidth={false}
+        title="Detalles de la Propiedad"
+        showCloseButton={true}
+        scroll="paper"
+        maxHeight="90vh"
+      >
         <FullProperty
           propertyId={property.id}
-          open={isOpen}
-          onClose={handleClose}
         />
-      )}
+      </Dialog>
     </div>
   );
 };

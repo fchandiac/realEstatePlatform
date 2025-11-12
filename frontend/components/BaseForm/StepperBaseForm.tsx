@@ -743,8 +743,8 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 							</Button>
 						)}
 						{isProcessing ? (
-							<DotProgress 
-								size={12} 
+							<DotProgress
+								size={8}
 								totalSteps={steps.length}
 								activeStep={activeStepIndex}
 							/>

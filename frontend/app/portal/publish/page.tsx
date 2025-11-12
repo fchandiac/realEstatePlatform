@@ -6,6 +6,7 @@ import StepperBaseForm, { StepperStep, BaseFormField } from '@/components/BaseFo
 import { listPropertyTypes, getPropertyTypeCharacteristics, PropertyTypeWithFeatures, publishProperty } from '@/app/actions/properties';
 import { getRegiones, getComunasByRegion } from '@/app/actions/commons';
 import Alert from '@/components/Alert/Alert';
+import PropertyCard, { PortalProperty } from '@/app/portal/ui/PropertyCard';
 
 type FormValues = Record<string, unknown>;
 
@@ -396,6 +397,88 @@ export default function PublishPropertyPage() {
       title: 'Datos de contacto',
       description: 'Cómo pueden contactarte los interesados',
       fields: step4Fields,
+    },
+    {
+      title: 'Resumen',
+      description: 'Revisa la información antes de publicar',
+      renderContent: (context) => {
+        // Crear el objeto property para PropertyCard
+        const propertyData: PortalProperty = {
+          id: 'preview', // ID temporal para preview
+          title: values.title as string || 'Sin título',
+          operationType: 'SALE',
+          price: parseFloat((values.price as string || '0').replace(/\./g, '').replace(/,/g, '')) || 0,
+          currencyPrice: (values.currencyPrice as string || 'CLP') as 'CLP' | 'UF',
+          state: regions.find(r => r.id === values.region)?.label || '',
+          city: comunas.find(c => c.id === values.city)?.label || '',
+          propertyType: selectedPropertyType ? {
+            id: selectedPropertyType.id,
+            name: selectedPropertyType.name
+          } : undefined,
+          bedrooms: values.bedrooms as number || null,
+          bathrooms: values.bathrooms as number || null,
+          builtSquareMeters: values.builtSquareMeters as number || null,
+          landSquareMeters: values.landSquareMeters as number || null,
+          parkingSpaces: values.parkingSpaces as number || null,
+          multimedia: (values.multimedia as File[])?.map((file, index) => ({
+            id: `temp-${index}`,
+            url: URL.createObjectURL(file),
+            type: 'PROPERTY_IMG',
+            format: 'IMG'
+          })) || []
+        };
+
+        return (
+          <div className="space-y-6">
+            <Alert variant="info">
+              Revisa la información de tu propiedad antes de publicarla. Si todo está correcto, haz clic en "Publicar propiedad".
+            </Alert>
+
+            {/* Tarjeta de propiedad */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <PropertyCard
+                  property={propertyData}
+                  onClick={() => {}} // No hacer nada en preview
+                />
+              </div>
+            </div>
+
+            {/* Dirección aparte */}
+            <div className="bg-white p-4 rounded-lg border">
+              <h3 className="text-lg font-semibold mb-2">Dirección</h3>
+              <p className="text-gray-700">{values.address as string || 'No especificada'}</p>
+            </div>
+
+            {/* Otros datos adicionales */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {selectedPropertyType?.hasConstructionYear && (values.constructionYear as number) > 0 && (
+                <div className="bg-white p-4 rounded-lg border">
+                  <h3 className="text-lg font-semibold mb-2">Año de construcción</h3>
+                  <p className="text-gray-700">{values.constructionYear as number}</p>
+                </div>
+              )}
+
+              {selectedPropertyType?.hasFloors && (values.floors as number) > 0 && (
+                <div className="bg-white p-4 rounded-lg border">
+                  <h3 className="text-lg font-semibold mb-2">Número de pisos</h3>
+                  <p className="text-gray-700">{values.floors as number}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Datos de contacto */}
+            <div className="bg-white p-4 rounded-lg border">
+              <h3 className="text-lg font-semibold mb-2">Datos de contacto</h3>
+              <div className="space-y-1">
+                <p className="text-gray-700"><strong>Nombre:</strong> {values.contactName as string || 'No especificado'}</p>
+                <p className="text-gray-700"><strong>Teléfono:</strong> {values.contactPhone as string || 'No especificado'}</p>
+                <p className="text-gray-700"><strong>Email:</strong> {values.contactEmail as string || 'No especificado'}</p>
+              </div>
+            </div>
+          </div>
+        );
+      }
     }
   ];
 
@@ -404,7 +487,7 @@ export default function PublishPropertyPage() {
       <div className="max-w-4xl mx-auto">
         <StepperBaseForm
           title="Publica tu propiedad"
-          subtitle="Completa los 4 pasos para publicar tu propiedad y encontrar compradores"
+          subtitle="Completa los 5 pasos para publicar tu propiedad y encontrar compradores"
           steps={steps}
           values={values}
           onChange={handleChange}
