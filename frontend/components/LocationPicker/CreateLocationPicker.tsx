@@ -20,14 +20,12 @@ import { TextField } from '../TextField/TextField';
 // Map rendering is handled by a client-only dynamically imported wrapper
 
 interface CreateLocationPickerProps {
-  height?: string;
   onChange?: (coordinates: { lat: number; lng: number } | null) => void;
 }
 
 // (map click handler and view setter live in CreateLocationPickerMap)
 
 const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({ 
-  height = '400px', 
   onChange 
 }) => {
   const [currentCoordinates, setCurrentCoordinates] = useState<{ lat: number; lng: number } | null>(null);
@@ -37,6 +35,8 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
   const [isUserSelected, setIsUserSelected] = useState(false);
   const [shouldCenterMap, setShouldCenterMap] = useState(true); // Controlar centrado automático
   const [flyToTarget, setFlyToTarget] = useState<[number, number] | null>(null);
+  const [permissionStatus, setPermissionStatus] = useState<'prompt' | 'granted' | 'denied' | null>(null);
+  const [permissionError, setPermissionError] = useState<string | null>(null);
   const onChangeRef = useRef(onChange);
 
   useEffect(() => {
@@ -45,6 +45,29 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
 
   const handleFlyEnd = useCallback(() => {
     setFlyToTarget(null);
+  }, []);
+
+  // Verificar estado de permiso de geolocalización
+  useEffect(() => {
+    const checkPermission = async () => {
+      if ('permissions' in navigator) {
+        try {
+          const permission = await navigator.permissions.query({ name: 'geolocation' });
+          setPermissionStatus(permission.state as 'prompt' | 'granted' | 'denied');
+          console.log('CreateLocationPicker - Estado de permiso:', permission.state);
+
+          // Escuchar cambios en el permiso
+          permission.addEventListener('change', () => {
+            setPermissionStatus(permission.state as 'prompt' | 'granted' | 'denied');
+            console.log('CreateLocationPicker - Estado de permiso actualizado:', permission.state);
+          });
+        } catch (error) {
+          console.warn('CreateLocationPicker - No se puede verificar permiso de geolocalización:', error);
+        }
+      }
+    };
+
+    checkPermission();
   }, []);
 
   // Obtener ubicación actual del usuario automáticamente al cargar
@@ -58,9 +81,7 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
     const getLocation = async () => {
       // PRIMERO: Intentar geolocalización del navegador
       if (navigator.geolocation) {
-        console.log('CreateLocationPicker - Intentando geolocalización del navegador...');
-        console.log('CreateLocationPicker - Navigator geolocation disponible:', !!navigator.geolocation);
-        console.log('CreateLocationPicker - User agent:', navigator.userAgent);
+        console.log('CreateLocationPicker - Solicitando geolocalización del navegador...');
 
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -72,8 +93,10 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
             setMapCenter(userLocation);
             setMarkerPosition(userLocation);
             setIsLoading(false);
-            setShouldCenterMap(true); // Permitir centrado para ubicación inicial
+            setShouldCenterMap(true);
             setFlyToTarget(null);
+            setPermissionStatus('granted');
+            setPermissionError(null);
 
             console.log('CreateLocationPicker - ✅ Ubicación obtenida del navegador:', newCoords, `Precisión: ${accuracy}m`);
             onChangeRef.current?.(newCoords);
@@ -81,32 +104,23 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
           async (error) => {
             console.warn('CreateLocationPicker - ❌ Error en geolocalización del navegador:', error);
             console.warn('CreateLocationPicker - Código de error:', error.code);
-            console.warn('CreateLocationPicker - Mensaje de error:', error.message);
 
-            // SEGUNDO: Intentar geolocalización del sistema como fallback
-            try {
-              console.log('CreateLocationPicker - Intentando geolocalización del sistema...');
-              if (typeof window !== 'undefined' && window.api && window.api.getSystemLocation) {
-                const systemLocation = await window.api.getSystemLocation();
-                const systemCoords = { lat: systemLocation.lat, lng: systemLocation.lng };
-                const systemLocationArr: [number, number] = [systemLocation.lat, systemLocation.lng];
-
-                setCurrentCoordinates(systemCoords);
-                setMapCenter(systemLocationArr);
-                setMarkerPosition(systemLocationArr);
-                setIsLoading(false);
-                setShouldCenterMap(true); // Permitir centrado para ubicación inicial
-                setFlyToTarget(null);
-
-                console.log('CreateLocationPicker - ✅ Ubicación obtenida del sistema:', systemCoords, `Fuente: ${systemLocation.source}`);
-                onChangeRef.current?.(systemCoords);
-                return;
-              }
-            } catch (systemError) {
-              console.warn('CreateLocationPicker - ❌ Error en geolocalización del sistema:', systemError);
+            // Manejar diferentes códigos de error
+            let errorMessage = 'No se pudo obtener la ubicación';
+            if (error.code === 1) {
+              errorMessage = 'Permiso de geolocalización denegado. Por favor, habilita la geolocalización en la configuración del navegador.';
+              setPermissionStatus('denied');
+            } else if (error.code === 2) {
+              errorMessage = 'No se pudo obtener la posición. Intenta de nuevo en unos momentos.';
+              setPermissionStatus('prompt');
+            } else if (error.code === 3) {
+              errorMessage = 'La solicitud de geolocalización tardó demasiado.';
             }
 
-            // TERCERO: Usar ubicación por defecto como último recurso
+            setPermissionError(errorMessage);
+            console.warn('CreateLocationPicker - Mensaje de error:', errorMessage);
+
+            // Usar ubicación por defecto como fallback
             const defaultCoords = { lat: -33.45, lng: -70.6667 };
             const defaultLocation = [-33.45, -70.6667] as [number, number];
 
@@ -114,7 +128,7 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
             setMapCenter(defaultLocation);
             setMarkerPosition(defaultLocation);
             setIsLoading(false);
-            setShouldCenterMap(true); // Permitir centrado para ubicación inicial
+            setShouldCenterMap(true);
             setFlyToTarget(null);
 
             console.log('CreateLocationPicker - ⚠️ Usando ubicación por defecto:', defaultCoords);
@@ -122,32 +136,13 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
           },
           {
             enableHighAccuracy: true,
-            timeout: 15000, // Aumentado a 15 segundos
-            maximumAge: 300000 // 5 minutos
+            timeout: 15000,
+            maximumAge: 300000
           }
         );
       } else {
-        // Sin geolocalización del navegador, intentar sistema directamente
-        console.log('CreateLocationPicker - Navegador sin geolocalización, intentando sistema...');
-        try {
-          if (typeof window !== 'undefined' && window.api && window.api.getSystemLocation) {
-            const systemLocation = await window.api.getSystemLocation();
-            const systemCoords = { lat: systemLocation.lat, lng: systemLocation.lng };
-            const systemLocationArr: [number, number] = [systemLocation.lat, systemLocation.lng];
-
-            setCurrentCoordinates(systemCoords);
-            setMapCenter(systemLocationArr);
-            setMarkerPosition(systemLocationArr);
-            setIsLoading(false);
-            setShouldCenterMap(true); // Permitir centrado para ubicación inicial
-
-            console.log('CreateLocationPicker - ✅ Ubicación obtenida del sistema:', systemCoords);
-            onChangeRef.current?.(systemCoords);
-            return;
-          }
-        } catch (systemError) {
-          console.warn('CreateLocationPicker - ❌ Error en geolocalización del sistema:', systemError);
-        }
+        console.warn('CreateLocationPicker - El navegador no soporta geolocalización');
+        setPermissionError('Tu navegador no soporta geolocalización.');
 
         // Usar ubicación por defecto
         const defaultCoords = { lat: -33.45, lng: -70.6667 };
@@ -157,16 +152,15 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
         setMapCenter(defaultLocation);
         setMarkerPosition(defaultLocation);
         setIsLoading(false);
-        setShouldCenterMap(true); // Permitir centrado para ubicación inicial
-    setFlyToTarget(null);
+        setShouldCenterMap(true);
+        setFlyToTarget(null);
 
-        console.log('CreateLocationPicker - ⚠️ Usando ubicación por defecto:', defaultCoords);
         onChangeRef.current?.(defaultCoords);
       }
     };
 
     getLocation();
-  }, [isUserSelected]); // Solo depende de isUserSelected, no de onChange
+  }, [isUserSelected]);
 
   const handleLocationSelect = (lat: number, lng: number) => {
     console.log('CreateLocationPicker - Click en mapa detectado:', { lat, lng });
@@ -193,7 +187,7 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
   return (
     <>
       {isLoading ? (
-        <div style={{ height, width: '100%' }} className="flex items-center justify-center bg-gray-100">
+        <div className="w-full bg-gray-100 flex items-center justify-center" style={{ aspectRatio: '16 / 9' }}>
           <p className="text-secondary">Obteniendo ubicación...</p>
         </div>
       ) : (
@@ -201,8 +195,8 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
       
           <div 
             style={{ 
-              height, 
               width: '100%', 
+              aspectRatio: '16 / 9',
               borderRadius: '0.375rem', 
               overflow: 'hidden'
             }}

@@ -27,6 +27,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { SlideModule } from './modules/slide/slide.module';
 import { BlogsModule } from './modules/blogs/blogs.module';
 import { FileUploadService } from './common/services/file-upload.service';
+import { ConfigModule as CustomConfigModule } from './modules/config/config.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { FileUploadService } from './common/services/file-upload.service';
     AnalyticsModule,
     SlideModule,
     BlogsModule,
+    CustomConfigModule,
     // CustomConfigModule,
   ],
   controllers: [AppController],

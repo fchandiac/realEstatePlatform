@@ -222,12 +222,17 @@ export const TextField: React.FC<TextFieldProps> = ({
           onBlur={() => setFocused(false)}
           onChange={handleChange}
           className={`${placeholderClassRef.current ?? ''} block w-full min-w-[180px] rounded border-[1px] pr-4 py-2 text-sm font-light text-foreground border-border focus:outline-none transition-colors duration-200 ${(startIcon ? " pl-9" : " px-3")} ${contrastInput} ${disabledStyles} z-0`}
-          placeholder={required ? "" : (shrink || !showPlaceholder ? "" : (placeholder ?? label))}
+          placeholder={required ? "" : (placeholder ?? label)}
           required={required}
           readOnly={readOnly}
           disabled={disabled}
           autoComplete="off"
-          style={{ backgroundColor: "var(--color-background)", resize: 'none', ...(props.style || {}) }}
+          style={{ 
+            backgroundColor: "var(--color-background)", 
+            resize: 'none',
+            paddingTop: '0.75rem',
+            ...(props.style || {}) 
+          }}
           data-test-id={props["data-test-id"]}
           {...props}
         />
@@ -310,6 +315,12 @@ export const TextField: React.FC<TextFieldProps> = ({
       {placeholderColor && placeholderClassRef.current && (
         <style>{`input.${placeholderClassRef.current}::placeholder, textarea.${placeholderClassRef.current}::placeholder { color: ${placeholderColor} }`}</style>
       )}
+      <style>{`
+        textarea::placeholder {
+          line-height: 1.5rem;
+          text-align: left;
+        }
+      `}</style>
       <label
         className={`absolute left-3 -top-1 pointer-events-none transition-all duration-300 ease-in-out px-1 font-light text-xs text-foreground rounded-md bg-background` +
           (shrink ? " -translate-y-1 scale-90 opacity-100" : " opacity-0")}

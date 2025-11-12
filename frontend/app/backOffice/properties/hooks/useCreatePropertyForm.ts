@@ -31,7 +31,7 @@ export const useCreatePropertyForm = (onCloseCallback?: () => void) => {
     floors: 0,
     builtSquareMeters: 0,
     landSquareMeters: 0,
-    constructionYear: 0,
+    constructionYear: 2025,
     seoTitle: '',
     seoDescription: '',
     status: 'REQUEST',

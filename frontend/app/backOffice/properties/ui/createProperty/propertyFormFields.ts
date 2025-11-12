@@ -209,42 +209,50 @@ export const getPropertyDetailsFields = (
 // Función para obtener campos de ubicación
 export const getLocationFields = (
   stateOptions: LocationOption[],
-  cityOptions: LocationOption[]
-): BaseFormField[][] => [
-  [
-    {
-      name: 'state',
-      label: 'Estado/Región',
-      type: 'select',
+  cityOptions: LocationOption[],
+  selectedStateId?: string
+): BaseFormField[][] => {
+  // Filtrar ciudades por el estado seleccionado
+  const filteredCityOptions = selectedStateId 
+    ? cityOptions.filter(city => city.stateId === selectedStateId)
+    : [];
+  
+  return [
+    [
+      {
+        name: 'state',
+        label: 'Estado/Región',
+        type: 'select',
+        required: true,
+        options: mapLocationOptions(stateOptions),
+        width: '50%',
+      },
+      {
+        name: 'city',
+        label: 'Comuna',
+        type: 'select',
+        required: true,
+        options: mapLocationOptions(filteredCityOptions),
+        width: '50%',
+      },
+    ],
+    [{
+      name: 'address',
+      label: 'Dirección Completa',
+      type: 'textarea',
       required: true,
-      options: mapLocationOptions(stateOptions),
-      width: '50%',
-    },
-    {
-      name: 'city',
-      label: 'Comuna',
-      type: 'select',
+      rows: 3,
+      width: '100%',
+    }],
+    [{
+      name: 'coordinates',
+      label: 'Ubicación en Mapa',
+      type: 'location',
       required: true,
-      options: mapLocationOptions(cityOptions),
-      width: '50%',
-    },
-  ],
-  [{
-    name: 'address',
-    label: 'Dirección Completa',
-    type: 'textarea',
-    required: true,
-    rows: 3,
-    width: '100%',
-  }],
-  [{
-    name: 'coordinates',
-    label: 'Ubicación en Mapa',
-    type: 'location',
-    required: true,
-    width: '100%',
-  }],
-];
+      width: '100%',
+    }],
+  ];
+};
 
 // Función para obtener campos de multimedia
 export const getMultimediaFields = (): BaseFormField[][] => [

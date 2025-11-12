@@ -44,6 +44,7 @@ export interface PropertyTypeOption {
 export interface LocationOption {
   id: string;
   label: string;
+  stateId?: string; // ID de la región (para filtrar comunas)
 }
 
 export interface CreatePropertyContextType {

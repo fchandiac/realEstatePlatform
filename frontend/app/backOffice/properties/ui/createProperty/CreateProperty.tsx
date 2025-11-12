@@ -56,7 +56,7 @@ export default function CreateProperty({
     {
       title: 'Ubicación',
       description: 'Estado, ciudad, dirección y coordenadas',
-      fields: getLocationFields(stateOptions, cityOptions),
+      fields: getLocationFields(stateOptions, cityOptions, formData.state?.id),
     },
     {
       title: 'Multimedia',
@@ -73,7 +73,7 @@ export default function CreateProperty({
       description: 'Información adicional para el equipo interno',
       fields: getInternalNotesFields(),
     },
-  ], [propertyTypes, selectedPropertyType, stateOptions, cityOptions]);
+  ], [propertyTypes, selectedPropertyType, stateOptions, cityOptions, formData.state?.id]);
 
   const handleSubmit = async () => {
     await handleFormSubmit();

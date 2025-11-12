@@ -13,12 +13,16 @@ export class ConfigController {
   }
 
   @Get('comunas')
-  getComunasByRegion(@Query('region') region: RegionEnum) {
+  getComunasByRegion(@Query('region') region: string) {
     console.log('Received region:', region); // Depurar valor recibido
-    if (!region || !REGION_COMMUNES[region]) {
+    if (!region || !REGION_COMMUNES[region as RegionEnum]) {
       console.warn(`Invalid region: ${region}`);
       return [];
     }
-    return REGION_COMMUNES[region].map((comuna) => ({ id: comuna, label: comuna }));
+    return REGION_COMMUNES[region as RegionEnum].map((comuna) => ({
+      id: comuna,
+      label: comuna,
+      stateId: region // Agregar el stateId correspondiente a la región
+    }));
   }
 }

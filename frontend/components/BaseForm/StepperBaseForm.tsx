@@ -324,9 +324,9 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 	const hasCustomContent = Boolean(stepCustomContent);
 
 	const baseFormLayoutClass = hasCustomContent
-		? "w-full flex flex-col gap-4"
+		? "w-full flex flex-col gap-2"
 		: safeColumns > 1
-		? `w-full grid grid-cols-${safeColumns} gap-4`
+		? `w-full grid grid-cols-${safeColumns} gap-2`
 		: "w-full flex flex-col gap-2";
 
 	const resolvedFormClassName = [baseFormLayoutClass, formClassName].filter(Boolean).join(" ");
@@ -691,7 +691,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 			<form
 				onSubmit={handleSubmit}
-				className="w-full flex flex-col gap-4" // Contenedor principal de filas
+				className="w-full flex flex-col gap-2" // Contenedor principal de filas
 				style={formStyle}
 				{...(dataTestId ? { "data-test-id": dataTestId } : {})}
 			>
@@ -700,7 +700,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 				) : (
 					// Nueva lógica de renderizado por filas
 					normalizedFields.map((row, rowIndex) => (
-						<div key={`row-${rowIndex}`} className="flex items-start gap-4 w-full">
+						<div key={`row-${rowIndex}`} className="flex items-start gap-2 w-full">
 							{row.map((field) => (
 								<div
 									key={field.name}
@@ -714,7 +714,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 					))
 				)}
 
-				<div className="col-span-full flex justify-between items-center mt-6">
+				<div className="col-span-full flex justify-between items-center mt-2">
 					<div className="flex gap-2">
 						{showCloseButton && onClose && (
 							<Button
@@ -757,7 +757,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 				</div>
 
 				{errors.length > 0 && (
-					<div className="col-span-full flex flex-col gap-2 mt-4">
+					<div className="col-span-full flex flex-col gap-2 mt-2">
 						{errors.map((err, index) => (
 							<Alert key={index} variant="error">
 								{err}
@@ -767,7 +767,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 				)}
 
 				{validationErrors.length > 0 && (
-					<div className="col-span-full flex flex-col gap-2 mt-4">
+					<div className="col-span-full flex flex-col gap-2 mt-2">
 						{validationErrors.map((err, index) => (
 							<Alert key={`validation-${index}`} variant="error">
 								{err}
