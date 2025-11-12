@@ -1,7 +1,6 @@
 "use client";
 
 import React from 'react';
-import { Button } from '@/components/Button/Button';
 
 export enum BlogCategory {
   COMPRAR = 'Comprar',
@@ -77,21 +76,18 @@ export default function BlogCard({
       {/* Overlay gradiente sutil en la parte inferior */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-      {/* Badge de categoría - esquina superior derecha */}
-      <div className="absolute top-4 right-4 z-10">
+      {/* Badge de categoría y fecha - misma fila con space between */}
+      <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10">
         <div className="bg-white/95 backdrop-blur-sm text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full border border-white/30 shadow-sm">
           {category}
         </div>
-      </div>
 
-      {/* Fecha de publicación - esquina inferior izquierda */}
-      {publishedAt && (
-        <div className="absolute bottom-4 left-4 z-10">
+        {publishedAt && (
           <div className="bg-black/70 backdrop-blur-sm text-white/90 text-xs font-medium px-3 py-1.5 rounded-lg">
             {formatDate(publishedAt)}
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Contenido principal - parte inferior con mejor espaciado */}
       <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
