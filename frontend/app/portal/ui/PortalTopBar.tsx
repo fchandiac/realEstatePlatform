@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import IconButton from "@/components/IconButton/IconButton";
 import { Button } from "@/components/Button/Button";
 import Dialog from "@/components/Dialog/Dialog";
-import LoginForm from "./loginForm";
-import RegisterForm from "./registerForm";
+import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
 import { getIdentity } from "@/app/actions/identity";
 
 interface RegisterData {

@@ -530,41 +530,23 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 				const currentCurrency = currencyField ? values[currencyField] : 'CLP';
 				const currencySymbol = currencies.find(c => c.id === currentCurrency)?.symbol || '$';
 
-				const displayValue = (() => {
-					if (typeof fieldValue === "string") {
-						// Si ya tiene el símbolo, lo mantenemos
-						if (fieldValue.startsWith('$') || fieldValue.startsWith('UF')) {
-							return fieldValue;
-						}
-						// Si no tiene símbolo, lo agregamos
-						return `${currencySymbol} ${fieldValue}`;
-					}
-					if (typeof fieldValue === "number") {
-						return `${currencySymbol} ${fieldValue}`;
-					}
-					return "";
-				})();
-
 				return (
 					<div key={field.name}>
 						<TextField
 							label={field.label}
-							value={displayValue}
+							value={String(fieldValue || '')}
 							onChange={(event) => {
-								let value = event.target.value;
-								// Remover el símbolo si está presente para guardar solo el número
-								if (value.startsWith('$ ')) {
-									value = value.replace('$ ', '');
-								} else if (value.startsWith('UF ')) {
-									value = value.replace('UF ', '');
-								}
-								onChange(field.name, value);
+								onChange(field.name, event.target.value);
 							}}
-							type="text"
+							type="currency"
 							name={field.name}
 							required={field.required}
+							currencySymbol={currencySymbol}
+							currencyField={currencyField}
+							currencies={currencies}
 							data-test-id={`currency-${field.name}`}
 							{...commonProps}
+							{...(field.props || {})}
 						/>
 					</div>
 				);
@@ -613,17 +595,14 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 	return (
 		<div className={containerClassName}>
-			{title && (
-				<div className="title p-1 pb-0 w-full mb-0 leading-tight">{title}</div>
-			)}
 			{subtitle && (
 				<div className="subtitle p-1 pt-0 w-full mb-3 leading-snug">{subtitle}</div>
 			)}
 
 			{totalSteps > 0 && (
 				<div className="mb-6">
-					{/* Dots que representan los steps */}
-					<div className="flex justify-start items-center mb-4">
+					{/* Dots que representan los steps + Título */}
+					<div className="flex justify-between items-center mb-4">
 						{/* Dots que representan los steps */}
 						<div className="flex items-center gap-4">
 							{steps.map((step, index) => {
@@ -635,11 +614,11 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 								const baseDotClasses = "w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-200";
 								const stateClasses = (() => {
 									if (isStepActive) {
-										return "bg-primary border-2 border-primary";
+										return "bg-primary border-2 border-primary text-white";
 									}
 
 									if (isStepCompleted) {
-										return "bg-gray-300 border-2 border-gray-300";
+										return "bg-gray-300 border-2 border-gray-300 text-white";
 									}
 
 									return "bg-transparent border border-gray-300 text-gray-500";
@@ -650,11 +629,16 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 										key={`dot-${index}`}
 										className={`${baseDotClasses} ${stateClasses}`}
 									>
-										{!isStepActive && !isStepCompleted && (index + 1)}
+										{index + 1}
 									</div>
 								);
 							})}
 						</div>
+						
+						{/* Título alineado a la derecha */}
+						{title && (
+							<div className="title p-1 leading-tight text-right">{title}</div>
+						)}
 					</div>
 
 					{/* Segundo row: Información del step actual + Dot grande */}
@@ -759,7 +743,11 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 							</Button>
 						)}
 						{isProcessing ? (
-							<DotProgress size={18} />
+							<DotProgress 
+								size={18} 
+								totalSteps={steps.length}
+								activeStep={activeStepIndex}
+							/>
 						) : (
 							<Button variant="primary" type="submit" size="sm">
 								{isLastStep ? submitLabel ?? "Guardar" : "→"}

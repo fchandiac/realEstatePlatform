@@ -14,6 +14,10 @@ interface DotProgressProps {
   className?: string;
   /** Intervalo de animación en ms */
   interval?: number;
+  /** Número total de pasos (si no se proporciona, usa 5) */
+  totalSteps?: number;
+  /** Paso activo (si se proporciona, no anima) */
+  activeStep?: number;
 }
 
 const DEFAULT_SIZE = 16;
@@ -29,31 +33,56 @@ const DotProgress: React.FC<DotProgressProps> = ({
   colorNeutral = DEFAULT_NEUTRAL,
   className = "",
   interval = DEFAULT_INTERVAL,
+  totalSteps = 5,
+  activeStep,
 }) => {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(activeStep ?? 0);
 
   useEffect(() => {
+    // Si activeStep está definido, lo usamos y no animamos
+    if (activeStep !== undefined) {
+      setActive(activeStep);
+      return;
+    }
+
+    // Si no está definido, hacemos la animación automática
     const timer = setInterval(() => {
-      setActive((prev) => (prev + 1) % 5);
+      setActive((prev) => (prev + 1) % totalSteps);
     }, interval);
     return () => clearInterval(timer);
-  }, [interval]);
+  }, [interval, totalSteps, activeStep]);
 
   return (
     <div className={`flex items-center ${className}`} style={{ gap }} data-test-id="dot-progress-root">
-      {[...Array(5)].map((_, i) => (
-        <span
+      {[...Array(totalSteps)].map((_, i) => (
+        <div
           key={i}
           style={{
             width: size,
             height: size,
             borderRadius: "50%",
             backgroundColor: i === active ? colorPrimary : colorNeutral,
-            display: "inline-block",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
             transition: "background-color 0.2s",
-            animation: i === active ? "dotPulse 1s infinite ease-in-out" : undefined,
+            animation: i === active && activeStep === undefined ? "dotPulse 1s infinite ease-in-out" : undefined,
+            cursor: "default",
           }}
-        />
+        >
+          {i === active && (
+            <span
+              style={{
+                color: "white",
+                fontSize: `${size * 0.6}px`,
+                fontWeight: "bold",
+                lineHeight: 1,
+              }}
+            >
+              {i + 1}
+            </span>
+          )}
+        </div>
       ))}
       <style>{`
         @keyframes dotPulse {

@@ -93,7 +93,6 @@ export default function CreateProperty({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold mb-6">Crear Propiedad</h1>
 
       {submitError && (
         <div className="mb-6">
@@ -104,6 +103,7 @@ export default function CreateProperty({
       )}
 
       <StepperBaseForm
+       title='Crear Propiedad'
         steps={steps}
         values={formData as unknown as Record<string, unknown>}
         onChange={handleChange}
