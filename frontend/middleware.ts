@@ -8,14 +8,22 @@ export default withAuth(
 
     // Solo aplicar restricciones a rutas del backoffice
     if (pathname.startsWith('/backOffice')) {
+      console.log('Middleware - Acceso a backoffice:', pathname);
+      console.log('Middleware - Token presente:', !!token);
+      console.log('Middleware - Token role:', token?.role);
+
       // Verificar autenticación
       if (!token) {
+        console.log('Middleware - No hay token, redirigiendo a /');
         return NextResponse.redirect(new URL('/', req.url));
       }
       // Verificar rol: solo admin o agente pueden acceder
-      if (!token.role || !['admin', 'agente'].includes(token.role as string)) {
+      if (!token.role || !['ADMIN', 'AGENT'].includes(token.role as string)) {
+        console.log('Middleware - Rol no autorizado:', token.role, '- redirigiendo a /');
         return NextResponse.redirect(new URL('/', req.url));
       }
+
+      console.log('Middleware - Acceso permitido para rol:', token.role);
     }
     // Rutas públicas (portal, etc.) no tienen restricciones
   },
