@@ -429,7 +429,7 @@ export default function PublishPropertyPage() {
         };
 
         return (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <Alert variant="info">
               Revisa la información de tu propiedad antes de publicarla. Si todo está correcto, haz clic en "Publicar propiedad".
             </Alert>
@@ -445,35 +445,35 @@ export default function PublishPropertyPage() {
             </div>
 
             {/* Dirección aparte */}
-            <div className="bg-white p-4 rounded-lg border">
-              <h3 className="text-lg font-semibold mb-2">Dirección</h3>
-              <p className="text-gray-700">{values.address as string || 'No especificada'}</p>
+            <div className="bg-white p-3 rounded-lg border">
+              <h5 className="text-base font-semibold mb-1">Dirección</h5>
+              <p className="text-gray-700 text-sm">{values.address as string || 'No especificada'}</p>
             </div>
 
             {/* Otros datos adicionales */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {selectedPropertyType?.hasConstructionYear && (values.constructionYear as number) > 0 && (
-                <div className="bg-white p-4 rounded-lg border">
-                  <h3 className="text-lg font-semibold mb-2">Año de construcción</h3>
-                  <p className="text-gray-700">{values.constructionYear as number}</p>
+                <div className="bg-white p-3 rounded-lg border">
+                  <h5 className="text-base font-semibold mb-1">Año de construcción</h5>
+                  <p className="text-gray-700 text-sm">{values.constructionYear as number}</p>
                 </div>
               )}
 
               {selectedPropertyType?.hasFloors && (values.floors as number) > 0 && (
-                <div className="bg-white p-4 rounded-lg border">
-                  <h3 className="text-lg font-semibold mb-2">Número de pisos</h3>
-                  <p className="text-gray-700">{values.floors as number}</p>
+                <div className="bg-white p-3 rounded-lg border">
+                  <h5 className="text-base font-semibold mb-1">Número de pisos</h5>
+                  <p className="text-gray-700 text-sm">{values.floors as number}</p>
                 </div>
               )}
             </div>
 
             {/* Datos de contacto */}
-            <div className="bg-white p-4 rounded-lg border">
-              <h3 className="text-lg font-semibold mb-2">Datos de contacto</h3>
+            <div className="bg-white p-3 rounded-lg border">
+              <h5 className="text-base font-semibold mb-1">Datos de contacto</h5>
               <div className="space-y-1">
-                <p className="text-gray-700"><strong>Nombre:</strong> {values.contactName as string || 'No especificado'}</p>
-                <p className="text-gray-700"><strong>Teléfono:</strong> {values.contactPhone as string || 'No especificado'}</p>
-                <p className="text-gray-700"><strong>Email:</strong> {values.contactEmail as string || 'No especificado'}</p>
+                <p className="text-gray-700 text-sm"><strong>Nombre:</strong> {values.contactName as string || 'No especificado'}</p>
+                <p className="text-gray-700 text-sm"><strong>Teléfono:</strong> {values.contactPhone as string || 'No especificado'}</p>
+                <p className="text-gray-700 text-sm"><strong>Email:</strong> {values.contactEmail as string || 'No especificado'}</p>
               </div>
             </div>
           </div>
