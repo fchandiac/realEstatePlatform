@@ -3,16 +3,20 @@ import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const jose = require('jose');
-
 @Injectable()
 export class JweService implements OnModuleInit {
   private publicKey: any;
   private privateKey: any;
+  private jose: any;
 
   constructor(private readonly configService: ConfigService) {}
 
   async onModuleInit() {
+    // Use dynamic import to avoid TypeScript converting to require()
+    this.jose = await new Function(
+      'specifier',
+      'return import(specifier)',
+    )('jose');
     await this.loadKeys();
   }
 
@@ -31,8 +35,11 @@ export class JweService implements OnModuleInit {
       );
       const publicKeyPem = fs.readFileSync(path.resolve(publicKeyPath), 'utf8');
 
-      this.privateKey = await jose.importPKCS8(privateKeyPem, 'RSA-OAEP-256');
-      this.publicKey = await jose.importSPKI(publicKeyPem, 'RSA-OAEP-256');
+      this.privateKey = await this.jose.importPKCS8(
+        privateKeyPem,
+        'RSA-OAEP-256',
+      );
+      this.publicKey = await this.jose.importSPKI(publicKeyPem, 'RSA-OAEP-256');
     } catch (error) {
       throw new Error(`Failed to load JWE keys: ${error.message}`);
     }
@@ -41,7 +48,7 @@ export class JweService implements OnModuleInit {
   async encrypt(payload: any, expiresIn: string = '15m'): Promise<string> {
     const now = Math.floor(Date.now() / 1000);
 
-    return new jose.EncryptJWT(payload)
+    return new this.jose.EncryptJWT(payload)
       .setProtectedHeader({ alg: 'RSA-OAEP-256', enc: 'A256GCM' })
       .setIssuedAt(now)
       .setIssuer('real-estate-platform')
@@ -52,7 +59,7 @@ export class JweService implements OnModuleInit {
 
   async decrypt(token: string): Promise<any> {
     try {
-      const { payload } = await jose.jwtDecrypt(token, this.privateKey, {
+      const { payload } = await this.jose.jwtDecrypt(token, this.privateKey, {
         issuer: 'real-estate-platform',
         audience: 'real-estate-platform-users',
       });

@@ -6,6 +6,7 @@ import { PropertyOperationType } from '../../src/common/enums/property-operation
 import { CurrencyPriceEnum } from '../../src/entities/property.entity';
 import { RegionEnum } from '../../src/common/regions/regions.enum';
 import { ComunaEnum } from '../../src/common/regions/comunas.enum';
+import { MultimediaFormat, MultimediaType } from '../../src/entities/multimedia.entity';
 import * as bcrypt from 'bcrypt';
 import {
   PersonSeed,
@@ -193,12 +194,14 @@ export class SeederFactory {
   static createRandomMultimedia() {
     return {
       url: faker.image.url(),
-      type: faker.helpers.arrayElement(['IMAGE', 'VIDEO', 'DOCUMENT']),
-      title: faker.lorem.words(2),
+      format: faker.helpers.arrayElement(Object.values(MultimediaFormat)),
+      type: faker.helpers.arrayElement(Object.values(MultimediaType)),
+      filename: faker.system.fileName(),
+      fileSize: faker.number.int({ min: 1000, max: 5000000 }),
+      seoTitle: faker.lorem.words(3),
       description: faker.lorem.sentence(),
       createdAt: faker.date.past(),
-      updatedAt: new Date(),
-      deletedAt: null
+      updatedAt: new Date()
     };
   }
 
@@ -224,8 +227,7 @@ export class SeederFactory {
       name: selectedType,
       description: faker.lorem.sentence(),
       createdAt: faker.date.past(),
-      updatedAt: new Date(),
-      deletedAt: null
+      updatedAt: new Date()
     };
   }
 
@@ -266,8 +268,7 @@ export class SeederFactory {
       hasFloors: faker.datatype.boolean(),
       hasConstructionYear: faker.datatype.boolean(),
       createdAt: faker.date.past(),
-      updatedAt: new Date(),
-      deletedAt: null
+      updatedAt: new Date()
     };
   }
 
@@ -290,8 +291,7 @@ export class SeederFactory {
       email: faker.internet.email(),
       phone: `+56 9 ${faker.string.numeric(4)} ${faker.string.numeric(4)}`,
       createdAt: faker.date.past(),
-      updatedAt: new Date(),
-      deletedAt: null
+      updatedAt: new Date()
     };
   }
 
@@ -311,8 +311,7 @@ export class SeederFactory {
       vision: faker.lorem.paragraph(),
       multimediaUrl: faker.image.url(),
       createdAt: faker.date.past(),
-      updatedAt: new Date(),
-      deletedAt: null
+      updatedAt: new Date()
     };
   }
 
@@ -324,8 +323,7 @@ export class SeederFactory {
       isPublished: faker.datatype.boolean(),
       publishDate: faker.date.past(),
       createdAt: faker.date.past(),
-      updatedAt: new Date(),
-      deletedAt: null
+      updatedAt: new Date()
     };
   }
 

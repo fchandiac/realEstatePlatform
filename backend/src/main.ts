@@ -1,3 +1,16 @@
+import 'reflect-metadata';
+import * as crypto from 'crypto';
+
+// Polyfill para crypto en contexto global (DEBE estar ANTES de cualquier otro import)
+if (typeof globalThis.crypto === 'undefined') {
+  (globalThis as any).crypto = crypto.webcrypto;
+}
+
+// Añade randomUUID si no está disponible
+if (typeof (globalThis.crypto as any).randomUUID !== 'function') {
+  (globalThis.crypto as any).randomUUID = () => crypto.randomUUID();
+}
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
@@ -19,7 +32,14 @@ async function bootstrap() {
 
   // Configuración de CORS
   app.enableCors({
-    origin: ['http://localhost:3001', 'http://localhost:3000'], // Permitir frontend en ambos puertos
+    origin: [
+      'http://localhost:3001', 
+      'http://localhost:3000',
+      'http://localhost:3002',
+      'http://72.61.6.232:3001',
+      'http://72.61.6.232:3000',
+      'http://72.61.6.232:3002',
+    ], // Permitir frontend en múltiples puertos y la IP pública
     credentials: true, // Importante para NextAuth cookies
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],

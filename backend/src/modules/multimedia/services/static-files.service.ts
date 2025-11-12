@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { UploadConfigService } from '../../../config/upload.config';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import {
@@ -11,9 +12,12 @@ import {
 export class StaticFilesService implements OnModuleInit {
   private readonly uploadBasePath: string;
 
-  constructor(private configService: ConfigService) {
-    // Obtiene la ruta base de uploads desde la configuración o usa el valor por defecto
-    this.uploadBasePath = this.configService.get('UPLOAD_PATH') || 'public';
+  constructor(
+    private configService: ConfigService,
+    private uploadConfig: UploadConfigService,
+  ) {
+    // Obtiene la ruta base de uploads desde UploadConfigService
+    this.uploadBasePath = this.uploadConfig.getUploadBasePath();
   }
 
   // Se ejecuta cuando el módulo se inicializa
@@ -67,13 +71,8 @@ export class StaticFilesService implements OnModuleInit {
 
   // Genera una URL pública para un archivo
   getPublicUrl(relativePath: string): string {
-    // Obtener URL base del backend si está configurada
-    const backendUrl = this.configService.get<string>('BACKEND_PUBLIC_URL') ||
-                      this.configService.get<string>('BACKEND_URL') ||
-                      `http://localhost:${this.configService.get('PORT', 3001)}`;
-
-    // Retornar URL absoluta completa
-    return `${backendUrl}/public/${relativePath}`;
+    // Usar la URL base configurada
+    return this.uploadConfig.buildFileUrl(relativePath);
   }
 
   // Obtiene la ruta completa del sistema de archivos para un archivo
