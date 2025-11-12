@@ -1,27 +1,30 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { withAuth } from "next-auth/middleware"
+import { NextResponse } from "next/server"
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export default withAuth(
+  function middleware(req) {
+    const { pathname } = req.nextUrl;
+    const token = req.nextauth.token;
 
-  // Check if the request is for backOffice routes
-  if (pathname.startsWith('/backOffice')) {
-    // Check for NextAuth session cookie
-    const sessionCookie = request.cookies.get('next-auth.session-token') ||
-                         request.cookies.get('next-auth.session-token.0') ||
-                         request.cookies.get('__Secure-next-auth.session-token') ||
-                         request.cookies.get('__Secure-next-auth.session-token.0');
-
-    // If no session cookie exists, redirect to home page
-    if (!sessionCookie) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/';
-      return NextResponse.redirect(url);
+    // Solo aplicar restricciones a rutas del backoffice
+    if (pathname.startsWith('/backOffice')) {
+      // Verificar autenticación
+      if (!token) {
+        return NextResponse.redirect(new URL('/', req.url));
+      }
+      // Verificar rol: solo admin o agente pueden acceder
+      if (!token.role || !['admin', 'agente'].includes(token.role)) {
+        return NextResponse.redirect(new URL('/', req.url));
+      }
     }
+    // Rutas públicas (portal, etc.) no tienen restricciones
+  },
+  {
+    callbacks: {
+      authorized: () => true, // Manejar lógica manualmente en la función middleware
+    },
   }
-
-  return NextResponse.next();
-}
+)
 
 export const config = {
   matcher: [

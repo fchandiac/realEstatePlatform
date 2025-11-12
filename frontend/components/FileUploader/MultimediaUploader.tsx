@@ -11,7 +11,7 @@ interface MultimediaUploaderProps {
   accept?: string;
   maxFiles?: number;
   maxSize?: number; // Tamaño máximo en MB
-  aspectRatio?: 'square' | 'video' | 'auto';
+  aspectRatio?: 'square' | 'video' | '16:9' | 'auto';
   buttonType?: 'icon' | 'normal';
   variant?: 'default' | 'avatar'; // Nueva prop para variante avatar
 }
@@ -23,7 +23,7 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
   accept = 'image/*,video/*',
   maxFiles = 5,
   maxSize = 9, // 9MB por defecto (margen con el límite de 10MB de Next.js)
-  aspectRatio = 'auto',
+  aspectRatio = '16:9',
   buttonType = 'icon',
   variant = 'default', // Valor por defecto
 }) => {
@@ -237,6 +237,7 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
                       className={`w-full object-cover rounded-lg shadow ${
                         aspectRatio === 'square' ? 'aspect-square' :
                         aspectRatio === 'video' ? 'aspect-video' :
+                        aspectRatio === '16:9' ? 'aspect-video' :
                         'h-40 sm:h-48 md:h-52'
                       }`}
                       controls={false}
@@ -249,6 +250,7 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
                       className={`w-full object-cover rounded-lg shadow ${
                         aspectRatio === 'square' ? 'aspect-square' :
                         aspectRatio === 'video' ? 'aspect-video' :
+                        aspectRatio === '16:9' ? 'aspect-video' :
                         'h-40 sm:h-48 md:h-52'
                       }`}
                     />
