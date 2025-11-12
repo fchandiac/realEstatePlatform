@@ -629,7 +629,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 										key={`dot-${index}`}
 										className={`${baseDotClasses} ${stateClasses}`}
 									>
-										{index + 1}
+										{!isStepCompleted && (index + 1)}
 									</div>
 								);
 							})}
