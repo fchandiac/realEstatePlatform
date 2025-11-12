@@ -69,20 +69,7 @@ const DotProgress: React.FC<DotProgressProps> = ({
             animation: i === active && activeStep === undefined ? "dotPulse 1s infinite ease-in-out" : undefined,
             cursor: "default",
           }}
-        >
-          {i === active && (
-            <span
-              style={{
-                color: "white",
-                fontSize: `${size * 0.6}px`,
-                fontWeight: "bold",
-                lineHeight: 1,
-              }}
-            >
-              {i + 1}
-            </span>
-          )}
-        </div>
+        ></div>
       ))}
       <style>{`
         @keyframes dotPulse {
