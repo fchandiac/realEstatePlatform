@@ -450,22 +450,25 @@ export default function PublishPropertyPage() {
               <p className="text-gray-700 text-sm">{values.address as string || 'No especificada'}</p>
             </div>
 
-            {/* Otros datos adicionales */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {selectedPropertyType?.hasConstructionYear && (values.constructionYear as number) > 0 && (
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="text-base font-semibold mb-1">Año de construcción</h5>
-                  <p className="text-gray-700 text-sm">{values.constructionYear as number}</p>
-                </div>
-              )}
+            {/* Otros datos adicionales - solo mostrar si hay elementos */}
+            {((selectedPropertyType?.hasConstructionYear && (values.constructionYear as number) > 0) ||
+              (selectedPropertyType?.hasFloors && (values.floors as number) > 0)) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {selectedPropertyType?.hasConstructionYear && (values.constructionYear as number) > 0 && (
+                  <div className="bg-white p-3 rounded-lg border">
+                    <h5 className="text-base font-semibold mb-1">Año de construcción</h5>
+                    <p className="text-gray-700 text-sm">{values.constructionYear as number}</p>
+                  </div>
+                )}
 
-              {selectedPropertyType?.hasFloors && (values.floors as number) > 0 && (
-                <div className="bg-white p-3 rounded-lg border">
-                  <h5 className="text-base font-semibold mb-1">Número de pisos</h5>
-                  <p className="text-gray-700 text-sm">{values.floors as number}</p>
-                </div>
-              )}
-            </div>
+                {selectedPropertyType?.hasFloors && (values.floors as number) > 0 && (
+                  <div className="bg-white p-3 rounded-lg border">
+                    <h5 className="text-base font-semibold mb-1">Número de pisos</h5>
+                    <p className="text-gray-700 text-sm">{values.floors as number}</p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Datos de contacto */}
             <div className="bg-white p-3 rounded-lg border">
