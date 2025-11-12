@@ -13,7 +13,7 @@ export default withAuth(
         return NextResponse.redirect(new URL('/', req.url));
       }
       // Verificar rol: solo admin o agente pueden acceder
-      if (!token.role || !['admin', 'agente'].includes(token.role)) {
+      if (!token.role || !['admin', 'agente'].includes(token.role as string)) {
         return NextResponse.redirect(new URL('/', req.url));
       }
     }
