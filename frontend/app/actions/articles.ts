@@ -14,6 +14,7 @@ export interface Article {
   text: string;
   multimediaUrl?: string;
   category: ArticleCategory;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }

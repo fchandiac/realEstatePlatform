@@ -144,7 +144,6 @@ export default function LocationSection({ property, regions, onChange }: Locatio
             Selecciona un punto en el mapa para actualizar la latitud y longitud.
           </p>
           <LocationPicker
-            height="320px"
             onChange={(coords) => {
               if (!coords) return;
               // Guardar con 6 decimales como string

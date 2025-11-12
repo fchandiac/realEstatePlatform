@@ -11,6 +11,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
   const search = typeof params.search === 'string' ? params.search : undefined
 
   const result = await getArticles({ search })
+  console.log('ArticlesPage result:', result)
 
   if (!result.success) {
     return (

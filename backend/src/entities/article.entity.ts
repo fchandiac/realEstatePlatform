@@ -49,6 +49,9 @@ export class Article {
   @IsEnum(ArticleCategory)
   category: ArticleCategory;
 
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

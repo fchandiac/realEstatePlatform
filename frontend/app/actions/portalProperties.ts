@@ -73,7 +73,9 @@ export async function getPublishedPropertiesFiltered(filters: {
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => response.statusText);
-      console.error('Error fetching published properties:', response.status, errorText);
+      const errorMsg = `Error fetching published properties: ${response.status} ${response.statusText} - ${errorText}`;
+      console.error('❌', errorMsg);
+      console.log('📍 URL intentado:', url);
       return null;
     }
 

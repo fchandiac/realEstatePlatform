@@ -65,11 +65,14 @@ export default function BlogCard({
       role={href ? undefined : 'button'}
       tabIndex={href ? -1 : 0}
     >
-      {/* Imagen de fondo */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${imageUrl || FALLBACK_IMAGE_DATA_URL})`
+      {/* Imagen con etiqueta img */}
+      <img
+        src={imageUrl || FALLBACK_IMAGE_DATA_URL}
+        alt={title}
+        className="absolute inset-0 w-full h-full object-cover"
+        onError={(e) => {
+          const img = e.target as HTMLImageElement;
+          img.src = FALLBACK_IMAGE_DATA_URL;
         }}
       />
 
@@ -115,31 +118,6 @@ export default function BlogCard({
 
       {/* Overlay hover sutil */}
       <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20" />
-
-      {/* Indicador de hover en la esquina */}
-      <div className="absolute top-4 left-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
-          <svg
-            className="w-4 h-4 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-            />
-          </svg>
-        </div>
-      </div>
     </div>
   );
 

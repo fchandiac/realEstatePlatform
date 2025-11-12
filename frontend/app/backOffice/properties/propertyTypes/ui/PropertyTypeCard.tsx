@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Switch from '@/components/Switch/Switch';
 import IconButton from '@/components/IconButton/IconButton';
 import Dialog from '@/components/Dialog/Dialog';
-import UpdatePropertyTypeForm from './updatePropertyTypeForm';
+import UpdatePropertyTypeForm from './UpdatePropertyTypeForm';
 import DeletePropertyTypeForm from './DeletePropertyTypeForm';
 import { useRouter } from 'next/navigation';
 
