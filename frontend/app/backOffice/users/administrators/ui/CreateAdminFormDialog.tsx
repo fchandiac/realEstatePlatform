@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Dialog from '@/components/Dialog/Dialog';
 import CreateBaseForm, { BaseFormField, BaseFormFieldGroup } from '@/components/BaseForm/CreateBaseForm';
 import { createAdmin } from '@/app/actions/users';
+import { useAlert } from '@/app/hooks/useAlert';
 
 interface CreateAdminFormDialogProps {
   open: boolean;
@@ -27,6 +28,7 @@ export default function CreateAdminFormDialog({
   onClose,
   onSuccess,
 }: CreateAdminFormDialogProps) {
+  const { showAlert } = useAlert();
   const [values, setValues] = useState<AdminFormData>({
     username: '',
     email: '',
@@ -139,7 +141,7 @@ export default function CreateAdminFormDialog({
       fields: [
         {
           name: 'avatarFile',
-          label: 'Avatar',
+          label: '',
           type: 'avatar',
           acceptedTypes: ['image/*'],
           maxSize: 2,
@@ -198,6 +200,11 @@ export default function CreateAdminFormDialog({
     const validationErrors = validateForm(values);
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
+      showAlert({
+        message: 'Por favor corrige los errores del formulario',
+        type: 'error',
+        duration: 3000
+      });
       return;
     }
 
@@ -205,6 +212,15 @@ export default function CreateAdminFormDialog({
     setErrors([]);
 
     try {
+      console.log('Submitting admin creation with values:', {
+        username: values.username,
+        email: values.email,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phone: values.phone,
+        hasAvatar: !!values.avatarFile,
+      });
+
       const result = await createAdmin({
         username: values.username,
         email: values.email,
@@ -216,14 +232,32 @@ export default function CreateAdminFormDialog({
       });
 
       if (result.success) {
+        showAlert({
+          message: 'Administrador creado exitosamente',
+          type: 'success',
+          duration: 3000
+        });
         onSuccess?.();
         handleClose();
       } else {
-        setErrors([result.error || 'Error al crear administrador']);
+        const errorMsg = result.error || 'Error al crear administrador';
+        console.error('Creation failed:', errorMsg);
+        showAlert({
+          message: errorMsg,
+          type: 'error',
+          duration: 5000
+        });
+        setErrors([errorMsg]);
       }
     } catch (error) {
       console.error('Error creating admin:', error);
-      setErrors(['Error interno del servidor']);
+      const errorMsg = error instanceof Error ? error.message : 'Error interno del servidor';
+      showAlert({
+        message: errorMsg,
+        type: 'error',
+        duration: 5000
+      });
+      setErrors([errorMsg]);
     } finally {
       setIsSubmitting(false);
     }

@@ -234,10 +234,11 @@ export async function createAdmin(data: {
 	try {
 		const session = await getServerSession(authOptions);
 		if (!session?.accessToken) {
-			return { success: false, error: 'No authenticated' };
+			console.error('No access token found');
+			return { success: false, error: 'No authenticado' };
 		}
 
-		console.log('Creating admin with data:', {
+		console.log('[createAdmin] Starting admin creation with:', {
 			username: data.username,
 			email: data.email,
 			firstName: data.firstName,
@@ -261,6 +262,8 @@ export async function createAdmin(data: {
 			},
 		};
 
+		console.log('[createAdmin] Sending to backend:', { backendUrl: env.backendApiUrl, createUserData });
+
 		const createResponse = await fetch(`${env.backendApiUrl}/users`, {
 			method: 'POST',
 			headers: {
@@ -270,19 +273,24 @@ export async function createAdmin(data: {
 			body: JSON.stringify(createUserData),
 		});
 
+		console.log('[createAdmin] Response status:', createResponse.status);
+
 		if (!createResponse.ok) {
 			const errorData = await createResponse.json().catch(() => null);
+			const errorMsg = errorData?.message || `Error ${createResponse.status} al crear administrador`;
+			console.error('[createAdmin] User creation failed:', errorMsg);
 			return { 
 				success: false, 
-				error: errorData?.message || `Failed to create admin: ${createResponse.status}` 
+				error: errorMsg 
 			};
 		}
 
 		const user = await createResponse.json();
+		console.log('[createAdmin] User created successfully:', { id: user.id, username: user.username });
 
 		// If avatar file is provided, upload it
 		if (data.avatarFile && user.id) {
-			console.log('Uploading avatar for user:', user.id);
+			console.log('[createAdmin] Starting avatar upload for user:', user.id);
 			const avatarFormData = new FormData();
 			avatarFormData.append('file', data.avatarFile);
 
@@ -294,9 +302,11 @@ export async function createAdmin(data: {
 				body: avatarFormData,
 			});
 
+			console.log('[createAdmin] Avatar upload response status:', avatarResponse.status);
+
 			if (avatarResponse.ok) {
 				const avatarData = await avatarResponse.json();
-				console.log('Avatar uploaded successfully:', avatarData);
+				console.log('[createAdmin] Avatar uploaded successfully:', avatarData);
 				// Update the user object with the new avatar URL
 				if (user.personalInfo) {
 					user.personalInfo.avatarUrl = avatarData.avatarUrl;
@@ -304,17 +314,21 @@ export async function createAdmin(data: {
 					user.personalInfo = { avatarUrl: avatarData.avatarUrl };
 				}
 			} else {
-				console.warn('Avatar upload failed:', avatarResponse.status);
+				const avatarError = await avatarResponse.json().catch(() => null);
+				console.warn('[createAdmin] Avatar upload failed:', avatarResponse.status, avatarError);
+				// Continue anyway - user was created successfully
 			}
 		}
 
 		revalidatePath('/backOffice/users/administrators', 'page');
+		console.log('[createAdmin] Admin created successfully');
 		return { success: true, data: user };
 	} catch (error) {
-		console.error('Error creating admin:', error);
+		console.error('[createAdmin] Exception thrown:', error);
+		const errorMsg = error instanceof Error ? error.message : 'Error desconocido';
 		return { 
 			success: false, 
-			error: error instanceof Error ? error.message : 'Unknown error' 
+			error: errorMsg
 		};
 	}
 }
