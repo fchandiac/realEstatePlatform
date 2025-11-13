@@ -3,20 +3,22 @@
 import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/Button/Button';
-import { BlogCategory } from './BlogCard';
-
-const CATEGORIES = Object.values(BlogCategory);
+import { Article } from '@/app/actions/articles';
 
 export interface CategoriesBlogProps {
+  articles: Article[];
   className?: string;
 }
 
-export default function CategoriesBlog({ className = '' }: CategoriesBlogProps) {
+export default function CategoriesBlog({ articles, className = '' }: CategoriesBlogProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentCategory = searchParams.get('category') as BlogCategory | null;
+  const currentCategory = searchParams.get('category');
 
-  const handleCategoryClick = (category: BlogCategory | null) => {
+  // Obtener categorías únicas de los artículos
+  const categories = Array.from(new Set(articles.map(article => article.category)));
+
+  const handleCategoryClick = (category: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
 
     if (category) {
@@ -48,7 +50,7 @@ export default function CategoriesBlog({ className = '' }: CategoriesBlogProps) 
       </Button>
 
       {/* Botones de categorías */}
-      {CATEGORIES.map((category) => (
+      {categories.map((category) => (
         <Button
           key={category}
           variant={currentCategory === category ? 'primary' : 'outlined'}

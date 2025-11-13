@@ -1,10 +1,11 @@
 "use client";
 
 import React from 'react';
-import BlogCard, { BlogCardProps } from './BlogCard';
+import { Article } from '@/app/actions/articles';
+import BlogCard from './BlogCard';
 
 export interface BlogListProps {
-  blogs: BlogCardProps[];
+  blogs: Article[];
   loading?: boolean;
   emptyMessage?: string;
 }
@@ -60,10 +61,10 @@ export default function BlogList({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {blogs.map((blog) => (
+      {blogs.map((article) => (
         <BlogCard
-          key={blog.id}
-          {...blog}
+          key={article.id}
+          {...article}
         />
       ))}
     </div>
