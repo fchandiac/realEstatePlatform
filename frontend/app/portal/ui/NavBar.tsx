@@ -28,7 +28,7 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="w-full bg-background shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)] sticky top-16 z-20" aria-label="Main navigation">
+    <nav className="w-full bg-background/80 backdrop-blur-md shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)] sticky top-16 z-40" aria-label="Main navigation">
       <ul className="flex items-center justify-center gap-3 px-4 py-3">
         {/* --- Home Link --- */}
         <li>

@@ -37,7 +37,7 @@ const DeleteAdminDialog: React.FC<DeleteAdminDialogProps> = ({
 			title="Eliminar Administrador"
 			maxWidth="sm"
 		>
-			<div className="p-6">
+			<div >
 				{error && (
 					<div className="mb-4 text-red-600">
 						{error}

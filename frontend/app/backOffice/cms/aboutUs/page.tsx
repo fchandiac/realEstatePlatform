@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { TextField } from '@/components/TextField/TextField';
 import { Button } from '@/components/Button/Button';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
+import MultimediaUpdater from '@/components/FileUploader/MultimediaUpdater';
 import { getAboutUs, updateAboutUs } from '@/app/actions/aboutUs';
-import { env } from '@/lib/env';
-import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
+import { useAlert } from '@/app/hooks/useAlert';
 
 interface AboutUsData {
   bio: string;
@@ -16,6 +16,7 @@ interface AboutUsData {
 }
 
 export default function AboutUsPage() {
+  const { showAlert } = useAlert();
   const [data, setData] = useState<AboutUsData>({
     bio: '',
     mision: '',
@@ -23,10 +24,8 @@ export default function AboutUsPage() {
     multimediaUrl: '',
   });
 
-  // Estados para manejo de multimedia
-  const [currentMultimedia, setCurrentMultimedia] = useState<string>('');
-  const [newMultimediaFile, setNewMultimediaFile] = useState<File[]>([]);
-  const [showMultimediaUploader, setShowMultimediaUploader] = useState(false);
+  // Estado para multimedia file
+  const [multimediaFile, setMultimediaFile] = useState<File | null>(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -41,60 +40,58 @@ export default function AboutUsPage() {
     const result = await getAboutUs();
     if (result.success && result.data) {
       setData(result.data);
-      setCurrentMultimedia(result.data.multimediaUrl || '');
     }
     setIsLoading(false);
   };
 
-  // Handlers para gestión de multimedia
-  const handleChangeMultimedia = () => {
-    setShowMultimediaUploader(true);
-    setCurrentMultimedia('');
-  };
-
-  const handleKeepCurrentMultimedia = () => {
-    setShowMultimediaUploader(false);
-    setNewMultimediaFile([]);
-    setCurrentMultimedia(data.multimediaUrl || '');
-  };
-
-  const handleMultimediaChange = (files: File[]) => {
-    setNewMultimediaFile(files);
+  const handleMultimediaChange = (file: File | null) => {
+    setMultimediaFile(file);
   };
 
   const handleSubmit = async () => {
-    console.log('🔔 handleSubmit called');
-    console.log('Data to send:', data);
-    console.log('New multimedia file:', newMultimediaFile);
-
     setErrors([]);
     setIsSaving(true);
 
-    const formData = new FormData();
-    formData.append('bio', data.bio);
-    formData.append('mision', data.mision);
-    formData.append('vision', data.vision);
+    try {
+      const formData = new FormData();
+      formData.append('bio', data.bio);
+      formData.append('mision', data.mision);
+      formData.append('vision', data.vision);
 
-    if (newMultimediaFile.length > 0) {
-      formData.append('multimedia', newMultimediaFile[0]);
-      console.log('Appending multimedia:', newMultimediaFile[0].name);
+      if (multimediaFile) {
+        formData.append('multimedia', multimediaFile);
+      }
+
+      const result = await updateAboutUs(formData);
+
+      if (result.success) {
+        showAlert({
+          message: 'Cambios guardados exitosamente',
+          type: 'success',
+          duration: 3000,
+        });
+        await loadData();
+        setMultimediaFile(null);
+      } else {
+        const errorMsg = result.error || 'Error al guardar';
+        setErrors([errorMsg]);
+        showAlert({
+          message: errorMsg,
+          type: 'error',
+          duration: 5000,
+        });
+      }
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Error interno del servidor';
+      setErrors([errorMsg]);
+      showAlert({
+        message: errorMsg,
+        type: 'error',
+        duration: 5000,
+      });
+    } finally {
+      setIsSaving(false);
     }
-
-    console.log('Calling updateAboutUs...');
-    const result = await updateAboutUs(formData);
-    console.log('updateAboutUs result:', result);
-
-    if (result.success) {
-      console.log('Success! Reloading data...');
-      await loadData(); // Recargar datos
-      setNewMultimediaFile([]);
-      setShowMultimediaUploader(false);
-    } else {
-      console.log('Error:', result.error);
-      setErrors([result.error || 'Error al guardar']);
-    }
-
-    setIsSaving(false);
   };
 
   if (isLoading) {
@@ -124,78 +121,21 @@ export default function AboutUsPage() {
       <div className="space-y-6">
         {/* Multimedia */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Multimedia (opcional)
+          <label className="block text-sm font-medium text-foreground mb-4">
+            Multimedia 
           </label>
 
-          {/* Mostrar multimedia actual */}
-          {currentMultimedia && !showMultimediaUploader && (
-            <div className="mb-4">
-              <div className="relative h-64 md:h-96 rounded-lg overflow-hidden shadow-lg">
-                {currentMultimedia.includes('.mp4') || currentMultimedia.includes('.webm') || currentMultimedia.includes('.ogg') ? (
-                  <video
-                    src={currentMultimedia}
-                    className="w-full h-full object-cover"
-                    autoPlay
-                    muted
-                    loop
-                  />
-                ) : (
-                  <img
-                    src={currentMultimedia}
-                    alt="Multimedia actual"
-                    className="w-full h-full object-cover"
-                  />
-                )}
-                <div className="absolute inset-0 bg-black/20"></div>
-              </div>
-              <div className="flex justify-start mt-2">
-                <Button
-                  onClick={handleChangeMultimedia}
-                  variant="outlined"
-                  size="sm"
-                >
-                  Cambiar multimedia
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Mostrar uploader cuando se necesita */}
-          {(showMultimediaUploader || !currentMultimedia) && (
-            <div className="border border-input rounded-md p-4 bg-background">
-              <MultimediaUploader
-                uploadPath="/public/web/aboutUs"
-                onChange={handleMultimediaChange}
-                maxFiles={1}
-                accept="image/*,video/*"
-                maxSize={9}
-                aspectRatio="auto"
-                buttonType="icon"
-              />
-
-              {newMultimediaFile.length > 0 && (
-                <p className="text-sm text-green-600 mt-2">
-                  ✓ Nuevo archivo seleccionado: {newMultimediaFile[0].name}
-                </p>
-              )}
-
-              {currentMultimedia && (
-                <Button
-                  onClick={handleKeepCurrentMultimedia}
-                  variant="text"
-                  size="sm"
-                  className="mt-2"
-                >
-                  Mantener multimedia actual
-                </Button>
-              )}
-
-              <small className="text-xs text-muted-foreground mt-2 block">
-                Máx. 1 archivo (imagen o video, hasta 9MB)
-              </small>
-            </div>
-          )}
+          <MultimediaUpdater
+            currentUrl={data.multimediaUrl}
+            currentType={data.multimediaUrl?.includes('.mp4') || data.multimediaUrl?.includes('.webm') || data.multimediaUrl?.includes('.ogg') ? 'video' : 'image'}
+            onFileChange={handleMultimediaChange}
+            buttonText="Cambiar multimedia"
+            labelText="Multimedia"
+            acceptedTypes={['image/*', 'video/*']}
+            maxSize={9}
+            aspectRatio="16:9"
+            previewSize="xl"
+          />
         </div>
 
         {/* Bio */}
