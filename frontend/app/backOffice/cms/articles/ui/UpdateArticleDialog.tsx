@@ -43,7 +43,7 @@ const UpdateArticleDialog: React.FC<UpdateArticleDialogProps> = ({
       label: 'Contenido',
       type: 'textarea',
       required: true,
-      rows: 6,
+      rows: 12,
     },
     {
       name: 'category',
@@ -133,6 +133,7 @@ const UpdateArticleDialog: React.FC<UpdateArticleDialogProps> = ({
     >
       {article ? (
         <UpdateBaseForm
+          title=''
           fields={formFields}
           initialState={initialState}
           onSubmit={handleSubmit}

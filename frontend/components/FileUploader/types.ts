@@ -10,4 +10,5 @@ export interface MultimediaUpdaterProps {
   variant?: 'default' | 'avatar';
   allowDragDrop?: boolean;
   className?: string;
+  previewSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }

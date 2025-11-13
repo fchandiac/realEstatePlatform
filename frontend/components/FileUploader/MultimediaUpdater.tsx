@@ -17,6 +17,7 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
   variant = 'default',
   allowDragDrop = false,
   className = '',
+  previewSize = 'md',
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentUrl || null);
@@ -29,6 +30,14 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
     '16:9': 'aspect-video',
     '9:16': 'aspect-[9/16]',
   }[aspectRatio];
+
+  const previewSizeClass = {
+    'xs': 'max-w-20 max-h-20',
+    'sm': 'max-w-32 max-h-32',
+    'md': 'max-w-48 max-h-48',
+    'lg': 'max-w-64 max-h-64',
+    'xl': 'max-w-96 max-h-96',
+  }[previewSize];
 
   const validateFile = (file: File): boolean => {
     if (!acceptedTypes.some(type => file.type.match(type))) {
@@ -109,12 +118,12 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
     <div className={`space-y-4 ${className}`}>
       {/* Preview Container */}
       <div
-        className={`relative overflow-hidden cursor-pointer ${
+        className={`relative overflow-hidden cursor-pointer rounded-lg ${
           variant === 'avatar'
             ? `w-24 h-24 mx-auto rounded-full border-4 border-secondary ${
                 !previewUrl ? 'bg-neutral-100' : ''
               } ${isDragOver ? 'border-blue-500 bg-blue-50' : ''} flex items-center justify-center`
-            : `border-2 border-dashed border-gray-300 rounded-lg ${aspectRatioClass} max-w-32 max-h-32 mx-auto ${isDragOver ? 'border-blue-500 bg-blue-50' : ''}`
+            : `border border-border ${aspectRatioClass} ${previewSizeClass} mx-auto ${isDragOver ? 'bg-blue-50' : ''}`
         }`}
         onClick={() => fileInputRef.current?.click()}
         onDragOver={handleDragOver}
