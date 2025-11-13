@@ -60,10 +60,39 @@ Focus on being productive quickly in this full-stack repo (NestJS backend + Next
   - UI components that use React hooks or browser APIs must be rendered in Client Components (`'use client'`). Keep data fetching in Server Components or Server Actions.
 - Style system: Tailwind CSS utility classes. Keep styling consistent with existing component classes; avoid inline styles unless necessary.
 
+### Alert System (Global Context)
+- **Always use context-based alerts (`useAlert` hook) for user feedback in client components.**
+- Import: `import { useAlert } from '@/app/hooks/useAlert'`
+- Usage pattern:
+  ```tsx
+  'use client'
+  import { useAlert } from '@/app/hooks/useAlert'
+  
+  export default function MyComponent() {
+    const { showAlert } = useAlert();
+    
+    const handleAction = async () => {
+      const result = await someAction();
+      if (result.success) {
+        showAlert({ message: 'Action completed', type: 'success', duration: 3000 });
+      } else {
+        showAlert({ message: result.error, type: 'error', duration: 3000 });
+      }
+    }
+  }
+  ```
+- Alert types: `'success' | 'error' | 'info' | 'warning'`
+- Default duration: 8000ms (8 seconds). Override with `duration` parameter.
+- Alerts stack vertically at top-right with slide-in/fade-out animations.
+- Do NOT use inline `<Alert>` component for notifications; reserve it for inline error messages in forms only.
+
 #### Quick usage guide
 - Alert: show user feedback.
-  - Import: `import Alert from '@/components/Alert/Alert'`
-  - Use for success/info/warning/error messages; minimal layout, stackable.
+  - **IMPORTANT: Always use `useAlert()` hook from context for alerts in client components.**
+  - Import: `import { useAlert } from '@/app/hooks/useAlert'`
+  - Usage: `const { showAlert } = useAlert(); showAlert({ message: 'Success!', type: 'success', duration: 3000 })`
+  - Use for success/info/warning/error messages; displays at top-right with animations.
+  - Never use inline `<Alert>` component for notifications; use context alerts instead.
 - Dialog: confirm/collect small inputs in a modal.
   - Import: `import Dialog from '@/components/Dialog/Dialog'`
   - Wrap critical/destructive actions with confirmation.
