@@ -23,7 +23,16 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentUrl || null);
   const [error, setError] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sincronizar previewUrl cuando currentUrl cambia (después de guardar)
+  React.useEffect(() => {
+    if (!selectedFile && currentUrl) {
+      setPreviewUrl(currentUrl);
+      setImageError(false);
+    }
+  }, [currentUrl, selectedFile]);
 
   const aspectRatioClass = {
     '1:1': 'aspect-square',
@@ -57,6 +66,7 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
       setSelectedFile(file);
       const newPreviewUrl = URL.createObjectURL(file);
       setPreviewUrl(newPreviewUrl);
+      setImageError(false);
       onFileChange?.(file);
     }
   }, [onFileChange, acceptedTypes, maxSize]);
@@ -101,6 +111,15 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
       return <div className="flex items-center justify-center h-full text-gray-400">Sin multimedia</div>;
     }
 
+    // Mostrar ícono de error si la imagen no cargó
+    if (imageError) {
+      return (
+        <div className="flex items-center justify-center h-full bg-gray-100">
+          <span className="material-symbols-outlined text-gray-400" style={{ fontSize: '3rem' }}>image_not_supported</span>
+        </div>
+      );
+    }
+
     const commonClasses = `w-full h-full object-cover ${variant === 'avatar' ? 'rounded-full' : 'rounded-lg'}`;
 
     if (currentType === 'video' || selectedFile?.type.startsWith('video/')) {
@@ -111,7 +130,15 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
       );
     }
 
-    return <img src={previewUrl} alt="Preview" className={commonClasses} />;
+    return (
+      <img 
+        src={previewUrl} 
+        alt="Preview" 
+        className={commonClasses}
+        onError={() => setImageError(true)}
+        onLoad={() => setImageError(false)}
+      />
+    );
   };
 
   return (

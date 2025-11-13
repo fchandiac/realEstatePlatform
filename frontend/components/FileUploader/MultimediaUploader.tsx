@@ -19,7 +19,7 @@ interface MultimediaUploaderProps {
 export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
   uploadPath,
   onChange,
-  label = 'Selecciona multimedia',
+  label = '',
   accept = 'image/*,video/*',
   maxFiles = 5,
   maxSize = 9, // 9MB por defecto (margen con el límite de 10MB de Next.js)

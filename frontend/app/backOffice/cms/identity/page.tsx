@@ -10,7 +10,7 @@ import Switch from '@/components/Switch/Switch'
 import IconButton from '@/components/IconButton/IconButton'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram, faFacebook, faLinkedin, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import MultimediaUploader from '@/components/FileUploader/MultimediaUploader'
+import MultimediaUpdater from '@/components/FileUploader/MultimediaUpdater'
 import { useAlert } from '@/app/contexts/AlertContext'
 
 interface SocialMediaItem {
@@ -89,21 +89,10 @@ export default function IdentityPage() {
     partnerships: [],
     faqs: []
   })
-  const [logoFile, setLogoFile] = useState<File[]>([])
-  const [partnershipLogoFiles, setPartnershipLogoFiles] = useState<(File[] | null)[]>([])
-  
-  // Estados para manejo de logo principal
-  const [currentLogo, setCurrentLogo] = useState<string>('')
-  const [newLogoFile, setNewLogoFile] = useState<File[]>([])
-  const [showLogoUploader, setShowLogoUploader] = useState(false)
-
-  // Estados para manejo de partnership logos
-  const [currentPartnershipLogos, setCurrentPartnershipLogos] = useState<string[]>([])
-  const [newPartnershipLogoFiles, setNewPartnershipLogoFiles] = useState<(File[] | null)[]>([])
-  const [showPartnershipUploaders, setShowPartnershipUploaders] = useState<boolean[]>([])
-  
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [newLogoFile, setNewLogoFile] = useState<File | null>(null)
+  const [newPartnershipLogoFiles, setNewPartnershipLogoFiles] = useState<(File | null)[]>([])
 
   useEffect(() => {
     async function loadIdentity() {
@@ -111,15 +100,9 @@ export default function IdentityPage() {
         const data = await getIdentity()
         if (data) {
           setIdentity(data)
-          
-          // Inicializar estados de imágenes
-          setCurrentLogo(data.urlLogo || '')
-          
-          // Inicializar logos de partnerships
-          const partnershipLogos = data.partnerships?.map((p: { logoUrl: any }) => p.logoUrl || '') || []
-          setCurrentPartnershipLogos(partnershipLogos)
-          setShowPartnershipUploaders(new Array(partnershipLogos.length).fill(false))
-          setNewPartnershipLogoFiles(new Array(partnershipLogos.length).fill(null))
+          // Inicializar array de partnership logo files
+          const partnershipCount = data.partnerships?.length || 0
+          setNewPartnershipLogoFiles(new Array(partnershipCount).fill(null))
         }
       } catch (err) {
         error('Error cargando identidad')
@@ -130,58 +113,14 @@ export default function IdentityPage() {
     loadIdentity()
   }, [])
 
-  // Handlers para gestión de logo principal
-  const handleChangeLogo = () => {
-    setShowLogoUploader(true)
-    setCurrentLogo('')
+  const handleLogoChange = (file: File | null) => {
+    setNewLogoFile(file)
   }
 
-  const handleKeepCurrentLogo = () => {
-    setShowLogoUploader(false)
-    setNewLogoFile([])
-    setCurrentLogo(identity.urlLogo || '')
-  }
-
-  const handleLogoChange = (files: File[]) => {
-    setNewLogoFile(files)
-  }
-
-  // Handlers para gestión de partnership logos
-  const handleChangePartnershipLogo = (index: number) => {
-    setShowPartnershipUploaders(prev => {
-      const newState = [...prev]
-      newState[index] = true
-      return newState
-    })
-    setCurrentPartnershipLogos(prev => {
-      const newState = [...prev]
-      newState[index] = ''
-      return newState
-    })
-  }
-
-  const handleKeepCurrentPartnershipLogo = (index: number) => {
-    setShowPartnershipUploaders(prev => {
-      const newState = [...prev]
-      newState[index] = false
-      return newState
-    })
+  const handlePartnershipLogoChange = (index: number, file: File | null) => {
     setNewPartnershipLogoFiles(prev => {
       const newState = [...prev]
-      newState[index] = null
-      return newState
-    })
-    setCurrentPartnershipLogos(prev => {
-      const newState = [...prev]
-      newState[index] = identity.partnerships?.[index]?.logoUrl || ''
-      return newState
-    })
-  }
-
-  const handlePartnershipLogoChange = (index: number, files: File[]) => {
-    setNewPartnershipLogoFiles(prev => {
-      const newState = [...prev]
-      newState[index] = files
+      newState[index] = file
       return newState
     })
   }
@@ -202,20 +141,18 @@ export default function IdentityPage() {
       formData.append('partnerships', JSON.stringify(identity.partnerships || []))
       formData.append('faqs', JSON.stringify(identity.faqs || []))
 
-      console.log('Frontend - Sending partnerships:', identity.partnerships)
-
-      // Add logo file solo si hay archivo NUEVO
-      if (newLogoFile.length > 0) {
-        formData.append('logo', newLogoFile[0])
+      // Add logo file si hay uno nuevo
+      if (newLogoFile) {
+        formData.append('logo', newLogoFile)
       }
 
-      // Add partnership logo files solo los que han cambiado
+      // Add partnership logo files que han cambiado
       const changedPartnershipLogos: File[] = []
       const partnershipLogoIndexes: number[] = []
       
-      newPartnershipLogoFiles.forEach((files, index) => {
-        if (files && files.length > 0) {
-          changedPartnershipLogos.push(files[0])
+      newPartnershipLogoFiles.forEach((file, index) => {
+        if (file) {
+          changedPartnershipLogos.push(file)
           partnershipLogoIndexes.push(index)
         }
       })
@@ -240,6 +177,8 @@ export default function IdentityPage() {
       // Update local state with server response to ensure ID is set
       if (result) {
         setIdentity(result)
+        setNewLogoFile(null)
+        setNewPartnershipLogoFiles(new Array(result.partnerships?.length || 0).fill(null))
       }
     } catch (err) {
       error('Error guardando identidad')
@@ -266,11 +205,7 @@ export default function IdentityPage() {
       ...prev,
       partnerships: [...(prev.partnerships || []), { name: '', description: '', logoUrl: '' }]
     }))
-    setPartnershipLogoFiles(prev => [...prev, []])
-    
-    // Sincronizar estados de imágenes
-    setCurrentPartnershipLogos(prev => [...prev, ''])
-    setShowPartnershipUploaders(prev => [...prev, false])
+    // Agregar espacio para el nuevo archivo
     setNewPartnershipLogoFiles(prev => [...prev, null])
   }
 
@@ -286,11 +221,7 @@ export default function IdentityPage() {
       ...prev,
       partnerships: prev.partnerships?.filter((_, i) => i !== index)
     }))
-    setPartnershipLogoFiles(prev => prev.filter((_, i) => i !== index))
-    
-    // Sincronizar eliminación en todos los estados de imágenes
-    setCurrentPartnershipLogos(prev => prev.filter((_, i) => i !== index))
-    setShowPartnershipUploaders(prev => prev.filter((_, i) => i !== index))
+    // Eliminar también del estado de archivos
     setNewPartnershipLogoFiles(prev => prev.filter((_, i) => i !== index))
   }
 
@@ -369,66 +300,21 @@ export default function IdentityPage() {
               />
             </div>
             <div className="md:col-span-2">
-              <div className="relative">
+              <div>
                 <label className="block text-sm font-medium mb-2">Logo de la Empresa</label>
                 
-                {/* Mostrar logo actual */}
-                {currentLogo && !showLogoUploader && (
-                  <div className="mb-4">
-                    <div className="relative w-32 h-32 bg-gray-100 rounded-lg overflow-hidden border">
-                      <img 
-                        src={normalizeMediaUrl(currentLogo)} 
-                        alt="Logo actual" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex justify-start mt-2">
-                      <Button
-                        onClick={handleChangeLogo}
-                        variant="outlined"
-                        size="sm"
-                      >
-                        Cambiar logo
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Mostrar uploader cuando se necesita */}
-                {(showLogoUploader || !currentLogo) && (
-                  <div className="border border-input rounded-md p-4 bg-background">
-                    <MultimediaUploader
-                      uploadPath="/public/web/logos"
-                      onChange={handleLogoChange}
-                      maxFiles={1}
-                      accept="image/*"
-                      maxSize={9}
-                      aspectRatio="square"
-                      buttonType="icon"
-                    />
-                    
-                    {newLogoFile.length > 0 && (
-                      <p className="text-sm text-green-600 mt-2">
-                        ✓ Nuevo logo seleccionado: {newLogoFile[0].name}
-                      </p>
-                    )}
-                    
-                    {currentLogo && (
-                      <Button
-                        onClick={handleKeepCurrentLogo}
-                        variant="text"
-                        size="sm"
-                        className="mt-2"
-                      >
-                        Mantener logo actual
-                      </Button>
-                    )}
-                    
-                    <small className="text-xs text-muted-foreground mt-2 block">
-                      Máx. 1 imagen (hasta 9MB)
-                    </small>
-                  </div>
-                )}
+                {/* Updater */}
+                <MultimediaUpdater
+                  currentUrl={identity.urlLogo ? normalizeMediaUrl(identity.urlLogo) : undefined}
+                  currentType="image"
+                  onFileChange={handleLogoChange}
+                  acceptedTypes={['image/*']}
+                  maxSize={9}
+                  aspectRatio="1:1"
+                  variant="default"
+                  previewSize="sm"
+                />
+                
               </div>
             </div>
           </div>
@@ -445,7 +331,7 @@ export default function IdentityPage() {
               { key: 'youtube', label: 'YouTube' }
             ] as const).map(({ key, label }) => (
               <div key={key} className="w-full mb-3">
-                <div className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg">
+                <div className="rounded-lg p-4">
                   <div className="flex items-center gap-4">
                     {/* Ícono y nombre de la red social */}
                     <div className="flex items-center gap-2 flex-shrink-0">
@@ -490,7 +376,7 @@ export default function IdentityPage() {
           </div>
           <div className="space-y-4">
             {identity.partnerships?.map((partnership, index) => (
-              <div key={index} className="rounded-lg p-4 bg-background shadow-sm">
+              <div key={index} className="rounded-lg p-4 bg-background">
                 <div className="flex items-start justify-between mb-4">
                   <h3 className="text-lg font-medium">Alianza {index + 1}</h3>
                   <IconButton
@@ -513,63 +399,21 @@ export default function IdentityPage() {
                   <div>
                     <label className="block text-sm font-medium mb-2">Imagen</label>
                     
-                    {/* Mostrar logo actual del partnership */}
-                    {currentPartnershipLogos[index] && !showPartnershipUploaders[index] && (
-                      <div className="mb-4">
-                        <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden border">
-                          <img 
-                            src={currentPartnershipLogos[index]} 
-                            alt="Imagen de la alianza" 
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="flex justify-start mt-2">
-                          <Button
-                            onClick={() => handleChangePartnershipLogo(index)}
-                            variant="outlined"
-                            size="sm"
-                          >
-                            Cambiar imagen
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Mostrar uploader cuando se necesita */}
-                    {(showPartnershipUploaders[index] || !currentPartnershipLogos[index]) && (
-                      <div className="border border-input rounded-md p-4 bg-background">
-                        <MultimediaUploader
-                          uploadPath="/public/web/partnerships"
-                          onChange={(files) => handlePartnershipLogoChange(index, files)}
-                          maxFiles={1}
-                          accept="image/*"
-                          maxSize={9}
-                          aspectRatio="square"
-                          buttonType="icon"
-                        />
-                        
-                        {newPartnershipLogoFiles[index] && newPartnershipLogoFiles[index]!.length > 0 && (
-                          <p className="text-sm text-green-600 mt-2">
-                            ✓ Nueva imagen seleccionada: {newPartnershipLogoFiles[index]![0].name}
-                          </p>
-                        )}
-                        
-                        {currentPartnershipLogos[index] && (
-                          <Button
-                            onClick={() => handleKeepCurrentPartnershipLogo(index)}
-                            variant="text"
-                            size="sm"
-                            className="mt-2"
-                          >
-                            Mantener imagen actual
-                          </Button>
-                        )}
-                        
-                        <small className="text-xs text-muted-foreground mt-2 block">
-                          Máx. 1 imagen (hasta 9MB)
-                        </small>
-                      </div>
-                    )}
+                    {/* Updater */}
+                    <MultimediaUpdater
+                      currentUrl={partnership.logoUrl ? normalizeMediaUrl(partnership.logoUrl) : undefined}
+                      currentType="image"
+                      onFileChange={(file) => handlePartnershipLogoChange(index, file)}
+                      acceptedTypes={['image/*']}
+                      maxSize={9}
+                      aspectRatio="1:1"
+                      variant="default"
+                      previewSize="sm"
+                    />
+                    
+                    <small className="text-xs text-muted-foreground mt-2 block">
+                      Máx. 1 imagen (hasta 9MB)
+                    </small>
                   </div>
                   
                   {/* Descripción al final */}
@@ -605,7 +449,7 @@ export default function IdentityPage() {
           </div>
           <div className="space-y-4">
             {identity.faqs?.map((faq, index) => (
-              <div key={index} className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg">
+              <div key={index} className="rounded-lg p-4">
                 <div className="flex items-start justify-between mb-4">
                   <h3 className="text-lg font-medium">Pregunta {index + 1}</h3>
                   <IconButton
