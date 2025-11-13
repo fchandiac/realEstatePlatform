@@ -109,7 +109,7 @@ const ListArticles: React.FC<ListArticlesProps> = ({
           value={searchValue}
           onChange={handleSearchChange}
           className="w-80 ml-auto"
-          endIcon="search"
+          startIcon="search"
         />
       </div>
 
