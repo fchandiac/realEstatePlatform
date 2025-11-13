@@ -104,7 +104,7 @@ export async function listArticles(params: GetArticlesParams = {}): Promise<Arti
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.offset) queryParams.append('offset', params.offset.toString());
 
-    const url = `${env.backendApiUrl}/articles/public/active?${queryParams.toString()}`;
+    const url = `${env.backendApiUrl}/articles?${queryParams.toString()}`;
 
     const res = await fetch(url, {
       method: 'GET',
@@ -131,7 +131,7 @@ export async function listArticles(params: GetArticlesParams = {}): Promise<Arti
  */
 export async function getArticleById(id: string): Promise<Article | null> {
   try {
-    const url = `${env.backendApiUrl}/articles/public/${id}`;
+    const url = `${env.backendApiUrl}/articles/${id}`;
 
     const res = await fetch(url, {
       method: 'GET',
