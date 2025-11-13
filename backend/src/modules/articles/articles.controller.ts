@@ -34,8 +34,14 @@ export class ArticlesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.articlesService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const article = await this.articlesService.findOne(id);
+    const relatedArticles = await this.articlesService.findRelated(id, 4);
+
+    return {
+      ...article,
+      relatedArticles,
+    };
   }
 
   @Patch(':id')

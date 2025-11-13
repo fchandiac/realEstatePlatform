@@ -128,6 +128,7 @@ export async function listArticles(params: GetArticlesParams = {}): Promise<Arti
 
 /**
  * Obtiene un artículo público por ID (sin autenticación requerida)
+ * Incluye artículos relacionados basados en estrategia robusta
  */
 export async function getArticleById(id: string): Promise<Article | null> {
   try {

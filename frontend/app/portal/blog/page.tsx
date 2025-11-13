@@ -1,4 +1,4 @@
-import { getArticles } from '@/app/actions/articles';
+import { listArticles } from '@/app/actions/articles';
 import BlogList from './ui/BlogList';
 import CategoriesBlog from './ui/CategoriesBlog';
 
@@ -15,13 +15,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     category = undefined;
   }
 
-  // Obtener artículos filtrados por categoría si existe
-  const result = await getArticles({ category });
-  const articles = result?.data || [];
+  // Obtener artículos filtrados por categoría si existe (usando listArticles - pública)
+  const articles = await listArticles({ category });
 
   // Obtener todas las categorías disponibles (sin filtro)
-  const allArticlesResult = await getArticles({});
-  const allArticles = allArticlesResult?.data || [];
+  const allArticles = await listArticles({});
 
   return (
     <div className="min-h-screen bg-background py-8 px-4">

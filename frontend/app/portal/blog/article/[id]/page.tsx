@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { getArticleById, listArticles, Article } from '@/app/actions/articles'
+import { getArticleById, Article } from '@/app/actions/articles'
 import DotProgress from '@/components/DotProgress/DotProgress'
 import ArticleDetailCard from './ArticleDetailCard'
 import RelatedArticlesSection from './RelatedArticlesSection'
@@ -29,21 +29,13 @@ export default function ArticleDetailPage() {
   useEffect(() => {
     async function loadData() {
       try {
-        // Cargar artículo principal
-        const articleData = await getArticleById(id)
-        setArticle(articleData)
-
-        // Cargar artículos relacionados por categoría
-        if (articleData) {
-          const allArticles = await listArticles({ 
-            category: articleData.category,
-            limit: 6 
-          })
-          // Filtrar el artículo actual y limitar a 4
-          const related = allArticles
-            .filter(a => a.id !== id)
-            .slice(0, 4)
-          setRelatedArticles(related)
+        // Cargar artículo principal con sus relacionados (desde backend)
+        const data = await getArticleById(id)
+        
+        if (data) {
+          setArticle(data)
+          // Los artículos relacionados vienen del backend
+          setRelatedArticles((data as any).relatedArticles || [])
         }
       } catch (error) {
         console.error('Error loading article:', error)
