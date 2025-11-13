@@ -140,7 +140,11 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
 
 
       {/* Buttons */}
-      <div className="flex gap-2 justify-center">
+      <div className="flex flex-col items-center gap-1">
+        {/* Optional Label */}
+        {labelText && (
+          <span className="text-xs font-normal text-foreground leading-none">{labelText}</span>
+        )}
         <IconButton
           icon="refresh"
           variant="outlined"
@@ -148,14 +152,7 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
         />
       </div>
 
-      {/* Optional Label */}
-      {labelText && (
-        <div className="text-center">
-          <span className="text-sm text-gray-600">{labelText}</span>
-        </div>
-      )}
-
-         {/* Error Alert */}
+      {/* Error Alert */}
       {error && <Alert variant="error">{error}</Alert>}
 
       {/* Hidden File Input */}

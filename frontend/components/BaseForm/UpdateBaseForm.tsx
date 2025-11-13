@@ -105,9 +105,9 @@ export interface UpdateBaseFormProps {
 	submitVariant?: ButtonVariant;
 	["data-test-id"]?: string;
 	columns?: number;
-	showCloseButton?: boolean;
-	closeButtonText?: string;
-	onClose?: () => void;
+	cancelButton?: boolean;
+	cancelButtonText?: string;
+	onCancel?: () => void;
 }
 
 
@@ -121,14 +121,14 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 	onSubmit,
 	isSubmitting = false,
 	errors = [],
-	title = "Elemento",
+	title = "",
 	subtitle,
 	submitLabel,
 	submitVariant = "primary",
 	columns = 1,
-	showCloseButton = false,
-	closeButtonText = "cerrar",
-	onClose,
+	cancelButton = false,
+	cancelButtonText = "Cerrar",
+	onCancel,
 	...props
 }) => {
 	const dataTestId = props["data-test-id"];
@@ -304,19 +304,18 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 				);
 			})}
 			<div className="flex justify-between mt-4 w-full">
-				<div>
-					{showCloseButton && onClose && (
+				<div />
+				<div className="flex gap-2">
+					{cancelButton && onCancel && (
 						<Button
 							variant="outlined"
 							type="button"
-							onClick={onClose}
+							onClick={onCancel}
 							disabled={isSubmitting}
 						>
-							{closeButtonText}
+							{cancelButtonText}
 						</Button>
 					)}
-				</div>
-				<div>
 					{isSubmitting ? (
 						<DotProgress size={18} className="self-end" />
 					) : (
