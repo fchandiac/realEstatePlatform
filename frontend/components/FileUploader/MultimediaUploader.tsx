@@ -207,6 +207,11 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
         // Renderizado normal para variante default
         <>
           <div className="flex flex-col items-start gap-0.5">
+            {buttonType === 'icon' && (
+              <span className="text-xs font-normal text-foreground leading-none">
+                {label}
+              </span>
+            )}
             {buttonType === 'icon' ? (
               <IconButton
                 icon="add"
@@ -218,11 +223,6 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
               <Button variant="secondary" type="button" onClick={() => inputRef.current?.click()}>
                 Subir multimedia
               </Button>
-            )}
-            {buttonType === 'icon' && (
-              <span className="text-xs font-normal text-foreground leading-none">
-                {label}
-              </span>
             )}
           </div>
 
