@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Dialog from '@/components/Dialog/Dialog';
 import CreateBaseForm, { BaseFormField, BaseFormFieldGroup } from '@/components/BaseForm/CreateBaseForm';
-import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 import { createAdmin } from '@/app/actions/users';
 
 interface CreateAdminFormDialogProps {
@@ -133,6 +132,21 @@ export default function CreateAdminFormDialog({
         },
       ],
     },
+    {
+      id: 'avatar-field',
+      columns: 1,
+      gap: 4,
+      fields: [
+        {
+          name: 'avatarFile',
+          label: '',
+          type: 'avatar',
+          acceptedTypes: ['image/*'],
+          maxSize: 2,
+          uploadPath: '/users/avatar',
+        },
+      ],
+    },
   ];
 
   const handleChange = (field: string, value: any) => {
@@ -144,13 +158,6 @@ export default function CreateAdminFormDialog({
     if (errors.length > 0) {
       setErrors([]);
     }
-  };
-
-  const handleAvatarChange = (files: File[]) => {
-    setValues(prev => ({
-      ...prev,
-      avatarFile: files[0] || null,
-    }));
   };
 
   const validateForm = (formValues: AdminFormData): string[] => {
@@ -258,19 +265,6 @@ export default function CreateAdminFormDialog({
           errors={errors}
           validate={(vals) => validateForm(vals as AdminFormData)}
         />
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Avatar (opcional)
-          </label>
-          <MultimediaUploader
-            variant="avatar"
-            onChange={handleAvatarChange}
-            accept="image/*"
-            maxSize={2}
-            uploadPath="/users/avatar"
-          />
-        </div>
       </div>
     </Dialog>
   );

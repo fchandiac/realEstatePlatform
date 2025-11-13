@@ -196,12 +196,6 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
             onClick={() => inputRef.current?.click()}
             ariaLabel="Seleccionar avatar"
           />
-
-          {label && (
-            <div className="text-center">
-              <span className="text-sm text-gray-600">{label}</span>
-            </div>
-          )}
         </div>
       ) : (
         // Renderizado normal para variante default

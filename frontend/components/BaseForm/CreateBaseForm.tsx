@@ -10,6 +10,7 @@ import Switch from "../Switch/Switch";
 import Select from "../Select/Select";
 import RangeSlider from "../RangeSlider/RangeSlider";
 import CreateLocationPicker from "../LocationPicker/CreateLocationPickerWrapper";
+import MultimediaUploader from "../FileUploader/MultimediaUploader";
 
 export interface BaseFormField {
 	name: string;
@@ -26,7 +27,10 @@ export interface BaseFormField {
 	| "range"
 	| "location"
 	| "dni"
-	| "currency";
+	| "currency"
+	| "image"
+	| "video"
+	| "avatar";
 	required?: boolean;
 	autoFocus?: boolean;
 	options?: Option[];
@@ -38,6 +42,11 @@ export interface BaseFormField {
 	min?: number;
 	max?: number;
 	labelPosition?: 'left' | 'right';
+	// Props para campos multimedia
+	acceptedTypes?: string[];
+	maxSize?: number;
+	uploadPath?: string;
+	buttonText?: string;
 }
 
 export interface BaseFormFieldGroup {
@@ -133,6 +142,23 @@ const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 					labelPosition={field.labelPosition || 'left'}
 					data-test-id={`switch-${field.name}`}
 				/>
+			) : field.type === "image" || field.type === "video" || field.type === "avatar" ? (
+				<div>
+					<label className="block text-sm font-medium text-gray-700 mb-2">
+						{field.label}
+					</label>
+					<MultimediaUploader
+						variant={field.type === 'avatar' ? 'avatar' : 'default'}
+						onChange={(files) => {
+							if (files.length > 0) {
+								onChange(field.name, files[0]);
+							}
+						}}
+						accept={field.acceptedTypes?.join(',') || (field.type === 'video' ? 'video/*' : 'image/*')}
+						maxSize={field.maxSize || (field.type === 'avatar' ? 2 : 5)}
+						uploadPath={field.uploadPath || '/uploads'}
+					/>
+				</div>
 			) : (
 				<TextField
 					label={field.label}
