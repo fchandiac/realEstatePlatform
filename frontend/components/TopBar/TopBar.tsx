@@ -56,7 +56,7 @@ const TopBar: React.FC<TopBarProps> = ({
   return (
     <SideBarContext.Provider value={{ open, close, isOpen: showSidebar }}>
       <div data-test-id="top-bar-root">
-  <header className={`w-full flex items-center justify-between px-4 pt-2 bg-primary border-b-[5px] border-accent fixed top-0 left-0 z-40 ${className}`}>
+  <header className={`w-full flex items-center justify-between px-4 pt-2 bg-background border-b-[5px] border-accent fixed top-0 left-0 z-40 ${className}`}>
           <div className="flex items-center gap-3">
             {logoSrc && (
               <img
@@ -66,14 +66,14 @@ const TopBar: React.FC<TopBarProps> = ({
                 data-test-id="top-bar-logo"
               />
             )}
-            <span className="text-lg font-bold text-background" data-test-id="top-bar-title">{title}</span>
+            <span className="text-lg font-bold text-foreground" data-test-id="top-bar-title">{title}</span>
           </div>
 
           {/* Right side elements */}
           <div className="flex items-center gap-2">
             {/* User name */}
             {userName && (
-              <span className="text-sm font-weight-300 text-background" data-test-id="top-bar-user-name">
+              <span className="text-sm font-weight-300 text-foreground" data-test-id="top-bar-user-name">
                 {userName}
               </span>
             )}
@@ -92,7 +92,7 @@ const TopBar: React.FC<TopBarProps> = ({
               <button
                 type="button"
                 onClick={onUserClick}
-                className="rounded-full transition-colors text-background hover:text-secondary focus:outline-none"
+                className="rounded-full transition-colors text-foreground hover:text-secondary focus:outline-none"
                 data-test-id="top-bar-user-button"
                 aria-label="Perfil de usuario"
               >
@@ -110,7 +110,7 @@ const TopBar: React.FC<TopBarProps> = ({
             <button
               type="button"
               onClick={open}
-              className=" rounded-full transition-colors text-background hover:text-secondary focus:outline-none"
+              className=" rounded-full transition-colors text-foreground hover:text-secondary focus:outline-none"
               data-test-id="top-bar-menu-button"
               aria-label="Abrir menú"
             >
