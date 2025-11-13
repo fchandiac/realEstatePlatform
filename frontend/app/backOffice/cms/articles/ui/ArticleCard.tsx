@@ -4,22 +4,25 @@ import IconButton from '@/components/IconButton/IconButton';
 import Switch from '@/components/Switch/Switch';
 import { Article, toggleArticleActive } from '@/app/actions/articles';
 import React, { useState } from 'react';
-import Alert from '@/components/Alert/Alert';
+import { useAlert } from '@/app/hooks/useAlert';
 
 export interface ArticleCardProps {
   article: Article;
   onEdit: (article: Article) => void;
   onDelete: (article: Article) => void;
+  onRemove?: (articleId: string) => void;
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({
   article,
   onEdit,
   onDelete,
+  onRemove,
 }) => {
   const [isActive, setIsActive] = useState(article.isActive);
   const [loading, setLoading] = useState(false);
-  const [alertMessage, setAlertMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const { showAlert } = useAlert();
 
   const handleActiveChange = async (checked: boolean) => {
     setLoading(true);
@@ -28,44 +31,43 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       
       if (result.success) {
         setIsActive(checked);
-        setAlertMessage({
+        showAlert({
+          message: checked ? 'Artículo activado correctamente' : 'Artículo desactivado correctamente',
           type: 'success',
-          message: checked ? 'Artículo activado' : 'Artículo desactivado'
+          duration: 3000
         });
+        
+        // Si se desactiva, remover la tarjeta después de 2 segundos
+        if (!checked) {
+          setIsRemoving(true);
+          setTimeout(() => {
+            onRemove?.(article.id);
+          }, 2000);
+        }
       } else {
-        setAlertMessage({
+        showAlert({
+          message: result.error || 'Error al actualizar el artículo',
           type: 'error',
-          message: result.error || 'Error al actualizar el artículo'
+          duration: 3000
         });
         // Revertir el cambio en caso de error
         setIsActive(!checked);
       }
     } catch (error) {
-      setAlertMessage({
+      showAlert({
+        message: 'Error al actualizar el artículo',
         type: 'error',
-        message: 'Error al actualizar el artículo'
+        duration: 3000
       });
       // Revertir el cambio en caso de error
       setIsActive(!checked);
     } finally {
       setLoading(false);
-      // Limpiar el mensaje después de 3 segundos
-      if (alertMessage) {
-        setTimeout(() => setAlertMessage(null), 3000);
-      }
     }
   };
 
   return (
-    <div className="bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
-      {/* Alert */}
-      {alertMessage && (
-        <div className="mb-4">
-          <Alert variant={alertMessage.type}>
-            {alertMessage.message}
-          </Alert>
-        </div>
-      )}
+    <div className={`bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full ${isRemoving ? 'opacity-50' : ''}`}>
       {/* Imagen */}
       {article.multimediaUrl && (
         <div className="mb-4">

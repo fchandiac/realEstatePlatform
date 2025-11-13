@@ -29,10 +29,12 @@ const ListArticles: React.FC<ListArticlesProps> = ({
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [filteredArticles, setFilteredArticles] = useState(articles);
 
   useEffect(() => {
     setSearchValue(search || "");
-  }, [search]);
+    setFilteredArticles(articles);
+  }, [search, articles]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -58,6 +60,13 @@ const ListArticles: React.FC<ListArticlesProps> = ({
   const handleDeleteClick = (article: Article) => {
     setSelectedArticle(article);
     setDeleteDialogOpen(true);
+  };
+
+  const handleRemoveArticle = (articleId: string) => {
+    // Remover el artículo de la lista local
+    setFilteredArticles((prevArticles) =>
+      prevArticles.filter((article) => article.id !== articleId)
+    );
   };
 
   const handleCreateSuccess = () => {
@@ -105,7 +114,7 @@ const ListArticles: React.FC<ListArticlesProps> = ({
       </div>
 
       {/* Articles grid */}
-      {articles.length === 0 ? (
+      {filteredArticles.length === 0 ? (
         <div className="text-center py-12">
           <span className="material-symbols-outlined text-gray-400 mx-auto mb-4" style={{ fontSize: '64px' }}>
             article
@@ -116,12 +125,13 @@ const ListArticles: React.FC<ListArticlesProps> = ({
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {articles.map((article) => (
+          {filteredArticles.map((article) => (
             <ArticleCard
               key={article.id}
               article={article}
               onEdit={handleEditClick}
               onDelete={handleDeleteClick}
+              onRemove={handleRemoveArticle}
             />
           ))}
         </div>
