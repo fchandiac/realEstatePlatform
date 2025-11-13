@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Dialog from '@/components/Dialog/Dialog';
-import { Button } from '@/components/Button/Button';
+import CreateBaseForm, { BaseFormField } from '@/components/BaseForm/CreateBaseForm';
 import { useAlert } from '@/app/contexts/AlertContext';
 import { updateUserAvatar } from '@/app/actions/users';
 
@@ -13,90 +13,97 @@ interface UploadUserAvatarDialogProps {
   currentAvatarUrl?: string;
 }
 
+interface AvatarFormData {
+  avatarFile: File | null;
+}
+
 const UploadUserAvatarDialog: React.FC<UploadUserAvatarDialogProps> = ({
   open,
   onClose,
   userId,
   currentAvatarUrl,
 }) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { success, error } = useAlert();
+  const [values, setValues] = useState<AvatarFormData>({
+    avatarFile: null,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
+  const { success, error: showError } = useAlert();
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // Validar tipo de archivo
-      if (!file.type.startsWith('image/')) {
-        error('Por favor selecciona un archivo de imagen válido');
-        return;
-      }
-
-      // Validar tamaño (máximo 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        error('La imagen no puede ser mayor a 5MB');
-        return;
-      }
-
-      setSelectedFile(file);
-
-      // Crear preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreviewUrl(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleChange = (field: string, value: any) => {
+    setValues(prev => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      error('Por favor selecciona una imagen primero');
+  const validateForm = (formValues: AvatarFormData): string[] => {
+    const validationErrors: string[] = [];
+
+    if (!formValues.avatarFile) {
+      validationErrors.push('Por favor selecciona una imagen');
+    }
+
+    return validationErrors;
+  };
+
+  const handleSubmit = async () => {
+    const validationErrors = validateForm(values);
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors);
+      showError('Por favor selecciona una imagen');
       return;
     }
 
-    setIsLoading(true);
+    setIsSubmitting(true);
+    setErrors([]);
+
     try {
+      if (!values.avatarFile) {
+        showError('Por favor selecciona una imagen');
+        return;
+      }
+
       const formData = new FormData();
-      formData.append('file', selectedFile);
+      formData.append('file', values.avatarFile);
 
       const result = await updateUserAvatar(userId, formData);
 
       if (result.success) {
         success('Avatar actualizado exitosamente');
-        onClose();
-        // Limpiar estado
-        setSelectedFile(null);
-        setPreviewUrl(null);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
+        handleClose();
       } else {
-        error(result.error || 'Error al actualizar el avatar');
+        const errorMsg = result.error || 'Error al actualizar el avatar';
+        setErrors([errorMsg]);
+        showError(errorMsg);
       }
-    } catch (err) {
-      console.error('Upload error:', err);
-      error('Error al actualizar el avatar');
+    } catch (error) {
+      console.error('[UploadUserAvatarDialog] Exception:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Error interno del servidor';
+      setErrors([errorMsg]);
+      showError(errorMsg);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   const handleClose = () => {
-    if (!isLoading) {
-      onClose();
-      // Limpiar estado
-      setSelectedFile(null);
-      setPreviewUrl(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    }
+    setValues({ avatarFile: null });
+    setErrors([]);
+    onClose();
   };
 
-  const displayUrl = previewUrl || currentAvatarUrl;
+  const fields: BaseFormField[] = [
+    {
+      name: 'avatarFile',
+      label: '',
+      type: 'avatar',
+      required: true,
+      acceptedTypes: ['image/*'],
+      maxSize: 5 * 1024 * 1024, // 5MB
+  
+    },
+  ];
 
   return (
     <Dialog
@@ -104,81 +111,20 @@ const UploadUserAvatarDialog: React.FC<UploadUserAvatarDialogProps> = ({
       onClose={handleClose}
       title="Actualizar Avatar"
       size="sm"
-      showCloseButton={true}
-      closeButtonText="Cerrar"
-      actions={
-        <div className="flex justify-end gap-3">
-          <Button
-            variant="outlined"
-            onClick={handleClose}
-            disabled={isLoading}
-          >
-            Cancelar
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleUpload}
-            disabled={!selectedFile || isLoading}
-          >
-            {isLoading ? 'Guardando...' : 'Guardar'}
-          </Button>
-        </div>
-      }
     >
-      <div className="flex flex-col items-center gap-6">
-        {/* Preview del avatar */}
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative">
-            <div className="h-32 w-32 rounded-full bg-neutral-100 border-4 border-secondary flex items-center justify-center overflow-hidden">
-              {displayUrl ? (
-                <img
-                  src={displayUrl}
-                  alt="Avatar preview"
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <span className="material-symbols-outlined text-secondary" style={{ fontSize: '3rem' }}>
-                  person
-                </span>
-              )}
-            </div>
-         
-          </div>
-
-          <div className="text-center">
-            <p className="text-sm text-neutral-600 mb-2">
-              {selectedFile
-                ? `Archivo seleccionado: ${selectedFile.name}`
-                : 'Selecciona una imagen para tu avatar'
-              }
-            </p>
-            <p className="text-xs text-neutral-500">
-              Formatos permitidos: JPEG, PNG, WebP (máx. 5MB)
-            </p>
-          </div>
-        </div>
-
-        {/* Input file oculto */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileSelect}
-          className="hidden"
+      <div className="p-4">
+        <CreateBaseForm
+          fields={fields}
+          values={values}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
+          errors={errors}
+          submitLabel="Guardar Avatar"
+          cancelButton={true}
+          cancelButtonText="Cancelar"
+          onCancel={handleClose}
         />
-
-        {/* Botón para seleccionar archivo */}
-        <Button
-          variant="outlined"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isLoading}
-          className="w-full"
-        >
-          <span className="material-symbols-outlined mr-2" style={{ fontSize: '1.2rem' }}>
-            upload
-          </span>
-          Seleccionar Imagen
-        </Button>
       </div>
     </Dialog>
   );
