@@ -70,11 +70,11 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
     <div className={`bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full ${isRemoving ? 'opacity-50' : ''}`}>
       {/* Imagen */}
       {article.multimediaUrl && (
-        <div className="mb-4">
+        <div className="mb-4 overflow-hidden rounded-lg">
           <img
             src={article.multimediaUrl}
             alt={article.title}
-            className="w-full h-32 object-cover rounded-lg"
+            className="w-full aspect-video object-cover"
           />
         </div>
       )}

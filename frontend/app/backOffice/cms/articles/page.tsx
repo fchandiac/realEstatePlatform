@@ -24,9 +24,6 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Administración de Artículos</h1>
       <ListArticles articles={result.data || []} search={search} />
-    </div>
   )
 }

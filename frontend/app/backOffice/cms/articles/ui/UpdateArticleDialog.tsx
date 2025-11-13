@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
 import Dialog from '@/components/Dialog/Dialog';
-import { Button } from '@/components/Button/Button';
-import { TextField } from '@/components/TextField/TextField';
-import Select from '@/components/Select/Select';
-import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
+import { UpdateBaseForm, type BaseUpdateFormField } from '@/components/BaseForm';
 import { updateArticle, Article } from '@/app/actions/articles';
 import { ArticleCategory } from '@/app/types/article';
-import { useAlert } from '@/app/contexts/AlertContext';
+import { useAlert } from '@/app/hooks/useAlert';
 
 export interface UpdateArticleDialogProps {
   open: boolean;
@@ -21,184 +18,127 @@ const UpdateArticleDialog: React.FC<UpdateArticleDialogProps> = ({
   onSuccess,
   article,
 }) => {
-  const { success, error } = useAlert();
+  const { showAlert } = useAlert();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+
+  const categoryOptions = Object.values(ArticleCategory).map((category) => ({
+    id: category as any,
+    label: category,
+  }));
+
+  const formFields: BaseUpdateFormField[] = [
+    {
+      name: 'title',
+      label: 'Título',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'subtitle',
+      label: 'Subtítulo',
+      type: 'text',
+    },
+    {
+      name: 'text',
+      label: 'Contenido',
+      type: 'textarea',
+      required: true,
+      rows: 6,
+    },
+    {
+      name: 'category',
+      label: 'Categoría',
+      type: 'select',
+      required: true,
+      options: categoryOptions,
+    },
+    {
+      name: 'multimediaUrl',
+      label: 'Imagen',
+      type: 'image',
+      currentUrl: article?.multimediaUrl,
+      currentType: 'image',
+      acceptedTypes: ['image/*'],
+      maxSize: 5,
+      aspectRatio: '16:9',
+      buttonText: 'Cambiar imagen',
+      labelText: 'Imagen del artículo',
+    },
+  ];
+
+  const initialState = article ? {
+    title: article.title || '',
+    subtitle: article.subtitle || '',
+    text: article.text || '',
+    category: article.category,
+    multimediaUrl: article.multimediaUrl || '',
+  } : {
     title: '',
     subtitle: '',
     text: '',
     category: ArticleCategory.COMPRAR,
-  });
-  const [newImageFile, setNewImageFile] = useState<File[]>([]);
-  const [currentImage, setCurrentImage] = useState<string>('');
-
-  useEffect(() => {
-    if (article && open) {
-      setFormData({
-        title: article.title || '',
-        subtitle: article.subtitle || '',
-        text: article.text || '',
-        category: article.category,
-      });
-      setCurrentImage(article.multimediaUrl || '');
-      setNewImageFile([]);
-    }
-  }, [article, open]);
-
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      subtitle: '',
-      text: '',
-      category: ArticleCategory.COMPRAR,
-    });
-    setNewImageFile([]);
-    setCurrentImage('');
+    multimediaUrl: '',
   };
 
-  const handleClose = () => {
-    resetForm();
-    onClose();
-  };
-
-  const handleImageChange = (files: File[]) => {
-    setNewImageFile(files);
-  };
-
-  const handleSubmit = async () => {
-    if (!article || !formData.title.trim() || !formData.text.trim()) {
-      error('Título y texto son obligatorios');
-      return;
-    }
+  const handleSubmit = async (values: Record<string, unknown>) => {
+    if (!article) return;
 
     setIsSubmitting(true);
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title.trim());
-      formDataToSend.append('subtitle', formData.subtitle.trim());
-      formDataToSend.append('text', formData.text.trim());
-      formDataToSend.append('category', formData.category);
+      formDataToSend.append('title', String(values.title || ''));
+      formDataToSend.append('subtitle', String(values.subtitle || ''));
+      formDataToSend.append('text', String(values.text || ''));
+      formDataToSend.append('category', String(values.category || ''));
 
-      if (newImageFile.length > 0) {
-        formDataToSend.append('image', newImageFile[0]);
+      // Si hay un archivo de imagen nuevo (fromultimediaUpdater)
+      if (values.multimediaUrlFile instanceof File) {
+        formDataToSend.append('image', values.multimediaUrlFile);
       }
 
       const result = await updateArticle(article.id, formDataToSend);
 
       if (result.success) {
-        success('Artículo actualizado exitosamente');
-        handleClose();
+        showAlert({
+          message: 'Artículo actualizado exitosamente',
+          type: 'success',
+          duration: 3000,
+        });
+        onClose();
         onSuccess();
       } else {
-        error(result.error || 'Error al actualizar artículo');
+        showAlert({
+          message: result.error || 'Error al actualizar artículo',
+          type: 'error',
+          duration: 3000,
+        });
       }
     } catch (err) {
-      error('Error interno del servidor');
+      showAlert({
+        message: 'Error interno del servidor',
+        type: 'error',
+        duration: 3000,
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const categoryOptions = Object.values(ArticleCategory).map((category, index) => ({
-    id: index,
-    label: category,
-  }));
-
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={onClose}
       title="Editar Artículo"
       maxWidth="md"
     >
       {article ? (
-        <div className="space-y-6">
-          <TextField
-            label="Título"
-            value={formData.title}
-            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-            required
-            placeholder="Título del artículo"
-          />
-
-          <TextField
-            label="Subtítulo"
-            value={formData.subtitle}
-            onChange={(e) => setFormData(prev => ({ ...prev, subtitle: e.target.value }))}
-            placeholder="Subtítulo opcional"
-          />
-
-          <TextField
-            label="Texto del artículo"
-            value={formData.text}
-            onChange={(e) => setFormData(prev => ({ ...prev, text: e.target.value }))}
-            type="textarea"
-            rows={6}
-            required
-            placeholder="Contenido del artículo..."
-          />
-
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Categoría
-            </label>
-            <Select
-              value={Object.values(ArticleCategory).indexOf(formData.category)}
-              onChange={(id) => {
-                const categories = Object.values(ArticleCategory);
-                setFormData(prev => ({ ...prev, category: categories[id as number] as ArticleCategory }));
-              }}
-              options={categoryOptions}
-              placeholder="Selecciona una categoría"
-              required
-            />
-          </div>
-
-          {/* Imagen actual */}
-          {currentImage && (
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Imagen actual
-              </label>
-              <img
-                src={currentImage}
-                alt="Imagen actual"
-                className="w-20 h-20 object-cover rounded-lg border"
-              />
-            </div>
-          )}
-
-          {/* Upload de nueva imagen */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Cambiar imagen (opcional)
-            </label>
-            <MultimediaUploader
-              uploadPath="/public/web/articles"
-              onChange={handleImageChange}
-              accept="image/*"
-              maxFiles={1}
-              maxSize={5}
-              aspectRatio="square"
-              buttonType="icon"
-            />
-            {newImageFile.length > 0 && (
-              <p className="text-sm text-green-600 mt-2">
-                ✓ Nueva imagen seleccionada: {newImageFile[0].name}
-              </p>
-            )}
-          </div>
-
-          <div className="flex justify-end gap-3 pt-4">
-            <Button
-              variant="primary"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-            >
-              Actualizar Artículo
-            </Button>
-          </div>
-        </div>
+        <UpdateBaseForm
+          fields={formFields}
+          initialState={initialState}
+          onSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
+          submitLabel="Actualizar Artículo"
+        />
       ) : (
         <div className="flex justify-center py-8">
           <div className="text-muted-foreground">Cargando...</div>
