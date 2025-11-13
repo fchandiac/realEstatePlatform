@@ -52,7 +52,7 @@ export default function ArticleCard({
       />
 
       {/* Overlay gradiente sutil en la parte inferior */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent" />
 
       {/* Badge de categoría y fecha - misma fila con space between */}
       <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10">

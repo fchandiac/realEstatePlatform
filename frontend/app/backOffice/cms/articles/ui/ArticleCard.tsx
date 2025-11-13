@@ -13,7 +13,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
       {/* Imagen */}
       {article.multimediaUrl && (
         <div className="mb-4">
@@ -26,7 +26,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       )}
 
       {/* Contenido */}
-      <div className="space-y-2">
+      <div className="space-y-2 flex-1">
         <h3 className="text-lg font-semibold text-foreground">{article.title}</h3>
         {article.subtitle && (
           <p className="text-sm text-muted-foreground">{article.subtitle}</p>
@@ -41,7 +41,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         </div>
       </div>
 
-      {/* Acciones */}
+      {/* Acciones - Siempre al fondo */}
       <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-border">
         <IconButton
           icon="edit"
