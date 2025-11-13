@@ -7,6 +7,7 @@ import { CurrencyPriceEnum } from '../../src/entities/property.entity';
 import { RegionEnum } from '../../src/common/regions/regions.enum';
 import { ComunaEnum } from '../../src/common/regions/comunas.enum';
 import { MultimediaFormat, MultimediaType } from '../../src/entities/multimedia.entity';
+import { ArticleCategory } from '../../src/entities/article.entity';
 import * as bcrypt from 'bcrypt';
 import {
   PersonSeed,
@@ -23,7 +24,6 @@ import {
   IdentitySeed,
   SlideSeed
 } from './seeder.types';
-import { BlogArticle, BlogCategory } from '../../src/entities/blog-article.entity';
 
 export class SeederFactory {
   private static latinFirstNames = [
@@ -327,22 +327,61 @@ export class SeederFactory {
     };
   }
 
-  static createRandomBlogArticle() {
-    return {
-      title: faker.lorem.sentence(),
+  /**
+   * Crea un artículo de blog para la plataforma
+   * Con categorías reales del sistema inmobiliario
+   */
+  static createArticleForBlog(overrides?: Partial<ArticleSeed>): ArticleSeed {
+    const categories = [ArticleCategory.COMPRAR, ArticleCategory.ARRENDAR, ArticleCategory.INVERSION, ArticleCategory.DECORACION, ArticleCategory.MERCADO];
+    
+    // Prefixes y suffixes para generar títulos variados
+    const prefixes = [
+      'Cómo',
+      'Guía',
+      'Todo sobre',
+      'Entender',
+      'Las mejores',
+      '5 consejos para',
+      '10 pasos para',
+      'El secreto para',
+      'Tendencias en',
+      'Análisis de'
+    ];
+    
+    const topics = [
+      'elegir la mejor propiedad',
+      'invertir en inmuebles',
+      'vender tu casa rápido',
+      'arrendar correctamente',
+      'decorar interiores',
+      'comprar una vivienda',
+      'evaluar propiedades',
+      'financiar tu sueño inmobiliario',
+      'el mercado inmobiliario',
+      'tecnología en el hogar',
+      'ubicaciones premium',
+      'reformar tu casa',
+      'contratos de arriendo',
+      'hipotecas modernas',
+      'seguro de propiedad',
+      'normativas de construcción',
+      'impuestos inmobiliarios',
+      'plusvalía de inmuebles'
+    ];
+
+    const defaultArticle: ArticleSeed = {
+      title: `${faker.helpers.arrayElement(prefixes)} ${faker.helpers.arrayElement(topics)}`,
       subtitle: faker.lorem.sentence(),
-      content: faker.lorem.paragraphs(5),
-      category: faker.helpers.arrayElement(Object.values(BlogCategory)),
-      imageUrl: faker.helpers.maybe(() => `/uploads/blog/${faker.system.fileName()}.jpg`, { probability: 0.8 }),
-      publishedAt: faker.date.past(),
-      isActive: faker.helpers.weightedArrayElement([
-        { weight: 0.9, value: true },
-        { weight: 0.1, value: false }
-      ]),
-      createdAt: faker.date.past(),
+      text: faker.lorem.paragraphs(4),
+      multimediaUrl: faker.helpers.maybe(() => `http://localhost:3000/public/web/articles/${faker.string.alphanumeric(8)}.jpg`, { probability: 0.7 }),
+      category: faker.helpers.arrayElement(categories),
+      isActive: true,
+      createdAt: faker.date.past({ years: 1 }),
       updatedAt: new Date(),
       deletedAt: undefined
     };
+
+    return { ...defaultArticle, ...overrides };
   }
 
   static createRandomIdentity(): IdentitySeed {

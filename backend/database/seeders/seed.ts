@@ -15,7 +15,6 @@ import { Article, ArticleCategory } from '../../src/entities/article.entity';
 import { Multimedia, MultimediaFormat, MultimediaType } from '../../src/entities/multimedia.entity';
 import { Identity } from '../../src/entities/identity.entity';
 import { Slide } from '../../src/entities/slide.entity';
-import { BlogArticle } from '../../src/entities/blog-article.entity';
 import {
   PersonSeed,
   UserSeed,
@@ -203,28 +202,12 @@ async function seedDatabase() {
     );
     
         // Seed Articles
-    console.log('Seeding articles...');
+    console.log('Seeding articles for blog...');
     const articleRepository = AppDataSource.getRepository(Article);
     const articles = await articleRepository.save(
-      Array.from({ length: 15 }, () => {
-        const articleData = SeederFactory.createRandomArticle();
-        return articleRepository.create({
-          title: articleData.title,
-          subtitle: `Subtítulo para ${articleData.title}`,
-          text: articleData.content,
-          category: ArticleCategory.MERCADO,
-          multimediaUrl: 'https://example.com/articles/image.jpg'
-        });
-      })
-    );
-    
-    // Seed Blog Articles
-    console.log('Seeding blog articles...');
-    const blogArticleRepository = AppDataSource.getRepository(BlogArticle);
-    const blogArticles = await blogArticleRepository.save(
-      Array.from({ length: 20 }, () => {
-        const blogArticleData = SeederFactory.createRandomBlogArticle();
-        return blogArticleRepository.create(blogArticleData);
+      Array.from({ length: 10 }, () => {
+        const articleData = SeederFactory.createArticleForBlog();
+        return articleRepository.create(articleData);
       })
     );
     
@@ -234,18 +217,13 @@ async function seedDatabase() {
     const multimedia = await multimediaRepository.save(
       Array.from({ length: 50 }, () => {
         const mediaData = SeederFactory.createRandomMultimedia();
-        const multimediaFormat = mediaData.type === 'VIDEO' ? MultimediaFormat.VIDEO : MultimediaFormat.IMG;
-        const multimediaType = multimediaFormat === MultimediaFormat.VIDEO 
-          ? MultimediaType.PROPERTY_VIDEO 
-          : MultimediaType.PROPERTY_IMG;
-        
         return multimediaRepository.create({
-          format: multimediaFormat,
-          type: multimediaType,
+          format: mediaData.format,
+          type: mediaData.type,
           url: mediaData.url,
-          seoTitle: mediaData.title,
-          filename: `${mediaData.title.toLowerCase().replace(/\s+/g, '-')}.${multimediaFormat === MultimediaFormat.VIDEO ? 'mp4' : 'jpg'}`,
-          fileSize: Math.floor(Math.random() * 10000000)
+          seoTitle: mediaData.seoTitle,
+          filename: mediaData.filename,
+          fileSize: mediaData.fileSize
         });
       })
     );
