@@ -29,8 +29,8 @@ export class ArticlesController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.articlesService.findAll(search);
+  findAll(@Query('search') search?: string, @Query('category') category?: string) {
+    return this.articlesService.findAll(search, category);
   }
 
   @Get(':id')

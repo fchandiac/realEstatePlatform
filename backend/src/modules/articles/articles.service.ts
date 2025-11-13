@@ -51,14 +51,20 @@ export class ArticlesService {
     return await this.articleRepository.save(article);
   }
 
-  async findAll(search?: string): Promise<Article[]> {
+  async findAll(search?: string, category?: string): Promise<Article[]> {
     const query = this.articleRepository.createQueryBuilder('article')
       .where('article.deletedAt IS NULL')
       .orderBy('article.createdAt', 'DESC');
 
     if (search) {
-      query.andWhere('(article.title ILIKE :search OR article.subtitle ILIKE :search OR article.text ILIKE :search)', {
+      query.andWhere('(article.title LIKE :search OR article.subtitle LIKE :search OR article.text LIKE :search)', {
         search: `%${search}%`,
+      });
+    }
+
+    if (category) {
+      query.andWhere('article.category LIKE :category', {
+        category: `%${category}%`,
       });
     }
 

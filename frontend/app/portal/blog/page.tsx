@@ -10,7 +10,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams;
   const category = typeof params.category === 'string' ? params.category : undefined;
 
-  const result = await getArticles({ search: category });
+  const result = await getArticles({ category });
   const articles = result?.data || [];
 
   return (

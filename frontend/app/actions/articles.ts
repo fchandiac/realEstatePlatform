@@ -60,6 +60,11 @@ export async function getArticles(params: GetArticlesParams = {}): Promise<{
       url.searchParams.set('search', params.search)
     }
 
+    // Agregar parámetro de categoría
+    if (params.category) {
+      url.searchParams.set('category', params.category)
+    }
+
     const res = await fetch(url.toString(), {
       headers: {
         'Authorization': `Bearer ${session.accessToken}`,
