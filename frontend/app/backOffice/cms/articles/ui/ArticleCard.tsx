@@ -1,6 +1,9 @@
+'use client'
+
 import IconButton from '@/components/IconButton/IconButton';
 import Switch from '@/components/Switch/Switch';
 import { Article } from '@/app/actions/articles';
+import React, { useState } from 'react';
 
 export interface ArticleCardProps {
   article: Article;
@@ -13,6 +16,13 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const [isActive, setIsActive] = useState(article.isActive);
+
+  const handleActiveChange = (checked: boolean) => {
+    setIsActive(checked);
+    // Aquí puedes agregar la lógica para actualizar en el backend si es necesario
+  };
+
   return (
     <div className="bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
       {/* Imagen */}
@@ -43,8 +53,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
             {article.category}
           </span>
           <Switch
-            checked={article.isActive}
-            onChange={() => {}}
+            checked={isActive}
+            onChange={handleActiveChange}
           />
         </div>
 

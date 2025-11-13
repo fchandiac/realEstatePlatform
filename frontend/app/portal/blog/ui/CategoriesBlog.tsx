@@ -14,6 +14,9 @@ export default function CategoriesBlog({ articles, className = '' }: CategoriesB
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get('category');
+  
+  // Si category está vacío o no existe, es "Todos"
+  const isAllCategories = !currentCategory || currentCategory === '';
 
   // Obtener categorías únicas de los artículos
   const categories = Array.from(new Set(articles.map(article => article.category)));
@@ -24,7 +27,8 @@ export default function CategoriesBlog({ articles, className = '' }: CategoriesB
     if (category) {
       params.set('category', category);
     } else {
-      params.delete('category');
+      // Cuando es "Todos", establecer category a string vacío
+      params.set('category', '');
     }
 
     // Mantener otros parámetros pero resetear página
@@ -41,7 +45,7 @@ export default function CategoriesBlog({ articles, className = '' }: CategoriesB
     <div className={`flex flex-wrap gap-2 justify-center ${className}`}>
       {/* Botón "Todos" */}
       <Button
-        variant={currentCategory === null ? 'primary' : 'outlined'}
+        variant={isAllCategories ? 'primary' : 'outlined'}
         size="sm"
         onClick={() => handleCategoryClick(null)}
         className="rounded-full px-4 py-2 text-sm font-medium transition-all duration-200"

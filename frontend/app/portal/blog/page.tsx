@@ -8,10 +8,20 @@ interface BlogPageProps {
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams;
-  const category = typeof params.category === 'string' ? params.category : undefined;
+  let category = typeof params.category === 'string' ? params.category : undefined;
+  
+  // Si category es string vacío, tratarlo como undefined para mostrar todos
+  if (category === '') {
+    category = undefined;
+  }
 
+  // Obtener artículos filtrados por categoría si existe
   const result = await getArticles({ category });
   const articles = result?.data || [];
+
+  // Obtener todas las categorías disponibles (sin filtro)
+  const allArticlesResult = await getArticles({});
+  const allArticles = allArticlesResult?.data || [];
 
   return (
     <div className="min-h-screen bg-background py-8 px-4">
@@ -29,7 +39,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
         {/* Filtros de categorías */}
         <div className="mb-8">
-          <CategoriesBlog articles={articles} />
+          <CategoriesBlog articles={allArticles} />
         </div>
 
         {/* Lista de artículos */}
