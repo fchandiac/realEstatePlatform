@@ -25,7 +25,7 @@ export default function ArticleDetailCard({
   return (
     <article className="w-full bg-white">
       {/* Imagen Hero */}
-      <div className="relative w-full bg-gray-200" style={{ aspectRatio: '12/9' }}>
+      <div className="relative w-full bg-gray-200" style={{ aspectRatio: '10/9' }}>
         <img
           src={article.multimediaUrl || fallbackImage}
           alt={article.title}
