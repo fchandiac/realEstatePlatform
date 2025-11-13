@@ -190,9 +190,9 @@ const UpdateAdminForm: React.FC<UpdateAdminFormProps> = ({
 			subtitle=""
 			errors={[]} // Errors handled via onError prop
 			columns={1}
-			showCloseButton={true}
-			closeButtonText="Cerrar"
-			onClose={onClose}
+			cancelButton={true}
+			cancelButtonText="Cerrar"
+			onCancel={onClose}
 		/>
 	);
 };

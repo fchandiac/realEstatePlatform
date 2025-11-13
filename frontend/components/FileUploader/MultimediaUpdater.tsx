@@ -118,12 +118,12 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
     <div className={`space-y-4 ${className}`}>
       {/* Preview Container */}
       <div
-        className={`relative overflow-hidden cursor-pointer rounded-lg ${
+        className={`relative overflow-hidden cursor-pointer ${
           variant === 'avatar'
             ? `w-24 h-24 mx-auto rounded-full border-4 border-secondary ${
                 !previewUrl ? 'bg-neutral-100' : ''
               } ${isDragOver ? 'border-blue-500 bg-blue-50' : ''} flex items-center justify-center`
-            : `border border-border ${aspectRatioClass} ${previewSizeClass} mx-auto ${isDragOver ? 'bg-blue-50' : ''}`
+            : `border border-border rounded-lg ${aspectRatioClass} ${previewSizeClass} mx-auto ${isDragOver ? 'bg-blue-50' : ''}`
         }`}
         onClick={() => fileInputRef.current?.click()}
         onDragOver={handleDragOver}

@@ -62,7 +62,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose,
       return (
         <li key={id}>
           <button
-            className="block px-4 py-2 rounded-lg text-gray-900 hover:bg-gray-100 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm"
+            className="block px-4 py-2 rounded-lg text-gray-900 hover:bg-secondary/20 transition-colors duration-200 font-medium w-full flex justify-between items-center text-sm"
             onClick={() => toggleOpen(id)}
             aria-expanded={isOpen}
             data-test-id={`side-bar-parent-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
@@ -82,7 +82,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose,
             {item.children!.map((child, cIdx) => (
               <li key={(child.id ?? `${child.label}-${cIdx}`)}>
                 <button
-                  className="w-full text-left px-4 py-2 rounded hover:bg-gray-100 transition-colors font-medium cursor-pointer text-sm"
+                  className="w-full text-left px-4 py-2 rounded hover:bg-secondary/50 transition-colors font-medium cursor-pointer text-sm"
                   onClick={() => handleNavigate(child.url)}
                   data-test-id={`side-bar-child-${child.label.toLowerCase().replace(/\s+/g, '-')}`}
                 >
@@ -98,7 +98,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose,
     return (
       <li key={id}>
         <button
-          className="w-full text-left px-4 py-2 rounded hover:bg-gray-100 transition-colors font-medium cursor-pointer text-sm"
+          className="w-full text-left px-4 py-2 rounded hover:bg-secondary/50 transition-colors font-medium cursor-pointer text-sm"
           onClick={() => handleNavigate(item.url)}
           data-test-id={`side-bar-menu-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
         >
@@ -110,7 +110,7 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose,
 
   return (
     <aside
-      className={`fixed top-0 left-0 z-50 w-64 h-full bg-white/70 backdrop-blur backdrop-saturate-150 text-black flex flex-col items-center py-6 shadow-xl border border-white/20 ${className ? className : ''}`}
+      className={`fixed top-0 left-0 z-50 w-64 h-full bg-white/60 backdrop-blur backdrop-saturate-150 text-black flex flex-col items-center py-6 shadow-xl border border-white/20 ${className ? className : ''}`}
       style={style}
       data-test-id="side-bar-root"
     >

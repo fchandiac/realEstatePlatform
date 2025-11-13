@@ -210,9 +210,9 @@ export default function CreateAdminFormDialog({
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
           submitLabel="Crear Administrador"
-          showCloseButton={true}
-          closeButtonText="Cancelar"
-          onClose={handleClose}
+          cancelButton={true}
+          cancelButtonText="Cancelar"
+          onCancel={handleClose}
           columns={2}
           errors={errors}
         />

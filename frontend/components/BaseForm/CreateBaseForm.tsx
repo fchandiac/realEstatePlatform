@@ -55,9 +55,9 @@ export interface CreateBaseFormProps {
 	errors?: string[];
 	["data-test-id"]?: string;
 	columns?: number;
-	showCloseButton?: boolean;
-	closeButtonText?: string;
-	onClose?: () => void;
+	cancelButton?: boolean;
+	cancelButtonText?: string;
+	onCancel?: () => void;
 }
 
 const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
@@ -71,9 +71,9 @@ const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 	subtitle = "",
 	errors = [],
 	columns = 1,
-	showCloseButton = false,
-	closeButtonText = "cerrar",
-	onClose,
+	cancelButton = false,
+	cancelButtonText = "Cerrar",
+	onCancel,
 	...props
 }) => {
 	const dataTestId = props["data-test-id"];
@@ -176,14 +176,14 @@ const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 					))
 				)}
 				<div className="col-span-full flex justify-end gap-2 mt-4">
-					{showCloseButton && onClose && (
+					{cancelButton && onCancel && (
 						<Button
 							variant="outlined"
 							type="button"
-							onClick={onClose}
+							onClick={onCancel}
 							disabled={isSubmitting}
 						>
-							{closeButtonText}
+							{cancelButtonText}
 						</Button>
 					)}
 					{isSubmitting ? (

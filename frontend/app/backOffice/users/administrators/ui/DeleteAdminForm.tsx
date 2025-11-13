@@ -54,9 +54,9 @@ const DeleteAdminForm: React.FC<DeleteAdminFormProps> = ({
 			isSubmitting={loading}
 			submitLabel="Eliminar"
 			onSubmit={handleSubmit}
-			showCloseButton={true}
-			closeButtonText="Cancelar"
-			onClose={onClose}
+			cancelButton={true}
+			cancelButtonText="Cancelar"
+			onCancel={onClose}
 		/>
 	);
 };

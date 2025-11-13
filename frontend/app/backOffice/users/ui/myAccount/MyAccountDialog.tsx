@@ -416,7 +416,7 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
                                 submitLabel="Actualizar Usuario"
                                 submitVariant="outlined"
                                 isSubmitting={loading}
-                                showCloseButton={false}
+                                cancelButton={false}
                             />
                         </div>
 
@@ -433,7 +433,7 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
                                 submitLabel="Actualizar Información"
                                 submitVariant="outlined"
                                 isSubmitting={loading}
-                                showCloseButton={false}
+                                cancelButton={false}
                             />
                         </div>
 
@@ -450,7 +450,7 @@ const MyAccountDialog: React.FC<MyAccountDialogProps> = ({ open, onClose }) => {
                                 submitLabel="Validar"
                                 submitVariant="outlined"
                                 isSubmitting={loading}
-                                showCloseButton={false}
+                                cancelButton={false}
                             />
                         </div>
 

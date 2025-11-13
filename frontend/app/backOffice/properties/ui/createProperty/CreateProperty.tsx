@@ -110,9 +110,9 @@ export default function CreateProperty({
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}
         submitLabel="Crear Propiedad"
-        showCloseButton={true}
-        closeButtonText="Cancelar"
-        onClose={onClose}
+        cancelButton={true}
+        cancelButtonText="Cancelar"
+        onCancel={onClose}
       />
     </div>
   );

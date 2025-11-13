@@ -99,9 +99,9 @@ export interface StepperBaseFormProps {
 	subtitle?: string;
 	errors?: string[];
 	columns?: number;
-	showCloseButton?: boolean;
-	closeButtonText?: string;
-	onClose?: () => void;
+	cancelButton?: boolean;
+	cancelButtonText?: string;
+	onCancel?: () => void;
 	onNext?: (currentStep: number) => Promise<void> | void;
 	onPrevious?: (currentStep: number) => Promise<void> | void;
 	onFinish?: () => Promise<void> | void;
@@ -125,9 +125,9 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 	subtitle = "",
 	errors = [],
 	columns: defaultColumns = 1,
-	showCloseButton = false,
-	closeButtonText = "cerrar",
-	onClose,
+	cancelButton = false,
+	cancelButtonText = "Cerrar",
+	onCancel,
 	onNext,
 	onPrevious,
 	onFinish,
@@ -716,14 +716,14 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 
 				<div className="col-span-full flex justify-between items-center mt-2">
 					<div className="flex gap-2">
-						{showCloseButton && onClose && (
+						{cancelButton && onCancel && (
 							<Button
 								variant="outlined"
 								type="button"
-								onClick={onClose}
+								onClick={onCancel}
 								disabled={isProcessing}
 							>
-								{closeButtonText}
+								{cancelButtonText}
 							</Button>
 						)}
 					</div>
