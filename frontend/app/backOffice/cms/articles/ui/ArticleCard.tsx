@@ -1,4 +1,5 @@
 import IconButton from '@/components/IconButton/IconButton';
+import Switch from '@/components/Switch/Switch';
 import { Article } from '@/app/actions/articles';
 
 export interface ArticleCardProps {
@@ -36,10 +37,16 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
 
       {/* Acciones - Siempre al fondo */}
       <div className="flex justify-between items-center gap-2 mt-4 pt-4 border-t border-border">
-        {/* Categoría a la izquierda */}
-        <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-          {article.category}
-        </span>
+        {/* Switch y Categoría a la izquierda */}
+        <div className="flex items-center gap-2">
+          <Switch
+            checked={article.isActive}
+            onChange={() => {}}
+          />
+          <span className="text-xs border border-border text-primary px-2 py-1 rounded-full">
+            {article.category}
+          </span>
+        </div>
 
         {/* Botones a la derecha */}
         <div className="flex gap-2">
