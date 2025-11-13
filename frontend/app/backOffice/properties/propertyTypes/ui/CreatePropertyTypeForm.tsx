@@ -154,6 +154,9 @@ export default function CreatePropertyTypeForm({ onSuccess, onCancel }: CreatePr
         submitLabel="Crear Tipo de Propiedad"
         errors={errors}
         columns={1}
+        cancelButton={!!onCancel}
+        cancelButtonText="Cancelar"
+        onCancel={onCancel}
         data-test-id="create-property-type-form"
       />
     </div>

@@ -258,7 +258,7 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 				title: group.title,
 				subtitle: group.subtitle,
 				columns: Math.max(1, group.columns ?? columns ?? 1),
-				gap: group.gap ?? 16,
+				gap: group.gap ?? 4,
 				fields: group.fields,
 			}));
 		}
@@ -268,7 +268,7 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 			title: undefined,
 			subtitle: undefined,
 			columns: Math.max(1, columns ?? 1),
-			gap: 16,
+			gap: 4,
 			fields: fields as BaseUpdateFormField[],
 		}];
 	}, [fields, columns]);

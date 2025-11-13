@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Dialog from '@/components/Dialog/Dialog';
-import CreateBaseForm, { BaseFormField } from '@/components/BaseForm/CreateBaseForm';
+import CreateBaseForm, { BaseFormField, BaseFormFieldGroup } from '@/components/BaseForm/CreateBaseForm';
 import MultimediaUploader from '@/components/FileUploader/MultimediaUploader';
 import { createAdmin } from '@/app/actions/users';
 
@@ -42,54 +42,96 @@ export default function CreateAdminFormDialog({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
 
-  const fields: BaseFormField[] = [
+  const fields: BaseFormFieldGroup[] = [
     {
-      name: 'username',
-      label: 'Nombre de usuario',
-      type: 'text',
-      required: true,
-      col: 1,
+      id: 'username-field',
+      columns: 1,
+      gap: 4,
+      fields: [
+        {
+          name: 'username',
+          label: 'Nombre de usuario',
+          type: 'text',
+          required: true,
+        },
+      ],
     },
     {
-      name: 'email',
-      label: 'Email',
-      type: 'email',
-      required: true,
-      col: 2,
+      id: 'email-field',
+      columns: 1,
+      gap: 4,
+      fields: [
+        {
+          name: 'email',
+          label: 'Email',
+          type: 'email',
+          required: true,
+        },
+      ],
     },
     {
-      name: 'firstName',
-      label: 'Nombre',
-      type: 'text',
-      required: true,
-      col: 1,
+      id: 'firstName-field',
+      columns: 1,
+      gap: 4,
+      fields: [
+        {
+          name: 'firstName',
+          label: 'Nombre',
+          type: 'text',
+          required: true,
+        },
+      ],
     },
     {
-      name: 'lastName',
-      label: 'Apellido',
-      type: 'text',
-      required: true,
-      col: 2,
+      id: 'lastName-field',
+      columns: 1,
+      gap: 4,
+      fields: [
+        {
+          name: 'lastName',
+          label: 'Apellido',
+          type: 'text',
+          required: true,
+        },
+      ],
     },
     {
-      name: 'phone',
-      label: 'Teléfono',
-      type: 'text',
-      col: 1,
+      id: 'phone-field',
+      columns: 1,
+      gap: 4,
+      fields: [
+        {
+          name: 'phone',
+          label: 'Teléfono',
+          type: 'text',
+        },
+      ],
     },
     {
-      name: 'password',
-      label: 'Contraseña',
-      type: 'password',
-      required: true,
-      col: 1,
+      id: 'password-field',
+      columns: 1,
+      gap: 4,
+      fields: [
+        {
+          name: 'password',
+          label: 'Contraseña',
+          type: 'password',
+          required: true,
+        },
+      ],
     },
     {
-      name: 'confirmPassword',
-      label: 'Confirmar contraseña',
-      type: 'password',
-      required: true,
-      col: 2,
+      id: 'confirmPassword-field',
+      columns: 1,
+      gap: 4,
+      fields: [
+        {
+          name: 'confirmPassword',
+          label: 'Confirmar contraseña',
+          type: 'password',
+          required: true,
+        },
+      ],
     },
   ];
 
@@ -111,42 +153,42 @@ export default function CreateAdminFormDialog({
     }));
   };
 
-  const validateForm = (): string[] => {
+  const validateForm = (formValues: AdminFormData): string[] => {
     const newErrors: string[] = [];
 
-    if (!values.username.trim()) {
+    if (!formValues.username.trim()) {
       newErrors.push('El nombre de usuario es requerido');
     }
 
-    if (!values.email.trim()) {
+    if (!formValues.email.trim()) {
       newErrors.push('El email es requerido');
-    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+    } else if (!/\S+@\S+\.\S+/.test(formValues.email)) {
       newErrors.push('El email no es válido');
     }
 
-    if (!values.password) {
-      newErrors.push('La contraseña es requerida');
-    } else if (values.password.length < 8) {
-      newErrors.push('La contraseña debe tener al menos 8 caracteres');
-    }
-
-    if (values.password !== values.confirmPassword) {
-      newErrors.push('Las contraseñas no coinciden');
-    }
-
-    if (!values.firstName.trim()) {
+    if (!formValues.firstName.trim()) {
       newErrors.push('El nombre es requerido');
     }
 
-    if (!values.lastName.trim()) {
+    if (!formValues.lastName.trim()) {
       newErrors.push('El apellido es requerido');
+    }
+
+    if (!formValues.password) {
+      newErrors.push('La contraseña es requerida');
+    } else if (formValues.password.length < 8) {
+      newErrors.push('La contraseña debe tener al menos 8 caracteres');
+    }
+
+    if (formValues.password !== formValues.confirmPassword) {
+      newErrors.push('Las contraseñas no coinciden');
     }
 
     return newErrors;
   };
 
   const handleSubmit = async () => {
-    const validationErrors = validateForm();
+    const validationErrors = validateForm(values);
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
       return;
@@ -213,8 +255,8 @@ export default function CreateAdminFormDialog({
           cancelButton={true}
           cancelButtonText="Cancelar"
           onCancel={handleClose}
-          columns={2}
           errors={errors}
+          validate={(vals) => validateForm(vals as AdminFormData)}
         />
 
         <div>

@@ -4,14 +4,12 @@ import React, { useState } from "react";
 import { TextField } from "../TextField/TextField";
 import AutoComplete, { Option } from "../AutoComplete/AutoComplete";
 import { Button } from "../Button/Button";
-import CircularProgress from "../CircularProgress/CircularProgress";
 import DotProgress from "../DotProgress/DotProgress";
 import Alert from "../Alert/Alert";
 import Switch from "../Switch/Switch";
 import Select from "../Select/Select";
 import RangeSlider from "../RangeSlider/RangeSlider";
 import CreateLocationPicker from "../LocationPicker/CreateLocationPickerWrapper";
-
 
 export interface BaseFormField {
 	name: string;
@@ -39,12 +37,22 @@ export interface BaseFormField {
 	endIcon?: string;
 	min?: number;
 	max?: number;
-	col?: number;
 	labelPosition?: 'left' | 'right';
 }
 
-export interface CreateBaseFormProps {
+export interface BaseFormFieldGroup {
+	id?: string;
+	title?: string;
+	subtitle?: string;
+	columns?: number;
+	gap?: number;
 	fields: BaseFormField[];
+}
+
+type CreateBaseFormFields = BaseFormField[] | BaseFormFieldGroup[];
+
+export interface CreateBaseFormProps {
+	fields: CreateBaseFormFields;
 	values: Record<string, any>;
 	onChange: (field: string, value: any) => void;
 	onSubmit: () => void;
@@ -58,7 +66,12 @@ export interface CreateBaseFormProps {
 	cancelButton?: boolean;
 	cancelButtonText?: string;
 	onCancel?: () => void;
+	validate?: (values: Record<string, any>) => string[];
 }
+
+const isFieldGroupArray = (items: CreateBaseFormFields): items is BaseFormFieldGroup[] => {
+	return Array.isArray(items) && items.length > 0 && Boolean((items[0] as BaseFormFieldGroup).fields);
+};
 
 const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 	fields,
@@ -74,26 +87,14 @@ const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 	cancelButton = false,
 	cancelButtonText = "Cerrar",
 	onCancel,
+	validate,
 	...props
 }) => {
 	const dataTestId = props["data-test-id"];
-	// Función para agrupar campos por columnas
-	const groupFieldsByColumns = (fields: BaseFormField[], columns: number) => {
-		const columnGroups: BaseFormField[][] = Array.from({ length: columns }, () => []);
-
-		fields.forEach((field) => {
-			const colIndex = field.col ? Math.max(0, Math.min(field.col - 1, columns - 1)) : 0;
-			columnGroups[colIndex].push(field);
-		});
-
-		return columnGroups;
-	};
-
-	const columnGroups = groupFieldsByColumns(fields, columns);
 
 	// Función para renderizar un campo individual
 	const renderField = (field: BaseFormField) => (
-		<div key={field.name} className="mb-2">
+		<div key={field.name} className="mb-0">
 			{field.type === "location" ? (
 				<CreateLocationPicker
 					onChange={coords => onChange(field.name, coords)}
@@ -149,33 +150,73 @@ const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 		</div>
 	);
 
+	const resolvedGroups = React.useMemo(() => {
+		if (isFieldGroupArray(fields)) {
+			return fields.map((group, index) => ({
+				id: group.id ?? `group-${index}`,
+				title: group.title,
+				subtitle: group.subtitle,
+				columns: Math.max(1, group.columns ?? columns ?? 1),
+				gap: group.gap ?? 4,
+				fields: group.fields,
+			}));
+		}
+
+		return [{
+			id: "group-default",
+			title: undefined,
+			subtitle: undefined,
+			columns: Math.max(1, columns ?? 1),
+			gap: 4,
+			fields: fields as BaseFormField[],
+		}];
+	}, [fields, columns]);
+
 	return (
-		<>
+		<form
+			onSubmit={(e) => {
+				e.preventDefault();
+				if (validate) {
+					const validationErrors = validate(values);
+					if (validationErrors.length > 0) {
+						// Los errores se pasan a través de la prop errors del componente padre
+						return;
+					}
+				}
+				onSubmit();
+			}}
+			className="w-full flex flex-col gap-1"
+			{...(dataTestId ? { 'data-test-id': dataTestId } : {})}
+		>
 			{title && title !== "" && (
 				<div className="title p-1 pb-0 w-full mb-0 leading-tight">{title}</div>
 			)}
 			{subtitle && subtitle !== "" && (
-				<div className="subtitle p-1 pt-0 w-full mb-3 leading-snug">{subtitle}</div>
+				<div className="subtitle p-1 pt-0 w-full mb-1 leading-snug">{subtitle}</div>
 			)}
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					onSubmit();
-				}}
-				className={`w-full ${columns > 1 ? 'grid' : 'flex flex-col'} gap-2`}
-				style={columns > 1 ? { gridTemplateColumns: `repeat(${columns}, 1fr)`, gap: '1rem' } : {}}
-				{...(dataTestId ? { 'data-test-id': dataTestId } : {})}
-			>
-				{columns === 1 ? (
-					fields.map(renderField)
-				) : (
-					columnGroups.map((columnFields, columnIndex) => (
-						<div key={columnIndex} className="flex flex-col gap-2 w-full">
-							{columnFields.map(renderField)}
+			{resolvedGroups.map((group) => {
+				const columnCount = Math.max(1, group.columns);
+				const gapValue = typeof group.gap === "number" ? `${group.gap}px` : group.gap;
+				const containerClass = columnCount > 1 ? "grid" : "flex flex-col";
+				const containerStyle = columnCount > 1 ? { gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`, gap: gapValue ?? "4px" } : { gap: gapValue ?? "4px" };
+
+				return (
+					<div key={group.id} className="flex flex-col gap-1 w-full">
+						{group.title && <h4 className="text-base font-semibold text-gray-900">{group.title}</h4>}
+						{group.subtitle && <p className="text-sm text-gray-600">{group.subtitle}</p>}
+						<div className={`${containerClass}`} style={containerStyle as React.CSSProperties}>
+							{group.fields.map((field, index) => (
+								<div key={`${group.id}-${field.name}-${index}`} className="mb-0">
+									{renderField(field)}
+								</div>
+							))}
 						</div>
-					))
-				)}
-				<div className="col-span-full flex justify-end gap-2 mt-4">
+					</div>
+				);
+			})}
+			<div className="flex justify-between mt-4 w-full">
+				<div />
+				<div className="flex gap-2">
 					{cancelButton && onCancel && (
 						<Button
 							variant="outlined"
@@ -194,15 +235,15 @@ const CreateBaseForm: React.FC<CreateBaseFormProps> = ({
 						</Button>
 					)}
 				</div>
-				{errors.length > 0 && (
-					<div className="col-span-full flex flex-col gap-2 mt-4">
-						{errors.map((err, i) => (
-							<Alert key={i} variant="error">{err}</Alert>
-						))}
-					</div>
-				)}
-			</form>
-		</>
+			</div>
+			{errors.length > 0 && (
+				<div className="flex flex-col gap-2 mt-4">
+					{errors.map((err, i) => (
+						<Alert key={i} variant="error">{err}</Alert>
+					))}
+				</div>
+			)}
+		</form>
 	);
 };
 

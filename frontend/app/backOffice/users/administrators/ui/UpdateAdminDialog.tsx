@@ -37,7 +37,7 @@ const UpdateAdminDialog: React.FC<UpdateAdminDialogProps> = ({
 			title="Editar Administrador"
 			maxWidth="md"
 		>
-			<div className="p-6">
+			<div>
 				{error && (
 					<div className="mb-4 text-red-600">
 						{error}
