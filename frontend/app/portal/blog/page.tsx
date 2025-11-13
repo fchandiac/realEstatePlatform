@@ -1,7 +1,8 @@
-import { listBlogs } from '@/app/actions/blogs';
+import { listArticles } from '@/app/actions/articles';
 import BlogList from './ui/BlogList';
 import CategoriesBlog from './ui/CategoriesBlog';
 import { BlogCategory } from './ui/BlogCard';
+import { ArticleCategory } from '@/app/types/article';
 
 interface BlogPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -11,17 +12,17 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams;
   const category = typeof params.category === 'string' ? params.category : undefined;
 
-  const articles = await listBlogs({ category });
+  const articles = await listArticles({ category });
 
   // Transformar los artículos al formato que espera BlogCard
   const transformedArticles = articles.map(article => ({
     id: article.id,
     title: article.title,
     subtitle: article.subtitle,
-    content: article.content,
-    category: article.category as BlogCategory,
-    imageUrl: article.imageUrl,
-    publishedAt: article.publishedAt ? new Date(article.publishedAt) : undefined,
+    content: article.text,
+    category: article.category as unknown as BlogCategory,
+    imageUrl: article.multimediaUrl,
+    publishedAt: article.createdAt ? new Date(article.createdAt) : undefined,
   }));
 
   return (

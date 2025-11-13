@@ -37,6 +37,9 @@ export interface UpdateArticleDto {
 
 export interface GetArticlesParams {
   search?: string;
+  category?: string;
+  limit?: number;
+  offset?: number;
 }
 
 export async function getArticles(params: GetArticlesParams = {}): Promise<{
@@ -81,6 +84,40 @@ export async function getArticles(params: GetArticlesParams = {}): Promise<{
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error'
     }
+  }
+}
+
+/**
+ * Obtiene artículos públicos del blog (sin autenticación requerida)
+ */
+export async function listArticles(params: GetArticlesParams = {}): Promise<Article[]> {
+  try {
+    const queryParams = new URLSearchParams();
+
+    if (params.search) queryParams.append('search', params.search);
+    if (params.category) queryParams.append('category', params.category);
+    if (params.limit) queryParams.append('limit', params.limit.toString());
+    if (params.offset) queryParams.append('offset', params.offset.toString());
+
+    const url = `${env.backendApiUrl}/articles/public/active?${queryParams.toString()}`;
+
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    })
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch articles: ${res.statusText}`)
+    }
+
+    const data = await res.json()
+    return Array.isArray(data) ? data : data.data || []
+  } catch (error) {
+    console.error('Error fetching articles:', error)
+    return []
   }
 }
 
