@@ -91,6 +91,7 @@ export interface BaseUpdateFormField {
 	aspectRatio?: '1:1' | '16:9' | '9:16';
 	buttonText?: string;
 	labelText?: string;
+	previewSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 export interface UpdateBaseFormProps {
@@ -220,6 +221,7 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 					aspectRatio={field.aspectRatio || (field.type === 'avatar' ? '1:1' : '16:9')}
 					buttonText={field.buttonText || (field.type === 'avatar' ? 'Cambiar avatar' : field.type === 'video' ? 'Actualizar video' : 'Actualizar imagen')}
 					labelText={field.labelText ?? field.label}
+					previewSize={field.previewSize || 'md'}
 					onFileChange={(file) => {
 						handleChange(`${field.name}File`, file ?? null);
 						if (file) {
@@ -274,28 +276,28 @@ const UpdateBaseForm: React.FC<UpdateBaseFormProps> = ({
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="w-full flex flex-col gap-4"
+			className="w-full flex flex-col gap-1"
 			{...(dataTestId ? { 'data-test-id': dataTestId } : {})}
 		>
 			{title && title !== "" && (
 				<div className="title p-1 pb-0 w-full mb-0 leading-tight">{title}</div>
 			)}
 			{subtitle && subtitle !== "" && (
-				<div className="subtitle p-1 pt-0 w-full mb-3 leading-snug">{subtitle}</div>
+				<div className="subtitle p-1 pt-0 w-full mb-1 leading-snug">{subtitle}</div>
 			)}
 			{resolvedGroups.map((group) => {
 				const columnCount = Math.max(1, group.columns);
 				const gapValue = typeof group.gap === "number" ? `${group.gap}px` : group.gap;
 				const containerClass = columnCount > 1 ? "grid" : "flex flex-col";
-				const containerStyle = columnCount > 1 ? { gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`, gap: gapValue ?? "1rem" } : { gap: gapValue ?? "0.5rem" };
+				const containerStyle = columnCount > 1 ? { gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))`, gap: gapValue ?? "4px" } : { gap: gapValue ?? "4px" };
 
 				return (
-					<div key={group.id} className="flex flex-col gap-3 w-full">
+					<div key={group.id} className="flex flex-col gap-1 w-full">
 						{group.title && <h4 className="text-base font-semibold text-gray-900">{group.title}</h4>}
 						{group.subtitle && <p className="text-sm text-gray-600">{group.subtitle}</p>}
 						<div className={`${containerClass}`} style={containerStyle as React.CSSProperties}>
 							{group.fields.map((field, index) => (
-								<div key={`${group.id}-${field.name}-${index}`} className="mb-2">
+								<div key={`${group.id}-${field.name}-${index}`} className="mb-0">
 									{renderField(field)}
 								</div>
 							))}

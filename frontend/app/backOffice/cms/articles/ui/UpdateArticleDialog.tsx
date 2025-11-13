@@ -63,6 +63,7 @@ const UpdateArticleDialog: React.FC<UpdateArticleDialogProps> = ({
       aspectRatio: '16:9',
       buttonText: 'Cambiar imagen',
       labelText: 'Imagen del artículo',
+      previewSize: 'lg',
     },
   ];
 
@@ -139,6 +140,8 @@ const UpdateArticleDialog: React.FC<UpdateArticleDialogProps> = ({
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}
           submitLabel="Actualizar Artículo"
+          cancelButton={true}
+          onCancel={onClose}
         />
       ) : (
         <div className="flex justify-center py-8">
