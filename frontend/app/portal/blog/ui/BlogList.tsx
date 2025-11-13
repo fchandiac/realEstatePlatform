@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Article } from '@/app/actions/articles';
-import BlogCard from './BlogCard';
+import ArticleCard from './ArticleCard';
 
 export interface BlogListProps {
   blogs: Article[];
@@ -62,7 +62,7 @@ export default function BlogList({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {blogs.map((article) => (
-        <BlogCard
+        <ArticleCard
           key={article.id}
           {...article}
         />
