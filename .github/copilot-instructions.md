@@ -121,6 +121,127 @@ Focus on being productive quickly in this full-stack repo (NestJS backend + Next
 - TopBar/Button/IconButton/Card/Showcase/Logo/FontAwesome: building blocks for consistent UX.
   - Import from their paths; keep styles consistent and avoid inline styles.
 
+### Card Patterns (Reference: ArticleCard)
+Cards in the backOffice follow a standard structure for consistency. Use these patterns when building new card components.
+
+#### Standard Card Structure
+```tsx
+// Main container: flex column layout with full height
+className="bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full"
+
+// Content area: flex-1 to grow and push actions to bottom
+className="space-y-2 flex-1"
+
+// Actions footer: justify-between splits into left and right zones
+className="flex justify-between items-center gap-2 mt-4"
+```
+
+**Key principles:**
+- `flex flex-col h-full`: Ensures card grows vertically and actions stick to bottom.
+- `flex-1` on content: Pushes actions down automatically, no fixed heights needed.
+- `p-6`: Consistent padding (24px).
+- `shadow-sm hover:shadow-md`: Subtle elevation feedback on hover.
+- `transition-shadow`: Smooth animation.
+
+#### Image Standards
+For cards with images (articles, properties, products):
+```tsx
+// Container with proper aspect ratio
+className="mb-4 overflow-hidden rounded-lg"
+
+// Image: maintain aspect ratio without distortion
+className="w-full aspect-video object-cover"
+```
+
+**Image ratios by type:**
+- `aspect-video` (16:9): Articles, blog posts, slides, hero sections.
+- `aspect-square` (1:1): User avatars, product thumbnails, team members.
+- `aspect-[4/3]`: Property galleries, wider content.
+
+**Handling missing images:**
+```tsx
+{multimediaUrl ? (
+  <img src={multimediaUrl} alt={title} className="w-full aspect-video object-cover" />
+) : (
+  <div className="mb-4 w-full aspect-video bg-muted rounded-lg flex items-center justify-center">
+    <span className="material-symbols-outlined text-muted-foreground">image_not_supported</span>
+  </div>
+)}
+```
+
+#### Content Preview Pattern
+For truncated descriptions and subtitles:
+```tsx
+// Title: semantic heading
+<h3 className="text-lg font-semibold text-foreground">{title}</h3>
+
+// Subtitle: muted secondary text
+<p className="text-sm text-muted-foreground">{subtitle}</p>
+
+// Preview: limit to 3 lines elegantly
+<p className="text-sm text-foreground line-clamp-3">{description}</p>
+```
+
+**Spacing:** Use `space-y-2` on parent container for consistent vertical gaps.
+
+#### Footer with Dual Zones
+Actions layout: information on left, buttons on right.
+```tsx
+<div className="flex justify-between items-center gap-2 mt-4">
+  {/* Left zone: category, status, date, metadata */}
+  <div className="flex items-center gap-2">
+    <span className="text-xs border border-border text-primary px-2 py-1 rounded-full">
+      {category}
+    </span>
+    {/* Additional metadata can go here */}
+  </div>
+
+  {/* Right zone: action buttons */}
+  <div className="flex gap-2">
+    <IconButton icon="edit" variant="text" onClick={handleEdit} />
+    <IconButton icon="delete" variant="text" className="text-red-500" onClick={handleDelete} />
+  </div>
+</div>
+```
+
+**Badge style (for categories, tags, status):**
+```tsx
+className="text-xs border border-border text-primary px-2 py-1 rounded-full"
+```
+
+#### Visual Feedback Patterns
+For disabled/inactive card states:
+```tsx
+// During removal or disabled state
+className={`... ${isRemoving ? 'opacity-50' : ''}`}
+
+// Smooth state transitions
+className="transition-shadow"
+```
+
+**Usage example (ArticleCard):**
+```tsx
+const [isRemoving, setIsRemoving] = useState(false);
+
+// Trigger removal animation
+if (!isActive) {
+  setIsRemoving(true);
+  setTimeout(() => onRemove?.(id), 2000);  // Give user time to see feedback
+}
+
+// Apply opacity during transition
+className={`... ${isRemoving ? 'opacity-50' : ''}`}
+```
+
+#### Common Card Variations
+| Card Type | Aspect | Content Lines | Actions | Note |
+|-----------|--------|----------------|---------|------|
+| Article | 16:9 | 3 preview lines | edit/delete + toggle | Current pattern |
+| Product | 1:1 | Price + short desc | cart + buy | Square image |
+| User/Team | 1:1 | Name + role | follow + contact | Avatar, centered |
+| Property | 4:3 | Address + features | view + favorites | Wider gallery |
+| Slide | 16:9 | Title only | edit/view/delete | Drag handle support |
+
 ## Testing & data
 - Jest scripts are available per feature (e.g., `npm run test:contract`, `test:users`) in `backend/package.json`.
 - Seeding helpers exist (`npm run seed` / `seed:reset`). Prefer `seed:reset` before integration tests that expect a known state.
