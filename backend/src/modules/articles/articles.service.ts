@@ -125,4 +125,10 @@ export class ArticlesService {
     const article = await this.findOne(id);
     await this.articleRepository.softDelete(id);
   }
+
+  async toggleActive(id: string, isActive: boolean): Promise<Article> {
+    const article = await this.findOne(id);
+    article.isActive = isActive;
+    return await this.articleRepository.save(article);
+  }
 }

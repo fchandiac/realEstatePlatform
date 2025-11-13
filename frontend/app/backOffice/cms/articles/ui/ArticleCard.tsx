@@ -2,8 +2,9 @@
 
 import IconButton from '@/components/IconButton/IconButton';
 import Switch from '@/components/Switch/Switch';
-import { Article } from '@/app/actions/articles';
+import { Article, toggleArticleActive } from '@/app/actions/articles';
 import React, { useState } from 'react';
+import Alert from '@/components/Alert/Alert';
 
 export interface ArticleCardProps {
   article: Article;
@@ -17,14 +18,54 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   onDelete,
 }) => {
   const [isActive, setIsActive] = useState(article.isActive);
+  const [loading, setLoading] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-  const handleActiveChange = (checked: boolean) => {
-    setIsActive(checked);
-    // Aquí puedes agregar la lógica para actualizar en el backend si es necesario
+  const handleActiveChange = async (checked: boolean) => {
+    setLoading(true);
+    try {
+      const result = await toggleArticleActive(article.id, checked);
+      
+      if (result.success) {
+        setIsActive(checked);
+        setAlertMessage({
+          type: 'success',
+          message: checked ? 'Artículo activado' : 'Artículo desactivado'
+        });
+      } else {
+        setAlertMessage({
+          type: 'error',
+          message: result.error || 'Error al actualizar el artículo'
+        });
+        // Revertir el cambio en caso de error
+        setIsActive(!checked);
+      }
+    } catch (error) {
+      setAlertMessage({
+        type: 'error',
+        message: 'Error al actualizar el artículo'
+      });
+      // Revertir el cambio en caso de error
+      setIsActive(!checked);
+    } finally {
+      setLoading(false);
+      // Limpiar el mensaje después de 3 segundos
+      if (alertMessage) {
+        setTimeout(() => setAlertMessage(null), 3000);
+      }
+    }
   };
 
   return (
     <div className="bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
+      {/* Alert */}
+      {alertMessage && (
+        <div className="mb-4">
+          <Alert variant={alertMessage.type}>
+            {alertMessage.message}
+          </Alert>
+        </div>
+      )}
       {/* Imagen */}
       {article.multimediaUrl && (
         <div className="mb-4">

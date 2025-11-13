@@ -52,4 +52,12 @@ export class ArticlesController {
   softDelete(@Param('id') id: string) {
     return this.articlesService.softDelete(id);
   }
+
+  @Patch(':id/toggle-active')
+  toggleActive(
+    @Param('id') id: string,
+    @Body() body: { isActive: boolean },
+  ) {
+    return this.articlesService.toggleActive(id, body.isActive);
+  }
 }

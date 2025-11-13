@@ -248,3 +248,47 @@ export async function deleteArticle(id: string): Promise<{
     }
   }
 }
+
+export async function toggleArticleActive(id: string, isActive: boolean): Promise<{
+  success: boolean;
+  data?: Article;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' }
+    }
+
+    const res = await fetch(`${env.backendApiUrl}/articles/${id}/toggle-active`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ isActive }),
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null)
+      return {
+        success: false,
+        error: errorData?.message || `Failed to toggle article: ${res.status}`
+      }
+    }
+
+    const result = await res.json()
+
+    // Revalidar la página para reflejar los cambios
+    revalidatePath('/backOffice/cms/articles')
+    revalidatePath('/portal/blog')
+
+    return { success: true, data: result }
+  } catch (error) {
+    console.error('Error toggling article:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
+    }
+  }
+}
