@@ -25,7 +25,7 @@ export default function ArticleDetailCard({
   return (
     <article className="w-full bg-white">
       {/* Imagen Hero */}
-      <div className="relative w-full max-h-[60vh] overflow-hidden bg-gray-200">
+      <div className="relative mx-auto max-h-[70vh] overflow-hidden bg-gray-200 lg:max-w-6xl">
         <img
           src={article.multimediaUrl || fallbackImage}
           alt={article.title}
