@@ -49,6 +49,8 @@ const TopBar: React.FC<TopBarProps> = ({
   onNotificationsClick
 }) => {
   const [showSidebar, setShowSidebar] = useState(false);
+  const [logoLoaded, setLogoLoaded] = useState(false);
+  const [logoError, setLogoError] = useState(false);
 
   const open = () => setShowSidebar(true);
   const close = () => setShowSidebar(false);
@@ -58,13 +60,34 @@ const TopBar: React.FC<TopBarProps> = ({
       <div data-test-id="top-bar-root">
   <header className={`w-full flex items-center justify-between px-4 pt-2 bg-background border-b-[5px] border-accent fixed top-0 left-0 z-40 ${className}`}>
           <div className="flex items-center gap-3">
-            {logoSrc && (
-              <img
-                src={logoSrc}
-                alt="Logo"
-                className="h-10 w-10 object-contain"
-                data-test-id="top-bar-logo"
-              />
+            {logoSrc ? (
+              <>
+                {(!logoLoaded || logoError) && (
+                  <div className="h-10 w-10 bg-neutral-300 rounded-lg flex items-center justify-center" data-test-id="top-bar-logo-skeleton">
+                    {logoError && (
+                      <span className="material-symbols-outlined text-neutral-400" style={{ fontSize: 20 }}>
+                        image_not_supported
+                      </span>
+                    )}
+                  </div>
+                )}
+                {!logoError && (
+                  <img
+                    src={logoSrc}
+                    alt="Logo"
+                    className={`h-10 w-10 object-contain transition-opacity duration-300 ${!logoLoaded ? 'opacity-0 absolute' : 'opacity-100'}`}
+                    data-test-id="top-bar-logo"
+                    onLoad={() => setLogoLoaded(true)}
+                    onError={() => setLogoError(true)}
+                  />
+                )}
+              </>
+            ) : (
+              <div className="h-10 w-10 bg-neutral-300 rounded-lg flex items-center justify-center" data-test-id="top-bar-logo-placeholder">
+                <span className="material-symbols-outlined text-neutral-400" style={{ fontSize: 20 }}>
+                  image
+                </span>
+              </div>
             )}
             <span className="text-lg font-bold text-foreground" data-test-id="top-bar-title">{title}</span>
           </div>

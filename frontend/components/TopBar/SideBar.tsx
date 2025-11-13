@@ -36,6 +36,8 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose,
 
   // Track which parent items are open using their id or label
   const [openIds, setOpenIds] = useState<Record<string, boolean>>({});
+  const [logoLoaded, setLogoLoaded] = useState(false);
+  const [logoError, setLogoError] = useState(false);
 
   const toggleOpen = (id: string) => {
     setOpenIds((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -115,12 +117,25 @@ const SideBar: React.FC<SideBarProps> = ({ menuItems, className, style, onClose,
       <div className="mb-6 text-center">
         {logoUrl ? (
           <div className="">
-            <img
-              src={logoUrl}
-              alt={`${APP_NAME} Logo`}
-              className="h-20 w-auto mx-auto object-contain"
-              data-test-id="side-bar-logo"
-            />
+            {(!logoLoaded || logoError) && (
+              <div className="h-20 w-20 bg-neutral-300 rounded-lg flex items-center justify-center mx-auto mb-2" data-test-id="side-bar-logo-skeleton">
+                {logoError && (
+                  <span className="material-symbols-outlined text-neutral-400" style={{ fontSize: 32 }}>
+                    image_not_supported
+                  </span>
+                )}
+              </div>
+            )}
+            {!logoError && (
+              <img
+                src={logoUrl}
+                alt={`${APP_NAME} Logo`}
+                className={`h-20 w-auto mx-auto object-contain transition-opacity duration-300 ${!logoLoaded ? 'opacity-0 absolute' : 'opacity-100'}`}
+                data-test-id="side-bar-logo"
+                onLoad={() => setLogoLoaded(true)}
+                onError={() => setLogoError(true)}
+              />
+            )}
           </div>
         ) : null}
         {/* <div className="text-xl font-bold" data-test-id="side-bar-app-name">{APP_NAME}</div> */}
