@@ -3,7 +3,15 @@
 import React from 'react';
 import { Article } from '@/app/actions/articles';
 
-export type ArticleCardProps = Article;
+export interface BlogCardProps extends Article {}
+
+export enum BlogCategory {
+  COMPRAR = 'Comprar',
+  ARRENDAR = 'Arrendar',
+  INVERSION = 'Inversión',
+  DECORACION = 'Decoración',
+  MERCADO = 'Mercado',
+}
 
 const FALLBACK_IMAGE_DATA_URL =
   'data:image/svg+xml;utf8,' +
@@ -26,7 +34,7 @@ function formatDate(date?: string | Date): string {
   }).format(dateObj);
 }
 
-export default function ArticleCard({
+export default function BlogCard({
   id,
   title,
   subtitle,
@@ -34,7 +42,7 @@ export default function ArticleCard({
   category,
   multimediaUrl,
   createdAt,
-}: ArticleCardProps) {
+}: BlogCardProps) {
   const CardInner = (
     <div
       className="relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
@@ -80,7 +88,7 @@ export default function ArticleCard({
           </h3>
           {subtitle && (
             <p
-              className="text-gray-300 text-xs leading-snug font-normal"
+              className="text-gray-200 text-sm leading-relaxed font-medium"
               style={{
                 textShadow: '0 1px 2px rgba(0,0,0,0.4)'
               }}
