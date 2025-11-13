@@ -62,37 +62,36 @@ export default function SlideCard({
 
   return (
     <div
-      className={`h-full bg-card rounded-lg w-full border border-border shadow-sm hover:shadow-md text-left relative transition-shadow duration-200 flex flex-col ${isDragging ? 'opacity-50' : ''}`}
+      className={`bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full relative ${isDragging ? 'opacity-50' : ''}`}
     >
-      
-
-      {/* Drag handle */}
+      {/* Drag handle - Absolute positioned overlay */}
       <div 
-        className="absolute top-2 left-2 z-10 cursor-move touch-none bg-white rounded-full p-2 shadow-sm hover:shadow-md transition-shadow flex items-center justify-center"
+        className="absolute top-3 left-3 z-10 cursor-move border touch-none bg-white rounded-full p-2 shadow-sm hover:shadow-md transition-shadow flex items-center justify-center"
         {...dragAttributes}
         {...dragListeners}
+        title="Arrastra para reordenar"
       >
-        <span className="material-symbols-outlined text-gray-500 hover:text-gray-700 leading-none" style={{ fontSize: '1.5rem' }}>
+        <span className="material-symbols-outlined  text-muted-foreground leading-none">
           drag_indicator
         </span>
       </div>
 
-      {/* Status indicator */}
-      <div className="absolute top-2 right-2 z-10">
+      {/* Status indicator - Absolute positioned badge */}
+      <div className="absolute top-3 right-3 z-10">
         <div 
-          className={`w-5 h-5 rounded-full ${slide.isActive ? 'bg-green-500' : 'bg-gray-400'} border-2 border-white shadow-sm`}
+          className={`w-3 h-3 rounded-full border-2 border-white shadow-sm ${slide.isActive ? 'bg-green-500' : 'bg-gray-400'}`}
           title={slide.isActive ? 'Activo' : 'Inactivo'}
         />
       </div>
 
-      {/* Media container */}
-      <div className="flex items-center justify-center w-full h-40 bg-gray-200 text-gray-400 overflow-hidden rounded-t-lg flex-shrink-0 relative">
+      {/* Media container - Standard image ratio */}
+      <div className="mb-4 overflow-hidden rounded-lg">
         {slide.multimediaUrl && !mediaError ? (
           <>
             {isVideo(slide.multimediaUrl) ? (
               <video
                 src={normalizeMediaUrl(slide.multimediaUrl)}
-                className="w-full h-full object-cover"
+                className="w-full aspect-video object-cover"
                 muted
                 autoPlay
                 loop
@@ -103,111 +102,102 @@ export default function SlideCard({
               <img
                 src={normalizeMediaUrl(slide.multimediaUrl)}
                 alt={slide.title}
-                className="w-full h-full object-cover"
+                className="w-full aspect-video object-cover"
                 onError={handleMediaError}
               />
             )}
           </>
         ) : (
-          <span className="material-symbols-outlined text-6xl">
-            {slide.multimediaUrl && isVideo(slide.multimediaUrl) ? 'videocam' : 'image'}
-          </span>
+          <div className="w-full aspect-video bg-border rounded-lg flex items-center justify-center">
+            <span className="material-symbols-outlined text-muted-foreground" style={{ fontSize: '40px' }}>
+              {slide.multimediaUrl && isVideo(slide.multimediaUrl) ? 'videocam' : 'image_not_supported'}
+            </span>
+          </div>
         )}
       </div>
 
-      {/* Card content */}
-      <div className="p-4 pt-6 flex-1 flex flex-col">
-        {/* Main content area */}
-        <div className="flex-1">
-          {/* Title */}
-          <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2">
-            {slide.title}
-          </h3>
+      {/* Content area - flex-1 to push actions to bottom */}
+      <div className="space-y-2 flex-1">
+        {/* Title */}
+        <h3 className="text-lg font-semibold text-foreground line-clamp-2">
+          {slide.title}
+        </h3>
+        
+        {/* Description */}
+        {slide.description && (
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {slide.description}
+          </p>
+        )}
+        
+        {/* Link URL */}
+        {slide.linkUrl && (
+          <div className="flex items-center gap-1 text-sm">
+            <span className="material-symbols-outlined text-muted-foreground text-base">
+              link
+            </span>
+            <a 
+              href={slide.linkUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:text-primary/80 underline truncate transition-colors"
+              title={slide.linkUrl}
+            >
+              {slide.linkUrl}
+            </a>
+          </div>
+        )}
+        
+        {/* Metadata - Duration and dates */}
+        <div className="flex flex-wrap gap-3 text-xs text-muted-foreground pt-2">
+          {/* Duration */}
+          <div className="flex items-center gap-1">
+            <span className="material-symbols-outlined text-base">
+              schedule
+            </span>
+            <span>{slide.duration}s</span>
+          </div>
           
-          {/* Description */}
-          {slide.description && (
-            <p className="text-sm font-medium text-gray-500 mb-2 line-clamp-2">
-              {slide.description}
-            </p>
-          )}
+          {/* Start date */}
+          <div className="flex items-center gap-1">
+            <span className="material-symbols-outlined text-base">
+              calendar_today
+            </span>
+            <span>{formatDate(slide.startDate)}</span>
+          </div>
           
-          {/* Link URL */}
-          <div className="flex items-start justify-start flex-col space-y-2">
-            {slide.linkUrl && (
-              <div className="flex items-center space-x-1">
-                <span className="material-symbols-outlined text-gray-400 text-sm">
-                  link
-                </span>
-                <a 
-                  href={slide.linkUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-medium text-blue-500 hover:text-blue-700 underline truncate max-w-xs transition-colors"
-                  title={slide.linkUrl}
-                >
-                  {slide.linkUrl}
-                </a>
-              </div>
-            )}
-            
-            {/* Duration and dates */}
-            <div className="flex items-center space-x-4 text-gray-400 text-sm">
-              {/* Duration */}
-              <div className="flex items-center space-x-1">
-                <span className="material-symbols-outlined text-sm">
-                  schedule
-                </span>
-                <span>{slide.duration}s</span>
-              </div>
-              
-              {/* Start date */}
-              <div className="flex items-center space-x-1">
-                <span className="material-symbols-outlined text-sm">
-                  calendar_today
-                </span>
-                <span className="text-xs">{formatDate(slide.startDate)}</span>
-              </div>
-              
-              {/* End date */}
-              <div className="flex items-center space-x-1">
-                <span className="material-symbols-outlined text-sm">
-                  event
-                </span>
-                <span className="text-xs">{formatDate(slide.endDate)}</span>
-              </div>
-            </div>
+          {/* End date */}
+          <div className="flex items-center gap-1">
+            <span className="material-symbols-outlined text-base">
+              event
+            </span>
+            <span>{formatDate(slide.endDate)}</span>
           </div>
         </div>
-        
-        {/* Position badge and actions - Fixed at bottom */}
-        <div className="mt-4">
-          {/* Position badge centered - Above divider */}
-          <div className="flex justify-center items-center mb-2">
-            <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-              Posición: {slide.order}
-            </div>
-          </div>
-          
-          {/* Divider */}
-          <div className="pt-2">
-            {/* Actions - Below divider, right aligned */}
-            <div className="flex justify-end items-center gap-1">
-              <IconButton
-                icon="edit"
-                variant="text"
-                size="sm"
-                onClick={() => onEdit?.(slide)}
-                ariaLabel="Editar slide"
-              />
-              <IconButton
-                icon="delete"
-                variant="text"
-                size="sm"
-                onClick={() => onDelete?.(slide)}
-                ariaLabel="Eliminar slide"
-              />
-            </div>
-          </div>
+      </div>
+
+      {/* Actions footer - Dual zone pattern */}
+      <div className="flex justify-between items-center gap-2 mt-4">
+        {/* Left zone: Position badge */}
+        <div className="text-xs border border-border text-muted-foreground px-3 py-1.5 rounded-full bg-card">
+          Pos: {slide.order}
+        </div>
+
+        {/* Right zone: Action buttons */}
+        <div className="flex gap-2">
+          <IconButton
+            icon="edit"
+            variant="text"
+            onClick={() => onEdit?.(slide)}
+            aria-label="Editar slide"
+          />
+          <IconButton
+            icon="delete"
+            variant="text"
+            onClick={() => onDelete?.(slide)}
+            className="text-red-500"
+            aria-label="Eliminar slide"
+          />
         </div>
       </div>
     </div>

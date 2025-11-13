@@ -102,54 +102,60 @@ export default function PropertyTypeCard({
 
   return (
     <div
-      className="w-full h-full cursor-pointer transition-all duration-200 hover:shadow-lg"
+      className="bg-card rounded-lg border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full cursor-pointer"
       onClick={onClick}
     >
-      <div
-        className="rounded-lg p-4 border-l-4 border-secondary border-t border-b border-r border-border shadow-lg h-full flex flex-col"
-      >
-        <div className="flex items-start flex-1">
-          <div className="flex-1 min-w-0 flex flex-col">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-foreground truncate">{name}</h3>
-              {!isActive && (
-                <span className="text-xs text-red-500 font-medium ml-2">Inactivo</span>
-              )}
-            </div>
-            {description && (
-              <p className="text-sm text-secondary mb-3">{description}</p>
-            )}
-            <div className="space-y-2">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-center justify-start">
-                  <Switch
-                    label={feature.label}
-                    labelPosition="right"
-                    checked={feature.value || false}
-                    onChange={(checked) => handleFeatureToggle(feature.key, checked)}
-                    data-test-id={`switch-${feature.key}`}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+      {/* Header area with title and status */}
+      <div className="p-6 flex-1">
+        <div className="flex items-start justify-between mb-4">
+          <h3 className="text-lg font-semibold text-foreground truncate flex-1">{name}</h3>
+          {!isActive && (
+            <span className="text-xs bg-red-100 text-red-600 font-medium px-2 py-1 rounded ml-2">
+              Inactivo
+            </span>
+          )}
         </div>
 
-        {/* Botones de editar y eliminar en la parte inferior */}
-        <div className="flex justify-end gap-2 mt-4 pt-2 border-t border-border">
+        {/* Description */}
+        {description && (
+          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{description}</p>
+        )}
+
+        {/* Features list */}
+        <div className="space-y-2">
+          {features.map((feature, index) => (
+            <div key={index} className="flex items-center justify-start">
+              <Switch
+                label={feature.label}
+                labelPosition="right"
+                checked={feature.value || false}
+                onChange={(checked) => handleFeatureToggle(feature.key, checked)}
+                data-test-id={`switch-${feature.key}`}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Actions footer - Dual zone pattern */}
+      <div className="flex justify-between items-center gap-2 mt-4 p-6 pt-0">
+        {/* Left zone: Empty or status info */}
+        <div />
+
+        {/* Right zone: Action buttons */}
+        <div className="flex gap-2">
           <IconButton
             aria-label="Editar tipo de propiedad"
             variant="text"
             onClick={handleEditClick}
             icon="edit"
-            size="sm"
           />
           <IconButton
             aria-label="Eliminar tipo de propiedad"
             variant="text"
             onClick={handleDeleteClick}
             icon="delete"
-            size="sm"
+            className="text-red-500"
           />
         </div>
       </div>
