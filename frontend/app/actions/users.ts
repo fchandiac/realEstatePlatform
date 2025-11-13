@@ -237,6 +237,17 @@ export async function createAdmin(data: {
 			return { success: false, error: 'No authenticated' };
 		}
 
+		console.log('Creating admin with data:', {
+			username: data.username,
+			email: data.email,
+			firstName: data.firstName,
+			lastName: data.lastName,
+			phone: data.phone,
+			hasAvatar: !!data.avatarFile,
+			avatarSize: data.avatarFile?.size,
+			avatarType: data.avatarFile?.type,
+		});
+
 		// First create the user
 		const createUserData: CreateUserDto = {
 			username: data.username,
@@ -271,6 +282,7 @@ export async function createAdmin(data: {
 
 		// If avatar file is provided, upload it
 		if (data.avatarFile && user.id) {
+			console.log('Uploading avatar for user:', user.id);
 			const avatarFormData = new FormData();
 			avatarFormData.append('file', data.avatarFile);
 
@@ -284,6 +296,7 @@ export async function createAdmin(data: {
 
 			if (avatarResponse.ok) {
 				const avatarData = await avatarResponse.json();
+				console.log('Avatar uploaded successfully:', avatarData);
 				// Update the user object with the new avatar URL
 				if (user.personalInfo) {
 					user.personalInfo.avatarUrl = avatarData.avatarUrl;
@@ -291,7 +304,7 @@ export async function createAdmin(data: {
 					user.personalInfo = { avatarUrl: avatarData.avatarUrl };
 				}
 			} else {
-				console.warn('Avatar upload failed, but user was created successfully');
+				console.warn('Avatar upload failed:', avatarResponse.status);
 			}
 		}
 

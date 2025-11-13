@@ -139,7 +139,7 @@ export default function CreateAdminFormDialog({
       fields: [
         {
           name: 'avatarFile',
-          label: '',
+          label: 'Avatar',
           type: 'avatar',
           acceptedTypes: ['image/*'],
           maxSize: 2,
