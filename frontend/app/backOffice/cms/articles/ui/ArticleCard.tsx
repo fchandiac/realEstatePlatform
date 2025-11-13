@@ -39,13 +39,13 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       <div className="flex justify-between items-center gap-2 mt-4 pt-4 border-t border-border">
         {/* Switch y Categoría a la izquierda */}
         <div className="flex items-center gap-2">
+          <span className="text-xs border border-border text-primary px-2 py-1 rounded-full">
+            {article.category}
+          </span>
           <Switch
             checked={article.isActive}
             onChange={() => {}}
           />
-          <span className="text-xs border border-border text-primary px-2 py-1 rounded-full">
-            {article.category}
-          </span>
         </div>
 
         {/* Botones a la derecha */}
