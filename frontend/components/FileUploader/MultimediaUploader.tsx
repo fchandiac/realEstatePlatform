@@ -206,23 +206,25 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
       ) : (
         // Renderizado normal para variante default
         <>
-          {buttonType === 'icon' ? null : (
-            <label className="font-medium cursor-pointer">
-              {label}
-            </label>
-          )}
-          {buttonType === 'icon' ? (
-            <IconButton
-              icon="add"
-              variant="containedSecondary"
-              onClick={() => inputRef.current?.click()}
-              ariaLabel="Subir multimedia"
-            />
-          ) : (
-            <Button variant="secondary" type="button" onClick={() => inputRef.current?.click()}>
-              Subir multimedia
-            </Button>
-          )}
+          <div className="flex flex-col gap-1">
+            {buttonType === 'icon' && (
+              <label className="text-xs font-normal cursor-pointer">
+                {label}
+              </label>
+            )}
+            {buttonType === 'icon' ? (
+              <IconButton
+                icon="add"
+                variant="containedSecondary"
+                onClick={() => inputRef.current?.click()}
+                ariaLabel="Subir multimedia"
+              />
+            ) : (
+              <Button variant="secondary" type="button" onClick={() => inputRef.current?.click()}>
+                Subir multimedia
+              </Button>
+            )}
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {previewUrls.map((url: string, idx: number) => {
