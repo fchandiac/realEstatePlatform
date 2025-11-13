@@ -67,13 +67,23 @@ export class UsersService {
     await queryRunner.startTransaction();
 
     try {
+      // Clean up personalInfo: remove undefined values, convert to null for avatarUrl
+      const personalInfo = createUserDto.personalInfo 
+        ? {
+            firstName: createUserDto.personalInfo.firstName,
+            lastName: createUserDto.personalInfo.lastName,
+            phone: createUserDto.personalInfo.phone,
+            avatarUrl: createUserDto.personalInfo.avatarUrl === undefined ? null : createUserDto.personalInfo.avatarUrl,
+          }
+        : {};
+
       // Create user
       const user = this.userRepository.create({
         ...createUserDto,
         status: UserStatus.ACTIVE,
         role: createUserDto.role || UserRole.COMMUNITY,
         permissions: createUserDto.permissions || [],
-        personalInfo: createUserDto.personalInfo || {},
+        personalInfo: personalInfo as any,
       });
 
       // Hash password using the entity method
@@ -86,7 +96,7 @@ export class UsersService {
       const person = this.personRepository.create({
         verified: false,
         user: savedUser, // Link the person to the user
-      });
+      } as any);
 
       await queryRunner.manager.save(Person, person);
 
