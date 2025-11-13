@@ -126,6 +126,34 @@ export async function listArticles(params: GetArticlesParams = {}): Promise<Arti
   }
 }
 
+/**
+ * Obtiene un artículo público por ID (sin autenticación requerida)
+ */
+export async function getArticleById(id: string): Promise<Article | null> {
+  try {
+    const url = `${env.backendApiUrl}/articles/public/${id}`;
+
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store',
+    })
+
+    if (!res.ok) {
+      console.error(`Failed to fetch article ${id}: ${res.statusText}`)
+      return null
+    }
+
+    const data = await res.json()
+    return data || null
+  } catch (error) {
+    console.error('Error fetching article:', error)
+    return null
+  }
+}
+
 export async function createArticle(formData: FormData): Promise<{
   success: boolean;
   data?: Article;

@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
 import { Article } from '@/app/actions/articles';
 
 export type ArticleCardProps = Article;
@@ -92,9 +93,13 @@ export default function ArticleCard({
       </div>
 
       {/* Overlay hover sutil */}
-      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20" />
+      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
     </div>
   );
 
-  return CardInner;
+  return (
+    <Link href={`/portal/blog/article/${id}`}>
+      {CardInner}
+    </Link>
+  );
 }
