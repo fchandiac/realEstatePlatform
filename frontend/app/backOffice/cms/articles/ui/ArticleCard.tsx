@@ -32,30 +32,31 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
           <p className="text-sm text-muted-foreground">{article.subtitle}</p>
         )}
         <p className="text-sm text-foreground line-clamp-3">{article.text}</p>
-
-        {/* Categoría */}
-        <div className="flex items-center gap-2 mt-3">
-          <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-            {article.category}
-          </span>
-        </div>
       </div>
 
       {/* Acciones - Siempre al fondo */}
-      <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-border">
-        <IconButton
-          icon="edit"
-          variant="text"
-          onClick={() => onEdit(article)}
-          aria-label="Editar artículo"
-        />
-        <IconButton
-          icon="delete"
-          variant="text"
-          onClick={() => onDelete(article)}
-          className="text-red-500"
-          aria-label="Eliminar artículo"
-        />
+      <div className="flex justify-between items-center gap-2 mt-4 pt-4 border-t border-border">
+        {/* Categoría a la izquierda */}
+        <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+          {article.category}
+        </span>
+
+        {/* Botones a la derecha */}
+        <div className="flex gap-2">
+          <IconButton
+            icon="edit"
+            variant="text"
+            onClick={() => onEdit(article)}
+            aria-label="Editar artículo"
+          />
+          <IconButton
+            icon="delete"
+            variant="text"
+            onClick={() => onDelete(article)}
+            className="text-red-500"
+            aria-label="Eliminar artículo"
+          />
+        </div>
       </div>
     </div>
   );
