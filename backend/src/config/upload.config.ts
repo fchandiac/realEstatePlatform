@@ -17,7 +17,8 @@ export class UploadConfigService {
    * Obtiene la URL base pública para acceder a los archivos
    */
   getUploadBaseUrl(): string {
-    return this.configService.get('UPLOAD_BASE_URL', 'http://localhost:3000/public');
+    const backendPublicUrl = this.configService.get('BACKEND_PUBLIC_URL', 'http://localhost:3000');
+    return `${backendPublicUrl}/public`;
   }
 
   /**

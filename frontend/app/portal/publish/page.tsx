@@ -174,11 +174,11 @@ export default function PublishPropertyPage() {
         return;
       }
 
-      // Éxito: mostrar mensaje y redirigir
+      // Éxito: mostrar mensaje y redirigir al inicio
       console.log('✅ Propiedad publicada:', result.data.id);
       
-      // Redirigir a página de éxito
-      router.push('/portal/success?propertyId=' + result.data.id);
+      // Redirigir al inicio del portal
+      router.push('/portal');
     } catch (error) {
       console.error('Error publishing property:', error);
       setErrors(['Error al publicar la propiedad']);

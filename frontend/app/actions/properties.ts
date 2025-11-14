@@ -1404,3 +1404,49 @@ export async function isMultimediaMain(
     };
   }
 }
+
+/**
+ * Public: Get a single published property by ID (no token required)
+}
+
+/**
+ * Public: Get a single published property by ID (no token required)
+ * 
+ * NOTE: This function is duplicated in app/portal/properties/property/[id]/actions.ts
+ * to avoid importing auth dependencies on public pages. Use that one instead for public pages.
+ */
+export async function getPublishedPropertyPublic(id: string): Promise<{
+  success: boolean;
+  data?: Property;
+  error?: string;
+}> {
+  try {
+    const res = await fetch(`${env.backendApiUrl}/properties/public/${id}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+      cache: 'no-store',
+      next: { revalidate: 0 },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to fetch property: ${res.status}`,
+      };
+    }
+
+    const data = await res.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error fetching published property (public):', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+

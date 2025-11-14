@@ -130,6 +130,8 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
   const commune = property.city || '';
 
   const handleClick = () => {
+    // Redirigir a la página de detalle en una nueva ventana
+    window.open(`/portal/properties/property/${property.id}`, '_blank');
     if (onClick) onClick(property.id);
   };
 
@@ -155,11 +157,11 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
 
   const CardInner = (
     <div
-      className="relative bg-white rounded-lg w-full text-left property-card shadow-lg overflow-hidden group"
+      className="relative bg-white rounded-lg w-full text-left property-card shadow-lg overflow-hidden group cursor-pointer"
       data-test-id="property-card-root"
-      onClick={href ? undefined : handleClick}
-      role={href ? undefined : 'button'}
-      tabIndex={href ? -1 : 0}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
     >
       {/* Overlay al hacer hover */}
       <div
@@ -168,13 +170,16 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
       />
       {/* Botón centrado sobre el overlay */}
       <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-        <Button
-          variant="primary"
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 px-6 py-2 text-base font-semibold pointer-events-auto"
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(`/portal/properties/property/${property.id}`, '_blank');
+          }}
+          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 px-6 py-2 text-base font-semibold pointer-events-auto bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
           style={{ transform: 'translateY(-30%)' }}
         >
           Ver propiedad
-        </Button>
+        </button>
       </div>
 
       {featured && (
@@ -280,14 +285,6 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
       </div>
     </div>
   );
-
-  if (href) {
-    return (
-      <a href={href} className="block">
-        {CardInner}
-      </a>
-    );
-  }
 
   return CardInner;
 }

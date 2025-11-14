@@ -77,6 +77,7 @@ export class PropertyService {
   /**
    * Lista de propiedades publicadas para el portal (público, sin token)
    * Devuelve campos esenciales y relaciones mínimas.
+   * Si no hay mainImageUrl, devuelve multimedia array para que el frontend busque la primera imagen.
    */
   async listPublishedPublic(): Promise<any[]> {
     const qb = this.propertyRepository
@@ -112,30 +113,40 @@ export class PropertyService {
 
     const items = await qb.getMany();
 
-    // Propiedades que necesitan fallback de imagen principal
+    // Propiedades que necesitan multimedia fallback
     const idsNeedingFallback = items
       .filter(p => !p.mainImageUrl || p.mainImageUrl.trim() === '')
       .map(p => p.id);
 
-    // Buscar primera imagen por propiedad (PROPERTY_IMG) para fallback
-    let firstUrlMap: Record<string, string> = {};
+    // Buscar ALL multimedia para propiedades sin mainImageUrl (para que el frontend elija la primera)
+    let multimediaMap: Record<string, any[]> = {};
     if (idsNeedingFallback.length > 0) {
-      const raws = await this.multimediaRepository
+      const multimedia = await this.multimediaRepository
         .createQueryBuilder('m')
-        .select(['m.propertyId AS propertyId', 'm.url AS url', 'm.createdAt AS createdAt'])
         .where('m.propertyId IN (:...ids)', { ids: idsNeedingFallback })
-        .andWhere('m.type = :type', { type: MultimediaType.PROPERTY_IMG })
-        .orderBy('m.propertyId', 'ASC')
-        .addOrderBy('m.createdAt', 'ASC')
-        .getRawMany<{ propertyId: string; url: string }>();
+        .andWhere('m.type IN (:...types)', { 
+          types: [
+            MultimediaType.PROPERTY_IMG, 
+            MultimediaType.PROPERTY_VIDEO
+          ] 
+        })
+        .orderBy('m.createdAt', 'ASC')
+        .getMany();
 
-      const map: Record<string, string> = {};
-      for (const r of raws) {
-        if (!map[r.propertyId] && r.url) {
-          map[r.propertyId] = r.url.replace('/../', '/');
+      // Agrupar por propertyId
+      for (const m of multimedia) {
+        if (m.propertyId) {
+          if (!multimediaMap[m.propertyId]) {
+            multimediaMap[m.propertyId] = [];
+          }
+          multimediaMap[m.propertyId].push({
+            id: m.id,
+            url: m.url,
+            type: m.type,
+            format: m.format,
+          });
         }
       }
-      firstUrlMap = map;
     }
 
     const normalize = (u?: string | null) => (u && u.trim() !== '' ? u.replace('/../', '/') : null);
@@ -147,37 +158,53 @@ export class PropertyService {
         new URL(cleaned);
         return cleaned;
       } catch {
-        // Si es relativa bajo /uploads, prefijar BACKEND_PUBLIC_URL si está configurada
-        if (cleaned.startsWith('/uploads/')) {
+        // Si es relativa bajo /public, prefijar BACKEND_PUBLIC_URL si está configurada
+        if (cleaned.startsWith('/public/')) {
           if (this.publicBaseUrl) return `${this.publicBaseUrl}${cleaned}`;
-          return cleaned; // Último recurso: devolver relativa
+          return cleaned;
+        }
+        // Si es relativa bajo /uploads, prefijar BACKEND_PUBLIC_URL
+        if (cleaned.startsWith('/uploads/')) {
+          if (this.publicBaseUrl) return `${this.publicBaseUrl}/public${cleaned}`;
+          return cleaned;
         }
         return cleaned;
       }
     };
 
     // Mapear a la forma esperada por el portal (PortalProperty)
-    return items.map((p) => ({
-      id: p.id,
-      title: p.title,
-      description: p.description ?? null,
-      status: p.status,
-      operationType: p.operationType,
-      price: p.price,
-      currencyPrice: p.currencyPrice,
-      state: p.state ?? null,
-      city: p.city ?? null,
-      propertyType: p.propertyType ? { id: p.propertyType.id, name: p.propertyType.name } : null,
-      // Usa mainImageUrl si existe; si no, toma la primera imagen de multimedia y devuelve ABSOLUTA (canónica)
-      mainImageUrl: toAbsoluteMediaUrl(normalize(p.mainImageUrl) ?? firstUrlMap[p.id] ?? null),
-      // multimedia opcional: omitimos el arreglo para payload liviano
-      bedrooms: p.bedrooms ?? null,
-      bathrooms: p.bathrooms ?? null,
-      builtSquareMeters: p.builtSquareMeters ?? null,
-      landSquareMeters: p.landSquareMeters ?? null,
-      parkingSpaces: p.parkingSpaces ?? null,
-      isFeatured: !!p.isFeatured,
-    }));
+    return items.map((p) => {
+      const hasMainImage = p.mainImageUrl && p.mainImageUrl.trim() !== '';
+      const result: any = {
+        id: p.id,
+        title: p.title,
+        description: p.description ?? null,
+        status: p.status,
+        operationType: p.operationType,
+        price: p.price,
+        currencyPrice: p.currencyPrice,
+        state: p.state ?? null,
+        city: p.city ?? null,
+        propertyType: p.propertyType ? { id: p.propertyType.id, name: p.propertyType.name } : null,
+        mainImageUrl: hasMainImage ? toAbsoluteMediaUrl(normalize(p.mainImageUrl)) : null,
+        bedrooms: p.bedrooms ?? null,
+        bathrooms: p.bathrooms ?? null,
+        builtSquareMeters: p.builtSquareMeters ?? null,
+        landSquareMeters: p.landSquareMeters ?? null,
+        parkingSpaces: p.parkingSpaces ?? null,
+        isFeatured: !!p.isFeatured,
+      };
+
+      // Si no tiene mainImageUrl pero tiene multimedia, incluir el array
+      if (!hasMainImage && multimediaMap[p.id]) {
+        result.multimedia = multimediaMap[p.id].map(m => ({
+          ...m,
+          url: toAbsoluteMediaUrl(m.url),
+        }));
+      }
+
+      return result;
+    });
   }
 
   /**

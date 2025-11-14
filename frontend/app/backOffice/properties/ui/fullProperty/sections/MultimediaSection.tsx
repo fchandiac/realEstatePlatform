@@ -8,7 +8,7 @@ import IconButton from '@/components/IconButton/IconButton';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import { uploadPropertyMultimedia } from '@/app/actions/properties';
 import { deleteMultimedia } from '@/app/actions/multimedia';
-import { useAlert } from '@/app/contexts/AlertContext';
+import { useAlert } from '@/app/hooks/useAlert';
 
 export default function MultimediaSection({ property }: MultimediaSectionProps) {
   const [localMainImageUrl, setLocalMainImageUrl] = useState(property.mainImageUrl);
@@ -17,7 +17,7 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
   const createdUrlsRef = React.useRef<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const { success, error: showError } = useAlert();
+  const { showAlert } = useAlert();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleMainImageUpdate = (newMainImageUrl: string) => {
@@ -29,17 +29,29 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
     try {
       const result = await deleteMultimedia(multimediaId);
       if (!result.success) {
-        showError(result.error || 'Error al eliminar el archivo.');
+        showAlert({
+          message: result.error || 'Error al eliminar el archivo.',
+          type: 'error',
+          duration: 5000
+        });
       } else {
         setMultimedia(prev => prev.filter(m => m.id !== multimediaId));
-        success('Archivo eliminado correctamente.');
+        showAlert({
+          message: 'Archivo eliminado correctamente.',
+          type: 'success',
+          duration: 3000
+        });
         const deletedItem = multimedia.find(m => m.id === multimediaId);
         if (deletedItem && localMainImageUrl && deletedItem.url === localMainImageUrl) {
           setLocalMainImageUrl(undefined);
         }
       }
     } catch (err) {
-      showError(err instanceof Error ? err.message : 'Error desconocido.');
+      showAlert({
+        message: err instanceof Error ? err.message : 'Error desconocido.',
+        type: 'error',
+        duration: 5000
+      });
     } finally {
       setDeletingId(null);
     }
@@ -75,7 +87,11 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
 
   const handleUploadMultimedia = async () => {
     if (selectedFiles.length === 0) {
-      showError('Por favor selecciona al menos un archivo');
+      showAlert({
+        message: 'Por favor selecciona al menos un archivo',
+        type: 'error',
+        duration: 3000
+      });
       return;
     }
 
@@ -85,7 +101,11 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
       const result = await uploadPropertyMultimedia(property.id, filesToUpload);
 
       if (!result.success) {
-        showError(result.error || 'Error al subir multimedia');
+        showAlert({
+          message: result.error || 'Error al subir multimedia',
+          type: 'error',
+          duration: 5000
+        });
         setUploading(false);
         return;
       }
@@ -97,13 +117,21 @@ export default function MultimediaSection({ property }: MultimediaSectionProps) 
       createdUrlsRef.current.forEach(u => URL.revokeObjectURL(u));
       createdUrlsRef.current = [];
       setSelectedFiles([]);
-      success('Multimedia subida exitosamente');
+      showAlert({
+        message: 'Multimedia subida exitosamente',
+        type: 'success',
+        duration: 3000
+      });
       
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
     } catch (err) {
-      showError(err instanceof Error ? err.message : 'Error desconocido');
+      showAlert({
+        message: err instanceof Error ? err.message : 'Error desconocido',
+        type: 'error',
+        duration: 5000
+      });
     } finally {
       setUploading(false);
     }

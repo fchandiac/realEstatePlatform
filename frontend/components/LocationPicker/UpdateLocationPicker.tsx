@@ -46,28 +46,23 @@ const UpdateLocationPicker: React.FC<UpdateLocationPickerProps> = ({
   const [markerPosition, setMarkerPosition] = useState<[number, number]>([initialCoordinates.lat, initialCoordinates.lng]);
   const [mapCenter, setMapCenter] = useState<[number, number]>([initialCoordinates.lat, initialCoordinates.lng]);
 
-  // Actualizar cuando cambien las coordenadas iniciales (para formularios)
+  // Actualizar TODOS los estados cuando cambien las coordenadas iniciales
   useEffect(() => {
-    // Solo actualizar si las coordenadas son diferentes
-    const coordsChanged = Math.abs(currentCoordinates.lat - initialCoordinates.lat) > 0.000001 || 
-                         Math.abs(currentCoordinates.lng - initialCoordinates.lng) > 0.000001;
-    
-    if (coordsChanged) {
-      console.log('UpdateLocationPicker - Actualizando coordenadas desde props:', initialCoordinates);
-      setCurrentCoordinates(initialCoordinates);
-      const newPosition: [number, number] = [initialCoordinates.lat, initialCoordinates.lng];
-      setMarkerPosition(newPosition);
-      setMapCenter(newPosition);
-    }
-  }, [initialCoordinates, currentCoordinates]);
+    console.log('🗺️ UpdateLocationPicker - Actualizando desde props:', initialCoordinates);
+    setCurrentCoordinates(initialCoordinates);
+    const newPosition: [number, number] = [initialCoordinates.lat, initialCoordinates.lng];
+    setMarkerPosition(newPosition);
+    setMapCenter(newPosition);
+  }, [initialCoordinates.lat, initialCoordinates.lng]);
 
   const handleLocationSelect = (lat: number, lng: number) => {
     const newCoords = { lat, lng };
+    console.log('📍 UpdateLocationPicker - Usuario seleccionó:', newCoords);
     setCurrentCoordinates(newCoords);
     setMarkerPosition([lat, lng]);
+    setMapCenter([lat, lng]);
     
     if (onChange) {
-      console.log('UpdateLocationPicker - Usuario seleccionó nueva ubicación:', newCoords);
       onChange(newCoords);
     }
   };

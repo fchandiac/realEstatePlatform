@@ -13,7 +13,7 @@ interface UsePropertyFormReturn {
   savingBasic: boolean;
   handleChange: (field: string, value: any) => void;
   handleSave: () => Promise<void>;
-  handleUpdateBasic: (payload: UpdatePropertyBasicDto) => Promise<void>;
+  handleUpdateBasic: (payload: UpdatePropertyBasicDto) => Promise<boolean>;
   resetForm: () => void;
 }
 
@@ -29,7 +29,7 @@ export function usePropertyForm(
   const [hasChanges, setHasChanges] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savingBasic, setSavingBasic] = useState(false);
-  const alert = useAlert();
+  const { showAlert } = useAlert();
 
   // Sincronizar formData cuando cambia initialProperty
   useEffect(() => {
@@ -68,28 +68,31 @@ export function usePropertyForm(
       const result = await updateProperty(formData.id, formData as any);
       
       if (result.success) {
-        alert.success('Propiedad actualizada exitosamente');
+        showAlert({ message: 'Propiedad actualizada exitosamente', type: 'success', duration: 3000 });
         setOriginalData(formData);
         setHasChanges(false);
         if (onSave && result.data) {
           onSave(result.data as Property);
         }
       } else {
-        alert.error(result.error || 'Error al actualizar la propiedad');
+        showAlert({ message: result.error || 'Error al actualizar la propiedad', type: 'error', duration: 5000 });
       }
     } catch (error) {
       console.error('❌ [usePropertyForm] Error al guardar:', error);
-      alert.error('Error al guardar los cambios');
+      showAlert({ message: 'Error al guardar los cambios', type: 'error', duration: 5000 });
     } finally {
       setSaving(false);
     }
-  }, [formData, hasChanges, alert, onSave]);
+  }, [formData, hasChanges, showAlert, onSave]);
 
   /**
    * Actualiza solo la información básica de la propiedad
    */
   const handleUpdateBasic = useCallback(async (payload: UpdatePropertyBasicDto) => {
-    if (!formData) return;
+    if (!formData) {
+      showAlert({ message: 'No hay datos de propiedad disponibles', type: 'error', duration: 3000 });
+      return false;
+    }
 
     setSavingBasic(true);
     try {
@@ -97,31 +100,39 @@ export function usePropertyForm(
       const result = await updatePropertyBasic(formData.id, payload);
 
       if (result.success) {
-        alert.success('Información básica actualizada');
+        showAlert({ message: 'Información básica actualizada', type: 'success', duration: 3000 });
         
-        // Actualizar solo los campos básicos en originalData
-        setOriginalData(prev => ({
-          ...prev,
-          title: payload.title || prev.title,
-          description: payload.description !== undefined ? payload.description : prev.description,
-          status: payload.status || prev.status,
-          operationType: payload.operationType || prev.operationType,
-          isFeatured: payload.isFeatured !== undefined ? payload.isFeatured : prev.isFeatured,
-        }));
+        // Actualizar TODOS los campos en originalData
+        setOriginalData(prev => {
+          const updated = { ...prev };
+          
+          if (payload.title !== undefined) updated.title = payload.title;
+          if (payload.description !== undefined) updated.description = payload.description;
+          if (payload.status !== undefined) updated.status = payload.status;
+          if (payload.operationType !== undefined) updated.operationType = payload.operationType;
+          if (payload.isFeatured !== undefined) updated.isFeatured = payload.isFeatured;
+          
+          return updated;
+        });
 
         if (onSave && result.data) {
           onSave(result.data as Property);
         }
+
+        return true;
       } else {
-        alert.error(result.error || 'No se pudo actualizar la información básica');
+        showAlert({ message: result.error || 'No se pudo actualizar la información básica', type: 'error', duration: 5000 });
+        return false;
       }
     } catch (error) {
-      console.error('❌ [usePropertyForm] Error al actualizar básica:', error);
-      alert.error('Error al actualizar la información básica');
+      const message = error instanceof Error ? error.message : 'Error desconocido';
+      console.error('❌ [usePropertyForm] Error al actualizar básica:', message);
+      showAlert({ message: 'Error al actualizar la información básica', type: 'error', duration: 5000 });
+      return false;
     } finally {
       setSavingBasic(false);
     }
-  }, [formData, alert, onSave]);
+  }, [formData, showAlert, onSave]);
 
   /**
    * Resetea el formulario a los valores originales

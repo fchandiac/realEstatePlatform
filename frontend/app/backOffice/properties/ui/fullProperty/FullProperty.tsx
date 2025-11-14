@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import DotProgress from '@/components/DotProgress/DotProgress';
 import { PropertyHeader, PropertySidebar } from './components';
 import {
@@ -23,6 +22,9 @@ interface FullPropertyProps {
   onSave?: (data: any) => void;
 }
 
+// Constante para ancho fijo del sidebar - evita cambios durante loading
+const SIDEBAR_WIDTH = 'w-64';
+
 export default function FullProperty({ propertyId, onSave }: FullPropertyProps) {
   const [activeSection, setActiveSection] = useState('basic');
   
@@ -33,30 +35,35 @@ export default function FullProperty({ propertyId, onSave }: FullPropertyProps) 
   const { formData, handleChange, handleUpdateBasic, savingBasic } = 
     usePropertyForm(property!, onSave);
 
-  // Loading state
+  // Loading state - MEJORADO con layout estable
   if (loading) {
     return (
-      <div className="flex flex-col h-full bg-neutral overflow-hidden">
-        {/* Header skeleton durante carga */}
-        <div className="h-16 bg-background border-b border-border flex items-center px-6">
-          <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 bg-neutral-200 rounded animate-pulse"></div>
+      <div className="flex flex-col h-full bg-neutral overflow-hidden w-full">
+        {/* Header skeleton - Tamaño fijo */}
+        <div className="h-16 bg-background border-b border-border flex items-center px-6 flex-shrink-0">
+          <div className="flex items-center space-x-4 w-full max-w-7xl mx-auto">
+            <div className="w-8 h-8 bg-neutral-200 rounded animate-pulse flex-shrink-0"></div>
             <div className="h-6 bg-neutral-200 rounded w-48 animate-pulse"></div>
           </div>
         </div>
 
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar skeleton durante carga */}
-          <div className="w-64 bg-background border-r border-border p-4">
+        {/* Main layout skeleton con estructura fija */}
+        <div className="flex flex-1 overflow-hidden w-full">
+          {/* Sidebar skeleton - ANCHO FIJO, NO CAMBIA */}
+          <aside className={`${SIDEBAR_WIDTH} bg-background border-r border-border p-4 flex-shrink-0 overflow-y-auto`}>
             <div className="space-y-2">
+              {/* Simular estructura exacta del sidebar real */}
               {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="h-10 bg-neutral-200 rounded animate-pulse"></div>
+                <div 
+                  key={i} 
+                  className="h-10 bg-neutral-200 rounded animate-pulse"
+                ></div>
               ))}
             </div>
-          </div>
+          </aside>
 
-          {/* Contenido con loading */}
-          <main className="flex-1 overflow-y-auto bg-background flex items-center justify-center">
+          {/* Content skeleton - Ancho flexible con padding consistente */}
+          <main className="flex-1 overflow-y-auto bg-background flex items-center justify-center w-full">
             <div className="flex flex-col items-center space-y-4">
               <DotProgress size={24} />
               <p className="text-sm text-muted-foreground">Cargando propiedad...</p>
@@ -92,7 +99,7 @@ export default function FullProperty({ propertyId, onSave }: FullPropertyProps) 
             users={users}
             onSave={async () => {
               // BasicSection maneja la creación del payload internamente
-              await handleUpdateBasic({
+              return await handleUpdateBasic({
                 title: formData.title,
                 description: formData.description,
                 status: formData.status,
@@ -131,20 +138,22 @@ export default function FullProperty({ propertyId, onSave }: FullPropertyProps) 
 
   return (
     <div className="flex flex-col h-full bg-neutral overflow-hidden w-full">
-      {/* Header */}
+      {/* Header - Tamaño fijo */}
       <PropertyHeader property={formData} />
 
+      {/* Main layout - Estructura estable */}
       <div className="flex flex-1 overflow-hidden w-full">
-        {/* Sidebar */}
+        {/* Sidebar - ANCHO FIJO, NO CAMBIA */}
         <PropertySidebar
           sections={SECTIONS}
           activeSection={activeSection}
           onSectionChange={setActiveSection}
+          className={`${SIDEBAR_WIDTH} flex-shrink-0`}
         />
 
-        {/* Contenido */}
+        {/* Contenido - Ancho flexible con máximo controlado */}
         <main className="flex-1 overflow-y-auto bg-background w-full">
-          <div className="p-4 w-full">
+          <div className="p-6 max-w-6xl mx-auto w-full">
             <div className="w-full">
               {renderSection()}
             </div>

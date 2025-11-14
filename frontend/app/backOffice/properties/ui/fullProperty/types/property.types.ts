@@ -130,6 +130,8 @@ export interface BasicSectionProps extends BaseSectionProps {
   propertyTypes: PropertyType[];
   users: User[];
   saving: boolean;
+  /** Callback para guardar cambios básicos - retorna boolean indicando éxito */
+  onSave?: () => Promise<boolean>;
 }
 
 export interface LocationSectionProps extends BaseSectionProps {

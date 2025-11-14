@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAlert } from '@/app/contexts/AlertContext';
+import { useState, useEffect, useCallback } from 'react';
+import { useAlert } from '@/app/hooks/useAlert';
 import { getFullProperty } from '@/app/actions/properties';
 import { listPropertyTypes } from '@/app/actions/properties';
 import { listAdminsAgents } from '@/app/actions/users';
@@ -28,9 +28,9 @@ export function usePropertyData(propertyId: string): UsePropertyDataReturn {
   const [regions, setRegions] = useState<Region[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const alert = useAlert();
+  const { showAlert } = useAlert();
 
-  const loadData = async () => {
+  const loadData = useCallback(async (): Promise<void> => {
     setLoading(true);
     setError(null);
 
@@ -59,29 +59,47 @@ export function usePropertyData(propertyId: string): UsePropertyDataReturn {
 
       // Procesar usuarios
       if (usersResult.success && usersResult.data) {
-        console.log('👥 [usePropertyData] Usuarios cargados:', usersResult.data.data?.length || 0);
-        setUsers(usersResult.data.data || []);
+        let usersList: User[] = [];
+        if (Array.isArray(usersResult.data)) {
+          usersList = usersResult.data;
+        } else if (Array.isArray(usersResult.data.data)) {
+          usersList = usersResult.data.data;
+        }
+        console.log('👥 [usePropertyData] Usuarios cargados:', usersList.length);
+        setUsers(usersList);
+      } else {
+        console.warn('⚠️ [usePropertyData] No se pudieron cargar usuarios');
+        setUsers([]);
       }
 
       // Procesar regiones
-      console.log('🗺️ [usePropertyData] Regiones cargadas:', regionsResult.length);
-      setRegions(regionsResult);
+      if (Array.isArray(regionsResult) && regionsResult.length > 0) {
+        console.log('🗺️ [usePropertyData] Regiones cargadas:', regionsResult.length);
+        setRegions(regionsResult);
+      } else {
+        console.warn('⚠️ [usePropertyData] Sin regiones disponibles');
+        setRegions([]);
+      }
 
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al cargar los datos';
       console.error('❌ [usePropertyData] Error:', errorMessage);
       setError(errorMessage);
-      alert.error(errorMessage);
+      showAlert({
+        message: errorMessage,
+        type: 'error',
+        duration: 5000
+      });
     } finally {
       setLoading(false);
     }
-  };
+  }, [propertyId, showAlert]);
 
   useEffect(() => {
     if (propertyId) {
       loadData();
     }
-  }, [propertyId]);
+  }, [propertyId, loadData]);
 
   return {
     property,
