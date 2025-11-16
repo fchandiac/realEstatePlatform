@@ -29,7 +29,7 @@ const mapLocationOptions = (locations: LocationOption[]): BaseFormOption[] =>
 export interface PropertyFormData {
   // Información básica
   title: string;
-  description: string;
+  description?: string;
   propertyTypeId: string; // Cambiado a string para coincidir con el hook
   price: number;
   currencyPrice: string; // Cambiado a string para usar 'CLP' y 'UF'
@@ -80,7 +80,7 @@ export const getBasicInfoFields = (
     name: 'description',
     label: 'Descripción',
     type: 'textarea',
-    required: true,
+    required: false,
     rows: 3,
     width: '100%',
   }],
@@ -221,7 +221,7 @@ export const getLocationFields = (
     [
       {
         name: 'state',
-        label: 'Estado/Región',
+        label: 'Región',
         type: 'select',
         required: true,
         options: mapLocationOptions(stateOptions),
@@ -238,9 +238,8 @@ export const getLocationFields = (
     ],
     [{
       name: 'address',
-      label: 'Dirección Completa',
+      label: 'Dirección',
       type: 'textarea',
-      required: true,
       rows: 3,
       width: '100%',
     }],
@@ -266,6 +265,8 @@ export const getMultimediaFields = (): BaseFormField[][] => [
       accept: 'image/*,video/*',
       maxFiles: 20,
       maxSize: 10, // 10MB por archivo
+      previewSize: 'compact',
+      
     },
     width: '100%',
   }],

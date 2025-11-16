@@ -14,6 +14,7 @@ interface MultimediaUploaderProps {
   aspectRatio?: 'square' | 'video' | '16:9' | 'auto';
   buttonType?: 'icon' | 'normal';
   variant?: 'default' | 'avatar'; // Nueva prop para variante avatar
+  previewSize?: 'normal' | 'compact';
 }
 
 export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
@@ -26,6 +27,7 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
   aspectRatio = '16:9',
   buttonType = 'icon',
   variant = 'default', // Valor por defecto
+  previewSize = 'normal',
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -160,6 +162,8 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
     onChange?.(newFiles);
   };
 
+  const previewContainerClass = previewSize === 'compact' ? 'w-full max-w-[240px] mx-auto' : 'w-full';
+
   return (
     <div className="flex flex-col gap-4 w-full" data-test-id="multimedia-uploader-root">
             <input
@@ -226,7 +230,7 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
               const isVideo = file?.type.startsWith('video/');
 
               return (
-                <div key={idx} style={{ position: 'relative', display: 'inline-block', flex: '0 0 auto' }}>
+                <div key={idx} className={`relative inline-block flex-none ${previewContainerClass}`}>
                   {isVideo ? (
                     <video
                       src={url}

@@ -376,6 +376,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 					aspectRatio?: "square" | "video" | "auto";
 					buttonType?: "icon" | "normal";
 					variant?: "default" | "avatar";
+					previewSize?: "normal" | "compact";
 				};
 
 				return (
@@ -394,6 +395,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 							aspectRatio={typedProps.aspectRatio}
 							buttonType={typedProps.buttonType}
 							variant={typedProps.variant}
+							previewSize={typedProps.previewSize}
 							onChange={(files: File[]) => onChange(field.name, files)}
 						/>
 						{multimediaValue.length > 0 && (

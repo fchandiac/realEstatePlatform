@@ -114,11 +114,60 @@ interface DialogProps {
   onCloseButtonClick?: () => void;
 }
 
-const presetSizeClasses: Record<'sm' | 'md' | 'lg' | 'xl', string> = {
-  sm: 'sm:min-w-[400px] sm:max-w-lg md:min-w-[400px] md:max-w-lg lg:min-w-[400px] lg:max-w-lg',
-  md: 'sm:min-w-[480px] sm:max-w-xl md:min-w-[480px] md:max-w-xl lg:min-w-[480px] lg:max-w-xl',
-  lg: 'sm:min-w-[560px] sm:max-w-2xl md:min-w-[560px] md:max-w-2xl lg:min-w-[560px] lg:max-w-2xl',
-  xl: 'sm:min-w-[640px] sm:max-w-4xl md:min-w-[640px] md:max-w-4xl lg:min-w-[640px] lg:max-w-4xl',
+type DialogSizeKey = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+type WidthRule = { min: string; max: string };
+const breakpointOrder: Array<{ key: DialogSizeKey; prefix: string }> = [
+  { key: 'xs', prefix: '' },
+  { key: 'sm', prefix: 'sm:' },
+  { key: 'md', prefix: 'md:' },
+  { key: 'lg', prefix: 'lg:' },
+  { key: 'xl', prefix: 'xl:' },
+];
+
+const dialogSizePresets: Record<DialogSizeKey, Partial<Record<DialogSizeKey, WidthRule>>> = {
+  xs: {
+    xs: { min: '280px', max: '90vw' },
+    sm: { min: '320px', max: '85vw' },
+  },
+  sm: {
+    xs: { min: '280px', max: '90vw' },
+    sm: { min: '420px', max: '85vw' },
+    md: { min: '420px', max: '80vw' },
+    lg: { min: '420px', max: '520px' },
+  },
+  md: {
+    xs: { min: '320px', max: '95vw' },
+    sm: { min: '520px', max: '90vw' },
+    md: { min: '520px', max: '85vw' },
+    lg: { min: '520px', max: '72vw' },
+  },
+  lg: {
+    xs: { min: '360px', max: '95vw' },
+    sm: { min: '640px', max: '90vw' },
+    md: { min: '640px', max: '85vw' },
+    lg: { min: '640px', max: '78vw' },
+    xl: { min: '960px', max: '89vw' },
+  },
+  xl: {
+    xs: { min: '400px', max: '95vw' },
+    sm: { min: '800px', max: '90vw' },
+    md: { min: '800px', max: '88vw' },
+    lg: { min: '960px', max: '90vw' },
+    xl: { min: '1024px', max: '1024px' },
+  },
+};
+
+const buildPresetSizeClasses = (size: DialogSizeKey) => {
+  const preset = dialogSizePresets[size];
+  if (!preset) return '';
+  return breakpointOrder
+    .map(({ key, prefix }) => {
+      const rule = preset[key];
+      if (!rule) return '';
+      return `${prefix}min-w-[${rule.min}] ${prefix}max-w-[${rule.max}]`;
+    })
+    .filter(Boolean)
+    .join(' ');
 };
 
 const Dialog: React.FC<DialogProps> = ({
@@ -254,8 +303,12 @@ const Dialog: React.FC<DialogProps> = ({
   };
 
   const baseXsMargins = `${xsMarginX} ${xsMarginY} ${smMarginX} ${smMarginY} ${mdMarginX} ${mdMarginY} ${lgMarginY} ${xlMarginX} ${xlMarginY}`;
-  const preset =
-    size === 'custom' ? '' : (size === 'xs' ? '' : presetSizeClasses[size as 'sm' | 'md' | 'lg' | 'xl']);
+  const presetClasses = size === 'custom' ? '' : buildPresetSizeClasses(size as DialogSizeKey);
+  const xsFullWidthOverride =
+    fullWidthOnXs && !fullWidth ? 'w-full sm:w-auto mx-4 sm:mx-8 md:mx-12' : '';
+  const widthSpacingClasses = fullWidth
+    ? 'w-full mx-4 sm:mx-4 md:mx-4'
+    : xsFullWidthOverride || baseXsMargins;
 
   const computedMaxWidth =
     size === 'custom' && maxWidth
@@ -271,8 +324,8 @@ const Dialog: React.FC<DialogProps> = ({
 
   const contentClass = [
     'bg-white rounded-lg shadow-lg p-4 sm:p-4',
-    fullWidth ? 'w-full mx-4 sm:mx-4 md:mx-4' : baseXsMargins,
-    preset,
+  widthSpacingClasses,
+  presetClasses,
     buildResponsiveWidthClasses(),
     buildResponsiveBehaviorClasses(),
     'relative',
