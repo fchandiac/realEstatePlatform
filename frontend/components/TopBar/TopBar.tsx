@@ -58,7 +58,7 @@ const TopBar: React.FC<TopBarProps> = ({
   return (
     <SideBarContext.Provider value={{ open, close, isOpen: showSidebar }}>
       <div data-test-id="top-bar-root">
-  <header className={`w-full flex items-center justify-between px-4 pt-2 bg-background border-b-[5px] border-accent fixed top-0 left-0 z-40 ${className}`}>
+  <header className={`w-full flex items-center justify-between px-4 pt-2 bg-background border-b-[5px] border-accent ${className}`}>
           <div className="flex items-center gap-3">
             {logoSrc ? (
               <>

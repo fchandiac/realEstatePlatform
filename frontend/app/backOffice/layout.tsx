@@ -93,12 +93,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         logoSrc={logoUrl || undefined} // Convert null to undefined
       />
 
-      <main className="container mx-auto mt-20">{children}</main>
+   
 
       <MyAccountDialog
         open={showMyAccountDialog}
         onClose={() => setShowMyAccountDialog(false)}
       />
+         <main className="container mx-auto">{children}</main>
     </div>
   );
 }
