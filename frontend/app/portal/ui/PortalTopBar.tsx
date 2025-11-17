@@ -40,6 +40,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [identity, setIdentity] = useState<Identity | null>(null);
+  const [logoError, setLogoError] = useState(false);
 
   useEffect(() => {
     async function loadIdentity() {
@@ -63,12 +64,19 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
     >
       {/* Izquierda: icono imagen y nombre empresa */}
       <div className="flex items-center gap-3 ml-4" data-test-id="topBarLogo">
-        <img
-          src={identity?.urlLogo || "/PropLogo2.png"}
-          alt="Logo"
-          style={{ width: "40px", height: "40px", objectFit: "contain" }}
-          data-test-id="topBarLogo"
-        />
+        {logoError ? (
+          <span className="material-symbols-outlined text-foreground" style={{ fontSize: '40px' }}>
+            image_not_supported
+          </span>
+        ) : (
+          <img
+            src={identity?.urlLogo || "/PropLogo2.png"}
+            alt="Logo"
+            style={{ width: "40px", height: "40px", objectFit: "contain" }}
+            data-test-id="topBarLogo"
+            onError={() => setLogoError(true)}
+          />
+        )}
         <span className="sm:text-base md:text-2xl font-medium text-foreground whitespace-nowrap">
           {identity?.name || nombreEmpresa}
         </span>

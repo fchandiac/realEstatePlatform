@@ -53,6 +53,7 @@ interface Identity {
 const PortalFooter: React.FC = () => {
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [loading, setLoading] = useState(true);
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     async function loadIdentity() {
@@ -80,6 +81,10 @@ const PortalFooter: React.FC = () => {
     );
   }
 
+  const handleImageError = (imageKey: string) => {
+    setFailedImages(prev => new Set([...prev, imageKey]));
+  };
+
   return (
     <footer className="bg-foreground text-background p-8 mt-12 border-t border-border">
       <div>
@@ -90,19 +95,31 @@ const PortalFooter: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4 text-background">Nuestras alianzas</h3>
             <div className="flex flex-col md:flex-row gap-4">
               {identity?.partnerships && identity.partnerships.length > 0 ? (
-                identity.partnerships.slice(0, 2).map((partnership, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <img
-                      src={partnership.logoUrl || "/globe.svg"}
-                      alt={partnership.name}
-                      className="w-12 h-12 object-contain"
-                    />
-                    <div>
-                      <div className="text-base font-semibold text-background">{partnership.name}</div>
-                      <div className="text-xs text-background font-light">{partnership.description}</div>
+                identity.partnerships.slice(0, 2).map((partnership, index) => {
+                  const imageKey = `partnership-${index}`;
+                  const imageError = failedImages.has(imageKey);
+                  
+                  return (
+                    <div key={index} className="flex items-center gap-3">
+                      {imageError ? (
+                        <span className="material-symbols-outlined text-background" style={{ fontSize: '48px' }}>
+                          image_not_supported
+                        </span>
+                      ) : (
+                        <img
+                          src={partnership.logoUrl || "/globe.svg"}
+                          alt={partnership.name}
+                          className="w-12 h-12 object-contain"
+                          onError={() => handleImageError(imageKey)}
+                        />
+                      )}
+                      <div>
+                        <div className="text-base font-semibold text-background">{partnership.name}</div>
+                        <div className="text-xs text-background font-light">{partnership.description}</div>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               ) : null}
             </div>
           </div>
@@ -160,11 +177,18 @@ const PortalFooter: React.FC = () => {
             <div className="space-y-4">
               {/* Logo y nombre de la empresa */}
               <div className="flex items-center gap-3 mb-6">
-                <img
-                  src={identity?.urlLogo || "/PropLogo2.png"}
-                  alt="Logo Plataforma Inmobiliaria"
-                  className="w-12 h-12 object-contain"
-                />
+                {failedImages.has('company-logo') ? (
+                  <span className="material-symbols-outlined text-background" style={{ fontSize: '48px' }}>
+                    image_not_supported
+                  </span>
+                ) : (
+                  <img
+                    src={identity?.urlLogo || "/PropLogo2.png"}
+                    alt="Logo Plataforma Inmobiliaria"
+                    className="w-12 h-12 object-contain"
+                    onError={() => handleImageError('company-logo')}
+                  />
+                )}
                 <div>
                   <h4 className="text-lg font-semibold text-background">
                     {identity?.name || 'Plataforma Inmobiliaria'}

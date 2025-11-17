@@ -51,9 +51,6 @@ const FALLBACK_IMAGE_DATA_URL =
   encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
       <rect width="100%" height="100%" fill="#e5e7eb"/>
-      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9ca3af" font-size="32" font-family="Arial, Helvetica, sans-serif">
-        Imagen no disponible
-      </text>
     </svg>`
   );
 
@@ -82,21 +79,8 @@ function normalizeMediaUrl(url?: string | null): string | undefined {
 }
 
 function getPrimaryImage(property: PortalProperty): string | undefined {
-  // 1) mainImageUrl si existe
-  const main = normalizeMediaUrl(property.mainImageUrl);
-  if (main) return main;
-
-  // 2) buscar en multimedia una imagen
-  const media = property.multimedia || [];
-  const image = media.find(
-    (m) => m?.format === 'IMG' || m?.type === 'PROPERTY_IMG'
-  );
-  if (image?.url) {
-    return normalizeMediaUrl(image.url);
-  }
-
-  // 3) si nada, undefined (caller pondrá fallback)
-  return undefined;
+  // Solo usar mainImageUrl si existe
+  return normalizeMediaUrl(property.mainImageUrl) || undefined;
 }
 
 function formatPrice(price: number, currency: Currency): string {
@@ -117,14 +101,6 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
   const opText = operationLabel(property.operationType);
   const featured = !!property.isFeatured;
 
-  // Debug logging
-  console.log('PropertyCard Debug:', {
-    id: property.id,
-    operationType: property.operationType,
-    opText: opText,
-    hasOpText: !!opText && opText.trim().length > 0
-  });
-
   const propertyTypeName = property.propertyType?.name || '';
   const region = property.state || '';
   const commune = property.city || '';
@@ -137,19 +113,26 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
 
   // Media container (img or fallback)
   const mediaEl = useMemo(() => {
-    const src = imgSrc || FALLBACK_IMAGE_DATA_URL;
+    if (!imgSrc) {
+      return (
+        <div className="flex items-center justify-center w-full h-full bg-gray-200">
+          <span className="material-symbols-outlined text-gray-400" style={{ fontSize: '64px' }}>
+            image_not_supported
+          </span>
+        </div>
+      );
+    }
+
     return (
       <img
-        src={src}
+        src={imgSrc}
         alt={propertyTypeName || property.title}
         className="object-cover w-full h-full"
         style={{ aspectRatio: '16/9' }}
         onError={(e) => {
-          // evitar bucle: si ya es fallback, no re-asignar
-          if (e.currentTarget.src !== FALLBACK_IMAGE_DATA_URL) {
-            console.error('Error loading image:', e.currentTarget.src);
-            e.currentTarget.src = FALLBACK_IMAGE_DATA_URL;
-          }
+          // evitar bucle: si ya mostró el error, no reintentar
+          console.error('Error loading image:', e.currentTarget.src);
+          setImgSrc(undefined);
         }}
       />
     );
