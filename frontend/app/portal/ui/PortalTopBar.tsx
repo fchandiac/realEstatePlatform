@@ -41,6 +41,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
   const [loading, setLoading] = useState(false);
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [logoError, setLogoError] = useState(false);
+  const [logoLoading, setLogoLoading] = useState(true);
 
   useEffect(() => {
     async function loadIdentity() {
@@ -55,6 +56,15 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
     }
     loadIdentity();
   }, []);
+
+  const handleLogoLoad = () => {
+    setLogoLoading(false);
+  };
+
+  const handleLogoError = () => {
+    setLogoLoading(false);
+    setLogoError(true);
+  };
 
 
   return (
@@ -74,7 +84,8 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
             alt="Logo"
             style={{ width: "40px", height: "40px", objectFit: "contain" }}
             data-test-id="topBarLogo"
-            onError={() => setLogoError(true)}
+            onLoad={handleLogoLoad}
+            onError={handleLogoError}
           />
         )}
         <span className="sm:text-base md:text-2xl font-medium text-foreground whitespace-nowrap">
