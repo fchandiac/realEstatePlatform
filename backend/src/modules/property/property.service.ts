@@ -1853,6 +1853,65 @@ export class PropertyService {
     return property;
   }
 
+  /**
+   * Obtiene las características disponibles de una propiedad según su tipo
+   */
+  async getPropertyCharacteristics(propertyId: string): Promise<any> {
+    const property = await this.propertyRepository
+      .createQueryBuilder('p')
+      .leftJoinAndSelect('p.propertyType', 'pt')
+      .where('p.id = :id', { id: propertyId })
+      .andWhere('p.deletedAt IS NULL')
+      .select([
+        'p.id',
+        'p.builtSquareMeters',
+        'p.landSquareMeters',
+        'p.bedrooms',
+        'p.bathrooms',
+        'p.parkingSpaces',
+        'p.floors',
+        'p.constructionYear',
+        'pt.id',
+        'pt.name',
+      ])
+      .getOne();
+
+    if (!property) {
+      throw new NotFoundException(`Property with ID ${propertyId} not found`);
+    }
+
+    // Construir lista de características basado en los campos disponibles
+    const characteristics: Array<{ name: string; value: number }> = [];
+    
+    if (property.builtSquareMeters !== null && property.builtSquareMeters !== undefined) {
+      characteristics.push({ name: 'Metros cuadrados construidos', value: property.builtSquareMeters });
+    }
+    if (property.landSquareMeters !== null && property.landSquareMeters !== undefined) {
+      characteristics.push({ name: 'Metros cuadrados terreno', value: property.landSquareMeters });
+    }
+    if (property.bedrooms !== null && property.bedrooms !== undefined) {
+      characteristics.push({ name: 'Dormitorios', value: property.bedrooms });
+    }
+    if (property.bathrooms !== null && property.bathrooms !== undefined) {
+      characteristics.push({ name: 'Baños', value: property.bathrooms });
+    }
+    if (property.parkingSpaces !== null && property.parkingSpaces !== undefined) {
+      characteristics.push({ name: 'Espacios de estacionamiento', value: property.parkingSpaces });
+    }
+    if (property.floors !== null && property.floors !== undefined) {
+      characteristics.push({ name: 'Pisos', value: property.floors });
+    }
+    if (property.constructionYear !== null && property.constructionYear !== undefined) {
+      characteristics.push({ name: 'Año de construcción', value: property.constructionYear });
+    }
+
+    return {
+      propertyId: property.id,
+      propertyType: property.propertyType?.name,
+      characteristics,
+    };
+  }
+
 }
 
 function toInt(v: any): number { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }

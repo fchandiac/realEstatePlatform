@@ -1596,4 +1596,50 @@ export async function updatePropertyStatus(
   }
 }
 
+/**
+ * Get property characteristics based on property type
+ */
+export async function getPropertyCharacteristics(propertyId: string): Promise<{
+  success: boolean;
+  data?: any;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
+
+    if (!accessToken) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      };
+    }
+
+    const res = await fetch(`${env.backendApiUrl}/properties/${propertyId}/characteristics`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to fetch property characteristics: ${res.status}`,
+      };
+    }
+
+    const data = await res.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error fetching property characteristics:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
 

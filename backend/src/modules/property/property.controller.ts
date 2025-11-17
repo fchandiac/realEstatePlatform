@@ -511,6 +511,13 @@ export class PropertyController {
     return this.propertyService.getPropertyHeaderInfo(propertyId);
   }
 
+  @Get(':id/characteristics')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property characteristics retrieved')
+  async getPropertyCharacteristics(@Param('id') propertyId: string) {
+    return this.propertyService.getPropertyCharacteristics(propertyId);
+  }
+
   private extractUserId(req: any): string {
     const user = req.user as any;
     if (user?.id) return user.id;
