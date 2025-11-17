@@ -6,6 +6,7 @@ import BasicInfoSection from './components/BasicInfoSection'
 import CharacteristicsSection from './components/CharacteristicsSection'
 import LocationSection from './components/LocationSection'
 import MultimediaSection from './components/multimedia/MultimediaSection'
+import HistorySection from './components/HistorySection'
 import CircularProgress from '@/components/CircularProgress/CircularProgress'
 import { getPropertyHeaderInfo } from '@/app/actions/properties'
 import { getStatusInSpanish, getStatusChipClasses } from '@/app/backOffice/properties/utils/statusTranslation'
@@ -117,6 +118,7 @@ export default function FullPropertyDialog({
     { title: 'Multimedia', icon: 'image' },
     { title: 'SEO y marketing', icon: 'trending_up' },
     { title: 'Nota interna', icon: 'note' },
+    { title: 'Historial', icon: 'history' },
   ]
 
   return (
@@ -194,6 +196,9 @@ export default function FullPropertyDialog({
                 )}
                 {propertyId && activeSection === 'Multimedia' && (
                   <MultimediaSection propertyId={propertyId} />
+                )}
+                {propertyId && activeSection === 'Historial' && (
+                  <HistorySection propertyId={propertyId} />
                 )}
               </div>
             )}

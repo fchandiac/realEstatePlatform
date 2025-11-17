@@ -33,6 +33,8 @@ export class PropertyService {
   constructor(
     @InjectRepository(Property)
     private readonly propertyRepository: Repository<Property>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly notificationsService: NotificationsService,
     private readonly multimediaService: UploadMultimediaService,
       private readonly config: ConfigService,
@@ -1989,6 +1991,58 @@ export class PropertyService {
       uploadedAt: m.uploadedAt,
       mainImageUrl: property.mainImageUrl,
     }));
+  }
+
+  /**
+   * Obtiene el historial de cambios de una propiedad con nombres de usuarios
+   */
+  async getPropertyHistory(propertyId: string): Promise<any[]> {
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId, deletedAt: IsNull() },
+    });
+
+    if (!property) {
+      throw new NotFoundException(`Property with ID ${propertyId} not found`);
+    }
+
+    const changeHistory = property.changeHistory || [];
+
+    // Resolver nombres de usuario para cada cambio
+    const enrichedHistory = await Promise.all(
+      changeHistory.map(async (entry: any) => {
+        let userName = entry.changedBy;
+
+        // Intentar obtener el nombre del usuario por ID
+        if (entry.changedBy) {
+          try {
+            const user = await this.userRepository.findOne({
+              where: { id: entry.changedBy },
+            });
+
+            if (user) {
+              // Usar personalInfo si existe, si no usar email o username
+              if (user.personalInfo?.firstName || user.personalInfo?.lastName) {
+                userName = `${user.personalInfo?.firstName || ''} ${user.personalInfo?.lastName || ''}`.trim();
+              } else if (user.email) {
+                userName = user.email;
+              } else {
+                userName = user.username;
+              }
+            }
+          } catch (error) {
+            // Si hay error, usar el ID original
+            console.warn(`Could not resolve user ${entry.changedBy}:`, error);
+          }
+        }
+
+        return {
+          ...entry,
+          changedBy: userName,
+        };
+      })
+    );
+
+    return enrichedHistory;
   }
 
 }

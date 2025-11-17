@@ -1832,5 +1832,56 @@ export async function updateMainMultimediaUrl(
 }
 
 /**
+ * Get property change history
+ */
+export async function getPropertyHistory(
+  propertyId: string
+): Promise<{
+  success: boolean;
+  data?: any[];
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
+
+    if (!accessToken) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      };
+    }
+
+    const res = await fetch(`${env.backendApiUrl}/properties/${propertyId}/history`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to fetch history: ${res.status}`,
+      };
+    }
+
+    const data = await res.json();
+    return {
+      success: true,
+      data: data.data || data,
+    };
+  } catch (error) {
+    console.error('Error fetching property history:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
  * Upload property multimedia
  */

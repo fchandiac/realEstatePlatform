@@ -532,6 +532,14 @@ export class PropertyController {
     return this.propertyService.getPropertyMultimedia(propertyId);
   }
 
+  @Get(':id/history')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property history retrieved')
+  async getPropertyHistory(@Param('id') propertyId: string) {
+    const history = await this.propertyService.getPropertyHistory(propertyId);
+    return { data: history };
+  }
+
   private extractUserId(req: any): string {
     const user = req.user as any;
     if (user?.id) return user.id;
