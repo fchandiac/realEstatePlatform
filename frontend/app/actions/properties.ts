@@ -1545,4 +1545,55 @@ export async function getPropertyHeaderInfo(propertyId: string): Promise<{
   }
 }
 
+/**
+ * Update property status
+ */
+export async function updatePropertyStatus(
+  propertyId: string,
+  status: string
+): Promise<{
+  success: boolean;
+  data?: any;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
+
+    if (!accessToken) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      };
+    }
+
+    const res = await fetch(`${env.backendApiUrl}/properties/${propertyId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to update property status: ${res.status}`,
+      };
+    }
+
+    const data = await res.json();
+    revalidatePath('/backOffice/properties');
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error updating property status:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
 

@@ -5,6 +5,7 @@ import Dialog from '@/components/Dialog/Dialog'
 import BasicInfoSection from './components/BasicInfoSection'
 import CircularProgress from '@/components/CircularProgress/CircularProgress'
 import { getPropertyHeaderInfo } from '@/app/actions/properties'
+import { getStatusInSpanish, getStatusChipClasses } from '@/app/backOffice/properties/utils/statusTranslation'
 
 export interface FullPropertyDialogProps {
   open: boolean
@@ -45,34 +46,6 @@ export interface FullPropertyDialogProps {
       summary?: string
     }>
   }
-}
-
-const getStatusChipClasses = (status?: string) => {
-  if (!status) return 'bg-muted/70 text-muted-foreground'
-  const normalized = status.toLowerCase()
-  if (normalized.includes('request')) {
-    return 'bg-blue-100 text-blue-700'
-  }
-  if (normalized.includes('published') || normalized.includes('publicada')) {
-    return 'bg-emerald-100 text-emerald-700'
-  }
-  if (normalized.includes('draft') || normalized.includes('borrador')) {
-    return 'bg-slate-100 text-slate-700'
-  }
-  if (normalized.includes('sold') || normalized.includes('vendida')) {
-    return 'bg-rose-100 text-rose-700'
-  }
-  return 'bg-muted/70 text-muted-foreground'
-}
-
-const getStatusInSpanish = (status?: string): string => {
-  if (!status) return '—'
-  const normalized = status.toLowerCase()
-  if (normalized.includes('request')) return 'Solicitud'
-  if (normalized.includes('published')) return 'Publicada'
-  if (normalized.includes('draft')) return 'Borrador'
-  if (normalized.includes('sold')) return 'Vendida'
-  return status
 }
 
 export default function FullPropertyDialog({
