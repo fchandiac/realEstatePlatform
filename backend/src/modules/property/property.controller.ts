@@ -518,6 +518,13 @@ export class PropertyController {
     return this.propertyService.getPropertyCharacteristics(propertyId);
   }
 
+  @Get(':id/location')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property location retrieved')
+  async getPropertyLocation(@Param('id') propertyId: string) {
+    return this.propertyService.getPropertyLocation(propertyId);
+  }
+
   private extractUserId(req: any): string {
     const user = req.user as any;
     if (user?.id) return user.id;

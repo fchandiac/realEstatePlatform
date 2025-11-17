@@ -1642,4 +1642,52 @@ export async function getPropertyCharacteristics(propertyId: string): Promise<{
   }
 }
 
+/**
+ * Get property location information
+ */
+export async function getPropertyLocation(propertyId: string): Promise<{
+  success: boolean;
+  data?: any;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
 
+    if (!accessToken) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      };
+    }
+
+    const res = await fetch(`${env.backendApiUrl}/properties/${propertyId}/location`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to fetch property location: ${res.status}`,
+      };
+    }
+
+    const data = await res.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error fetching property location:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
+ * Get property location information
+ */

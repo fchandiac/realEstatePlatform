@@ -1933,6 +1933,37 @@ export class PropertyService {
     };
   }
 
+  /**
+   * Obtiene la información de ubicación de una propiedad
+   */
+  async getPropertyLocation(propertyId: string): Promise<any> {
+    const property = await this.propertyRepository
+      .createQueryBuilder('p')
+      .where('p.id = :id', { id: propertyId })
+      .andWhere('p.deletedAt IS NULL')
+      .select([
+        'p.id',
+        'p.state',
+        'p.city',
+        'p.address',
+        'p.latitude',
+        'p.longitude',
+      ])
+      .getOne();
+
+    if (!property) {
+      throw new NotFoundException(`Property with ID ${propertyId} not found`);
+    }
+
+    return {
+      state: property.state || null,
+      city: property.city || null,
+      address: property.address || null,
+      latitude: property.latitude ? Number(property.latitude) : null,
+      longitude: property.longitude ? Number(property.longitude) : null,
+    };
+  }
+
 }
 
 function toInt(v: any): number { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }

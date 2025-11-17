@@ -4,6 +4,7 @@ import React, { ReactNode, useState, useEffect } from 'react'
 import Dialog from '@/components/Dialog/Dialog'
 import BasicInfoSection from './components/BasicInfoSection'
 import CharacteristicsSection from './components/CharacteristicsSection'
+import LocationSection from './components/LocationSection'
 import CircularProgress from '@/components/CircularProgress/CircularProgress'
 import { getPropertyHeaderInfo } from '@/app/actions/properties'
 import { getStatusInSpanish, getStatusChipClasses } from '@/app/backOffice/properties/utils/statusTranslation'
@@ -183,6 +184,9 @@ export default function FullPropertyDialog({
                 )}
                 {propertyId && activeSection === 'Características' && (
                   <CharacteristicsSection propertyId={propertyId} />
+                )}
+                {propertyId && activeSection === 'Localización' && (
+                  <LocationSection propertyId={propertyId} />
                 )}
               </div>
             )}
