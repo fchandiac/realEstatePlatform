@@ -3,7 +3,6 @@
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
 import Select, { type Option as SelectOption } from '@/components/Select/Select';
-import AutoComplete, { type Option as AutoCompleteOption } from '@/components/AutoComplete/AutoComplete';
 import { getRegions, getCommunesByRegion } from '@/app/actions/locations';
 import { getPublishedPropertiesFiltered } from '@/app/actions/portalProperties';
 
@@ -28,8 +27,8 @@ interface PropertyFilterProps {
 export default function PropertyFilter({ initialFilters = {}, onFiltersChange, isLoading = false }: PropertyFilterProps) {
   const currentParams = useSearchParams();
   const [filters, setFilters] = useState(initialFilters);
-  const [regions, setRegions] = useState<AutoCompleteOption[]>([]);
-  const [communes, setCommunes] = useState<AutoCompleteOption[]>([]);
+  const [regions, setRegions] = useState<SelectOption[]>([]);
+  const [communes, setCommunes] = useState<SelectOption[]>([]);
   const [isLoadingRegions, setIsLoadingRegions] = useState(false);
   const [isLoadingCommunes, setIsLoadingCommunes] = useState(false);
   const [originalRegions, setOriginalRegions] = useState<{id: string, name: string}[]>([]);
@@ -131,26 +130,20 @@ export default function PropertyFilter({ initialFilters = {}, onFiltersChange, i
           </div>
 
           <div className="w-full">
-            <AutoComplete
-              label="Región"
-              placeholder="Seleccione Región"
+            <Select
+              placeholder="Región"
               options={regions}
-              value={regions.find(option => option.id.toString() === filters.state) || null}
-              onChange={(option) => handleFilterChange('state', option?.id.toString() ?? null)}
-              getOptionLabel={(opt) => opt.label}
-              getOptionValue={(opt) => opt.id}
+              value={filters.state}
+              onChange={(value) => handleFilterChange('state', value)}
             />
           </div>
 
           <div className="w-full">
-            <AutoComplete
-              label="Comuna"
-              placeholder="Seleccione Comuna"
+            <Select
+              placeholder="Comuna"
               options={communes}
-              value={communes.find(option => option.id.toString() === filters.city) || null}
-              onChange={(option) => handleFilterChange('city', option?.id.toString() ?? null)}
-              getOptionLabel={(opt) => opt.label}
-              getOptionValue={(opt) => opt.id}
+              value={filters.city}
+              onChange={(value) => handleFilterChange('city', value)}
             />
           </div>
 
