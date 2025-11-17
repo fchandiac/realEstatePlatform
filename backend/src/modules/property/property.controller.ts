@@ -491,6 +491,26 @@ export class PropertyController {
     return this.propertyService.createPropertyRequest(dto, userId);
   }
 
+  /**
+   * Get basic property information by ID (title, price, type, creator user)
+   */
+  @Get(':id/basic')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Basic property info retrieved')
+  async getBasicPropertyInfo(@Param('id') propertyId: string) {
+    return this.propertyService.getBasicPropertyInfo(propertyId);
+  }
+
+  /**
+   * Get property header information by ID (title, status)
+   */
+  @Get(':id/header')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property header info retrieved')
+  async getPropertyHeaderInfo(@Param('id') propertyId: string) {
+    return this.propertyService.getPropertyHeaderInfo(propertyId);
+  }
+
   private extractUserId(req: any): string {
     const user = req.user as any;
     if (user?.id) return user.id;

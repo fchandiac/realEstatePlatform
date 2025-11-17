@@ -1,6 +1,10 @@
-import React, { ReactNode } from 'react'
+'use client'
+
+import React, { ReactNode, useState, useEffect } from 'react'
 import Dialog from '@/components/Dialog/Dialog'
 import BasicInfoSection from './components/BasicInfoSection'
+import CircularProgress from '@/components/CircularProgress/CircularProgress'
+import { getPropertyHeaderInfo } from '@/app/actions/properties'
 
 export interface FullPropertyDialogProps {
   open: boolean
@@ -68,6 +72,37 @@ export default function FullPropertyDialog({
   propertyInfo,
   children,
 }: FullPropertyDialogProps) {
+  const [headerData, setHeaderData] = useState<any>(null)
+  const [loadingHeader, setLoadingHeader] = useState(true)
+
+  // Load header data when dialog opens
+  useEffect(() => {
+    if (open && propertyId) {
+      const loadHeaderData = async () => {
+        try {
+          setLoadingHeader(true)
+          const response = await getPropertyHeaderInfo(propertyId)
+          if (response.success && response.data) {
+            setHeaderData(response.data)
+          } else {
+            console.error('Failed to load header:', response.error)
+          }
+        } catch (error) {
+          console.error('Error loading property header:', error)
+        } finally {
+          setLoadingHeader(false)
+        }
+      }
+
+      loadHeaderData()
+    } else {
+      setLoadingHeader(false)
+    }
+  }, [open, propertyId])
+
+  // Use header data if available, fallback to props
+  const displayTitle = headerData?.title || propertyTitle || 'Sin título de propiedad'
+  const displayStatus = headerData?.status || propertyStatus
   const formatCurrency = (value?: number, currency?: string) => {
     if (value == null) return '—'
     return new Intl.NumberFormat('es-CL', {
@@ -105,14 +140,19 @@ export default function FullPropertyDialog({
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-wide text-muted-foreground">Propiedad</p>
-              <h3 className="text-lg font-semibold text-foreground">
-                {propertyTitle || 'Sin título de propiedad'}
-              </h3>
+              {loadingHeader ? (
+                <div className="flex items-center gap-2">
+                  <CircularProgress size={20} />
+                  <span className="text-sm text-muted-foreground">Cargando...</span>
+                </div>
+              ) : (
+                <h3 className="text-lg font-semibold text-foreground">{displayTitle}</h3>
+              )}
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              {propertyStatus && (
-                <span className={`rounded-full py-1 text-xs font-medium ${getStatusChipClasses(propertyStatus)}`}>
-                  {propertyStatus}
+              {displayStatus && (
+                <span className={`rounded-full py-1 text-xs font-medium ${getStatusChipClasses(displayStatus)}`}>
+                  {displayStatus}
                 </span>
               )}
               {propertyId && (
@@ -141,7 +181,7 @@ export default function FullPropertyDialog({
           <div>
             {children ?? (
               <div>
-                <BasicInfoSection />
+                {propertyId && <BasicInfoSection propertyId={propertyId} />}
               </div>
             )}
           </div>

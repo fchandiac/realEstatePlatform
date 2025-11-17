@@ -1792,6 +1792,67 @@ export class PropertyService {
     return this.propertyRepository.findOneBy({ id: savedProperty.id }) as Promise<Property>;
   }
 
+  /**
+   * Obtiene la información básica de una propiedad por ID
+   * Incluye: título, descripción, precio, tipo, estado, operación, usuario creador
+   */
+  async getBasicPropertyInfo(propertyId: string): Promise<any> {
+    const property = await this.propertyRepository
+      .createQueryBuilder('p')
+      .leftJoinAndSelect('p.propertyType', 'pt')
+      .leftJoinAndSelect('p.creatorUser', 'cu')
+      .where('p.id = :id', { id: propertyId })
+      .andWhere('p.deletedAt IS NULL')
+      .select([
+        'p.id',
+        'p.title',
+        'p.description',
+        'p.status',
+        'p.operationType',
+        'p.price',
+        'p.currencyPrice',
+        'p.publicationDate',
+        'p.assignedAgentId',
+        'p.createdAt',
+        'p.updatedAt',
+        'pt.id',
+        'pt.name',
+        'cu.id',
+        'cu.username',
+        'cu.email',
+        'cu.personalInfo',
+      ])
+      .getOne();
+
+    if (!property) {
+      throw new NotFoundException(`Property with ID ${propertyId} not found`);
+    }
+
+    return property;
+  }
+
+  /**
+   * Obtiene la información del header de una propiedad (título, estado)
+   */
+  async getPropertyHeaderInfo(propertyId: string): Promise<any> {
+    const property = await this.propertyRepository
+      .createQueryBuilder('p')
+      .where('p.id = :id', { id: propertyId })
+      .andWhere('p.deletedAt IS NULL')
+      .select([
+        'p.id',
+        'p.title',
+        'p.status',
+      ])
+      .getOne();
+
+    if (!property) {
+      throw new NotFoundException(`Property with ID ${propertyId} not found`);
+    }
+
+    return property;
+  }
+
 }
 
 function toInt(v: any): number { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }

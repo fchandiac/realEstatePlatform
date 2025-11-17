@@ -4,30 +4,16 @@ import React, { useState, useEffect } from 'react'
 import { TextField } from '@/components/TextField/TextField'
 import Select from '@/components/Select/Select'
 import CircularProgress from '@/components/CircularProgress/CircularProgress'
-import { listPropertyTypes } from '@/app/actions/properties'
+import { listPropertyTypes, getBasicPropertyInfo } from '@/app/actions/properties'
 
 interface BasicInfoSectionProps {
+  propertyId: string
   title?: string
-  subtitle?: string
-  propertyInfo?: {
-    title?: string
-    operationType?: string
-    propertyType?: string
-    price?: number
-    currency?: string
-    publicationDate?: string
-    assignedAgent?: string
-    state?: string
-    city?: string
-    address?: string
-    status?: string
-  }
 }
 
 const operationOptions = [
-  { id: 'venta', label: 'Venta' },
-  { id: 'arriendo', label: 'Arriendo' },
-  { id: 'permuta', label: 'Permuta' },
+  { id: 'SALE', label: 'Venta' },
+  { id: 'RENT', label: 'Arriendo' },
 ]
 
 const currencyOptions = [
@@ -36,31 +22,47 @@ const currencyOptions = [
 ]
 
 const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
+  propertyId,
   title = 'Información básica',
-  subtitle = 'Resumen rápido de la propiedad',
-  propertyInfo,
 }) => {
   const [propertyTypes, setPropertyTypes] = useState<Array<{ id: string; name: string }>>([])
+  const [propertyData, setPropertyData] = useState<any>(null)
   const [loadingTypes, setLoadingTypes] = useState(true)
+  const [loadingData, setLoadingData] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const info = {
-    title: 'Departamento en Las Condes',
-    operationType: 'venta',
-    propertyType: 'departamento',
-    price: 120000000,
-    currency: 'CLP',
-    assignedAgent: 'Camila Pérez',
-    status: 'Publicada',
-    ...propertyInfo,
-  }
+  // Load property data
+  useEffect(() => {
+    const loadPropertyData = async () => {
+      try {
+        setLoadingData(true)
+        const response = await getBasicPropertyInfo(propertyId)
+        if (response.success && response.data) {
+          setPropertyData(response.data)
+        } else {
+          setError(response.error || 'Failed to load property data')
+        }
+      } catch (err) {
+        console.error('Error loading property data:', err)
+        setError(err instanceof Error ? err.message : 'Unknown error')
+      } finally {
+        setLoadingData(false)
+      }
+    }
 
+    if (propertyId) {
+      loadPropertyData()
+    }
+  }, [propertyId])
+
+  // Load property types
   useEffect(() => {
     const loadPropertyTypes = async () => {
       try {
         const response = await listPropertyTypes()
         setPropertyTypes(response.data || [])
-      } catch (error) {
-        console.error('Error loading property types:', error)
+      } catch (err) {
+        console.error('Error loading property types:', err)
       } finally {
         setLoadingTypes(false)
       }
@@ -74,10 +76,26 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
     return options.find((option) => option.id.toLowerCase() === value.toLowerCase() || option.label.toLowerCase() === value.toLowerCase())
   }
 
-  if (loadingTypes) {
+  // Get creator user info
+  const creatorUserInfo = propertyData?.creatorUser
+    ? `${propertyData.creatorUser.username || propertyData.creatorUser.email}`
+    : '—'
+
+  if (loadingTypes || loadingData) {
     return (
       <section className="flex items-center justify-center py-8">
         <CircularProgress />
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="space-y-4">
+        <header className="space-y-1">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{title}</p>
+          <p className="text-sm text-red-500">Error: {error}</p>
+        </header>
       </section>
     )
   }
@@ -91,13 +109,12 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
     <section className="space-y-4 ">
       <header className="space-y-1">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{title}</p>
-        <p className="text-sm text-muted-foreground">{subtitle}</p>
       </header>
 
       <div className="grid gap-4 md:grid-cols-2">
         <TextField
           label="Título"
-          value={info.title}
+          value={propertyData?.title || ''}
           onChange={() => {}}
           placeholder="Ej. Departamento con vista al parque"
           className="w-full"
@@ -106,41 +123,40 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         <Select
           placeholder="Operación"
           options={operationOptions}
-          value={findOption(operationOptions, info.operationType)?.id ?? null}
+          value={findOption(operationOptions, propertyData?.operationType)?.id ?? null}
           onChange={() => null}
         />
         <Select
           placeholder="Tipo de propiedad"
           options={propertyTypeOptions}
-          value={findOption(propertyTypeOptions, info.propertyType)?.id ?? null}
+          value={findOption(propertyTypeOptions, propertyData?.propertyType?.id)?.id ?? null}
           onChange={() => null}
         />
         <div className="grid gap-4 sm:grid-cols-2">
           <TextField
             label="Precio"
-            value={info.price ? info.price.toString() : ''}
+            value={propertyData?.price ? propertyData.price.toString() : ''}
             onChange={() => {}}
-            type="currency"
-            currencySymbol="$"
+            type="number"
             className="w-full"
             readOnly
           />
           <Select
             placeholder="Moneda"
             options={currencyOptions}
-            value={findOption(currencyOptions, info.currency)?.id ?? null}
+            value={findOption(currencyOptions, propertyData?.currencyPrice)?.id ?? null}
             onChange={() => null}
           />
         </div>
         <TextField
-          label="Agente asignado"
-          value={info.assignedAgent ?? ''}
+          label="Creado por"
+          value={creatorUserInfo}
           onChange={() => {}}
           readOnly
         />
         <TextField
           label="Estado"
-          value={info.status ?? ''}
+          value={propertyData?.status || ''}
           onChange={() => {}}
           readOnly
         />
