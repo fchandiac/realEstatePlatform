@@ -1883,27 +1883,14 @@ export class PropertyService {
     // Construir lista de características basado en los campos disponibles
     const characteristics: Array<{ name: string; value: number }> = [];
     
-    if (property.builtSquareMeters !== null && property.builtSquareMeters !== undefined) {
-      characteristics.push({ name: 'Metros cuadrados construidos', value: property.builtSquareMeters });
-    }
-    if (property.landSquareMeters !== null && property.landSquareMeters !== undefined) {
-      characteristics.push({ name: 'Metros cuadrados terreno', value: property.landSquareMeters });
-    }
-    if (property.bedrooms !== null && property.bedrooms !== undefined) {
-      characteristics.push({ name: 'Dormitorios', value: property.bedrooms });
-    }
-    if (property.bathrooms !== null && property.bathrooms !== undefined) {
-      characteristics.push({ name: 'Baños', value: property.bathrooms });
-    }
-    if (property.parkingSpaces !== null && property.parkingSpaces !== undefined) {
-      characteristics.push({ name: 'Espacios de estacionamiento', value: property.parkingSpaces });
-    }
-    if (property.floors !== null && property.floors !== undefined) {
-      characteristics.push({ name: 'Pisos', value: property.floors });
-    }
-    if (property.constructionYear !== null && property.constructionYear !== undefined) {
-      characteristics.push({ name: 'Año de construcción', value: property.constructionYear });
-    }
+    // Incluir todas las características disponibles, incluso si son 0
+    characteristics.push({ name: 'Metros cuadrados construidos', value: property.builtSquareMeters || 0 });
+    characteristics.push({ name: 'Metros cuadrados terreno', value: property.landSquareMeters || 0 });
+    characteristics.push({ name: 'Dormitorios', value: property.bedrooms || 0 });
+    characteristics.push({ name: 'Baños', value: property.bathrooms || 0 });
+    characteristics.push({ name: 'Espacios de estacionamiento', value: property.parkingSpaces || 0 });
+    characteristics.push({ name: 'Pisos', value: property.floors || 0 });
+    characteristics.push({ name: 'Año de construcción', value: property.constructionYear || 0 });
 
     return {
       propertyId: property.id,
