@@ -4,7 +4,7 @@
 
 export interface CreatePropertyFormData {
   title: string;
-  description: string;
+  description?: string;
   price: string | number | undefined;
   operationType: string;
   location: any;

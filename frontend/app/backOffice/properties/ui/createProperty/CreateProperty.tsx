@@ -113,6 +113,7 @@ export default function CreateProperty({
         cancelButton={true}
         cancelButtonText="Cancelar"
         onCancel={onClose}
+   
       />
     </div>
   );

@@ -86,7 +86,7 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
         excelUrl={excelEndpoint}
         limit={25}
         excelFields={excelFields}
-        createForm={<CreateProperty onClose={() => { router.refresh(); }} />}
+        createForm={<CreateProperty onClose={() => { router.refresh(); }} size='lg' />}
       />
     </>
   );
