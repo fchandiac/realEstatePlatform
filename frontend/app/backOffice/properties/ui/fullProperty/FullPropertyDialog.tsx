@@ -50,16 +50,29 @@ export interface FullPropertyDialogProps {
 const getStatusChipClasses = (status?: string) => {
   if (!status) return 'bg-muted/70 text-muted-foreground'
   const normalized = status.toLowerCase()
-  if (normalized.includes('list')) {
-    return 'bg-amber-100 text-amber-700'
+  if (normalized.includes('request')) {
+    return 'bg-blue-100 text-blue-700'
   }
-  if (normalized.includes('sold') || normalized.includes('cerrada')) {
-    return 'bg-rose-100 text-rose-700'
+  if (normalized.includes('published') || normalized.includes('publicada')) {
+    return 'bg-emerald-100 text-emerald-700'
   }
   if (normalized.includes('draft') || normalized.includes('borrador')) {
     return 'bg-slate-100 text-slate-700'
   }
-  return 'bg-emerald-100 text-emerald-700'
+  if (normalized.includes('sold') || normalized.includes('vendida')) {
+    return 'bg-rose-100 text-rose-700'
+  }
+  return 'bg-muted/70 text-muted-foreground'
+}
+
+const getStatusInSpanish = (status?: string): string => {
+  if (!status) return '—'
+  const normalized = status.toLowerCase()
+  if (normalized.includes('request')) return 'Solicitud'
+  if (normalized.includes('published')) return 'Publicada'
+  if (normalized.includes('draft')) return 'Borrador'
+  if (normalized.includes('sold')) return 'Vendida'
+  return status
 }
 
 export default function FullPropertyDialog({
@@ -136,8 +149,8 @@ export default function FullPropertyDialog({
       showCloseButton={true}
     >
       <div>
-        <header className="w-full rounded-t-xl border-b border-border bg-gradient-to-r from-foreground/5 to-primary/10 px-6 py-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <header className="w-full px-6 py-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-wide text-muted-foreground">Propiedad</p>
               {loadingHeader ? (
@@ -146,17 +159,17 @@ export default function FullPropertyDialog({
                   <span className="text-sm text-muted-foreground">Cargando...</span>
                 </div>
               ) : (
-                <h3 className="text-lg font-semibold text-foreground">{displayTitle}</h3>
+                <h3 className="text-xl font-semibold text-foreground">{displayTitle}</h3>
               )}
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-4">
               {displayStatus && (
-                <span className={`rounded-full py-1 text-xs font-medium ${getStatusChipClasses(displayStatus)}`}>
-                  {displayStatus}
+                <span className={`rounded-lg px-4 py-2 text-sm font-medium ${getStatusChipClasses(displayStatus)}`}>
+                  {getStatusInSpanish(displayStatus)}
                 </span>
               )}
               {propertyId && (
-                <p className="text-sm font-mono text-muted-foreground">ID {propertyId}</p>
+                <p className="text-xs font-mono text-muted-foreground">ID {propertyId}</p>
               )}
             </div>
           </div>

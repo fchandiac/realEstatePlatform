@@ -43,7 +43,11 @@ const SaleMoreButton: React.FC<SaleMoreButtonProps> = ({ property }) => {
           padding: 4
         }}
       />
-      <FullPropertyDialog open={isOpen} onClose={handleClose} />
+      <FullPropertyDialog 
+        open={isOpen} 
+        onClose={handleClose}
+        propertyId={property.id}
+      />
     
      
     </div>
