@@ -1689,5 +1689,148 @@ export async function getPropertyLocation(propertyId: string): Promise<{
 }
 
 /**
- * Get property location information
+ * Get property multimedia
+ */
+export async function getPropertyMultimedia(propertyId: string): Promise<{
+  success: boolean;
+  data?: any[];
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
+
+    if (!accessToken) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      };
+    }
+
+    const res = await fetch(`${env.backendApiUrl}/properties/${propertyId}/multimedia`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to fetch property multimedia: ${res.status}`,
+      };
+    }
+
+    const data = await res.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error('Error fetching property multimedia:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
+ * Delete property multimedia
+ */
+export async function deletePropertyMultimedia(
+  propertyId: string,
+  multimediaId: string
+): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
+
+    if (!accessToken) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      };
+    }
+
+    const res = await fetch(`${env.backendApiUrl}/multimedia/${multimediaId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to delete multimedia: ${res.status}`,
+      };
+    }
+
+    revalidatePath('/backOffice/cms/properties');
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting multimedia:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
+ * Update main multimedia URL
+ */
+export async function updateMainMultimediaUrl(
+  propertyId: string,
+  mainImageUrl: string
+): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
+
+    if (!accessToken) {
+      return {
+        success: false,
+        error: 'Unauthorized',
+      };
+    }
+
+    const res = await fetch(`${env.backendApiUrl}/properties/${propertyId}/main-image`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ mainImageUrl }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to update main multimedia: ${res.status}`,
+      };
+    }
+
+    // No revalidate path to keep dialog open
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating main multimedia:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
+ * Upload property multimedia
  */

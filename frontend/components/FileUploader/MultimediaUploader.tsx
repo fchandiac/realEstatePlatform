@@ -236,7 +236,7 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
                       src={url}
                       className={`w-full object-cover rounded-lg shadow ${
                         aspectRatio === 'square' ? 'aspect-square' :
-                        aspectRatio === 'video' ? 'aspect-video' :
+                        aspectRatio === 'video' ? 'aspect-video h-24' :
                         aspectRatio === '16:9' ? 'aspect-video' :
                         'h-40 sm:h-48 md:h-52'
                       }`}
@@ -249,7 +249,7 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
                       alt={`preview-${idx}`}
                       className={`w-full object-cover rounded-lg shadow ${
                         aspectRatio === 'square' ? 'aspect-square' :
-                        aspectRatio === 'video' ? 'aspect-video' :
+                        aspectRatio === 'video' ? 'aspect-video h-24' :
                         aspectRatio === '16:9' ? 'aspect-video' :
                         'h-40 sm:h-48 md:h-52'
                       }`}

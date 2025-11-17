@@ -337,76 +337,6 @@ export class PropertyController {
     return this.propertyService.updateMainImage(id, dto.mainImageUrl, userId);
   }
 
-    @Post(':id/multimedia')
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FilesInterceptor('files', 20, {
-    storage: diskStorage({
-      destination: (req, file, callback) => {
-        // Todas las imágenes y videos van a ./public/properties
-        callback(null, './public/properties');
-      },
-      filename: (req, file, callback) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const ext = extname(file.originalname);
-        const filename = `${uniqueSuffix}${ext}`;
-        callback(null, filename);
-      },
-    }),
-    limits: {
-      fileSize: 70 * 1024 * 1024, // Máximo global 70MB (para videos)
-      files: 20 // Máximo 20 archivos
-    },
-    fileFilter: (req, file, callback) => {
-      // Validar tipos de archivo permitidos
-      const allowedMimes = [
-        'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
-        'video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'
-      ];
-
-      if (!allowedMimes.includes(file.mimetype)) {
-        callback(new Error('Tipo de archivo no permitido'), false);
-        return;
-      }
-
-      // Validar tamaño específico por tipo de archivo
-      const isVideo = file.mimetype.startsWith('video/');
-      const maxSizeInBytes = isVideo ? 70 * 1024 * 1024 : 10 * 1024 * 1024; // 70MB para videos, 10MB para imágenes
-      const maxSizeLabel = isVideo ? '70MB' : '10MB';
-      const fileType = isVideo ? 'videos' : 'imágenes';
-
-      if (file.size > maxSizeInBytes) {
-        callback(new Error(`Archivo demasiado grande. Máximo permitido: ${maxSizeLabel} para ${fileType}`), false);
-        return;
-      }
-
-      callback(null, true);
-    },
-  }))
-  @Audit(AuditAction.CREATE, AuditEntityType.MULTIMEDIA, 'Multimedia uploaded to property')
-  async uploadMultimedia(
-    @Param('id') propertyId: string,
-    @Body(new ValidationPipe({ transform: true })) dto: UploadPropertyMultimediaDto,
-    @UploadedFiles() files: Express.Multer.File[],
-    @Req() req: any,
-  ) {
-    console.log(`� Endpoint llamado: POST /properties/${propertyId}/multimedia`);
-    console.log(`� Usuario: ${req.user?.id}`);
-    console.log(`� Archivos recibidos: ${files?.length || 0}`);
-    
-    if (!files || files.length === 0) {
-      console.error('❌ No se recibieron archivos');
-      throw new BadRequestException('No se recibieron archivos');
-    }
-
-    const userId = this.extractUserId(req);
-    const uploadedMultimedia = await this.propertyService.uploadMultimedia(propertyId, files, dto, userId);
-
-    return {
-      message: 'Multimedia uploaded successfully',
-      data: uploadedMultimedia
-    };
-  }
-
   /**
    * Actualiza la información de precio y SEO de una propiedad
    */
@@ -518,11 +448,88 @@ export class PropertyController {
     return this.propertyService.getPropertyCharacteristics(propertyId);
   }
 
+  @Post(':id/multimedia')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FilesInterceptor('files', 20, {
+    storage: diskStorage({
+      destination: (req, file, callback) => {
+        // Todas las imágenes y videos van a ./public/properties
+        callback(null, './public/properties');
+      },
+      filename: (req, file, callback) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = extname(file.originalname);
+        const filename = `${uniqueSuffix}${ext}`;
+        callback(null, filename);
+      },
+    }),
+    limits: {
+      fileSize: 70 * 1024 * 1024, // Máximo global 70MB (para videos)
+      files: 20 // Máximo 20 archivos
+    },
+    fileFilter: (req, file, callback) => {
+      // Validar tipos de archivo permitidos
+      const allowedMimes = [
+        'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+        'video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'
+      ];
+
+      if (!allowedMimes.includes(file.mimetype)) {
+        callback(new Error('Tipo de archivo no permitido'), false);
+        return;
+      }
+
+      // Validar tamaño específico por tipo de archivo
+      const isVideo = file.mimetype.startsWith('video/');
+      const maxSizeInBytes = isVideo ? 70 * 1024 * 1024 : 10 * 1024 * 1024; // 70MB para videos, 10MB para imágenes
+      const maxSizeLabel = isVideo ? '70MB' : '10MB';
+      const fileType = isVideo ? 'videos' : 'imágenes';
+
+      if (file.size > maxSizeInBytes) {
+        callback(new Error(`Archivo demasiado grande. Máximo permitido: ${maxSizeLabel} para ${fileType}`), false);
+        return;
+      }
+
+      callback(null, true);
+    },
+  }))
+  @Audit(AuditAction.CREATE, AuditEntityType.MULTIMEDIA, 'Multimedia uploaded to property')
+  async uploadMultimedia(
+    @Param('id') propertyId: string,
+    @Body(new ValidationPipe({ transform: true })) dto: UploadPropertyMultimediaDto,
+    @UploadedFiles() files: Express.Multer.File[],
+    @Req() req: any,
+  ) {
+    console.log(`✅ Endpoint llamado: POST /properties/${propertyId}/multimedia`);
+    console.log(`👤 Usuario: ${req.user?.id}`);
+    console.log(`📁 Archivos recibidos: ${files?.length || 0}`);
+    
+    if (!files || files.length === 0) {
+      console.error('❌ No se recibieron archivos');
+      throw new BadRequestException('No se recibieron archivos');
+    }
+
+    const userId = this.extractUserId(req);
+    const uploadedMultimedia = await this.propertyService.uploadMultimedia(propertyId, files, dto, userId);
+
+    return {
+      message: 'Multimedia uploaded successfully',
+      data: uploadedMultimedia
+    };
+  }
+
   @Get(':id/location')
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property location retrieved')
   async getPropertyLocation(@Param('id') propertyId: string) {
     return this.propertyService.getPropertyLocation(propertyId);
+  }
+
+  @Get(':id/multimedia')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property multimedia retrieved')
+  async getPropertyMultimedia(@Param('id') propertyId: string) {
+    return this.propertyService.getPropertyMultimedia(propertyId);
   }
 
   private extractUserId(req: any): string {

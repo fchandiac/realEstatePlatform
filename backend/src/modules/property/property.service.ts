@@ -1964,6 +1964,33 @@ export class PropertyService {
     };
   }
 
+  /**
+   * Obtiene todas las multimedias de una propiedad
+   */
+  async getPropertyMultimedia(propertyId: string): Promise<any[]> {
+    const property = await this.propertyRepository
+      .createQueryBuilder('p')
+      .leftJoinAndSelect('p.multimedia', 'm')
+      .where('p.id = :id', { id: propertyId })
+      .andWhere('p.deletedAt IS NULL')
+      .andWhere('m.deletedAt IS NULL')
+      .getOne();
+
+    if (!property) {
+      throw new NotFoundException(`Property with ID ${propertyId} not found`);
+    }
+
+    // Retornar multimedias con mainImageUrl incluido en cada item
+    return (property.multimedia || []).map((m: any) => ({
+      id: m.id,
+      url: m.url,
+      type: m.format === 'IMG' ? 'image' : 'video',
+      size: m.size,
+      uploadedAt: m.uploadedAt,
+      mainImageUrl: property.mainImageUrl,
+    }));
+  }
+
 }
 
 function toInt(v: any): number { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }
