@@ -173,6 +173,13 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
           value={propertyData?.status}
           onChange={() => null}
         />
+        <textarea
+          className="md:col-span-2 w-full px-3 py-2 border border-border rounded-md bg-background text-foreground text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+          placeholder="Descripción de la propiedad"
+          value={propertyData?.description || ''}
+          readOnly
+          rows={4}
+        />
       </div>
     </section>
   )
