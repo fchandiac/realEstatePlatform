@@ -1873,6 +1873,13 @@ export class PropertyService {
         'p.constructionYear',
         'pt.id',
         'pt.name',
+        'pt.hasBedrooms',
+        'pt.hasBathrooms',
+        'pt.hasBuiltSquareMeters',
+        'pt.hasLandSquareMeters',
+        'pt.hasParkingSpaces',
+        'pt.hasFloors',
+        'pt.hasConstructionYear',
       ])
       .getOne();
 
@@ -1880,22 +1887,49 @@ export class PropertyService {
       throw new NotFoundException(`Property with ID ${propertyId} not found`);
     }
 
-    // Construir lista de características basado en los campos disponibles
-    const characteristics: Array<{ name: string; value: number }> = [];
-    
-    // Incluir todas las características disponibles, incluso si son 0
-    characteristics.push({ name: 'Metros cuadrados construidos', value: property.builtSquareMeters || 0 });
-    characteristics.push({ name: 'Metros cuadrados terreno', value: property.landSquareMeters || 0 });
-    characteristics.push({ name: 'Dormitorios', value: property.bedrooms || 0 });
-    characteristics.push({ name: 'Baños', value: property.bathrooms || 0 });
-    characteristics.push({ name: 'Espacios de estacionamiento', value: property.parkingSpaces || 0 });
-    characteristics.push({ name: 'Pisos', value: property.floors || 0 });
-    characteristics.push({ name: 'Año de construcción', value: property.constructionYear || 0 });
+    // Mapear características con su estado de habilitación
+    const characteristicsMap = [
+      { 
+        name: 'Metros cuadrados construidos', 
+        value: property.builtSquareMeters || 0,
+        enabled: property.propertyType?.hasBuiltSquareMeters || false
+      },
+      { 
+        name: 'Metros cuadrados terreno', 
+        value: property.landSquareMeters || 0,
+        enabled: property.propertyType?.hasLandSquareMeters || false
+      },
+      { 
+        name: 'Dormitorios', 
+        value: property.bedrooms || 0,
+        enabled: property.propertyType?.hasBedrooms || false
+      },
+      { 
+        name: 'Baños', 
+        value: property.bathrooms || 0,
+        enabled: property.propertyType?.hasBathrooms || false
+      },
+      { 
+        name: 'Espacios de estacionamiento', 
+        value: property.parkingSpaces || 0,
+        enabled: property.propertyType?.hasParkingSpaces || false
+      },
+      { 
+        name: 'Pisos', 
+        value: property.floors || 0,
+        enabled: property.propertyType?.hasFloors || false
+      },
+      { 
+        name: 'Año de construcción', 
+        value: property.constructionYear || 0,
+        enabled: property.propertyType?.hasConstructionYear || false
+      },
+    ];
 
     return {
       propertyId: property.id,
       propertyType: property.propertyType?.name,
-      characteristics,
+      characteristics: characteristicsMap,
     };
   }
 
