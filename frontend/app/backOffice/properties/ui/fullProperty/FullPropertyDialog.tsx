@@ -105,12 +105,12 @@ export default function FullPropertyDialog({
   }
 
   const sidebarSections = [
-    { title: 'Información básica' },
-    { title: 'Características' },
-    { title: 'Localización' },
-    { title: 'Multimedia' },
-    { title: 'SEO y marketing' },
-    { title: 'Nota interna' },
+    { title: 'Información básica', icon: 'info' },
+    { title: 'Características', icon: 'home' },
+    { title: 'Localización', icon: 'location_on' },
+    { title: 'Multimedia', icon: 'image' },
+    { title: 'SEO y marketing', icon: 'trending_up' },
+    { title: 'Nota interna', icon: 'note' },
   ]
 
   return (
@@ -148,16 +148,18 @@ export default function FullPropertyDialog({
           </div>
         </header>
 
-        <section className="grid gap-6 py-6 md:grid-cols-[260px_1fr]">
+        <section className="grid gap-6 py-6 grid-cols-[auto_1fr]">
           <aside className="flex min-h-[200px] flex-col gap-4 py-4">
             {sidebar ?? (
               <nav className="space-y-2">
                 {sidebarSections.map((section) => (
                   <button
                     key={section.title}
-                    className="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wide text-muted-foreground hover:bg-muted/50 transition-colors"
+                    className="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wide text-muted-foreground hover:bg-muted/50 transition-colors flex items-center gap-3"
+                    title={section.title}
                   >
-                    {section.title}
+                    <span className="material-symbols-outlined text-base flex-shrink-0">{section.icon}</span>
+                    <span className="hidden sm:inline">{section.title}</span>
                   </button>
                 ))}
               </nav>
