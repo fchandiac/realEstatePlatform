@@ -123,13 +123,14 @@ export default function FullPropertyDialog({
     <Dialog
       open={open}
       onClose={onClose}
-      title="Full Property"
+      title="Detalles de la Propiedad"
       size="xl"
       showCloseButton={true}
     >
       <div>
-        <header className="w-full px-6 py-5">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <header className="w-full px-6 py-5 border-b">
+          <div className="flex flex-col gap-3">
+            {/* Title */}
             <div>
               <p className="text-xs uppercase tracking-wide text-muted-foreground">Propiedad</p>
               {loadingHeader ? (
@@ -141,14 +142,16 @@ export default function FullPropertyDialog({
                 <h3 className="text-xl font-semibold text-foreground">{displayTitle}</h3>
               )}
             </div>
-            <div className="flex flex-wrap items-center gap-4">
+            
+            {/* ID and Status */}
+            <div className="flex items-center gap-4">
+              {propertyId && (
+                <p className="text-xs font-mono text-muted-foreground">ID: {propertyId}</p>
+              )}
               {displayStatus && (
                 <span className={`rounded-lg px-4 py-2 text-sm font-medium ${getStatusChipClasses(displayStatus)}`}>
                   {getStatusInSpanish(displayStatus)}
                 </span>
-              )}
-              {propertyId && (
-                <p className="text-xs font-mono text-muted-foreground">ID {propertyId}</p>
               )}
             </div>
           </div>

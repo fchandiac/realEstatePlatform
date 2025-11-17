@@ -1771,7 +1771,7 @@ export async function deletePropertyMultimedia(
       };
     }
 
-    revalidatePath('/backOffice/cms/properties');
+    // No revalidate path to keep dialog open
     return { success: true };
   } catch (error) {
     console.error('Error deleting multimedia:', error);

@@ -224,18 +224,16 @@ const MultimediaSection: React.FC<MultimediaSectionProps> = ({
 
       {/* Upload Section */}
       <div className="space-y-4 border-t pt-6">
-        <h3 className="text-sm font-semibold text-foreground">Agregar nuevos archivos</h3>
-        <p className="text-xs text-muted-foreground">
-          Imágenes: máx 10MB (jpg, png, gif, webp) | Videos: máx 70MB (mp4, webm, avi, mov)
-        </p>
+      
         <MultimediaUploader
           uploadPath={`/properties/${propertyId}/multimedia`}
           onChange={handleFileSelect}
           accept="image/*,video/*"
           maxSize={70}
           maxFiles={20}
-          label="Selecciona imágenes o videos"
-          aspectRatio="video"
+          label=""
+          aspectRatio="16:9"
+          previewSize='compact'
         />
 
         {/* Upload Button - Only show if files are selected */}
