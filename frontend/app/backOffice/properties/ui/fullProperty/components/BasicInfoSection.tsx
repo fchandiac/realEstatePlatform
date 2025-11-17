@@ -4,12 +4,15 @@ import React, { useState, useEffect } from 'react'
 import { TextField } from '@/components/TextField/TextField'
 import Select from '@/components/Select/Select'
 import CircularProgress from '@/components/CircularProgress/CircularProgress'
-import { listPropertyTypes, getBasicPropertyInfo } from '@/app/actions/properties'
+import { listPropertyTypes, getBasicPropertyInfo, updatePropertyBasic } from '@/app/actions/properties'
 import { getStatusInSpanish } from '@/app/backOffice/properties/utils/statusTranslation'
+import { useAlert } from '@/app/hooks/useAlert'
+import { Button } from '@/components/Button/Button'
 
 interface BasicInfoSectionProps {
   propertyId: string
   title?: string
+  onUpdateSuccess?: () => void
 }
 
 const operationOptions = [
@@ -35,13 +38,23 @@ const statusOptions = [
 const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   propertyId,
   title = 'Información básica',
+  onUpdateSuccess,
 }) => {
+  const { showAlert } = useAlert()
   const [propertyTypes, setPropertyTypes] = useState<Array<{ id: string; name: string }>>([])
   const [propertyData, setPropertyData] = useState<any>(null)
   const [loadingTypes, setLoadingTypes] = useState(true)
   const [loadingData, setLoadingData] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
+  const [isUpdating, setIsUpdating] = useState(false)
+  const [formData, setFormData] = useState({
+    title: '',
+    operationType: '',
+    propertyTypeId: '',
+    description: '',
+    status: '',
+  })
 
   // Load property data
   useEffect(() => {
@@ -52,6 +65,13 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         if (response.success && response.data) {
           setPropertyData(response.data)
           setSelectedStatus(response.data.status || null)
+          setFormData({
+            title: response.data.title || '',
+            operationType: response.data.operationType || '',
+            propertyTypeId: response.data.propertyType?.id || '',
+            description: response.data.description || '',
+            status: response.data.status || '',
+          })
         } else {
           setError(response.error || 'Failed to load property data')
         }
@@ -87,6 +107,59 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   const findOption = (options: Array<{ id: string; label: string }>, value?: string) => {
     if (!value) return null
     return options.find((option) => option.id.toLowerCase() === value.toLowerCase() || option.label.toLowerCase() === value.toLowerCase())
+  }
+
+  const handleUpdateBasicInfo = async () => {
+    if (!propertyId) return
+
+    try {
+      setIsUpdating(true)
+      const result = await updatePropertyBasic(propertyId, {
+        title: formData.title,
+        operationType: formData.operationType,
+        propertyTypeId: formData.propertyTypeId,
+        description: formData.description,
+        status: formData.status,
+      })
+
+      if (result.success) {
+        showAlert({
+          message: 'Información básica actualizada correctamente',
+          type: 'success',
+          duration: 3000,
+        })
+        // Recargar data del header y basic info
+        const headerResponse = await getBasicPropertyInfo(propertyId)
+        if (headerResponse.success && headerResponse.data) {
+          setPropertyData(headerResponse.data)
+          setFormData({
+            title: headerResponse.data.title || '',
+            operationType: headerResponse.data.operationType || '',
+            propertyTypeId: headerResponse.data.propertyType?.id || '',
+            description: headerResponse.data.description || '',
+            status: headerResponse.data.status || '',
+          })
+          setSelectedStatus(headerResponse.data.status || null)
+        }
+        // Llamar al callback para recargar el header del FullPropertyDialog
+        onUpdateSuccess?.()
+      } else {
+        showAlert({
+          message: result.error || 'Error al actualizar información básica',
+          type: 'error',
+          duration: 3000,
+        })
+      }
+    } catch (err) {
+      console.error('Error updating basic info:', err)
+      showAlert({
+        message: 'Error al actualizar información básica',
+        type: 'error',
+        duration: 3000,
+      })
+    } finally {
+      setIsUpdating(false)
+    }
   }
 
   // Get creator user info
@@ -127,23 +200,22 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
       <div className="grid gap-4 md:grid-cols-2">
         <TextField
           label="Título"
-          value={propertyData?.title || ''}
-          onChange={() => {}}
+          value={formData.title}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           placeholder="Ej. Departamento con vista al parque"
           className="w-full"
-          readOnly
         />
         <Select
           placeholder="Operación"
           options={operationOptions}
-          value={findOption(operationOptions, propertyData?.operationType)?.id ?? null}
-          onChange={() => null}
+          value={formData.operationType}
+          onChange={(value) => setFormData({ ...formData, operationType: value as string })}
         />
         <Select
           placeholder="Tipo de propiedad"
           options={propertyTypeOptions}
-          value={findOption(propertyTypeOptions, propertyData?.propertyType?.id)?.id ?? null}
-          onChange={() => null}
+          value={formData.propertyTypeId}
+          onChange={(value) => setFormData({ ...formData, propertyTypeId: value as string })}
         />
         <div className="grid gap-4 sm:grid-cols-2">
           <TextField
@@ -170,16 +242,22 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         <Select
           placeholder="Estado"
           options={statusOptions}
-          value={propertyData?.status}
-          onChange={() => null}
+          value={formData.status}
+          onChange={(value) => setFormData({ ...formData, status: value as string })}
         />
         <textarea
           className="md:col-span-2 w-full px-3 py-2 border border-border rounded-md bg-background text-foreground text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
           placeholder="Descripción de la propiedad"
-          value={propertyData?.description || ''}
-          readOnly
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           rows={4}
         />
+      </div>
+
+      <div className="flex justify-end mt-4">
+        <Button variant="outlined" onClick={handleUpdateBasicInfo} disabled={isUpdating}>
+          {isUpdating ? 'Actualizando...' : 'Actualizar'}
+        </Button>
       </div>
     </section>
   )

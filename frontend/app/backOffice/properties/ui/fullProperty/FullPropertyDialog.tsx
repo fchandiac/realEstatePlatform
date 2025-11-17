@@ -61,25 +61,27 @@ export default function FullPropertyDialog({
   const [headerData, setHeaderData] = useState<any>(null)
   const [loadingHeader, setLoadingHeader] = useState(true)
 
+  const loadHeaderData = async () => {
+    if (propertyId) {
+      try {
+        setLoadingHeader(true)
+        const response = await getPropertyHeaderInfo(propertyId)
+        if (response.success && response.data) {
+          setHeaderData(response.data)
+        } else {
+          console.error('Failed to load header:', response.error)
+        }
+      } catch (error) {
+        console.error('Error loading property header:', error)
+      } finally {
+        setLoadingHeader(false)
+      }
+    }
+  }
+
   // Load header data when dialog opens
   useEffect(() => {
     if (open && propertyId) {
-      const loadHeaderData = async () => {
-        try {
-          setLoadingHeader(true)
-          const response = await getPropertyHeaderInfo(propertyId)
-          if (response.success && response.data) {
-            setHeaderData(response.data)
-          } else {
-            console.error('Failed to load header:', response.error)
-          }
-        } catch (error) {
-          console.error('Error loading property header:', error)
-        } finally {
-          setLoadingHeader(false)
-        }
-      }
-
       loadHeaderData()
     } else {
       setLoadingHeader(false)
@@ -169,7 +171,7 @@ export default function FullPropertyDialog({
           <div>
             {children ?? (
               <div>
-                {propertyId && <BasicInfoSection propertyId={propertyId} />}
+                {propertyId && <BasicInfoSection propertyId={propertyId} onUpdateSuccess={loadHeaderData} />}
               </div>
             )}
           </div>
