@@ -3,6 +3,7 @@
 import React, { ReactNode, useState, useEffect } from 'react'
 import Dialog from '@/components/Dialog/Dialog'
 import BasicInfoSection from './components/BasicInfoSection'
+import CharacteristicsSection from './components/CharacteristicsSection'
 import CircularProgress from '@/components/CircularProgress/CircularProgress'
 import { getPropertyHeaderInfo } from '@/app/actions/properties'
 import { getStatusInSpanish, getStatusChipClasses } from '@/app/backOffice/properties/utils/statusTranslation'
@@ -60,6 +61,7 @@ export default function FullPropertyDialog({
 }: FullPropertyDialogProps) {
   const [headerData, setHeaderData] = useState<any>(null)
   const [loadingHeader, setLoadingHeader] = useState(true)
+  const [activeSection, setActiveSection] = useState<string>('Información básica')
 
   const loadHeaderData = async () => {
     if (propertyId) {
@@ -157,7 +159,12 @@ export default function FullPropertyDialog({
                 {sidebarSections.map((section) => (
                   <button
                     key={section.title}
-                    className="w-full text-left px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wide text-muted-foreground hover:bg-muted/50 transition-colors flex items-center gap-3"
+                    onClick={() => setActiveSection(section.title)}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wide transition-colors flex items-center gap-3 ${
+                      activeSection === section.title
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-muted-foreground hover:bg-muted/50'
+                    }`}
                     title={section.title}
                   >
                     <span className="material-symbols-outlined text-base flex-shrink-0">{section.icon}</span>
@@ -171,7 +178,12 @@ export default function FullPropertyDialog({
           <div>
             {children ?? (
               <div>
-                {propertyId && <BasicInfoSection propertyId={propertyId} onUpdateSuccess={loadHeaderData} />}
+                {propertyId && activeSection === 'Información básica' && (
+                  <BasicInfoSection propertyId={propertyId} onUpdateSuccess={loadHeaderData} />
+                )}
+                {propertyId && activeSection === 'Características' && (
+                  <CharacteristicsSection propertyId={propertyId} />
+                )}
               </div>
             )}
           </div>
