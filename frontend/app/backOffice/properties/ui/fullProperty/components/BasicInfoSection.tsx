@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react'
 import { TextField } from '@/components/TextField/TextField'
 import Select from '@/components/Select/Select'
 import CircularProgress from '@/components/CircularProgress/CircularProgress'
-import { listPropertyTypes, getBasicPropertyInfo, updatePropertyStatus } from '@/app/actions/properties'
-import { useAlert } from '@/app/hooks/useAlert'
+import { listPropertyTypes, getBasicPropertyInfo } from '@/app/actions/properties'
+import { getStatusInSpanish } from '@/app/backOffice/properties/utils/statusTranslation'
 
 interface BasicInfoSectionProps {
   propertyId: string
@@ -36,14 +36,12 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   propertyId,
   title = 'Información básica',
 }) => {
-  const { showAlert } = useAlert()
   const [propertyTypes, setPropertyTypes] = useState<Array<{ id: string; name: string }>>([])
   const [propertyData, setPropertyData] = useState<any>(null)
   const [loadingTypes, setLoadingTypes] = useState(true)
   const [loadingData, setLoadingData] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
-  const [updatingStatus, setUpdatingStatus] = useState(false)
 
   // Load property data
   useEffect(() => {
@@ -89,43 +87,6 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
   const findOption = (options: Array<{ id: string; label: string }>, value?: string) => {
     if (!value) return null
     return options.find((option) => option.id.toLowerCase() === value.toLowerCase() || option.label.toLowerCase() === value.toLowerCase())
-  }
-
-  const handleStatusChange = async (newStatus: string | null) => {
-    if (!newStatus || !propertyId) return
-
-    try {
-      setUpdatingStatus(true)
-      const result = await updatePropertyStatus(propertyId, newStatus)
-
-      if (result.success) {
-        setSelectedStatus(newStatus)
-        showAlert({
-          message: 'Estado actualizado correctamente',
-          type: 'success',
-          duration: 3000,
-        })
-      } else {
-        showAlert({
-          message: result.error || 'Error al actualizar el estado',
-          type: 'error',
-          duration: 3000,
-        })
-        // Revertir al estado anterior
-        setSelectedStatus(propertyData?.status || null)
-      }
-    } catch (err) {
-      console.error('Error updating status:', err)
-      showAlert({
-        message: 'Error al actualizar el estado',
-        type: 'error',
-        duration: 3000,
-      })
-      // Revertir al estado anterior
-      setSelectedStatus(propertyData?.status || null)
-    } finally {
-      setUpdatingStatus(false)
-    }
   }
 
   // Get creator user info
@@ -209,8 +170,8 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         <Select
           placeholder="Estado"
           options={statusOptions}
-          value={selectedStatus}
-          onChange={(value) => handleStatusChange(value as string | null)}
+          value={propertyData?.status}
+          onChange={() => null}
         />
       </div>
     </section>
