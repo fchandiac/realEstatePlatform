@@ -3,6 +3,7 @@ import PortalTopBar from "./ui/PortalTopBar";
 import PortalFooter from "./ui/PortalFooter";
 import Wsp from "./ui/Wsp";
 import NavBar from "./ui/NavBar";
+import CookieConsent from "./ui/CookieConsent";
 
 type PortalLayoutProps = {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ export default function PortalLayout({ children }: PortalLayoutProps) {
   return (
 
     <div className="min-h-screen flex flex-col relative">
+      <CookieConsent />
       <PortalTopBar
       // onMenuClick={() => setSidebarOpen(true)} 
 

@@ -2161,6 +2161,60 @@ export class PropertyService {
     };
   }
 
+  /**
+   * Toggle favorite for a property by user
+   * Saves userId or 'anonymous' in the favorites array
+   */
+  async toggleFavorite(propertyId: string, userId: string): Promise<{ isFavorited: boolean }> {
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+    });
+
+    if (!property) {
+      throw new NotFoundException('Property not found');
+    }
+
+    // Initialize favorites array if not exists
+    if (!property.favorites) {
+      property.favorites = [];
+    }
+
+    // Check if user already has this property favorited
+    const favoriteIndex = property.favorites.findIndex(fav => fav.userId === userId);
+
+    if (favoriteIndex >= 0) {
+      // Remove from favorites
+      property.favorites.splice(favoriteIndex, 1);
+    } else {
+      // Add to favorites
+      property.favorites.push({
+        userId,
+        addedAt: new Date(),
+      });
+    }
+
+    await this.propertyRepository.save(property);
+
+    return {
+      isFavorited: favoriteIndex < 0, // true if we just added it
+    };
+  }
+
+  /**
+   * Check if a property is favorited by a specific user
+   */
+  async isFavorited(propertyId: string, userId: string): Promise<boolean> {
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+    });
+
+    if (!property || !property.favorites) {
+      return false;
+    }
+
+    return property.favorites.some(fav => fav.userId === userId);
+  }
+
 }
 
 function toInt(v: any): number { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }

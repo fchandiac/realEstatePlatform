@@ -24,6 +24,36 @@ interface ApiResponse<T> {
   error?: string;
 }
 
+export async function getPublicTeamMembers(
+  search?: string,
+): Promise<ApiResponse<TeamMember[]>> {
+  try {
+    const url = new URL(`${env.backendApiUrl}/team-members`);
+    if (search) {
+      url.searchParams.append('search', search);
+    }
+
+    const res = await fetch(url.toString());
+
+    if (!res.ok) {
+      throw new Error(`API error: ${res.statusText}`);
+    }
+
+    const data = await res.json();
+
+    return {
+      success: true,
+      data: Array.isArray(data) ? data : data.data,
+    };
+  } catch (error) {
+    console.error('Error fetching public team members:', error);
+    return {
+      success: false,
+      error: 'Error al obtener miembros del equipo',
+    };
+  }
+}
+
 export async function getTeamMembers(
   search?: string,
 ): Promise<ApiResponse<TeamMember[]>> {

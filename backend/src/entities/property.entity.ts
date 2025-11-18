@@ -247,6 +247,11 @@ export class Property {
   @IsArray()
   leads?: LeadEntry[];
 
+  @Column({ type: 'json', nullable: true })
+  @IsOptional()
+  @IsArray()
+  favorites?: Array<{ userId: string; addedAt: Date }>;
+
   // Internal Notes
   @Column({ type: 'text', nullable: true })
   @IsOptional()

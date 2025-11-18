@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Button } from '@/components/Button/Button';
 import { env } from '@/lib/env';
+import { useAlert } from '@/app/hooks/useAlert';
+import { togglePropertyFavorite } from '@/app/actions/properties';
 
 type Currency = 'CLP' | 'UF';
 type OperationType = 'SALE' | 'RENT';
@@ -97,6 +99,10 @@ function operationLabel(op: OperationType): string {
 
 export default function PropertyCard({ property, href, onClick }: PropertyCardProps) {
   const [imgSrc, setImgSrc] = useState<string | undefined>(() => getPrimaryImage(property));
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoadingFav, setIsLoadingFav] = useState(false);
+  const { showAlert } = useAlert();
+  
   const isUF = property.currencyPrice === 'UF';
   const opText = operationLabel(property.operationType);
   const featured = !!property.isFeatured;
@@ -104,6 +110,87 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
   const propertyTypeName = property.propertyType?.name || '';
   const region = property.state || '';
   const commune = property.city || '';
+
+  // Check favorite status on mount and from cookies
+  useEffect(() => {
+    const checkFavorite = () => {
+      try {
+        const favCookie = document.cookie
+          .split('; ')
+          .find((row) => row.startsWith('favorites='));
+        
+        if (favCookie) {
+          const favoritesStr = decodeURIComponent(favCookie.split('=')[1]);
+          const favorites = JSON.parse(favoritesStr);
+          setIsFavorited(Array.isArray(favorites) && favorites.includes(property.id));
+        } else {
+          setIsFavorited(false);
+        }
+      } catch (error) {
+        console.error('Error reading favorites cookie:', error);
+        setIsFavorited(false);
+      }
+    };
+
+    checkFavorite();
+  }, [property.id]);
+
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (isLoadingFav) return;
+    setIsLoadingFav(true);
+
+    try {
+      // Update DB and cookies
+      const result = await togglePropertyFavorite(property.id);
+
+      if (!result.success) {
+        showAlert({
+          message: result.error || 'Error al agregar/remover favorito',
+          type: 'error',
+          duration: 3000,
+        });
+        setIsLoadingFav(false);
+        return;
+      }
+
+      // Update cookie
+      try {
+        const favCookie = document.cookie
+          .split('; ')
+          .find((row) => row.startsWith('favorites='));
+        
+        let favorites: string[] = [];
+        if (favCookie) {
+          const favoritesStr = decodeURIComponent(favCookie.split('=')[1]);
+          favorites = JSON.parse(favoritesStr);
+        }
+
+        const newFavorites = favorites.includes(property.id)
+          ? favorites.filter((id) => id !== property.id)
+          : [...favorites, property.id];
+
+        const expires = new Date();
+        expires.setTime(expires.getTime() + 365 * 24 * 60 * 60 * 1000);
+        document.cookie = `favorites=${encodeURIComponent(JSON.stringify(newFavorites))}; expires=${expires.toUTCString()}; path=/`;
+
+        setIsFavorited(newFavorites.includes(property.id));
+
+        showAlert({
+          message: newFavorites.includes(property.id)
+            ? 'Agregado a favoritos'
+            : 'Removido de favoritos',
+          type: 'success',
+          duration: 2000,
+        });
+      } catch (error) {
+        console.error('Error updating favorites cookie:', error);
+      }
+    } finally {
+      setIsLoadingFav(false);
+    }
+  };
 
   const handleClick = () => {
     // Redirigir a la página de detalle en una nueva ventana
@@ -197,6 +284,25 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
           {opText}
         </div>
       )}
+
+      {/* Favorite heart button */}
+      <button
+        onClick={handleToggleFavorite}
+        disabled={isLoadingFav}
+        className="absolute bottom-4 right-4 z-20 transition-all duration-200 hover:scale-110 disabled:opacity-50"
+        title={isFavorited ? 'Remover de favoritos' : 'Agregar a favoritos'}
+      >
+        <span
+          className={`material-symbols-outlined transition-all ${
+            isFavorited
+              ? 'text-red-500 fill-red-500'
+              : 'text-gray-400 hover:text-red-400'
+          }`}
+          style={{ fontSize: '28px' }}
+        >
+          {isFavorited ? 'favorite' : 'favorite_border'}
+        </span>
+      </button>
 
       <div
         className="flex items-center justify-center w-full aspect-[16/9] bg-gray-200 text-gray-400 overflow-hidden"

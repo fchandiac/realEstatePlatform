@@ -1,9 +1,9 @@
 import React from 'react';
-import { getTeamMembers } from '@/app/actions/ourTeam';
+import { getPublicTeamMembers } from '@/app/actions/ourTeam';
 import TeamMembersDisplay from './ui/TeamMembersDisplay';
 
 export default async function OurTeamPage() {
-  const result = await getTeamMembers();
+  const result = await getPublicTeamMembers();
   const members = result.success && result.data ? result.data : [];
 
   return (

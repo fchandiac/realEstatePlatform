@@ -1889,5 +1889,99 @@ export async function getPropertyHistory(
 }
 
 /**
+ * Toggle property favorite (with cookie and DB persistence)
+ */
+export async function togglePropertyFavorite(
+  propertyId: string
+): Promise<{ success: boolean; error?: string; isFavorited?: boolean }> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = (session as any)?.accessToken;
+    const userId = (session as any)?.user?.id;
+
+    // Endpoint toggle favorite
+    const res = await fetch(
+      `${env.backendApiUrl}/properties/${propertyId}/toggle-favorite`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+        },
+        body: JSON.stringify({
+          userId: userId || 'anonymous',
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      return {
+        success: false,
+        error: 'Error al agregar/remover favorito',
+      };
+    }
+
+    const data = await res.json();
+
+    return {
+      success: true,
+      isFavorited: data.isFavorited,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: (error as Error).message || 'Error desconocido',
+    };
+  }
+}
+
+/**
+ * Check if property is favorited by current user
+ * Compares cookies with DB if authenticated
+ */
+export async function checkPropertyFavoriteStatus(
+  propertyId: string
+): Promise<{ success: boolean; isFavorited: boolean; error?: string }> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = (session as any)?.accessToken;
+    const userId = (session as any)?.user?.id;
+
+    // Call backend to get favorite status
+    const res = await fetch(
+      `${env.backendApiUrl}/properties/${propertyId}/favorite-status`,
+      {
+        method: 'GET',
+        headers: {
+          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+        },
+      }
+    );
+
+    if (!res.ok) {
+      return {
+        success: false,
+        isFavorited: false,
+        error: 'Error al verificar favorito',
+      };
+    }
+
+    const data = await res.json();
+
+    return {
+      success: true,
+      isFavorited: data.isFavorited || false,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      isFavorited: false,
+      error: (error as Error).message,
+    };
+  }
+}
+
+/**
  * Upload property multimedia
  */
+

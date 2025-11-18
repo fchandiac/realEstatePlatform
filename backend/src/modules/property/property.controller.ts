@@ -671,6 +671,39 @@ export class PropertyController {
     return { data: history };
   }
 
+  @Patch(':id/toggle-favorite')
+  @ApiOperation({ summary: 'Toggle property favorite for user' })
+  @ApiResponse({ status: 200, description: 'Favorite toggled', schema: { example: { isFavorited: true } } })
+  @ApiParam({ name: 'id', type: String, description: 'Property ID' })
+  @ApiBody({ schema: { example: { userId: 'user-id-or-anonymous' } } })
+  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property favorite toggled')
+  async toggleFavorite(
+    @Param('id') propertyId: string,
+    @Body('userId') userId: string,
+    @Req() req: any,
+  ) {
+    const result = await this.propertyService.toggleFavorite(propertyId, userId || 'anonymous');
+    return {
+      isFavorited: result.isFavorited,
+    };
+  }
+
+  @Get(':id/favorite-status')
+  @ApiOperation({ summary: 'Check if property is favorited by user' })
+  @ApiResponse({ status: 200, description: 'Favorite status', schema: { example: { isFavorited: true } } })
+  @ApiParam({ name: 'id', type: String, description: 'Property ID' })
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property favorite status checked')
+  async getFavoriteStatus(
+    @Param('id') propertyId: string,
+    @Req() req: any,
+  ) {
+    const userId = this.extractUserId(req) || 'anonymous';
+    const isFavorited = await this.propertyService.isFavorited(propertyId, userId);
+    return {
+      isFavorited,
+    };
+  }
+
   private extractUserId(req: any): string {
     const user = req.user as any;
     if (user?.id) return user.id;
