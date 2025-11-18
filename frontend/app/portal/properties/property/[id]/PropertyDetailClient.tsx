@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Property } from './actions';
 import { Button } from '@/components/Button/Button';
 import { TextField } from '@/components/TextField/TextField';
@@ -8,6 +8,7 @@ import CircularProgress from '@/components/CircularProgress/CircularProgress';
 import { useAlert } from '@/app/hooks/useAlert';
 import FontAwesome from '@/components/FontAwesome/FontAwesome';
 import { env } from '@/lib/env';
+import { togglePropertyFavorite } from '@/app/actions/properties';
 
 interface PropertyDetailClientProps {
   property: Property;
@@ -51,6 +52,26 @@ export default function PropertyDetailClient({
     email: '',
     message: '',
   });
+  const [favoritesCount, setFavoritesCount] = useState(property.favoritesCount || 0);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoadingFav, setIsLoadingFav] = useState(false);
+
+  // Check if user has favorited this property
+  useEffect(() => {
+    try {
+      const favCookie = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('favorites='));
+      
+      if (favCookie) {
+        const favoritesStr = decodeURIComponent(favCookie.split('=')[1]);
+        const favorites = JSON.parse(favoritesStr);
+        setIsFavorited(Array.isArray(favorites) && favorites.includes(property.id));
+      }
+    } catch (error) {
+      console.error('Error reading favorites from cookie:', error);
+    }
+  }, [property.id]);
 
   const mainImage = property.multimedia?.[0];
   const thumbnailImages = property.multimedia?.slice(1, 4) || [];
@@ -81,6 +102,71 @@ export default function PropertyDetailClient({
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleToggleFavorite = async () => {
+    if (isLoadingFav) return;
+    setIsLoadingFav(true);
+
+    try {
+      const result = await togglePropertyFavorite(property.id);
+
+      if (!result.success) {
+        showAlert({
+          message: result.error || 'Error al agregar/remover favorito',
+          type: 'error',
+          duration: 3000,
+        });
+        setIsLoadingFav(false);
+        return;
+      }
+
+      // Update cookie
+      try {
+        const favCookie = document.cookie
+          .split('; ')
+          .find((row) => row.startsWith('favorites='));
+        
+        let favorites: string[] = [];
+        if (favCookie) {
+          const favoritesStr = decodeURIComponent(favCookie.split('=')[1]);
+          favorites = JSON.parse(favoritesStr);
+        }
+
+        // Toggle: if already favorited, remove it; otherwise add it
+        const isFavBefore = favorites.includes(property.id);
+        const newFavorites = isFavBefore
+          ? favorites.filter((id) => id !== property.id)
+          : [...favorites, property.id];
+
+        // Save to cookie
+        const expires = new Date();
+        expires.setTime(expires.getTime() + 365 * 24 * 60 * 60 * 1000);
+        document.cookie = `favorites=${encodeURIComponent(JSON.stringify(newFavorites))}; expires=${expires.toUTCString()}; path=/`;
+
+        // Update UI
+        const isFavNow = newFavorites.includes(property.id);
+        setIsFavorited(isFavNow);
+        setFavoritesCount(prev => isFavNow ? prev + 1 : Math.max(prev - 1, 0));
+
+        showAlert({
+          message: isFavNow
+            ? 'Agregado a favoritos'
+            : 'Removido de favoritos',
+          type: 'success',
+          duration: 2000,
+        });
+      } catch (error) {
+        console.error('Error updating favorites cookie:', error);
+        showAlert({
+          message: 'Error al actualizar favorito',
+          type: 'error',
+          duration: 2000,
+        });
+      }
+    } finally {
+      setIsLoadingFav(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -143,11 +229,40 @@ export default function PropertyDetailClient({
           </div>
 
           {/* Location */}
-          <div className="flex items-center justify-center space-x-2">
+          <div className="flex items-center justify-center space-x-2 mb-3">
             <FontAwesome icon="location-dot" className="text-muted-foreground" />
             <span className="text-sm font-light text-muted-foreground">
               {locationText}
             </span>
+          </div>
+
+          {/* Favorites Count and Button */}
+          <div className="flex items-center justify-center space-x-4 text-sm mt-4">
+            {/* Favorite button */}
+            <button
+              onClick={handleToggleFavorite}
+              disabled={isLoadingFav}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
+              title={isFavorited ? 'Remover de favoritos' : 'Agregar a favoritos'}
+            >
+              <FontAwesome
+                icon={isFavorited ? 'heart' : 'heart'}
+                className={isFavorited ? 'text-red-500 fill-red-500' : 'text-red-500'}
+              />
+              <span className="text-red-600 font-medium text-xs">
+                {isFavorited ? 'En tus favoritos' : 'Agregar a favoritos'}
+              </span>
+            </button>
+
+            {/* Favorites count */}
+            {favoritesCount > 0 && (
+              <div className="flex items-center space-x-1">
+                <FontAwesome icon="heart" className="text-red-500 text-sm" />
+                <span className="text-muted-foreground text-xs">
+                  {favoritesCount} {favoritesCount === 1 ? 'persona interesada' : 'personas interesadas'}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 

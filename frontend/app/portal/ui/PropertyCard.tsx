@@ -155,7 +155,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
         return;
       }
 
-      // Update cookie
+      // Update cookie - read fresh state from cookie
       try {
         const favCookie = document.cookie
           .split('; ')
@@ -167,18 +167,23 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
           favorites = JSON.parse(favoritesStr);
         }
 
-        const newFavorites = favorites.includes(property.id)
+        // Toggle: if already favorited, remove it; otherwise add it
+        const isFavoritedBefore = favorites.includes(property.id);
+        const newFavorites = isFavoritedBefore
           ? favorites.filter((id) => id !== property.id)
           : [...favorites, property.id];
 
+        // Save to cookie
         const expires = new Date();
         expires.setTime(expires.getTime() + 365 * 24 * 60 * 60 * 1000);
         document.cookie = `favorites=${encodeURIComponent(JSON.stringify(newFavorites))}; expires=${expires.toUTCString()}; path=/`;
 
-        setIsFavorited(newFavorites.includes(property.id));
+        // Update UI state
+        const isFavNow = newFavorites.includes(property.id);
+        setIsFavorited(isFavNow);
 
         showAlert({
-          message: newFavorites.includes(property.id)
+          message: isFavNow
             ? 'Agregado a favoritos'
             : 'Removido de favoritos',
           type: 'success',
@@ -186,6 +191,11 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
         });
       } catch (error) {
         console.error('Error updating favorites cookie:', error);
+        showAlert({
+          message: 'Error al actualizar favorito',
+          type: 'error',
+          duration: 2000,
+        });
       }
     } finally {
       setIsLoadingFav(false);

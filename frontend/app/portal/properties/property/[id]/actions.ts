@@ -49,6 +49,9 @@ export interface Property {
   parkingSpaces?: number;
   floors?: number;
   publishedAt?: string;
+  // Favorites
+  favorites?: Array<{ userId: string; addedAt: string }>;
+  favoritesCount?: number;
 }
 
 /**

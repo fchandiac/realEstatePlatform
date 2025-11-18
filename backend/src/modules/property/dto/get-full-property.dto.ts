@@ -165,6 +165,12 @@ export class GetFullPropertyDto {
   @Transform(({ value }) => Array.isArray(value) ? value : [])
   leads?: LeadEntry[];
 
+  @Expose()
+  @IsOptional()
+  @IsArray()
+  @Transform(({ value }) => Array.isArray(value) ? value : [])
+  favorites?: Array<{ userId: string; addedAt: Date }>;
+
   // Internal Notes
   @Expose()
   internalNotes?: string;

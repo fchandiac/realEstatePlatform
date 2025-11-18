@@ -109,6 +109,7 @@ export class PropertyService {
       'p.landSquareMeters',
       'p.parkingSpaces',
       'p.isFeatured',
+      'p.favorites',
       'pt.id',
       'pt.name',
     ]);
@@ -229,7 +230,7 @@ export class PropertyService {
         'bedrooms', 'bathrooms', 'parkingSpaces', 'floors', 'constructionYear',
         'state', 'city', 'address', 'latitude', 'longitude',
         'internalNotes', 'createdAt', 'updatedAt', 'deletedAt', 'publishedAt',
-        'changeHistory', 'views', 'leads' // Incluir campos JSON
+        'changeHistory', 'views', 'leads', 'favorites' // Incluir campos JSON
       ]
     });
 
@@ -276,6 +277,7 @@ export class PropertyService {
         'p.landSquareMeters',
         'p.parkingSpaces',
         'p.operationType',
+        'p.favorites',
         'pt.id',
         'pt.name'
       ])
@@ -289,13 +291,18 @@ export class PropertyService {
 
   /**
    * Devuelve cuántas veces la propiedad ha sido marcada como favorita.
-   * Si tienes una tabla/relación de favoritos, ajusta el query.
+   * Cuenta los elementos en el array favorites de la propiedad
    */
   async getFavoritesCount(propertyId: string): Promise<number> {
-    // Si tienes una relación property.favorites, ajusta aquí
-    // Ejemplo: contar favoritos en una tabla 'favorites' con propertyId
-    // Aquí se asume que no existe, así que retorna 0
-    return 0;
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+    });
+    
+    if (!property || !property.favorites) {
+      return 0;
+    }
+    
+    return Array.isArray(property.favorites) ? property.favorites.length : 0;
   }
 
   /**
@@ -2057,14 +2064,17 @@ export class PropertyService {
       throw new NotFoundException('Property not found');
     }
 
+    const favoritesCount = await this.getFavoritesCount(propertyId);
+    const viewsCount = (property.views || []).length;
+
     return {
       seoTitle: property.seoTitle,
       seoDescription: property.seoDescription,
       seoKeywords: property.seoKeywords,
       isFeatured: property.isFeatured,
       publicationDate: property.publicationDate,
-      viewsCount: (property.views || []).length,
-      favoritesCount: 0, // TODO: Implementar cuando hay tabla de favoritos
+      viewsCount,
+      favoritesCount,
     };
   }
 
