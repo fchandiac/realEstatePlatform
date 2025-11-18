@@ -1982,6 +1982,23 @@ export async function checkPropertyFavoriteStatus(
 }
 
 /**
+ * Revalidate a property route after changes
+ * Used by useFullPropertyRevalidation hook to refresh property grids
+ */
+export async function revalidatePropertyRoute(path: string) {
+  'use server'
+  
+  try {
+    const { revalidatePath } = await import('next/cache')
+    revalidatePath(path)
+    return { success: true }
+  } catch (error) {
+    console.error('Error revalidating path:', error)
+    return { success: false, error: (error as Error).message }
+  }
+}
+
+/**
  * Upload property multimedia
  */
 

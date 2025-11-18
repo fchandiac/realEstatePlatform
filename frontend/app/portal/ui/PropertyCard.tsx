@@ -372,14 +372,21 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
           <p>{propertyTypeName}</p>
         </div>
 
+        {/* Property Title */}
+        <h2 className="text-lg font-bold text-gray-800 mb-3 line-clamp-2">
+          {property.title}
+        </h2>
+
         <h3 className="text-xl font-bold text-gray-800 mb-2" data-test-id={isUF ? 'property-card-uf' : 'property-card-clp'}>
           {formatPrice(property.price, property.currencyPrice)}
         </h3>
 
-        <div className="flex flex-col items-center space-y-2 text-center" data-test-id="property-card-location">
-          <p className="text-xs text-gray-400">
-            Region {region || '-'}, {commune || '-'}
-          </p>
+        <div className="flex flex-col items-center space-y-1 text-center" data-test-id="property-card-location">
+          <div className="flex justify-center items-center gap-2 flex-wrap">
+            {region && <span className="text-xs text-gray-600 font-medium">{region}</span>}
+            {region && commune && <span className="text-xs text-gray-400">•</span>}
+            {commune && <span className="text-xs text-gray-600 font-medium">{commune}</span>}
+          </div>
         </div>
       </div>
     </div>
