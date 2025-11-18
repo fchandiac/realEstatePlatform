@@ -114,14 +114,6 @@ const PaginationControls: React.FC<{
 export default function ListProperties({ properties, pagination, onPageChange, isLoading = false }: ListPropertiesProps) {
   return (
     <div className="w-full">
-      {/* Mostrar info de paginación si existe */}
-      {pagination && (
-        <div className="mb-4 text-sm text-gray-600 text-center">
-          Mostrando {properties.length} de {pagination.total} propiedades 
-          (Página {pagination.page} de {pagination.totalPages})
-        </div>
-      )}
-      
       <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-opacity duration-200 ${isLoading ? 'opacity-70' : 'opacity-100'}`}>
         {properties.map((property) => {
           // Mapear los campos de la API a la interfaz que PropertyCard espera
