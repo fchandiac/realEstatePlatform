@@ -18,6 +18,7 @@ export interface PropertyData {
   totalArea: number;
   mainImageUrl: string;
   createdAt: string;
+  isFeatured?: boolean;
 }
 
 export interface PublishedPropertiesResponse {
@@ -97,6 +98,7 @@ export async function getPublishedPropertiesFiltered(filters: {
       totalArea: prop.builtSquareMeters,
       mainImageUrl: prop.mainImageUrl,
       createdAt: prop.createdAt,
+      isFeatured: prop.isFeatured || false,
     }));
 
     console.log('✅ Properties fetched:', mappedData.length, 'items');

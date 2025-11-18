@@ -2045,6 +2045,122 @@ export class PropertyService {
     return enrichedHistory;
   }
 
+  /**
+   * Obtiene datos SEO de una propiedad
+   */
+  async getSeoData(propertyId: string) {
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+    });
+
+    if (!property) {
+      throw new NotFoundException('Property not found');
+    }
+
+    return {
+      seoTitle: property.seoTitle,
+      seoDescription: property.seoDescription,
+      seoKeywords: property.seoKeywords,
+      isFeatured: property.isFeatured,
+      publicationDate: property.publicationDate,
+      viewsCount: (property.views || []).length,
+      favoritesCount: 0, // TODO: Implementar cuando hay tabla de favoritos
+    };
+  }
+
+  /**
+   * Actualiza datos SEO de una propiedad
+   */
+  async updateSeoData(propertyId: string, dto: any, userId: string) {
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+    });
+
+    if (!property) {
+      throw new NotFoundException('Property not found');
+    }
+
+    // Guardar valores anteriores para auditoría
+    const previousSeoTitle = property.seoTitle;
+    const previousSeoDescription = property.seoDescription;
+    const previousSeoKeywords = property.seoKeywords;
+    const previousIsFeatured = property.isFeatured;
+
+    // Actualizar campos SEO si se proporcionan
+    if (dto.seoTitle !== undefined) {
+      property.seoTitle = dto.seoTitle;
+    }
+    if (dto.seoDescription !== undefined) {
+      property.seoDescription = dto.seoDescription;
+    }
+    if (dto.seoKeywords !== undefined) {
+      property.seoKeywords = dto.seoKeywords;
+    }
+    if (dto.isFeatured !== undefined) {
+      property.isFeatured = dto.isFeatured;
+    }
+
+    // Registrar cambios en el historial
+    const changes: ChangeHistoryEntry[] = [];
+
+    if (previousSeoTitle !== property.seoTitle) {
+      changes.push({
+        field: 'seoTitle',
+        previousValue: previousSeoTitle || null,
+        newValue: property.seoTitle || null,
+        changedBy: userId,
+        timestamp: new Date(),
+      });
+    }
+
+    if (previousSeoDescription !== property.seoDescription) {
+      changes.push({
+        field: 'seoDescription',
+        previousValue: previousSeoDescription || null,
+        newValue: property.seoDescription || null,
+        changedBy: userId,
+        timestamp: new Date(),
+      });
+    }
+
+    if (previousSeoKeywords !== property.seoKeywords) {
+      changes.push({
+        field: 'seoKeywords',
+        previousValue: previousSeoKeywords || null,
+        newValue: property.seoKeywords || null,
+        changedBy: userId,
+        timestamp: new Date(),
+      });
+    }
+
+    if (previousIsFeatured !== property.isFeatured) {
+      changes.push({
+        field: 'isFeatured',
+        previousValue: previousIsFeatured ? 'true' : 'false',
+        newValue: property.isFeatured ? 'true' : 'false',
+        changedBy: userId,
+        timestamp: new Date(),
+      });
+    }
+
+    // Agregar cambios al historial
+    if (changes.length > 0) {
+      property.changeHistory = [...(property.changeHistory || []), ...changes];
+    }
+
+    await this.propertyRepository.save(property);
+
+    return {
+      seoTitle: property.seoTitle,
+      seoDescription: property.seoDescription,
+      seoKeywords: property.seoKeywords,
+      isFeatured: property.isFeatured,
+      publicationDate: property.publicationDate,
+      viewsCount: (property.views || []).length,
+      favoritesCount: 0,
+    };
+  }
+
 }
 
 function toInt(v: any): number { const n = parseInt(v, 10); return isNaN(n) ? 0 : n; }

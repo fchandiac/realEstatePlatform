@@ -25,6 +25,7 @@ import { UpdatePropertyBasicDto } from './dto/update-property-basic.dto';
 import { CreatePropertyDto as CreatePropertyPayloadDto } from './dto/create-property.dto';
 import { UpdateMainImageDto } from './dto/create-property.dto';
 import { UpdatePropertyPriceDto } from './dto/update-property-price.dto';
+import { UpdatePropertySeoDto } from './dto/update-property-seo.dto';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
 import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { Audit } from '../../common/interceptors/audit.interceptor';
@@ -380,6 +381,31 @@ export class PropertyController {
   ): Promise<Property> {
     const userId = this.extractUserId(req);
     return this.propertyService.updateLocation(id, dto, userId);
+  }
+
+  /**
+   * Obtiene datos SEO de una propiedad
+   */
+  @Get(':id/seo')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property SEO data retrieved')
+  async getSeoData(@Param('id') id: string) {
+    return await this.propertyService.getSeoData(id);
+  }
+
+  /**
+   * Actualiza datos SEO de una propiedad
+   */
+  @Patch(':id/seo')
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property SEO data updated')
+  async updateSeoData(
+    @Param('id') id: string,
+    @Body(ValidationPipe) dto: UpdatePropertySeoDto,
+    @Req() req: any,
+  ) {
+    const userId = this.extractUserId(req);
+    return await this.propertyService.updateSeoData(id, dto, userId);
   }
 
   /**

@@ -181,12 +181,7 @@ const SEOSection: React.FC<SEOSectionProps> = ({
 
         {/* Featured Toggle */}
         <div className="flex items-center justify-between p-3 border border-border rounded-lg">
-          <div>
-            <p className="text-sm font-medium text-foreground">Destacada</p>
-            <p className="text-xs text-muted-foreground">
-              Mostrar como propiedad destacada en listados
-            </p>
-          </div>
+          <p className="text-sm font-medium text-foreground">Destacada</p>
           <Switch
             checked={formData.isFeatured || false}
             onChange={(checked) => handleInputChange('isFeatured', checked)}
