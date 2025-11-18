@@ -17,6 +17,7 @@ interface PropertyFromAPI {
   totalArea: number;
   mainImageUrl: string;
   createdAt: string;
+  isFeatured?: boolean;
 }
 
 interface PaginationData {
@@ -139,7 +140,7 @@ export default function ListProperties({ properties, pagination, onPageChange, i
             builtSquareMeters: property.totalArea,
             landSquareMeters: null,
             parkingSpaces: null,
-            isFeatured: false,
+            isFeatured: property.isFeatured || false,
           };
 
           return <PropertyCard key={property.id} property={mappedProperty} />;
