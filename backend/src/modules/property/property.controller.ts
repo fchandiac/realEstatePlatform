@@ -17,6 +17,16 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Response, Request } from 'express';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+  ApiBody,
+  ApiBearerAuth,
+  ApiConsumes,
+} from '@nestjs/swagger';
 import { PropertyService } from './property.service';
 import { Property } from '../../entities/property.entity';
 import { CreatePropertyDto, UpdatePropertyDto, UpdatePropertyCharacteristicsDto } from './dto/property.dto';
@@ -49,6 +59,7 @@ const propertyUploadStorage = diskStorage({
   },
 });
 
+@ApiTags('Properties')
 @Controller('properties')
 export class PropertyController {
   constructor(
@@ -57,6 +68,11 @@ export class PropertyController {
   ) {}
 
   @Get('grid-sale/excel')
+  @ApiOperation({ summary: 'Export sale properties to Excel' })
+  @ApiResponse({ status: 200, description: 'Excel file exported successfully' })
+  @ApiQuery({ name: 'fields', required: false, type: String, description: 'Comma-separated fields to export' })
+  @ApiQuery({ name: 'sort', required: false, enum: ['asc', 'desc'], description: 'Sort order' })
+  @ApiQuery({ name: 'sortField', required: false, type: String, description: 'Field to sort by' })
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Sale properties Excel exported')
   async exportSaleGridExcel(
     @Query(ValidationPipe) query: GridSaleQueryDto,
@@ -71,6 +87,16 @@ export class PropertyController {
   }
 
   @Post()
+  @ApiTags('Properties')
+  @ApiOperation({ summary: 'Create a new property with multimedia' })
+  @ApiResponse({ status: 201, description: 'Property created successfully', type: Property })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: CreatePropertyPayloadDto,
+    description: 'Property data with multimedia files',
+  })
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FilesInterceptor('multimediaFiles', 10, {
     storage: diskStorage({
@@ -212,12 +238,21 @@ export class PropertyController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all properties with filters' })
+  @ApiResponse({ status: 200, description: 'List of properties', type: [Property] })
+  @ApiQuery({ name: 'status', required: false, type: String })
+  @ApiQuery({ name: 'operationType', required: false, type: String })
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Properties listed')
   findAll(@Query() filters: any) {
     return this.propertyService.findAll(filters);
   }
 
   @Get('grid-sale')
+  @ApiOperation({ summary: 'Get sale properties grid with pagination' })
+  @ApiResponse({ status: 200, description: 'Grid of sale properties' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'sort', required: false, enum: ['asc', 'desc'] })
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Sale properties grid viewed')
   gridSale(@Query(ValidationPipe) query: GridSaleQueryDto) {
     return this.propertyService.gridSaleProperties(query);
@@ -227,12 +262,26 @@ export class PropertyController {
    * Endpoint público (sin token) para listar propiedades publicadas visibles en el portal.
    */
   @Get('public')
+  @ApiOperation({ summary: 'Get published properties for portal (public)' })
+  @ApiResponse({ status: 200, description: 'List of published properties' })
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Public list of published properties')
   async listPublishedPublic() {
     return await this.propertyService.listPublishedPublic();
   }
 
+  @Get('public/featured')
+  @ApiOperation({ summary: 'Get featured properties (public)' })
+  @ApiResponse({ status: 200, description: 'List of featured properties' })
+  async getPublicFeatured() {
+    const data = await this.propertyService.findPublishedFeaturedPublic();
+    return { success: true, data };
+  }
+
   @Get(':id')
+  @ApiOperation({ summary: 'Get property by ID' })
+  @ApiResponse({ status: 200, description: 'Property details', type: Property })
+  @ApiResponse({ status: 404, description: 'Property not found' })
+  @ApiParam({ name: 'id', type: String, description: 'Property ID' })
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property viewed')
   findOne(@Param('id') id: string) {
     return this.propertyService.findOne(id);
@@ -242,33 +291,30 @@ export class PropertyController {
    * Devuelve todos los detalles de la propiedad, incluyendo relaciones y datos agregados.
    */
   @Get(':id/full')
+  @ApiOperation({ summary: 'Get full property details with all relations' })
+  @ApiResponse({ status: 200, description: 'Complete property details', type: GetFullPropertyDto })
+  @ApiParam({ name: 'id', type: String, description: 'Property ID' })
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Full property details viewed')
   async getFullProperty(@Param('id') id: string): Promise<GetFullPropertyDto> {
     return await this.propertyService.getFullProperty(id);
   }
 
-  /**
-   * Public endpoint: list published and featured properties
-   */
-  @Get('public/featured')
-  async getPublicFeatured() {
-    const data = await this.propertyService.findPublishedFeaturedPublic();
-    return { success: true, data };
-  }
-
   @Patch(':id')
+  @ApiOperation({ summary: 'Update property information' })
+  @ApiResponse({ status: 200, description: 'Property updated successfully', type: Property })
+  @ApiResponse({ status: 404, description: 'Property not found' })
+  @ApiParam({ name: 'id', type: String, description: 'Property ID' })
+  @ApiBody({ type: UpdatePropertyDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property updated')
-    // No changes needed; description is handled by DTOs in create and update endpoints.
   update(
     @Param('id') id: string,
     @Body(ValidationPipe) updatePropertyDto: UpdatePropertyDto,
     @Req() request: any,
   ) {
-    // Extraer el ID del usuario de manera más robusta
     const user = request?.user;
     const userId = user?.id || user?.sub || (typeof user === 'string' ? user : undefined);
-
     return this.propertyService.update(id, updatePropertyDto, userId);
   }
 
@@ -276,6 +322,11 @@ export class PropertyController {
    * Actualiza solo la información básica de la propiedad
    */
   @Patch(':id/basic')
+  @ApiOperation({ summary: 'Update basic property information' })
+  @ApiResponse({ status: 200, description: 'Property updated', type: Property })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: UpdatePropertyBasicDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property basic info updated')
   async updateBasic(
@@ -283,15 +334,17 @@ export class PropertyController {
     @Body(ValidationPipe) dto: UpdatePropertyBasicDto,
     @Req() request: any,
   ): Promise<Property> {
-    // Extraer el ID del usuario de manera más robusta
     const user = request?.user;
     const userId = user?.id || user?.sub || (typeof user === 'string' ? user : undefined);
-
-    // Reutiliza el método general de actualización con el subconjunto permitido
     return await this.propertyService.update(id, dto as UpdatePropertyDto, userId);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete property' })
+  @ApiResponse({ status: 200, description: 'Property deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Property not found' })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.DELETE, AuditEntityType.PROPERTY, 'Property deleted')
   remove(@Param('id') id: string, @Req() req: Request) {
@@ -303,6 +356,8 @@ export class PropertyController {
    * Total de propiedades en venta
    */
   @Get('count-sale')
+  @ApiOperation({ summary: 'Get total count of sale properties' })
+  @ApiResponse({ status: 200, description: 'Total count returned' })
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Count sale properties')
   async countSaleProperties() {
     return { total: await this.propertyService.countSaleProperties() };
@@ -312,6 +367,8 @@ export class PropertyController {
    * Total de propiedades publicadas
    */
   @Get('count-published')
+  @ApiOperation({ summary: 'Get total count of published properties' })
+  @ApiResponse({ status: 200, description: 'Total count returned' })
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Count published properties')
   async countPublishedProperties() {
     return { total: await this.propertyService.countPublishedProperties() };
@@ -321,12 +378,19 @@ export class PropertyController {
    * Total de propiedades destacadas
    */
   @Get('count-featured')
+  @ApiOperation({ summary: 'Get total count of featured properties' })
+  @ApiResponse({ status: 200, description: 'Total count returned' })
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Count featured properties')
   async countFeaturedProperties() {
     return { total: await this.propertyService.countFeaturedProperties() };
   }
 
   @Patch(':id/main-image')
+  @ApiOperation({ summary: 'Update property main image' })
+  @ApiResponse({ status: 200, description: 'Main image updated', type: Property })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: UpdateMainImageDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Main image updated')
   async updateMainImage(
@@ -342,6 +406,11 @@ export class PropertyController {
    * Actualiza la información de precio y SEO de una propiedad
    */
   @Patch(':id/price')
+  @ApiOperation({ summary: 'Update property price and SEO information' })
+  @ApiResponse({ status: 200, description: 'Price updated', type: Property })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: UpdatePropertyPriceDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property price and SEO updated')
   async updatePrice(
@@ -357,6 +426,11 @@ export class PropertyController {
    * Actualiza las características de una propiedad
    */
   @Patch(':id/characteristics')
+  @ApiOperation({ summary: 'Update property characteristics' })
+  @ApiResponse({ status: 200, description: 'Characteristics updated', type: Property })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: UpdatePropertyCharacteristicsDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property characteristics updated')
   async updateCharacteristics(
@@ -372,6 +446,11 @@ export class PropertyController {
    * Actualiza la ubicación de una propiedad
    */
   @Patch(':id/location')
+  @ApiOperation({ summary: 'Update property location' })
+  @ApiResponse({ status: 200, description: 'Location updated', type: Property })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: UpdatePropertyLocationDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property location updated')
   async updateLocation(
@@ -387,6 +466,10 @@ export class PropertyController {
    * Obtiene datos SEO de una propiedad
    */
   @Get(':id/seo')
+  @ApiOperation({ summary: 'Get property SEO data' })
+  @ApiResponse({ status: 200, description: 'SEO data retrieved' })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property SEO data retrieved')
   async getSeoData(@Param('id') id: string) {
@@ -397,6 +480,11 @@ export class PropertyController {
    * Actualiza datos SEO de una propiedad
    */
   @Patch(':id/seo')
+  @ApiOperation({ summary: 'Update property SEO data' })
+  @ApiResponse({ status: 200, description: 'SEO data updated' })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: UpdatePropertySeoDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property SEO data updated')
   async updateSeoData(
@@ -412,6 +500,11 @@ export class PropertyController {
    * Verifica si una multimedia específica es la imagen principal de la propiedad
    */
   @Get(':propertyId/multimedia/:multimediaId/is-main')
+  @ApiOperation({ summary: 'Check if multimedia is main image' })
+  @ApiResponse({ status: 200, description: 'Boolean result' })
+  @ApiParam({ name: 'propertyId', type: String })
+  @ApiParam({ name: 'multimediaId', type: String })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Multimedia main status checked')
   async isMultimediaMain(
@@ -427,6 +520,14 @@ export class PropertyController {
    * Query params: currency, state, city, typeProperty, operation, page
    */
   @Get('published/filtered')
+  @ApiOperation({ summary: 'Get published properties with filters' })
+  @ApiResponse({ status: 200, description: 'Filtered properties list' })
+  @ApiQuery({ name: 'currency', required: false })
+  @ApiQuery({ name: 'state', required: false })
+  @ApiQuery({ name: 'city', required: false })
+  @ApiQuery({ name: 'typeProperty', required: false })
+  @ApiQuery({ name: 'operation', required: false })
+  @ApiQuery({ name: 'page', required: false, type: Number })
   async getPublishedPropertiesFiltered(
     @Query(new ValidationPipe({ transform: true })) filters: any,
   ) {
@@ -437,6 +538,10 @@ export class PropertyController {
    * Crear una solicitud de publicación de propiedad desde el portal
    */
   @Post('request')
+  @ApiOperation({ summary: 'Create property request from portal' })
+  @ApiResponse({ status: 201, description: 'Property request created', type: Property })
+  @ApiBody({ type: Object })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Property request created from portal')
   async createPropertyRequest(

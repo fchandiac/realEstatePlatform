@@ -11,6 +11,15 @@ import {
   DefaultValuePipe,
   ParseIntPipe,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+  ApiQuery,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { JweAuthGuard } from '../../auth/jwe/jwe-auth.guard';
 import { Audit } from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
@@ -21,17 +30,38 @@ import {
 } from './dto/notification.dto';
 
 @Controller('notifications')
+@ApiTags('Notifications')
+@ApiBearerAuth()
 @UseGuards(JweAuthGuard)
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
+  /**
+   * Create a new notification
+   */
   @Post()
+  @ApiOperation({ summary: 'Create new notification' })
+  @ApiResponse({
+    status: 201,
+    description: 'Notification created successfully',
+  })
+  @ApiBody({ type: CreateNotificationDto })
   @Audit(AuditAction.CREATE, AuditEntityType.NOTIFICATION, 'Crear nueva notificación')
   create(@Body() createNotificationDto: CreateNotificationDto) {
     return this.notificationsService.create(createNotificationDto);
   }
 
+  /**
+   * Get all notifications with pagination
+   */
   @Get()
+  @ApiOperation({ summary: 'Get all notifications' })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated list of notifications',
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
   @Audit(AuditAction.READ, AuditEntityType.NOTIFICATION, 'Listar notificaciones')
   findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
@@ -40,13 +70,36 @@ export class NotificationsController {
     return this.notificationsService.findAll(page, limit);
   }
 
+  /**
+   * Get notification by ID
+   */
   @Get(':id')
+  @ApiOperation({ summary: 'Get notification by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Notification details',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Notification not found',
+  })
+  @ApiParam({ name: 'id', type: String })
   @Audit(AuditAction.READ, AuditEntityType.NOTIFICATION, 'Obtener notificación por ID')
   findOne(@Param('id') id: string) {
     return this.notificationsService.findOne(id);
   }
 
+  /**
+   * Update notification
+   */
   @Patch(':id')
+  @ApiOperation({ summary: 'Update notification' })
+  @ApiResponse({
+    status: 200,
+    description: 'Notification updated successfully',
+  })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: UpdateNotificationDto })
   @Audit(AuditAction.UPDATE, AuditEntityType.NOTIFICATION, 'Actualizar notificación')
   update(
     @Param('id') id: string,
@@ -55,19 +108,51 @@ export class NotificationsController {
     return this.notificationsService.update(id, updateNotificationDto);
   }
 
+  /**
+   * Delete notification (soft delete)
+   */
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete notification' })
+  @ApiResponse({
+    status: 200,
+    description: 'Notification deleted successfully',
+  })
+  @ApiParam({ name: 'id', type: String })
   @Audit(AuditAction.DELETE, AuditEntityType.NOTIFICATION, 'Eliminar notificación')
   softDelete(@Param('id') id: string) {
     return this.notificationsService.softDelete(id);
   }
 
+  /**
+   * Mark notification as opened
+   */
   @Post(':id/open')
+  @ApiOperation({ summary: 'Mark notification as opened' })
+  @ApiResponse({
+    status: 200,
+    description: 'Notification marked as opened',
+  })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({
+    schema: {
+      example: { viewerId: 'user-uuid' },
+    },
+  })
   @Audit(AuditAction.UPDATE, AuditEntityType.NOTIFICATION, 'Marcar notificación como abierta')
   markAsOpened(@Param('id') id: string, @Body('viewerId') viewerId: string) {
     return this.notificationsService.markAsOpened(id, viewerId);
   }
 
+  /**
+   * Get notifications for a specific user
+   */
   @Get('user/:userId')
+  @ApiOperation({ summary: 'Get notifications for user' })
+  @ApiResponse({
+    status: 200,
+    description: 'User notifications list',
+  })
+  @ApiParam({ name: 'userId', type: String })
   @Audit(AuditAction.READ, AuditEntityType.NOTIFICATION, 'Obtener notificaciones de usuario')
   getNotificationsForUser(@Param('userId') userId: string) {
     return this.notificationsService.getNotificationsForUser(userId);
