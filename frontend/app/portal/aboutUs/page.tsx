@@ -67,7 +67,7 @@ export default async function AboutUsPage() {
 
       {/* Bio Section */}
       <div className="mb-12">
-        <div className="bg-card border border-border rounded-lg p-6 md:p-8 shadow-sm">
+        <div className="bg-card rounded-lg p-6 md:p-8 shadow-sm">
           <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6 text-center">Quiénes somos</h2>
           <div className="prose prose-lg max-w-none text-foreground">
             <p className="text-base md:text-lg leading-relaxed whitespace-pre-line">
