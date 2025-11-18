@@ -422,7 +422,7 @@ export default function PropertyDetailClient({
                     property.longitude
                   }!3d${
                     property.latitude
-                  }!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x${Math.random().toString(16).slice(2)}!2s${encodeURIComponent(
+                  }!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x${property.id.slice(0, 8)}!2s${encodeURIComponent(
                     property.address || `${property.city}, ${property.state}`
                   )}!5e0!3m2!1sen!2scl!4v1709292812260`}
                   width="100%"
