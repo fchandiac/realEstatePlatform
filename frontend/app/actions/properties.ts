@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { env } from '@/lib/env';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export type GridSort = 'asc' | 'desc';
 
@@ -170,6 +171,11 @@ export async function listPropertyTypes(): Promise<{
         'Content-Type': 'application/json',
       },
     });
+
+    // Si es 401, redirigir a inicio
+    if (response.status === 401) {
+      redirect('/');
+    }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
