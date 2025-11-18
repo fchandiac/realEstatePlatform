@@ -13,6 +13,16 @@ import {
   UploadedFile,
   BadRequestException,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiParam,
+  ApiQuery,
+  ApiConsumes,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SlideService } from './slide.service';
 import { CreateSlideDto } from './dto/create-slide.dto';
@@ -24,6 +34,7 @@ import { Audit } from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 
 @Controller('slide')
+@ApiTags('Slides')
 export class SlideController {
   constructor(private readonly slideService: SlideService) {}
 
@@ -55,14 +66,47 @@ export class SlideController {
     }
   }
 
+  /**
+   * Create a new slide without multimedia
+   */
   @Post()
+  @ApiOperation({ summary: 'Create new slide' })
+  @ApiResponse({
+    status: 201,
+    description: 'Slide created successfully',
+  })
+  @ApiBody({ type: CreateSlideDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Slide created')
   create(@Body() createSlideDto: CreateSlideDto) {
     return this.slideService.create(createSlideDto);
   }
 
+  /**
+   * Create a new slide with multimedia file
+   * Supports images (JPG, PNG, GIF max 10MB) and videos (MP4, WebM, AVI, MOV max 60MB)
+   */
   @Post('create-with-multimedia')
+  @ApiOperation({ summary: 'Create slide with multimedia file' })
+  @ApiResponse({
+    status: 201,
+    description: 'Slide with multimedia created successfully',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        description: { type: 'string' },
+        duration: { type: 'number', example: 3 },
+        isActive: { type: 'boolean' },
+        multimedia: { type: 'string', format: 'binary' },
+      },
+    },
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('multimedia'))
   @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Slide created with multimedia')
@@ -85,34 +129,107 @@ export class SlideController {
     return this.slideService.createWithMultimedia(processedDto, file);
   }
 
+  /**
+   * Get all slides with optional search
+   */
   @Get()
+  @ApiOperation({ summary: 'Get all slides' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all slides',
+  })
+  @ApiQuery({ name: 'search', required: false })
   findAll(@Query('search') search?: string) {
     return this.slideService.findAll(search);
   }
 
+  /**
+   * Get active slides
+   */
   @Get('active')
+  @ApiOperation({ summary: 'Get active slides' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of active slides',
+  })
+  @ApiQuery({ name: 'search', required: false })
   findActive(@Query('search') search?: string) {
     return this.slideService.findActive(search);
   }
 
+  /**
+   * Get publicly available active slides
+   */
   @Get('public/active')
+  @ApiOperation({ summary: 'Get public active slides' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of public active slides',
+  })
   findPublicActive() {
     return this.slideService.findPublicActive();
   }
 
+  /**
+   * Get slide by ID
+   */
   @Get(':id')
+  @ApiOperation({ summary: 'Get slide by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Slide details',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Slide not found',
+  })
+  @ApiParam({ name: 'id', type: String })
   findOne(@Param('id') id: string) {
     return this.slideService.findOne(id);
   }
 
+  /**
+   * Update slide without multimedia
+   */
   @Patch(':id')
+  @ApiOperation({ summary: 'Update slide' })
+  @ApiResponse({
+    status: 200,
+    description: 'Slide updated successfully',
+  })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: UpdateSlideDto })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Slide updated')
   update(@Param('id') id: string, @Body() updateSlideDto: UpdateSlideDto) {
     return this.slideService.update(id, updateSlideDto);
   }
 
+  /**
+   * Update slide with multimedia file
+   */
   @Put(':id/with-multimedia')
+  @ApiOperation({ summary: 'Update slide with multimedia file' })
+  @ApiResponse({
+    status: 200,
+    description: 'Slide with multimedia updated successfully',
+  })
+  @ApiParam({ name: 'id', type: String })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string' },
+        description: { type: 'string' },
+        duration: { type: 'number' },
+        isActive: { type: 'boolean' },
+        multimedia: { type: 'string', format: 'binary' },
+      },
+    },
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('multimedia'))
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Slide updated with multimedia')
@@ -138,21 +255,59 @@ export class SlideController {
     return this.slideService.updateWithMultimedia(id, processedDto, file);
   }
 
+  /**
+   * Toggle slide active/inactive status
+   */
   @Patch(':id/toggle-status')
+  @ApiOperation({ summary: 'Toggle slide active status' })
+  @ApiResponse({
+    status: 200,
+    description: 'Slide status toggled',
+  })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Slide status toggled')
   toggleStatus(@Param('id') id: string) {
     return this.slideService.toggleStatus(id);
   }
 
+  /**
+   * Reorder slides
+   */
   @Post('reorder')
+  @ApiOperation({ summary: 'Reorder slides' })
+  @ApiResponse({
+    status: 200,
+    description: 'Slides reordered successfully',
+  })
+  @ApiBody({
+    schema: {
+      example: { slideIds: ['id1', 'id2', 'id3'] },
+    },
+  })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Slides reordered')
   reorder(@Body('slideIds') slideIds: string[]) {
     return this.slideService.reorder(slideIds);
   }
 
+  /**
+   * Delete slide
+   */
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete slide' })
+  @ApiResponse({
+    status: 200,
+    description: 'Slide deleted successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Slide not found',
+  })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Audit(AuditAction.DELETE, AuditEntityType.PROPERTY, 'Slide deleted')
   remove(@Param('id') id: string) {
