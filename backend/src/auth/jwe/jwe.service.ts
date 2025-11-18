@@ -45,7 +45,7 @@ export class JweService implements OnModuleInit {
     }
   }
 
-  async encrypt(payload: any, expiresIn: string = '15m'): Promise<string> {
+  async encrypt(payload: any, expiresIn: string = '12h'): Promise<string> {
     const now = Math.floor(Date.now() / 1000);
 
     return new this.jose.EncryptJWT(payload)

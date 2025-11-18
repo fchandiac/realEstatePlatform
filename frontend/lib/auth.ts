@@ -75,7 +75,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  session: { strategy: 'jwt', maxAge: 60 * 60 },
+  session: { strategy: 'jwt', maxAge: 12 * 60 * 60 },
   pages: {
     signIn: '/portal',
   },

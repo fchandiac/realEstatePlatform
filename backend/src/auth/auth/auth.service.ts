@@ -48,12 +48,12 @@ export class AuthService {
           payload,
           process.env.JWT_SECRET || 'test-secret',
           {
-            expiresIn: '1h',
+            expiresIn: '12h',
           },
         );
       } else {
         // Generate JWE token
-        access_token = await this.jweService.encrypt(payload, '15m');
+        access_token = await this.jweService.encrypt(payload, '12h');
       }
       console.log('Token generated:', !!access_token);
 

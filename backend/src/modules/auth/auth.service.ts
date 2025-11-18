@@ -20,7 +20,7 @@ export class AuthService {
       role: user.role,
       name: user.name,
     };
-    const access_token = await this.jweService.encrypt(payload, '1h');
+    const access_token = await this.jweService.encrypt(payload, '12h');
     return {
       user: {
         id: user.id,
