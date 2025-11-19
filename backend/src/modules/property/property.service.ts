@@ -1813,6 +1813,9 @@ export class PropertyService {
       for (const property of data) {
         if (property.mainImageUrl) {
           property.mainImageUrl = normalizeUrl(property.mainImageUrl);
+          console.log(`📸 [getPublishedPropertiesFiltered] Property ${property.id} mainImageUrl:`, property.mainImageUrl);
+        } else {
+          console.log(`⚠️ [getPublishedPropertiesFiltered] Property ${property.id} has NO mainImageUrl`);
         }
       }
 
