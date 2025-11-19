@@ -29,7 +29,7 @@ export class SlideService {
 
   async createWithMultimedia(
     createSlideDto: CreateSlideWithMultimediaDto,
-    file: Express.Multer.File,
+    file?: Express.Multer.File,
   ): Promise<Slide> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -40,20 +40,25 @@ export class SlideService {
       const maxOrder = await this.getMaxOrder();
       const nextOrder = maxOrder + 1;
 
-      // Determinar tipo de multimedia
-      const isImage = file.mimetype.startsWith('image/');
-      const multimediaType = MultimediaType.SLIDE;
-      const multimediaFormat = isImage ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
+      let multimediaUrl: string | undefined;
 
-      // Subir multimedia siguiendo patrón de Identity
-      const slidePath = await this.multimediaService.uploadFileToPath(file, 'web/slides');
-      const multimediaUrl = this.staticFilesService.getPublicUrl(slidePath);
+      // Solo procesar multimedia si se proporcionó archivo
+      if (file) {
+        // Determinar tipo de multimedia
+        const isImage = file.mimetype.startsWith('image/');
+        const multimediaType = MultimediaType.SLIDE;
+        const multimediaFormat = isImage ? MultimediaFormat.IMG : MultimediaFormat.VIDEO;
 
-      // Crear slide con multimedia URL - asegurar tipos correctos
+        // Subir multimedia siguiendo patrón de Identity
+        const slidePath = await this.multimediaService.uploadFileToPath(file, 'web/slides');
+        multimediaUrl = this.staticFilesService.getPublicUrl(slidePath);
+      }
+
+      // Crear slide con multimedia URL opcional - asegurar tipos correctos
       const slideData: Partial<Slide> = {
         title: createSlideDto.title,
         description: createSlideDto.description || '',
-        multimediaUrl: multimediaUrl,
+        multimediaUrl: multimediaUrl || undefined,
         linkUrl: createSlideDto.linkUrl || undefined,
         duration: createSlideDto.duration || 3,
         startDate: createSlideDto.startDate ? new Date(createSlideDto.startDate) : undefined,

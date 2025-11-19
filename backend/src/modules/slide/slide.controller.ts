@@ -88,10 +88,10 @@ export class SlideController {
    * Supports images (JPG, PNG, GIF max 10MB) and videos (MP4, WebM, AVI, MOV max 60MB)
    */
   @Post('create-with-multimedia')
-  @ApiOperation({ summary: 'Create slide with multimedia file' })
+  @ApiOperation({ summary: 'Create slide with optional multimedia file' })
   @ApiResponse({
     status: 201,
-    description: 'Slide with multimedia created successfully',
+    description: 'Slide with optional multimedia created successfully',
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -108,14 +108,32 @@ export class SlideController {
   })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('multimedia'))
-  @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Slide created with multimedia')
+  @UseInterceptors(FileInterceptor('multimedia', {
+    fileFilter: (req, file, cb) => {
+      // Aceptar archivos válidos o ningún archivo
+      if (!file) {
+        cb(null, true);
+        return;
+      }
+      
+      const isValidType = file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/');
+      if (!isValidType) {
+        cb(new BadRequestException('Solo se permiten imágenes y videos'), false);
+        return;
+      }
+      
+      cb(null, true);
+    },
+  }))
+  @Audit(AuditAction.CREATE, AuditEntityType.PROPERTY, 'Slide created with optional multimedia')
   createWithMultimedia(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File | undefined,
     @Body() createSlideDto: CreateSlideWithMultimediaDto,
   ) {
-    // Validar tamaño de archivo según tipo (60MB para videos, 10MB para imágenes)
-    this.validateFileSize(file);
+    // Validar tamaño de archivo solo si se proporcionó
+    if (file) {
+      this.validateFileSize(file);
+    }
 
     // Asegurar que los tipos sean correctos desde FormData
     const processedDto = {
@@ -210,10 +228,10 @@ export class SlideController {
    * Update slide with multimedia file
    */
   @Put(':id/with-multimedia')
-  @ApiOperation({ summary: 'Update slide with multimedia file' })
+  @ApiOperation({ summary: 'Update slide with optional multimedia file' })
   @ApiResponse({
     status: 200,
-    description: 'Slide with multimedia updated successfully',
+    description: 'Slide with optional multimedia updated successfully',
   })
   @ApiParam({ name: 'id', type: String })
   @ApiConsumes('multipart/form-data')
@@ -231,15 +249,33 @@ export class SlideController {
   })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('multimedia'))
-  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Slide updated with multimedia')
+  @UseInterceptors(FileInterceptor('multimedia', {
+    fileFilter: (req, file, cb) => {
+      // Aceptar archivos válidos o ningún archivo
+      if (!file) {
+        cb(null, true);
+        return;
+      }
+      
+      const isValidType = file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/');
+      if (!isValidType) {
+        cb(new BadRequestException('Solo se permiten imágenes y videos'), false);
+        return;
+      }
+      
+      cb(null, true);
+    },
+  }))
+  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Slide updated with optional multimedia')
   updateWithMultimedia(
     @Param('id') id: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File | undefined,
     @Body() updateSlideDto: UpdateSlideWithMultimediaDto,
   ) {
-    // Validar tamaño de archivo según tipo (60MB para videos, 10MB para imágenes)
-    this.validateFileSize(file);
+    // Validar tamaño de archivo solo si se proporcionó
+    if (file) {
+      this.validateFileSize(file);
+    }
 
     // Asegurar que los tipos sean correctos desde FormData
     const processedDto = {

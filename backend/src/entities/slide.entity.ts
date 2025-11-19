@@ -19,7 +19,7 @@ export class Slide {
   description: string;
 
   @Column({ type: 'varchar', length: 500, nullable: true })
-  multimediaUrl: string;
+  multimediaUrl?: string;
 
   @Column({ type: 'varchar', length: 500, nullable: true })
   linkUrl: string;

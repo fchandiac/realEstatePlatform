@@ -341,9 +341,8 @@ export const SlideList: React.FC<SlideListProps> = ({
       <Dialog 
         open={isDeleteDialogOpen} 
         onClose={handleDeleteCancel}
-        size="sm"
+        size="xs"
         title=""
-        showCloseButton={true}
       >
         {slideToDelete && (
           <DeleteSlideForm

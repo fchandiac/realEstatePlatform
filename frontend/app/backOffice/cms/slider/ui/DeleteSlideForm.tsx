@@ -41,13 +41,15 @@ export default function DeleteSlideForm({
   return (
     <DeleteBaseForm
       title="Eliminar Slide"
-      subtitle={`Slide: "${slide.title}"`}
       message={`¿Estás seguro de que deseas eliminar el slide "${slide.title}"? Esta acción no se puede deshacer.`}
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
       submitLabel="Eliminar Slide"
       errors={errors}
       data-test-id="delete-slide-form"
+      onCancel={onCancel}
+      cancelButton={true}
+
     />
   )
 }
