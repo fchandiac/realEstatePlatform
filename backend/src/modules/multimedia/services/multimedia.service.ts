@@ -92,23 +92,12 @@ export class MultimediaService {
         // If diskStorage was used, multer already saved the file to disk.
         // We'll attempt to use the existing saved file. Multer's diskStorage typically
         // places files under the configured destination with `file.filename`.
-        // We'll derive a relative path under 'properties' using the filename if present.
+        // We'll derive a relative path using the filename and the upload type.
         const existingFilename = (file as any).filename || path.basename((file as any).path || '');
         if (existingFilename) {
-          // Prefer to use the existing location under ./public/properties
-          // Build relative path as 'properties/<filename>' so getPublicUrl returns the correct URL
-          const existingRelative = path.join('properties', existingFilename);
-          // If the file isn't in the expected final folder, we could move it here.
-          // For now assume controller saved to ./public/properties and leave it as is.
-          // Override relativePath so URL points to existing file
-          // Note: relativePath variable is still the intended destination when buffer is used
-          // but when buffer is absent we'll use existingRelative for the public URL.
-          // Set relativePath to existingRelative so the saved metadata matches actual file.
-          // (no file write performed)
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const _usePath = existingRelative;
-          // We will set multimedia.url using existingRelative below
-          relativePath = existingRelative;
+          // Use the correct relative path based on media type (properties/img or properties/video)
+          relativePath = path.join(relativeDir, existingFilename);
+          // (no file write performed, multer already saved it)
         }
       }
 

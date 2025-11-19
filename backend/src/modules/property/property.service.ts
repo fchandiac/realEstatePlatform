@@ -1792,6 +1792,30 @@ export class PropertyService {
         }
       }
 
+      // Helper: Normalizar URLs antiguas (retrocompatibilidad)
+      const normalizeUrl = (url: string): string => {
+        if (!url) return url;
+        
+        // Si ya tiene /img/ o /video/ no hacer nada
+        if (url.includes('/properties/img/') || url.includes('/properties/video/')) {
+          return url;
+        }
+        
+        // Si está en /public/properties/ y no tiene subcarpeta, agregar /img/ por defecto
+        if (url.includes('/public/properties/') && !url.includes('/properties/img/') && !url.includes('/properties/video/')) {
+          return url.replace('/public/properties/', '/public/properties/img/');
+        }
+        
+        return url;
+      };
+
+      // Normalizar mainImageUrl para todas las propiedades
+      for (const property of data) {
+        if (property.mainImageUrl) {
+          property.mainImageUrl = normalizeUrl(property.mainImageUrl);
+        }
+      }
+
       const totalPages = Math.ceil(total / limit);
 
       return {
@@ -2088,10 +2112,28 @@ export class PropertyService {
       throw new NotFoundException(`Property with ID ${propertyId} not found`);
     }
 
+    // Helper: Normalizar URLs antiguas a nuevas rutas (retrocompatibilidad)
+    const normalizeUrl = (url: string, type: 'IMG' | 'VIDEO'): string => {
+      if (!url) return url;
+      
+      // Si ya tiene /img/ o /video/ no hacer nada
+      if (url.includes('/properties/img/') || url.includes('/properties/video/')) {
+        return url;
+      }
+      
+      // Si está en /public/properties/ y no tiene subcarpeta, agregar
+      if (url.includes('/public/properties/') && !url.includes('/properties/img/') && !url.includes('/properties/video/')) {
+        const subfolder = type === 'IMG' ? 'img' : 'video';
+        return url.replace('/public/properties/', `/public/properties/${subfolder}/`);
+      }
+      
+      return url;
+    };
+
     // Retornar multimedias con mainImageUrl incluido en cada item
     return (property.multimedia || []).map((m: any) => ({
       id: m.id,
-      url: m.url,
+      url: normalizeUrl(m.url, m.format),
       type: m.format === 'IMG' ? 'image' : 'video',
       size: m.size,
       uploadedAt: m.uploadedAt,
