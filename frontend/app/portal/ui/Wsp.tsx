@@ -44,7 +44,7 @@ const Wsp: React.FC = () => {
 
   return (
     <div
-      className=" z-10 fixed bottom-6 right-6 w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 shadow-lg flex items-center justify-center text-white text-3xl transition-colors"
+      className="z-50 fixed bottom-6 right-6 w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 shadow-lg flex items-center justify-center text-white text-3xl transition-colors cursor-pointer"
       aria-label="Contactar por WhatsApp"
       data-test-id="wsp-button"
       onClick={() => window.open(`https://wa.me/${whatsappPhone}`, '_blank')}
