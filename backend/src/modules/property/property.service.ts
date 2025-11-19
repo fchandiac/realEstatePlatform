@@ -610,16 +610,37 @@ export class PropertyService {
     updatePropertyDto: UpdatePropertyDto,
     updatedBy?: string,
   ): Promise<Property> {
+    console.log('🔧 [update] CALLED');
+    console.log('🔧 [update] Property ID:', id);
+    console.log('🔧 [update] Update DTO (raw):', JSON.stringify(updatePropertyDto, null, 2));
+    
+    // Filter out empty strings and null values, keep only actual updates
+    const cleanDto = Object.fromEntries(
+      Object.entries(updatePropertyDto).filter(([, value]) => {
+        return value !== '' && value !== null && value !== undefined;
+      })
+    ) as UpdatePropertyDto;
+    
+    console.log('🔧 [update] Update DTO (cleaned):', JSON.stringify(cleanDto, null, 2));
+    
     const property = await this.findOne(id, false);
     const oldAssignedAgentId = property.assignedAgentId;
 
+    console.log('🔧 [update] Current property state:', {
+      id: property.id,
+      title: property.title,
+      price: property.price,
+      status: property.status,
+      propertyTypeId: property.propertyTypeId,
+    });
+
     // Validate update data
-    this.validatePropertyUpdate(updatePropertyDto);
+    this.validatePropertyUpdate(cleanDto);
 
     // Track changes for history with improved comparison logic
     const changes: ChangeHistoryEntry[] = [];
 
-    for (const [key, newValue] of Object.entries(updatePropertyDto)) {
+    for (const [key, newValue] of Object.entries(cleanDto)) {
       // Skip undefined values (fields not being updated)
       if (newValue === undefined) continue;
 
@@ -657,6 +678,12 @@ export class PropertyService {
       }
 
       if (hasChanged) {
+        console.log(`🔧 [update] Field changed: ${key}`, {
+          oldValue: currentValue,
+          newValue: newValue,
+          oldType: typeof currentValue,
+          newType: typeof newValue,
+        });
         changes.push({
           timestamp: new Date(),
           changedBy: updatedBy || 'system',
@@ -664,16 +691,23 @@ export class PropertyService {
           previousValue: currentValue,
           newValue: newValue,
         });
+      } else {
+        console.log(`🔧 [update] Field NOT changed: ${key}`, {
+          currentValue,
+          newValue,
+        });
       }
     }
 
+    console.log('🔧 [update] Total changes detected:', changes.length);
+
     // Update property
-    Object.assign(property, updatePropertyDto);
-    if ('description' in updatePropertyDto) {
-      property.description = updatePropertyDto.description ?? undefined;
+    Object.assign(property, cleanDto);
+    if ('description' in cleanDto) {
+      property.description = cleanDto.description ?? undefined;
     }
-    if ('address' in updatePropertyDto) {
-      property.address = updatePropertyDto.address ?? undefined;
+    if ('address' in cleanDto) {
+      property.address = cleanDto.address ?? undefined;
     }
     property.lastModifiedAt = new Date();
 
@@ -682,17 +716,46 @@ export class PropertyService {
       property.changeHistory = [...(property.changeHistory || []), ...changes];
     }
 
+    console.log('🔧 [update] About to save property');
     const savedProperty = await this.propertyRepository.save(property);
+    console.log('🔧 [update] Property saved successfully:', {
+      id: savedProperty.id,
+      title: savedProperty.title,
+      price: savedProperty.price,
+      propertyTypeId: savedProperty.propertyTypeId,
+    });
+
+    // ALWAYS reload relations after update to ensure fresh data is returned
+    console.log('🔧 [update] Reloading all relations for consistent data');
+    const reloadedProperty = await this.propertyRepository
+      .createQueryBuilder('p')
+      .leftJoinAndSelect('p.propertyType', 'pt')
+      .leftJoinAndSelect('p.creatorUser', 'cu')
+      .leftJoinAndSelect('p.assignedAgent', 'aa')
+      .where('p.id = :id', { id: savedProperty.id })
+      .andWhere('p.deletedAt IS NULL')
+      .getOne();
+
+    if (!reloadedProperty) {
+      console.error('🔧 [update] ERROR: Could not reload property after update');
+      return savedProperty;
+    }
+
+    console.log('🔧 [update] Property reloaded with relations:', {
+      id: reloadedProperty.id,
+      propertyTypeId: reloadedProperty.propertyTypeId,
+      propertyTypeName: reloadedProperty.propertyType?.name,
+    });
 
     // Send notification for agent assignment
-    if (updatePropertyDto.assignedAgentId && oldAssignedAgentId !== updatePropertyDto.assignedAgentId) {
+    if (cleanDto.assignedAgentId && oldAssignedAgentId !== cleanDto.assignedAgentId) {
       try {
         // Load the assigned agent
         const agent = await this.propertyRepository.manager.findOne(User, {
-          where: { id: updatePropertyDto.assignedAgentId },
+          where: { id: cleanDto.assignedAgentId },
         });
         if (agent) {
-          await this.notificationsService.notifyAgentAssigned(savedProperty, agent);
+          await this.notificationsService.notifyAgentAssigned(reloadedProperty, agent);
         }
       } catch (error) {
         // Log error but don't fail the operation
@@ -700,7 +763,7 @@ export class PropertyService {
       }
     }
 
-    return savedProperty;
+    return reloadedProperty;
   }
 
   async updateStatus(
@@ -1934,6 +1997,8 @@ export class PropertyService {
    * Incluye: título, descripción, precio, tipo, estado, operación, usuario creador
    */
   async getBasicPropertyInfo(propertyId: string): Promise<any> {
+    console.log('🔍 [getBasicPropertyInfo] Getting basic info for property:', propertyId);
+    
     const property = await this.propertyRepository
       .createQueryBuilder('p')
       .leftJoinAndSelect('p.propertyType', 'pt')
@@ -1950,10 +2015,19 @@ export class PropertyService {
         'p.currencyPrice',
         'p.publicationDate',
         'p.assignedAgentId',
+        'p.propertyTypeId',
         'p.createdAt',
         'p.updatedAt',
         'pt.id',
         'pt.name',
+        'pt.description',
+        'pt.hasBedrooms',
+        'pt.hasBathrooms',
+        'pt.hasBuiltSquareMeters',
+        'pt.hasLandSquareMeters',
+        'pt.hasParkingSpaces',
+        'pt.hasFloors',
+        'pt.hasConstructionYear',
         'cu.id',
         'cu.username',
         'cu.email',
@@ -1964,6 +2038,13 @@ export class PropertyService {
     if (!property) {
       throw new NotFoundException(`Property with ID ${propertyId} not found`);
     }
+
+    console.log('🔍 [getBasicPropertyInfo] Property found:', {
+      id: property.id,
+      title: property.title,
+      propertyTypeId: property.propertyTypeId,
+      propertyTypeName: property.propertyType?.name,
+    });
 
     return property;
   }

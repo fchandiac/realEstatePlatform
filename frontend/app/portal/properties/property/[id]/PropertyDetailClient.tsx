@@ -97,8 +97,8 @@ export default function PropertyDetailClient({
   // Normalize image URLs
   const mainImageUrl = mainImage ? normalizeImageUrl(mainImage.url) : undefined;
   
-  // Normalize all multimedia URLs
-  const normalizedMultimedia = property.multimedia?.map((m) => ({
+  // Normalize all multimedia URLs except the first one (which is mainImageUrl)
+  const normalizedMultimedia = property.multimedia?.slice(1).map((m) => ({
     ...m,
     url: normalizeImageUrl(m.url) || m.url,
   })) || [];

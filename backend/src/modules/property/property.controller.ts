@@ -355,7 +355,13 @@ export class PropertyController {
   ): Promise<Property> {
     const user = request?.user;
     const userId = user?.id || user?.sub || (typeof user === 'string' ? user : undefined);
-    return await this.propertyService.update(id, dto as UpdatePropertyDto, userId);
+    console.log('🔧 [updateBasic] CALLED');
+    console.log('🔧 [updateBasic] Property ID:', id);
+    console.log('🔧 [updateBasic] DTO received:', JSON.stringify(dto, null, 2));
+    console.log('🔧 [updateBasic] User ID:', userId);
+    const result = await this.propertyService.update(id, dto as UpdatePropertyDto, userId);
+    console.log('🔧 [updateBasic] Property updated, result:', { id: result.id, title: result.title });
+    return result;
   }
 
   @Delete(':id')
