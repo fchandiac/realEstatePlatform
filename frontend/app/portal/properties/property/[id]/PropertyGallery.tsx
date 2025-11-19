@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { env } from '@/lib/env';
 import FontAwesome from '@/components/FontAwesome/FontAwesome';
 
 interface MediaItem {
@@ -8,6 +9,22 @@ interface MediaItem {
   url: string;
   type?: string;
   format?: string;
+}
+
+// Helper to normalize URLs
+function normalizeImageUrl(url?: string | null): string | undefined {
+  if (!url) return undefined;
+  const cleaned = url.replace('/../', '/');
+  try {
+    new URL(cleaned);
+    return cleaned;
+  } catch {
+    // Not an absolute URL
+  }
+  if (cleaned.startsWith('/')) {
+    return `${env.backendApiUrl}${cleaned}`;
+  }
+  return cleaned;
 }
 
 // Gallery Modal Component
@@ -152,14 +169,19 @@ export default function PropertyGallery({
   const mediaList = useMemo(() => {
     const list: MediaItem[] = [];
 
-    if (mainImageUrl) {
-      list.push({ url: mainImageUrl, type: 'MAIN_IMAGE' });
+    // Normalizar y agregar mainImageUrl primero
+    const normalizedMainUrl = mainImageUrl ? normalizeImageUrl(mainImageUrl) : undefined;
+    if (normalizedMainUrl) {
+      list.push({ url: normalizedMainUrl, type: 'MAIN_IMAGE' });
     }
 
+    // Normalizar y agregar resto de multimedia (sin duplicar la principal)
     if (multimedia && multimedia.length > 0) {
       multimedia.forEach((item) => {
-        if (item.url !== mainImageUrl) {
-          list.push(item);
+        const normalizedUrl = normalizeImageUrl(item.url);
+        // Comparar URLs normalizadas para evitar duplicados
+        if (normalizedUrl && normalizedUrl.toLowerCase() !== normalizedMainUrl?.toLowerCase()) {
+          list.push({ ...item, url: normalizedUrl });
         }
       });
     }
@@ -167,13 +189,16 @@ export default function PropertyGallery({
     return list;
   }, [mainImageUrl, multimedia]);
 
+  // Golden ratio: 1.618
   const goldenRatio = 1.618;
-  const mainWidthPercent = (goldenRatio / (1 + goldenRatio)) * 100;
-  const thumbWidthPercent = (1 / (1 + goldenRatio)) * 100;
+  const mainWidthPercent = (goldenRatio / (1 + goldenRatio)) * 100; // ~61.8%
+  const thumbWidthPercent = (1 / (1 + goldenRatio)) * 100; // ~38.2%
 
-  const maxVisibleImages = 4; // 1 principal + 3 miniaturas
+  // Máximo 4 imágenes: 1 principal + 3 miniaturas
+  const maxVisibleImages = 4;
   const displayedMedia = mediaList.slice(0, maxVisibleImages);
   const hasMoreImages = mediaList.length > maxVisibleImages;
+  const numThumbnails = displayedMedia.length - 1;
 
   const handleMainImageClick = () => {
     setSelectedIndex(0);
@@ -196,18 +221,54 @@ export default function PropertyGallery({
     );
   }
 
-  // Usar ancho completo si hay solo una imagen, sino usar proporción dorada
+  // Si hay solo una imagen, ocupar 100% del ancho
   const isSingleImage = mediaList.length === 1;
-  const mainWidth = isSingleImage ? '100%' : `${mainWidthPercent}%`;
-  const thumbWidth = isSingleImage ? '0%' : `${thumbWidthPercent}%`;
 
+  if (isSingleImage) {
+    return (
+      <>
+        <div className="w-full h-96 rounded-lg overflow-hidden shadow-md cursor-pointer group" onClick={handleMainImageClick}>
+          {displayedMedia[0]?.url ? (
+            <img
+              src={displayedMedia[0].url}
+              alt={propertyTitle}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center border border-border">
+              <FontAwesome
+                icon="image-not-supported"
+                className="text-muted-foreground text-3xl"
+              />
+            </div>
+          )}
+        </div>
+
+        {isModalOpen && (
+          <GalleryModal
+            mediaList={mediaList}
+            initialIndex={selectedIndex}
+            propertyTitle={propertyTitle}
+            onClose={() => setIsModalOpen(false)}
+          />
+        )}
+      </>
+    );
+  }
+
+  // Múltiples imágenes: usar CSS Grid con proporción dorada
   return (
     <>
-      <div className={`flex flex-col ${isSingleImage ? '' : 'md:flex-row'} gap-4 h-96 w-full`}>
-        {/* Main Image - Left on desktop */}
+      <div
+        className="w-full h-96 gap-4"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `${mainWidthPercent}% 1fr`,
+        }}
+      >
+        {/* Main Image */}
         <div
-          className="overflow-hidden rounded-lg shadow-md cursor-pointer group flex-shrink-0"
-          style={{ width: mainWidth, height: '100%' }}
+          className="overflow-hidden rounded-lg shadow-md cursor-pointer group"
           onClick={handleMainImageClick}
         >
           {displayedMedia[0]?.url ? (
@@ -226,27 +287,18 @@ export default function PropertyGallery({
           )}
         </div>
 
-        {/* Thumbnail Strip - Right on desktop, bottom on mobile */}
-        {!isSingleImage && (
+        {/* Thumbnail Strip */}
         <div
-          className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-y-auto md:overflow-x-visible flex-1"
-          style={{ width: isSingleImage ? '0%' : 'auto' }}
+          style={{
+            display: 'grid',
+            gridTemplateRows: `repeat(${hasMoreImages ? 3 : numThumbnails}, 1fr)`,
+            gap: '16px',
+          }}
         >
-          {displayedMedia.slice(1).map((item, idx) => {
-            // 3 miniaturas para distribuir en el espacio disponible (38.2% ancho, 100% alto)
-            const numThumbnails = displayedMedia.length - 1; // Cantidad de miniaturas reales
-            const totalThumbnails = hasMoreImages ? 3 : numThumbnails; // Si hay más, mostrar 3 espacios; si no, los que hay
-            const gapSize = 16; // gap-4 = 16px
-            const thumbHeight = `calc((100% - ${(totalThumbnails - 1) * gapSize}px) / ${totalThumbnails})`;
-            
-            return (
+          {displayedMedia.slice(1).map((item, idx) => (
             <div
               key={`${item.url}-${idx}`}
-              className="flex-shrink-0 rounded-lg shadow-md cursor-pointer group overflow-hidden"
-              style={{
-                width: '100%',
-                height: thumbHeight,
-              }}
+              className="overflow-hidden rounded-lg shadow-md cursor-pointer group"
               onClick={() => handleThumbnailClick(idx + 1)}
             >
               {item.url ? (
@@ -264,36 +316,24 @@ export default function PropertyGallery({
                 </div>
               )}
             </div>
-            );
-          })}
+          ))}
 
-          {hasMoreImages && (() => {
-            const totalThumbnails = 3;
-            const numThumbnails = displayedMedia.length - 1;
-            const gapSize = 16;
-            const thumbHeight = `calc((100% - ${(totalThumbnails - 1) * gapSize}px) / ${totalThumbnails})`;
-            
-            return (
+          {/* "Ver más" button if there are more images */}
+          {hasMoreImages && (
             <button
               onClick={() => {
                 setSelectedIndex(0);
                 setIsModalOpen(true);
               }}
-              className="flex-shrink-0 rounded-lg shadow-md bg-black/50 hover:bg-black/70 transition-colors flex items-center justify-center text-white font-semibold text-sm cursor-pointer"
-              style={{
-                width: '100%',
-                height: thumbHeight,
-              }}
+              className="rounded-lg shadow-md bg-black/50 hover:bg-black/70 transition-colors flex items-center justify-center text-white font-semibold text-sm cursor-pointer"
             >
               <div className="text-center">
                 <div className="text-2xl font-bold">+{mediaList.length - maxVisibleImages}</div>
                 <div className="text-xs">Ver más</div>
               </div>
             </button>
-            );
-          })()}
+          )}
         </div>
-        )}
       </div>
 
       {isModalOpen && (
