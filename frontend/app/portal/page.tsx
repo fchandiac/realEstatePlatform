@@ -1,4 +1,5 @@
-import PropertyCard from './ui/PropertyCard';
+import FeaturedPropertiesList from './ui/FeaturedPropertiesList';
+import { getPublishedFeaturedProperties } from '@/app/actions/properties';
 import { getPublishedPropertiesFiltered } from '@/app/actions/portalProperties';
 import Slider from './ui/Slider';
 import PortalClient from './PortalClient';
@@ -11,6 +12,7 @@ interface PortalPageProps {
     city?: string;
     currency?: string;
     page?: string;
+    featured_page?: string;
   }>;
 }
 
@@ -23,9 +25,17 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
   const city = params.city || '';
   const currency = params.currency || '';
   const page = params.page || '';
+  const featuredPage = params.featured_page || '1';
 
-  
-  // Siempre llamar a getPublishedPropertiesFiltered
+  // Fetch featured properties with pagination
+  const featuredResult = await getPublishedFeaturedProperties(
+    parseInt(featuredPage) || 1
+  );
+
+  const featuredProperties = featuredResult?.data ?? [];
+  const featuredPagination = featuredResult?.pagination;
+
+  // Fetch regular properties (filtered)
   const result = await getPublishedPropertiesFiltered({
     currency: currency,
     state: state,
@@ -36,15 +46,14 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
   });
 
   const properties = result?.data ?? [];
-  const pagination = result?.pagination;  // ← Extraer paginación completa
-  const error = !result ? 'Error loading properties' : null;
+  const pagination = result?.pagination;
 
   return (
     <>
       {/* Hero Slider */}
       <Slider />
-      
-      {/* Propiedades Destacadas */}
+
+      {/* Featured Properties Section */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-extrabold text-gray-900">
@@ -54,9 +63,16 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
             Explora nuestras propiedades más destacadas seleccionadas especialmente para ti.
           </p>
         </div>
+
+        {/* Featured Properties List */}
+        <FeaturedPropertiesList
+          properties={featuredProperties}
+          pagination={featuredPagination}
+          isLoading={false}
+        />
       </div>
-      
-      {/* Portal Client - Lista de Propiedades */}
+
+      {/* Regular Portal Properties Section */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
         <PortalClient initialProperties={properties} initialPagination={pagination} />
       </div>

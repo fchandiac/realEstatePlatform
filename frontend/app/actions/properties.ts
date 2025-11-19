@@ -2001,6 +2001,92 @@ export async function revalidatePropertyRoute(path: string) {
 }
 
 /**
+ * Public: list published properties that are featured with pagination (no token required)
+ */
+export async function getPublishedFeaturedProperties(page: number = 1): Promise<{
+  success: boolean;
+  data?: Array<{
+    id: string;
+    title: string;
+    description?: string;
+    price: number;
+    currency: 'CLP' | 'UF';
+    operationType: 'RENT' | 'SALE';
+    state?: string;
+    city?: string;
+    address?: string;
+    bedrooms?: number;
+    bathrooms?: number;
+    totalArea?: number;
+    mainImageUrl?: string;
+    isFeatured: boolean;
+  }>;
+  pagination?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+  error?: string;
+}> {
+  try {
+    const limit = 9;
+    const url = new URL(`${env.backendApiUrl}/properties/public/featured/paginated`);
+    url.searchParams.set('page', page.toString());
+    url.searchParams.set('limit', limit.toString());
+
+    const res = await fetch(url.toString(), {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+      cache: 'no-store',
+      next: { revalidate: 0 },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      return {
+        success: false,
+        error: errorData?.message || `Failed to fetch featured properties: ${res.status}`,
+      };
+    }
+
+    const payload = await res.json();
+    
+    // Handle both array and object responses
+    let data = Array.isArray(payload) ? payload : payload?.data ?? [];
+    let pagination = payload?.pagination;
+
+    // If pagination data is missing, construct it from response
+    if (!pagination && Array.isArray(payload)) {
+      pagination = {
+        total: data.length,
+        page: 1,
+        limit: 9,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPrevPage: false,
+      };
+    }
+
+    return {
+      success: true,
+      data: data,
+      pagination: pagination,
+    };
+  } catch (error) {
+    console.error('Error fetching published featured properties (public):', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
  * Upload property multimedia
  */
 
