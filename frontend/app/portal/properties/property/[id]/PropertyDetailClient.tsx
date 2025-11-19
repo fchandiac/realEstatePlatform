@@ -96,6 +96,12 @@ export default function PropertyDetailClient({
 
   // Normalize image URLs
   const mainImageUrl = mainImage ? normalizeImageUrl(mainImage.url) : undefined;
+  
+  // Normalize all multimedia URLs
+  const normalizedMultimedia = property.multimedia?.map((m) => ({
+    ...m,
+    url: normalizeImageUrl(m.url) || m.url,
+  })) || [];
 
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -264,7 +270,7 @@ export default function PropertyDetailClient({
             <div className="mb-6">
               <MultimediaGrid
                 mainImageUrl={mainImageUrl}
-                multimedia={property.multimedia}
+                multimedia={normalizedMultimedia}
                 propertyTitle={property.title}
               />
             </div>
