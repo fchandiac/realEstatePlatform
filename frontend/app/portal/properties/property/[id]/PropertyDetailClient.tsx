@@ -10,7 +10,7 @@ import FontAwesome from '@/components/FontAwesome/FontAwesome';
 import { env } from '@/lib/env';
 import { togglePropertyFavorite } from '@/app/actions/properties';
 import PropertyMapWrapper from './PropertyMapWrapper';
-import PropertyGallery from './PropertyGallery';
+import MultimediaGrid from './MultimediaGrid';
 
 interface PropertyDetailClientProps {
   property: Property;
@@ -262,7 +262,7 @@ export default function PropertyDetailClient({
           <div className="w-full lg:w-3/4 rounded-lg p-6">
             {/* Gallery Section */}
             <div className="mb-6">
-              <PropertyGallery
+              <MultimediaGrid
                 mainImageUrl={mainImageUrl}
                 multimedia={property.multimedia}
                 propertyTitle={property.title}
