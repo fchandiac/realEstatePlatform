@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import PropertyFilter from './ui/PropertyFilter';
 import ListProperties from './ui/ListProperties';
 import { PropertyData, getPublishedPropertiesFiltered } from '@/app/actions/portalProperties';
@@ -11,6 +12,7 @@ interface PortalClientProps {
 }
 
 export default function PortalClient({ initialProperties, initialPagination }: PortalClientProps) {
+  const searchParams = useSearchParams();
   const [properties, setProperties] = useState<PropertyData[]>(initialProperties);
   const [pagination, setPagination] = useState<any>(initialPagination);
   const [currentFilters, setCurrentFilters] = useState<{
@@ -27,6 +29,18 @@ export default function PortalClient({ initialProperties, initialPagination }: P
     currency: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  // Initialize filters from URL parameters
+  useEffect(() => {
+    const filtersFromUrl = {
+      operation: searchParams.get('operation') || '',
+      typeProperty: searchParams.get('typeProperty') || '',
+      state: searchParams.get('state') || '',
+      city: searchParams.get('city') || '',
+      currency: searchParams.get('currency') || '',
+    };
+    setCurrentFilters(filtersFromUrl);
+  }, [searchParams]);
 
   const loadProperties = useCallback(async (filters: typeof currentFilters, page: number = 1) => {
     setIsLoading(true);
@@ -76,7 +90,7 @@ export default function PortalClient({ initialProperties, initialPagination }: P
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        <PropertyFilter onFiltersChange={handleFiltersChange} isLoading={isLoading} />
+        <PropertyFilter initialFilters={currentFilters} onFiltersChange={handleFiltersChange} isLoading={isLoading} />
       </div>
 
       {properties && properties.length > 0 ? (

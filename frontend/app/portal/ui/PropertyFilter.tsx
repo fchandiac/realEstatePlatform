@@ -26,12 +26,29 @@ interface PropertyFilterProps {
 
 export default function PropertyFilter({ initialFilters = {}, onFiltersChange, isLoading = false }: PropertyFilterProps) {
   const currentParams = useSearchParams();
-  const [filters, setFilters] = useState(initialFilters);
+  const [filters, setFilters] = useState({
+    operation: initialFilters.operation || '',
+    typeProperty: initialFilters.typeProperty || '',
+    state: initialFilters.state || '',
+    city: initialFilters.city || '',
+    currency: initialFilters.currency || '',
+  });
   const [regions, setRegions] = useState<SelectOption[]>([]);
   const [communes, setCommunes] = useState<SelectOption[]>([]);
   const [isLoadingRegions, setIsLoadingRegions] = useState(false);
   const [isLoadingCommunes, setIsLoadingCommunes] = useState(false);
   const [originalRegions, setOriginalRegions] = useState<{id: string, name: string}[]>([]);
+
+  // Update filters when initialFilters changes
+  useEffect(() => {
+    setFilters({
+      operation: initialFilters.operation || '',
+      typeProperty: initialFilters.typeProperty || '',
+      state: initialFilters.state || '',
+      city: initialFilters.city || '',
+      currency: initialFilters.currency || '',
+    });
+  }, [initialFilters]);
 
   useEffect(() => {
     const fetchRegions = async () => {
@@ -40,7 +57,8 @@ export default function PropertyFilter({ initialFilters = {}, onFiltersChange, i
         const fetchedRegions = await getRegions();
         setOriginalRegions(fetchedRegions);
         // Store regions with their actual names as IDs for filtering
-        setRegions(fetchedRegions.map((r) => ({ id: r.name, label: r.name })));
+        const regionOptions = fetchedRegions.map((r) => ({ id: r.name, label: r.name }));
+        setRegions(regionOptions);
       } catch (error) {
         console.error('Error loading regions:', error);
       } finally {
