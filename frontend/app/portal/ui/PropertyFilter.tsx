@@ -39,7 +39,8 @@ export default function PropertyFilter({ initialFilters = {}, onFiltersChange, i
       try {
         const fetchedRegions = await getRegions();
         setOriginalRegions(fetchedRegions);
-        setRegions(fetchedRegions.map((r, index) => ({ id: index + 1, label: r.name })));
+        // Store regions with their actual names as IDs for filtering
+        setRegions(fetchedRegions.map((r) => ({ id: r.name, label: r.name })));
       } catch (error) {
         console.error('Error loading regions:', error);
       } finally {
@@ -54,12 +55,12 @@ export default function PropertyFilter({ initialFilters = {}, onFiltersChange, i
       if (filters.state && originalRegions.length > 0) {
         setIsLoadingCommunes(true);
         try {
-          const selectedRegionIndex = parseInt(filters.state) - 1;
-          const originalRegion = originalRegions[selectedRegionIndex];
+          // filters.state now contains the actual region name
+          const originalRegion = originalRegions.find(r => r.name === filters.state);
           
           if (originalRegion) {
             const fetchedCommunes = await getCommunesByRegion(originalRegion.id);
-            setCommunes(fetchedCommunes.map((c, index) => ({ id: index + 1, label: c.name })));
+            setCommunes(fetchedCommunes.map((c) => ({ id: c.name, label: c.name })));
           }
         } catch (error) {
           console.error('Error loading communes:', error);
