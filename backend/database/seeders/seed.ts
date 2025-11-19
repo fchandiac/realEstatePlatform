@@ -46,6 +46,63 @@ async function seedDatabase() {
     );
     console.log(`✓ Admin user created: ${adminUser.email}`);
     
+    // ===== STEP 1B: CREATE AGENT USERS =====
+    console.log('Creating agent users...');
+    const agents = await userRepository.save([
+      userRepository.create({
+        username: 'agent1',
+        email: 'agent1@re.cl',
+        password: await bcrypt.hash('1234', 10),
+        role: UserRole.AGENT,
+        status: UserStatus.ACTIVE,
+        permissions: [Permission.MANAGE_PROPERTIES, Permission.MANAGE_CONTRACTS, Permission.MANAGE_MULTIMEDIA],
+        personalInfo: {
+          firstName: 'Carlos',
+          lastName: 'Navarro',
+          phone: '+56 9 9876 5432',
+          avatarUrl: undefined
+        },
+        lastLogin: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }),
+      userRepository.create({
+        username: 'agent2',
+        email: 'agent2@re.cl',
+        password: await bcrypt.hash('1234', 10),
+        role: UserRole.AGENT,
+        status: UserStatus.ACTIVE,
+        permissions: [Permission.MANAGE_PROPERTIES, Permission.MANAGE_CONTRACTS, Permission.MANAGE_MULTIMEDIA],
+        personalInfo: {
+          firstName: 'Daniela',
+          lastName: 'Ortiz',
+          phone: '+56 9 8765 4321',
+          avatarUrl: undefined
+        },
+        lastLogin: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }),
+      userRepository.create({
+        username: 'agent3',
+        email: 'agent3@re.cl',
+        password: await bcrypt.hash('1234', 10),
+        role: UserRole.AGENT,
+        status: UserStatus.ACTIVE,
+        permissions: [Permission.MANAGE_PROPERTIES, Permission.MANAGE_CONTRACTS, Permission.MANAGE_MULTIMEDIA],
+        personalInfo: {
+          firstName: 'José',
+          lastName: 'López',
+          phone: '+56 9 7654 3210',
+          avatarUrl: undefined
+        },
+        lastLogin: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
+    ]);
+    console.log(`✓ Created ${agents.length} agent users`);
+    
     // ===== STEP 2: SEED PROPERTY TYPES =====
     console.log('Seeding property types...');
     const propertyTypeRepository = AppDataSource.getRepository(PropertyType);
@@ -742,6 +799,7 @@ async function seedDatabase() {
     console.log('\n✅ Seeding completed successfully!');
     console.log(`\nResumen:`);
     console.log(`  • 1 admin user (${adminUser.email})`);
+    console.log(`  • 3 agent users (agent1@re.cl, agent2@re.cl, agent3@re.cl)`);
     console.log(`  • 20 published properties (12 featured)`);
     console.log(`  • 3 slides in Spanish`);
     console.log(`  • ${articles.length} blog articles by category`);
