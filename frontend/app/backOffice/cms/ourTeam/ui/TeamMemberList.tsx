@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { TextField } from '@/components/TextField/TextField';
 import IconButton from '@/components/IconButton/IconButton';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
-import Alert from '@/components/Alert/Alert';
 import TeamMemberCard from './TeamMemberCard';
 import CreateTeamMemberDialog from './CreateTeamMemberDialog';
 import UpdateTeamMemberDialog from './UpdateTeamMemberDialog';
@@ -87,34 +86,31 @@ export default function TeamMemberList({
   };
 
   return (
-    <div>
-      {/* Header con IconButton Plus */}
-      <div className="flex justify-between items-center mb-8">
-       
+    <div className="space-y-6">
+      {/* Header with search and create button */}
+      <div className="flex items-center w-full">
         <IconButton
           icon="add"
-          onClick={() => setShowCreateDialog(true)}
           variant="containedPrimary"
-          size="lg"
+          onClick={() => setShowCreateDialog(true)}
+          ariaLabel="Crear miembro del equipo"
         />
-          {/* TextField de Búsqueda */}
-      <div className="mb-6 relative">
-        <TextField
-          label="Buscar"
-          placeholder="Buscar por nombre, posición, email..."
-          value={search}
-          onChange={handleSearch}
-          className="w-full"
-        />
-        {isSearching && (
-          <div className="absolute right-3 top-3">
-            <CircularProgress size={20} />
-          </div>
-        )}
+        <div className="w-80 ml-auto relative">
+          <TextField
+            label=""
+            placeholder="Buscar por nombre, posición, email..."
+            value={search}
+            onChange={handleSearch}
+            className="w-full"
+            startIcon="search"
+          />
+          {isSearching && (
+            <div className="absolute right-3 top-3">
+              <CircularProgress size={20} />
+            </div>
+          )}
+        </div>
       </div>
-      </div>
-
-    
 
       {/* Grid de Cards */}
       {members.length > 0 ? (
@@ -135,11 +131,16 @@ export default function TeamMemberList({
           ))}
         </div>
       ) : (
-        <Alert variant="info">
-          {search
-            ? `No se encontraron miembros con "${search}"`
-            : 'No hay miembros del equipo. Crea uno para comenzar.'}
-        </Alert>
+        <div className="text-center py-12">
+          <span className="material-symbols-outlined text-gray-400 mx-auto mb-4" style={{ fontSize: '64px' }}>
+            person
+          </span>
+          <p className="text-muted-foreground">
+            {search
+              ? `No se encontraron miembros con "${search}"`
+              : 'No hay miembros del equipo. Crea uno para comenzar.'}
+          </p>
+        </div>
       )}
 
       {/* Diálogos */}
