@@ -343,6 +343,7 @@ export const SlideList: React.FC<SlideListProps> = ({
         onClose={handleDeleteCancel}
         size="sm"
         title=""
+        showCloseButton={true}
       >
         {slideToDelete && (
           <DeleteSlideForm
