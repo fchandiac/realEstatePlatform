@@ -328,7 +328,7 @@ export const SlideList: React.FC<SlideListProps> = ({
       <Dialog 
         open={isCreateDialogOpen} 
         onClose={() => setIsCreateDialogOpen(false)}
-        size="lg"
+        size="xl"
         title="Crear Nuevo Slide"
       >
         <CreateSlideForm

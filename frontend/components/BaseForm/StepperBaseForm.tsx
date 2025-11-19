@@ -376,7 +376,7 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 					aspectRatio?: "square" | "video" | "auto";
 					buttonType?: "icon" | "normal";
 					variant?: "default" | "avatar";
-					previewSize?: "normal" | "compact";
+					previewSize?: "xs" | "sm" | "normal" | "lg" | "xl";
 				};
 
 				return (

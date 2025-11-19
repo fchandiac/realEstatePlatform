@@ -1,47 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/Button/Button';
 
-interface ResponsiveWidth {
-  xs?: string | number;
-  sm?: string | number;
-  md?: string | number;
-  lg?: string | number;
-  xl?: string | number;
-}
-
-interface ResponsiveBehavior {
-  xs?: {
-    center?: boolean;
-    position?: 'center' | 'top';
-    marginX?: string;
-    marginY?: string;
-  };
-  sm?: {
-    center?: boolean;
-    position?: 'center' | 'top';
-    marginX?: string;
-    marginY?: string;
-  };
-  md?: {
-    center?: boolean;
-    position?: 'center' | 'top';
-    marginX?: string;
-    marginY?: string;
-  };
-  lg?: {
-    center?: boolean;
-    position?: 'center' | 'top';
-    marginX?: string;
-    marginY?: string;
-  };
-  xl?: {
-    center?: boolean;
-    position?: 'center' | 'top';
-    marginX?: string;
-    marginY?: string;
-  };
-}
-
 interface DialogProps {
   open: boolean;
   onClose: () => void;
@@ -49,37 +8,14 @@ interface DialogProps {
   children: React.ReactNode;
   // Preset sizes. 'custom' allows using maxWidth prop.
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'custom';
+  // Custom width configuration per breakpoint (overrides size presets)
+  customSize?: Partial<Record<BreakpointKey, number>>;
   // If provided and size === 'custom', overrides dialog max width. number -> px or string with units
   maxWidth?: number | string;
-  // Enable full width behavior on xs (overrides size presets)
-  fullWidthOnXs?: boolean;
   // Enable full width on all screens
   fullWidth?: boolean;
   // Minimum width for the dialog
   minWidth?: number | string;
-  // Responsive width configuration per breakpoint
-  responsiveWidth?: ResponsiveWidth;
-  // Custom classes for xs margins (defaults used if not provided)
-  xsMarginX?: string;
-  xsMarginY?: string;
-  // SM horizontal margin override
-  smMarginX?: string;
-  // SM vertical margin override
-  smMarginY?: string;
-  // MD horizontal margin override
-  mdMarginX?: string;
-  // MD vertical margin override
-  mdMarginY?: string;
-  // LG vertical margin override
-  lgMarginY?: string;
-  // XL horizontal margin override (string with tailwind or arbitrary)
-  xlMarginX?: string;
-  // XL vertical margin override
-  xlMarginY?: string;
-  // Whether the dialog centers vertically (on sm+) or sticks to top
-  centerOnScreen?: boolean;
-  // Responsive behavior configuration
-  responsiveBehavior?: ResponsiveBehavior;
   // scroll behavior: 'body' keeps page scrollable; 'paper' enables internal scroller
   scroll?: 'body' | 'paper';
   // Height control props
@@ -100,8 +36,6 @@ interface DialogProps {
   className?: string;
   // Inline style forwarded to dialog content (useful for child-specific widths)
   contentStyle?: React.CSSProperties;
-  // When true, allow children to overflow horizontally
-  allowOverflowX?: boolean;
   // Actions to display in the footer
   actions?: React.ReactNode;
   // Hide the actions area (useful when actions are handled internally by children)
@@ -115,59 +49,45 @@ interface DialogProps {
 }
 
 type DialogSizeKey = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-type WidthRule = { min: string; max: string };
-const breakpointOrder: Array<{ key: DialogSizeKey; prefix: string }> = [
-  { key: 'xs', prefix: '' },
-  { key: 'sm', prefix: 'sm:' },
-  { key: 'md', prefix: 'md:' },
-  { key: 'lg', prefix: 'lg:' },
-  { key: 'xl', prefix: 'xl:' },
-];
+type BreakpointKey = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-const dialogSizePresets: Record<DialogSizeKey, Partial<Record<DialogSizeKey, WidthRule>>> = {
+// Preset widths (in pixels) for each size at each breakpoint
+const dialogSizePresets: Record<DialogSizeKey, Record<BreakpointKey, number>> = {
   xs: {
-    xs: { min: '280px', max: '90vw' },
-    sm: { min: '320px', max: '85vw' },
+    xs: 280,
+    sm: 320,
+    md: 420,
+    lg: 420,
+    xl: 420,
   },
   sm: {
-    xs: { min: '280px', max: '90vw' },
-    sm: { min: '420px', max: '85vw' },
-    md: { min: '420px', max: '80vw' },
-    lg: { min: '420px', max: '520px' },
+    xs: 320,
+    sm: 420,
+    md: 520,
+    lg: 640,
+    xl: 640,
   },
   md: {
-    xs: { min: '320px', max: '95vw' },
-    sm: { min: '520px', max: '90vw' },
-    md: { min: '520px', max: '85vw' },
-    lg: { min: '520px', max: '72vw' },
+    xs: 360,
+    sm: 520,
+    md: 640,
+    lg: 800,
+    xl: 800,
   },
   lg: {
-    xs: { min: '360px', max: '95vw' },
-    sm: { min: '640px', max: '90vw' },
-    md: { min: '640px', max: '85vw' },
-    lg: { min: '640px', max: '78vw' },
-    xl: { min: '960px', max: '89vw' },
+    xs: 400,
+    sm: 640,
+    md: 800,
+    lg: 900,
+    xl: 900,
   },
   xl: {
-    xs: { min: '400px', max: '95vw' },
-    sm: { min: '800px', max: '90vw' },
-    md: { min: '800px', max: '88vw' },
-    lg: { min: '960px', max: '90vw' },
-    xl: { min: '1024px', max: '1024px' },
+    xs: 450,
+    sm: 800,
+    md: 900,
+    lg: 1000,
+    xl: 1024,
   },
-};
-
-const buildPresetSizeClasses = (size: DialogSizeKey) => {
-  const preset = dialogSizePresets[size];
-  if (!preset) return '';
-  return breakpointOrder
-    .map(({ key, prefix }) => {
-      const rule = preset[key];
-      if (!rule) return '';
-      return `${prefix}min-w-[${rule.min}] ${prefix}max-w-[${rule.max}]`;
-    })
-    .filter(Boolean)
-    .join(' ');
 };
 
 const Dialog: React.FC<DialogProps> = ({
@@ -176,22 +96,10 @@ const Dialog: React.FC<DialogProps> = ({
   title,
   children,
   size = 'md',
+  customSize,
   maxWidth,
-  fullWidthOnXs = true,
   fullWidth = false,
   minWidth,
-  responsiveWidth,
-  xsMarginX = 'mx-4',
-  xsMarginY = 'my-0',
-  smMarginX = 'sm:mx-8',
-  smMarginY = 'sm:mb-0',
-  mdMarginX = 'md:mx-12',
-  mdMarginY = 'md:mb-4',
-  lgMarginY = 'lg:mb-4',
-  xlMarginX = 'xl:mx-[200px]',
-  xlMarginY = 'xl:mb-4',
-  centerOnScreen = false,
-  responsiveBehavior,
   scroll = 'paper',
   height,
   maxHeight,
@@ -203,7 +111,6 @@ const Dialog: React.FC<DialogProps> = ({
   persistent = false,
   className = '',
   contentStyle,
-  allowOverflowX = false,
   actions,
   hideActions = false,
   showCloseButton = false,
@@ -252,82 +159,40 @@ const Dialog: React.FC<DialogProps> = ({
 
   if (!shouldRender) return null;
 
-  // Build responsive width classes
-  const buildResponsiveWidthClasses = () => {
-    if (!responsiveWidth) return '';
+  // Build width classes based on size or customSize
+  const buildWidthClasses = (): string => {
+    const breakpoints: BreakpointKey[] = ['xs', 'sm', 'md', 'lg', 'xl'];
+    const widths = customSize 
+      ? { ...dialogSizePresets[size as DialogSizeKey], ...customSize }
+      : dialogSizePresets[size as DialogSizeKey];
 
     const classes: string[] = [];
-    Object.entries(responsiveWidth).forEach(([breakpoint, value]) => {
-      if (value) {
-        const widthValue = typeof value === 'number' ? `${value}px` : value;
-        if (breakpoint === 'xs') {
-          classes.push(`min-w-[${widthValue}] max-w-[${widthValue}]`);
-        } else {
-          classes.push(`${breakpoint}:min-w-[${widthValue}] ${breakpoint}:max-w-[${widthValue}]`);
-        }
+    breakpoints.forEach((bp, index) => {
+      const width = widths[bp];
+      if (!width) return;
+
+      const widthValue = `${width}px`;
+      if (index === 0) {
+        // xs has no prefix
+        classes.push(`w-[${widthValue}]`);
+      } else {
+        // sm, md, lg, xl have prefixes
+        classes.push(`${bp}:w-[${widthValue}]`);
       }
     });
+
     return classes.join(' ');
   };
 
-  // Build responsive behavior classes
-  const buildResponsiveBehaviorClasses = () => {
-    if (!responsiveBehavior) return '';
+  const rootScrollClasses = `flex items-center justify-center ${scroll === 'body' ? 'overflow-y-auto pb-8' : ''}`;
 
-    const classes: string[] = [];
-    Object.entries(responsiveBehavior).forEach(([breakpoint, config]) => {
-      if (config) {
-        const prefix = breakpoint === 'xs' ? '' : `${breakpoint}:`;
-        if (config.marginX) classes.push(`${prefix}${config.marginX}`);
-        if (config.marginY) classes.push(`${prefix}${config.marginY}`);
-      }
-    });
-    return classes.join(' ');
-  };
-
-  // Determine positioning classes - default is centered
-  const getPositioningClasses = () => {
-    // Default behavior: center the dialog
-    if (!responsiveBehavior && centerOnScreen) {
-      return 'items-center justify-center';
-    }
-
-    if (!responsiveBehavior && !centerOnScreen) {
-      return 'items-start justify-center pt-16';
-    }
-
-    // If responsive behavior is defined, use it
-    // For simplicity, we'll use a basic responsive approach
-    // In a real app, you'd want to use a proper breakpoint hook
-    return 'items-center justify-center sm:items-center sm:justify-center';
-  };
-
-  const baseXsMargins = `${xsMarginX} ${xsMarginY} ${smMarginX} ${smMarginY} ${mdMarginX} ${mdMarginY} ${lgMarginY} ${xlMarginX} ${xlMarginY}`;
-  const presetClasses = size === 'custom' ? '' : buildPresetSizeClasses(size as DialogSizeKey);
-  const xsFullWidthOverride =
-    fullWidthOnXs && !fullWidth ? 'w-full sm:w-auto mx-4 sm:mx-8 md:mx-12' : '';
-  const widthSpacingClasses = fullWidth
-    ? 'w-full mx-4 sm:mx-4 md:mx-4'
-    : xsFullWidthOverride || baseXsMargins;
-
-  const computedMaxWidth =
-    size === 'custom' && maxWidth
-      ? typeof maxWidth === 'number'
-        ? `${maxWidth}px`
-        : maxWidth
-      : undefined;
-
-  const rootScrollClasses =
-    scroll === 'body'
-      ? `overflow-y-auto flex ${getPositioningClasses()} pb-8`
-      : `flex ${getPositioningClasses()}`;
+  const widthClasses = buildWidthClasses();
+  const marginClasses = fullWidth ? 'mx-4 sm:mx-4 md:mx-4' : 'mx-4 sm:mx-8 md:mx-12';
 
   const contentClass = [
     'bg-white rounded-lg shadow-lg p-4 sm:p-4',
-  widthSpacingClasses,
-  presetClasses,
-    buildResponsiveWidthClasses(),
-    buildResponsiveBehaviorClasses(),
+    marginClasses,
+    widthClasses,
     'relative',
     scroll === 'body' ? 'max-h-none mb-8' : 'flex flex-col max-h-[90vh]',
     'transition-all',
@@ -339,7 +204,11 @@ const Dialog: React.FC<DialogProps> = ({
 
   const contentWrapperStyle: React.CSSProperties = {
     width: fullWidth ? '100%' : 'auto',
-    maxWidth: computedMaxWidth || undefined,
+    maxWidth: size === 'custom' && maxWidth
+      ? typeof maxWidth === 'number'
+        ? `${maxWidth}px`
+        : maxWidth
+      : undefined,
     minWidth: minWidth ? (typeof minWidth === 'number' ? `${minWidth}px` : minWidth) : undefined,
     height: height ? (typeof height === 'number' ? `${height}px` : height) : undefined,
     maxHeight: maxHeight ? (typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight) : undefined,

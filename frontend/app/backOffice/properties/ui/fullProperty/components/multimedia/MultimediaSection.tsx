@@ -233,7 +233,6 @@ const MultimediaSection: React.FC<MultimediaSectionProps> = ({
           maxFiles={20}
           label=""
           aspectRatio="16:9"
-          previewSize='compact'
         />
 
         {/* Upload Button - Only show if files are selected */}

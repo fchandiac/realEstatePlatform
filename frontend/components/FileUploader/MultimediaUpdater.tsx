@@ -142,7 +142,7 @@ const MultimediaUpdater: React.FC<MultimediaUpdaterProps> = ({
   };
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-4 mt-2 ${className}`}>
       {/* Preview Container */}
       <div
         className={`relative overflow-hidden cursor-pointer ${
