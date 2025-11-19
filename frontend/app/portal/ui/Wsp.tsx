@@ -13,6 +13,7 @@ interface Identity {
 const Wsp: React.FC = () => {
   const [identity, setIdentity] = useState<Identity | null>(null);
   const [loading, setLoading] = useState(true);
+  const [cookiesAccepted, setCookiesAccepted] = useState(false);
 
   useEffect(() => {
     async function loadIdentity() {
@@ -30,8 +31,18 @@ const Wsp: React.FC = () => {
     loadIdentity();
   }, []);
 
-  // Don't render anything while loading or if no phone available
-  if (loading || !identity?.phone) {
+  useEffect(() => {
+    // Check if user accepted cookies
+    const consentCookie = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('cookieConsent='));
+    
+    const accepted = consentCookie?.includes('accepted') || false;
+    setCookiesAccepted(accepted);
+  }, []);
+
+  // Don't render anything while loading, if no phone, or if cookies not accepted
+  if (loading || !identity?.phone || !cookiesAccepted) {
     return null;
   }
 
