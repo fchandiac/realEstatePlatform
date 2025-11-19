@@ -1758,37 +1758,46 @@ export class PropertyService {
         console.log('📸 Loading multimedia for', idsNeedingFallback.length, 'properties without mainImageUrl');
         console.log('🔍 Property IDs needing fallback:', idsNeedingFallback);
         
-        const multimedia = await this.multimediaRepository
+        // Primero, intentar obtener CUALQUIER multimedia sin filtro de tipo
+        const allMultimedia = await this.multimediaRepository
           .createQueryBuilder('m')
           .where('m.propertyId IN (:...ids)', { ids: idsNeedingFallback })
-          .andWhere('m.type IN (:...types)', { 
-            types: [
-              MultimediaType.PROPERTY_IMG, 
-              MultimediaType.PROPERTY_VIDEO
-            ] 
-          })
           .orderBy('m.createdAt', 'ASC')
           .getMany();
 
-        console.log('📦 Multimedia found:', multimedia.length, 'items');
-        console.log('📦 Multimedia details:', multimedia.map(m => ({ id: m.id, propertyId: m.propertyId, type: m.type, url: m.url })));
+        console.log('📦 ALL Multimedia found:', allMultimedia.length, 'items');
+        if (allMultimedia.length > 0) {
+          console.log('📦 Sample multimedia:', allMultimedia.slice(0, 3).map(m => ({ 
+            id: m.id, 
+            propertyId: m.propertyId, 
+            type: m.type, 
+            format: m.format,
+            url: m.url 
+          })));
+        }
 
-        // Agrupar por propertyId
-        for (const m of multimedia) {
+        // Agrupar por propertyId y filtrar solo imágenes (no videos)
+        for (const m of allMultimedia) {
           if (m.propertyId) {
             if (!multimediaMap[m.propertyId]) {
               multimediaMap[m.propertyId] = [];
             }
-            multimediaMap[m.propertyId].push({
-              id: m.id,
-              url: m.url,
-              type: m.type,
-              format: m.format,
-            });
+            // Solo agregar si es imagen, no video
+            if (m.format === MultimediaFormat.IMG || m.type === MultimediaType.PROPERTY_IMG) {
+              multimediaMap[m.propertyId].push({
+                id: m.id,
+                url: m.url,
+                type: m.type,
+                format: m.format,
+              });
+            }
           }
         }
 
-        console.log('🗂️ Multimedia map:', Object.keys(multimediaMap));
+        console.log('🗂️ Multimedia map keys:', Object.keys(multimediaMap));
+        for (const [propId, items] of Object.entries(multimediaMap)) {
+          console.log(`  Property ${propId}: ${items.length} images`);
+        }
 
         // Asignar mainImageUrl desde la primera imagen de multimedia si no existe
         for (const property of data) {
@@ -1796,7 +1805,7 @@ export class PropertyService {
             property.mainImageUrl = multimediaMap[property.id][0].url;
             console.log(`✅ Set mainImageUrl for property ${property.id} from multimedia: ${property.mainImageUrl}`);
           } else if ((!property.mainImageUrl || property.mainImageUrl.trim() === '')) {
-            console.log(`⚠️ Property ${property.id} has no multimedia to use as fallback`);
+            console.log(`⚠️ Property ${property.id} has no images to use as fallback`);
           }
         }
       }
