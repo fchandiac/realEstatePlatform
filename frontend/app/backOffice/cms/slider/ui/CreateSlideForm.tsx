@@ -77,11 +77,6 @@ export default function CreateSlideForm({ onSuccess, onCancel }: CreateSlideForm
       newErrors.push('El título no puede exceder 255 caracteres');
     }
 
-    // Validar multimedia
-    if (multimediaFile.length === 0) {
-      newErrors.push('La imagen o video es requerida');
-    }
-
     // Validar URL si se proporciona (solo si tiene contenido)
     if (slide.linkUrl.trim() && !slide.linkUrl.match(/^https?:\/\/.+/)) {
       newErrors.push('La URL debe ser válida (http:// o https://)');
@@ -180,12 +175,12 @@ export default function CreateSlideForm({ onSuccess, onCancel }: CreateSlideForm
       {/* FileUploader directo (patrón IdentityPage) */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Imagen o Video *
+          Imagen o Video
         </label>
         <MultimediaUploader
           uploadPath="/uploads/web/slides"
           onChange={handleMultimediaChange}
-          label="Subir multimedia"
+          label=""
           accept="image/*,video/*"
           maxFiles={1}
           maxSize={10}
@@ -263,7 +258,7 @@ export default function CreateSlideForm({ onSuccess, onCancel }: CreateSlideForm
       <div className="pt-4 flex justify-end">
         <Button
           onClick={handleSubmit}
-          disabled={isSubmitting || multimediaFile.length === 0}
+          disabled={isSubmitting}
         >
           {isSubmitting ? (
             <>
