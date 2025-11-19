@@ -44,16 +44,9 @@ export default function MultimediaGrid({
   multimedia = [],
   propertyTitle,
 }: MultimediaGridProps) {
-  // Estado vacío: sin imagen principal
+  // Si no hay imagen principal, no renderizar nada
   if (!mainImageUrl) {
-    return (
-      <div className="w-full aspect-video rounded-lg flex items-center justify-center border border-border">
-        <FontAwesome
-          icon="image-not-supported"
-          className="text-muted-foreground text-4xl"
-        />
-      </div>
-    );
+    return null;
   }
 
   // Renderizar solo la imagen principal
