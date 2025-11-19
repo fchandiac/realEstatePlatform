@@ -10,6 +10,7 @@ import FontAwesome from '@/components/FontAwesome/FontAwesome';
 import { env } from '@/lib/env';
 import { togglePropertyFavorite } from '@/app/actions/properties';
 import PropertyMapWrapper from './PropertyMapWrapper';
+import PropertyGallery from './PropertyGallery';
 
 interface PropertyDetailClientProps {
   property: Property;
@@ -75,7 +76,6 @@ export default function PropertyDetailClient({
   }, [property.id]);
 
   const mainImage = property.multimedia?.[0];
-  const thumbnailImages = property.multimedia?.slice(1, 4) || [];
 
   const agentName =
     property.assignedAgent?.personalInfo?.firstName ||
@@ -96,7 +96,6 @@ export default function PropertyDetailClient({
 
   // Normalize image URLs
   const mainImageUrl = mainImage ? normalizeImageUrl(mainImage.url) : undefined;
-  const thumbnailUrls = thumbnailImages.map(img => normalizeImageUrl(img.url));
 
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -254,16 +253,6 @@ export default function PropertyDetailClient({
                 {isFavorited ? 'En tus favoritos' : 'Agregar a favoritos'}
               </span>
             </button>
-
-            {/* Favorites count */}
-            {favoritesCount > 0 && (
-              <div className="flex items-center space-x-1">
-                <FontAwesome icon="heart" className="text-red-500 text-sm" />
-                <span className="text-muted-foreground text-xs">
-                  {favoritesCount} {favoritesCount === 1 ? 'persona interesada' : 'personas interesadas'}
-                </span>
-              </div>
-            )}
           </div>
         </div>
 
@@ -273,64 +262,11 @@ export default function PropertyDetailClient({
           <div className="w-full lg:w-3/4 rounded-lg p-6">
             {/* Gallery Section */}
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-foreground mb-4">
-                Galería de la Propiedad
-              </h2>
-
-              {/* Image Grid */}
-              <div className="flex flex-col md:flex-row gap-4 h-96">
-                {/* Main Image - 75% width */}
-                <div className="w-full md:w-3/4 h-full overflow-hidden rounded-lg shadow-md">
-                  {mainImageUrl ? (
-                    <img
-                      src={mainImageUrl}
-                      alt={property.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-muted flex items-center justify-center">
-                      <FontAwesome
-                        icon="image-not-supported"
-                        className="text-muted-foreground text-3xl"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                {/* Thumbnail Grid - 25% width */}
-                <div className="w-full md:w-1/4 h-full flex flex-row md:flex-col gap-4">
-                  {thumbnailUrls.length > 0 ? (
-                    thumbnailUrls.map((url, idx) => (
-                      <div
-                        key={idx}
-                        className="w-1/3 md:w-full h-full md:h-1/3 overflow-hidden rounded-lg shadow-md"
-                      >
-                        {url ? (
-                          <img
-                            src={url}
-                            alt={`Thumbnail ${idx + 1}`}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-muted flex items-center justify-center">
-                            <FontAwesome
-                              icon="image-not-supported"
-                              className="text-muted-foreground text-lg"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="w-full h-full bg-muted flex items-center justify-center rounded-lg">
-                      <FontAwesome
-                        icon="image-not-supported"
-                        className="text-muted-foreground text-2xl"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
+              <PropertyGallery
+                mainImageUrl={mainImageUrl}
+                multimedia={property.multimedia}
+                propertyTitle={property.title}
+              />
             </div>
 
             {/* Key Characteristics */}
@@ -338,53 +274,54 @@ export default function PropertyDetailClient({
               property.builtSquareMeters !== undefined || property.landSquareMeters !== undefined || 
               property.parkingSpaces !== undefined) && (
               <div className="mb-6 border-t pt-4">
-                <h3 className="text-xl font-semibold text-foreground mb-4">
-                  Características Clave
-                </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                  {property.bedrooms !== undefined && (
-                    <div className="flex items-center space-x-2 p-3 rounded-lg">
-                      <FontAwesome icon="bed" className="text-primary text-lg" />
-                      <span className="font-medium text-sm text-foreground">
-                        {property.bedrooms} Dormitorios
+                <div className="flex flex-wrap items-center gap-6">
+                  {property.bedrooms != null && property.bedrooms > 0 && (
+                    <div className="flex items-center space-x-2">
+                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
+                        bed
+                      </span>
+                      <span className="text-sm text-foreground">
+                        {property.bedrooms} {property.bedrooms === 1 ? 'Dormitorio' : 'Dormitorios'}
                       </span>
                     </div>
                   )}
-                  {property.bathrooms !== undefined && (
-                    <div className="flex items-center space-x-2 p-3 rounded-lg">
-                      <FontAwesome icon="bath" className="text-primary text-lg" />
-                      <span className="font-medium text-sm text-foreground">
-                        {property.bathrooms} Baños
+                  {property.bathrooms != null && property.bathrooms > 0 && (
+                    <div className="flex items-center space-x-2">
+                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
+                        bathtub
+                      </span>
+                      <span className="text-sm text-foreground">
+                        {property.bathrooms} {property.bathrooms === 1 ? 'Baño' : 'Baños'}
                       </span>
                     </div>
                   )}
-                  {property.builtSquareMeters !== undefined && (
-                    <div className="flex items-center space-x-2 p-3 rounded-lg">
-                      <FontAwesome
-                        icon="house-chimney"
-                        className="text-primary text-lg"
-                      />
-                      <span className="font-medium text-sm text-foreground">
+                  {property.builtSquareMeters != null && property.builtSquareMeters > 0 && (
+                    <div className="flex items-center space-x-2">
+                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
+                        home
+                      </span>
+                      <span className="text-sm text-foreground">
                         {Math.round(property.builtSquareMeters)} m² const.
                       </span>
                     </div>
                   )}
-                  {property.landSquareMeters !== undefined && (
-                    <div className="flex items-center space-x-2 p-3 rounded-lg">
-                      <FontAwesome icon="square" className="text-primary text-lg" />
-                      <span className="font-medium text-sm text-foreground">
+                  {property.landSquareMeters != null && property.landSquareMeters > 0 && (
+                    <div className="flex items-center space-x-2">
+                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
+                        screenshot_frame_2
+                      </span>
+                      <span className="text-sm text-foreground">
                         {property.landSquareMeters} m² terreno
                       </span>
                     </div>
                   )}
-                  {property.parkingSpaces !== undefined && (
-                    <div className="flex items-center space-x-2 p-3 rounded-lg">
-                      <FontAwesome
-                        icon="square-parking"
-                        className="text-primary text-lg"
-                      />
-                      <span className="font-medium text-sm text-foreground">
-                        {property.parkingSpaces} Estacionamiento
+                  {property.parkingSpaces != null && property.parkingSpaces > 0 && (
+                    <div className="flex items-center space-x-2">
+                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
+                        local_parking
+                      </span>
+                      <span className="text-sm text-foreground">
+                        {property.parkingSpaces} {property.parkingSpaces === 1 ? 'Estacionamiento' : 'Estacionamientos'}
                       </span>
                     </div>
                   )}
@@ -507,29 +444,6 @@ export default function PropertyDetailClient({
         {/* Location Map Section */}
         {(property.state || property.city || property.address || (property.latitude && property.longitude)) && (
           <div className="w-full rounded-lg p-6">
-            <h3 className="text-2xl font-semibold text-foreground mb-4">
-              Ubicación de la Propiedad
-            </h3>
-            
-            {/* Location Details */}
-            <div className="mb-6 space-y-2">
-              {property.address && (
-                <p className="text-foreground">
-                  <span className="font-semibold">Dirección:</span> {property.address}
-                </p>
-              )}
-              {property.city && (
-                <p className="text-foreground">
-                  <span className="font-semibold">Comuna:</span> {property.city}
-                </p>
-              )}
-              {property.state && (
-                <p className="text-foreground">
-                  <span className="font-semibold">Región:</span> {property.state}
-                </p>
-              )}
-            </div>
-
             {/* Map if coordinates available */}
             {property.latitude && property.longitude && (
               <PropertyMapWrapper
