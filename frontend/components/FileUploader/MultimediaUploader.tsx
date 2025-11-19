@@ -14,7 +14,7 @@ interface MultimediaUploaderProps {
   aspectRatio?: 'square' | 'video' | '16:9' | 'auto';
   buttonType?: 'icon' | 'normal';
   variant?: 'default' | 'avatar'; // Nueva prop para variante avatar
-  previewSize?: 'normal' | 'compact';
+  previewSize?: 'xs' | 'sm' | 'normal' | 'lg' | 'xl'; // Opciones de tamaño de miniatura
 }
 
 export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
@@ -27,7 +27,7 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
   aspectRatio = '16:9',
   buttonType = 'icon',
   variant = 'default', // Valor por defecto
-  previewSize = 'normal',
+  previewSize = 'normal', // xs | sm | normal | lg | xl
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<File[]>([]);
@@ -162,7 +162,20 @@ export const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
     onChange?.(newFiles);
   };
 
-  const previewContainerClass = previewSize === 'compact' ? 'w-full max-w-[240px] mx-auto' : 'w-full';
+  // Calcular clases según tamaño de miniatura
+  const getPreviewSizeClasses = () => {
+    switch (previewSize) {
+      case 'xs': return 'w-full max-w-[120px] mx-auto'; // Extra pequeño (120px)
+      case 'sm': return 'w-full max-w-[180px] mx-auto'; // Pequeño (180px)
+      case 'lg': return 'w-full max-w-[320px] mx-auto'; // Grande (320px)
+      case 'xl': return 'w-full max-w-[420px] mx-auto'; // Extra grande (420px)
+      case 'normal':
+      default:
+        return 'w-full'; // Normal (sin límite)
+    }
+  };
+
+  const previewContainerClass = getPreviewSizeClasses();
 
   return (
     <div className="flex flex-col gap-4 w-full" data-test-id="multimedia-uploader-root">
