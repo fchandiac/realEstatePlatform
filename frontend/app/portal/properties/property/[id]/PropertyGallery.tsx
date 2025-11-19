@@ -232,13 +232,17 @@ export default function PropertyGallery({
           className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-x-visible"
           style={{ width: thumbWidth }}
         >
-          {displayedMedia.slice(1).map((item, idx) => (
+          {displayedMedia.slice(1).map((item, idx) => {
+            const remainingImages = displayedMedia.length - 1;
+            const thumbHeight = remainingImages === 1 ? '100%' : `calc((100% - ${(remainingImages - 1) * 16}px) / ${remainingImages})`;
+            
+            return (
             <div
               key={`${item.url}-${idx}`}
               className="flex-shrink-0 rounded-lg shadow-md cursor-pointer group overflow-hidden"
               style={{
-                width: `${thumbWidthPercent - 2}%`,
-                height: displayedMedia.length > 2 ? `calc((100% - 12px) / ${Math.min(4, displayedMedia.length - 1)})` : '100%',
+                width: '100%',
+                height: thumbHeight,
               }}
               onClick={() => handleThumbnailClick(idx + 1)}
             >
@@ -257,9 +261,14 @@ export default function PropertyGallery({
                 </div>
               )}
             </div>
-          ))}
+            );
+          })}
 
-          {hasMoreImages && (
+          {hasMoreImages && (() => {
+            const remainingImages = displayedMedia.length - 1;
+            const thumbHeight = remainingImages === 1 ? '100%' : `calc((100% - ${(remainingImages - 1) * 16}px) / ${remainingImages})`;
+            
+            return (
             <button
               onClick={() => {
                 setSelectedIndex(0);
@@ -267,8 +276,8 @@ export default function PropertyGallery({
               }}
               className="flex-shrink-0 rounded-lg shadow-md bg-black/50 hover:bg-black/70 transition-colors flex items-center justify-center text-white font-semibold text-sm cursor-pointer"
               style={{
-                width: `${thumbWidthPercent - 2}%`,
-                height: displayedMedia.length > 2 ? `calc((100% - 12px) / ${Math.min(4, displayedMedia.length - 1)})` : '100%',
+                width: '100%',
+                height: thumbHeight,
               }}
             >
               <div className="text-center">
@@ -276,7 +285,8 @@ export default function PropertyGallery({
                 <div className="text-xs">Ver más</div>
               </div>
             </button>
-          )}
+            );
+          })()}
         </div>
         )}
       </div>
