@@ -1756,6 +1756,8 @@ export class PropertyService {
       let multimediaMap: Record<string, any[]> = {};
       if (idsNeedingFallback.length > 0) {
         console.log('📸 Loading multimedia for', idsNeedingFallback.length, 'properties without mainImageUrl');
+        console.log('🔍 Property IDs needing fallback:', idsNeedingFallback);
+        
         const multimedia = await this.multimediaRepository
           .createQueryBuilder('m')
           .where('m.propertyId IN (:...ids)', { ids: idsNeedingFallback })
@@ -1767,6 +1769,9 @@ export class PropertyService {
           })
           .orderBy('m.createdAt', 'ASC')
           .getMany();
+
+        console.log('📦 Multimedia found:', multimedia.length, 'items');
+        console.log('📦 Multimedia details:', multimedia.map(m => ({ id: m.id, propertyId: m.propertyId, type: m.type, url: m.url })));
 
         // Agrupar por propertyId
         for (const m of multimedia) {
@@ -1783,11 +1788,15 @@ export class PropertyService {
           }
         }
 
+        console.log('🗂️ Multimedia map:', Object.keys(multimediaMap));
+
         // Asignar mainImageUrl desde la primera imagen de multimedia si no existe
         for (const property of data) {
           if ((!property.mainImageUrl || property.mainImageUrl.trim() === '') && multimediaMap[property.id]?.length > 0) {
             property.mainImageUrl = multimediaMap[property.id][0].url;
-            console.log(`✅ Set mainImageUrl for property ${property.id} from multimedia`);
+            console.log(`✅ Set mainImageUrl for property ${property.id} from multimedia: ${property.mainImageUrl}`);
+          } else if ((!property.mainImageUrl || property.mainImageUrl.trim() === '')) {
+            console.log(`⚠️ Property ${property.id} has no multimedia to use as fallback`);
           }
         }
       }
