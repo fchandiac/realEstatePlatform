@@ -203,11 +203,11 @@ export default function PropertyGallery({
 
   return (
     <>
-      <div className={`flex flex-col ${isSingleImage ? '' : 'md:flex-row'} gap-4 h-96`}>
-        {/* Main Image */}
+      <div className={`flex flex-col ${isSingleImage ? '' : 'md:flex-row'} gap-4 h-96 w-full`}>
+        {/* Main Image - Left on desktop */}
         <div
-          className="overflow-hidden rounded-lg shadow-md cursor-pointer group"
-          style={{ width: mainWidth }}
+          className="overflow-hidden rounded-lg shadow-md cursor-pointer group flex-shrink-0"
+          style={{ width: mainWidth, height: '100%' }}
           onClick={handleMainImageClick}
         >
           {displayedMedia[0]?.url ? (
@@ -226,11 +226,11 @@ export default function PropertyGallery({
           )}
         </div>
 
-        {/* Thumbnail Strip */}
+        {/* Thumbnail Strip - Right on desktop, bottom on mobile */}
         {!isSingleImage && (
         <div
-          className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-x-visible"
-          style={{ width: thumbWidth }}
+          className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-y-auto md:overflow-x-visible flex-1"
+          style={{ width: isSingleImage ? '0%' : 'auto' }}
         >
           {displayedMedia.slice(1).map((item, idx) => {
             const remainingImages = displayedMedia.length - 1;
