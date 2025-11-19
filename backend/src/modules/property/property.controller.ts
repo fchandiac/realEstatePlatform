@@ -49,8 +49,10 @@ import { extname } from 'path';
 // Configuración de storage para uploads de propiedades
 const propertyUploadStorage = diskStorage({
   destination: (req, file, callback) => {
-    // Todas las imágenes y videos van a ./public/properties
-    callback(null, './public/properties');
+    // Separar imágenes y videos en diferentes carpetas
+    const isVideo = file.mimetype.startsWith('video/');
+    const subfolder = isVideo ? 'video' : 'img';
+    callback(null, `./public/properties/${subfolder}`);
   },
   filename: (req, file, callback) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -101,8 +103,10 @@ export class PropertyController {
   @UseInterceptors(FilesInterceptor('multimediaFiles', 10, {
     storage: diskStorage({
       destination: (req, file, callback) => {
-        // Todas las imágenes y videos van a ./public/properties
-        callback(null, './public/properties');
+        // Separar imágenes y videos en diferentes carpetas
+        const isVideo = file.mimetype.startsWith('video/');
+        const subfolder = isVideo ? 'video' : 'img';
+        callback(null, `./public/properties/${subfolder}`);
       },
       filename: (req, file, callback) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -599,8 +603,10 @@ export class PropertyController {
   @UseInterceptors(FilesInterceptor('files', 20, {
     storage: diskStorage({
       destination: (req, file, callback) => {
-        // Todas las imágenes y videos van a ./public/properties
-        callback(null, './public/properties');
+        // Separar imágenes y videos en diferentes carpetas
+        const isVideo = file.mimetype.startsWith('video/');
+        const subfolder = isVideo ? 'video' : 'img';
+        callback(null, `./public/properties/${subfolder}`);
       },
       filename: (req, file, callback) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);

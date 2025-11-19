@@ -1748,6 +1748,50 @@ export class PropertyService {
 
       console.log('✅ [PropertyService] Data fetched:', data.length, 'properties');
 
+      // Cargar multimedia para propiedades sin mainImageUrl
+      const idsNeedingFallback = data
+        .filter(p => !p.mainImageUrl || p.mainImageUrl.trim() === '')
+        .map(p => p.id);
+
+      let multimediaMap: Record<string, any[]> = {};
+      if (idsNeedingFallback.length > 0) {
+        console.log('📸 Loading multimedia for', idsNeedingFallback.length, 'properties without mainImageUrl');
+        const multimedia = await this.multimediaRepository
+          .createQueryBuilder('m')
+          .where('m.propertyId IN (:...ids)', { ids: idsNeedingFallback })
+          .andWhere('m.type IN (:...types)', { 
+            types: [
+              MultimediaType.PROPERTY_IMG, 
+              MultimediaType.PROPERTY_VIDEO
+            ] 
+          })
+          .orderBy('m.createdAt', 'ASC')
+          .getMany();
+
+        // Agrupar por propertyId
+        for (const m of multimedia) {
+          if (m.propertyId) {
+            if (!multimediaMap[m.propertyId]) {
+              multimediaMap[m.propertyId] = [];
+            }
+            multimediaMap[m.propertyId].push({
+              id: m.id,
+              url: m.url,
+              type: m.type,
+              format: m.format,
+            });
+          }
+        }
+
+        // Asignar mainImageUrl desde la primera imagen de multimedia si no existe
+        for (const property of data) {
+          if ((!property.mainImageUrl || property.mainImageUrl.trim() === '') && multimediaMap[property.id]?.length > 0) {
+            property.mainImageUrl = multimediaMap[property.id][0].url;
+            console.log(`✅ Set mainImageUrl for property ${property.id} from multimedia`);
+          }
+        }
+      }
+
       const totalPages = Math.ceil(total / limit);
 
       return {
