@@ -1806,8 +1806,16 @@ export class PropertyService {
             console.log(`✅ Set mainImageUrl for property ${property.id} from multimedia: ${property.mainImageUrl}`);
           } else if ((!property.mainImageUrl || property.mainImageUrl.trim() === '')) {
             console.log(`⚠️ Property ${property.id} has no images to use as fallback`);
+            // Log debug info for specific property
+            if (property.id === '150dab43-c19d-4226-ba7b-d1e9ae4cf34f') {
+              console.log(`🔍 [DEBUG] Property 150dab43 - multimediaMap has entry:`, !!multimediaMap[property.id]);
+              console.log(`🔍 [DEBUG] Property 150dab43 - multimediaMap[id]:`, multimediaMap[property.id]);
+              console.log(`🔍 [DEBUG] Property 150dab43 - ALL multimedia in map:`, multimediaMap);
+            }
           }
         }
+      } else {
+        console.log('⚠️ No properties need multimedia fallback (all have mainImageUrl)');
       }
 
       // Helper: Normalizar URLs antiguas (retrocompatibilidad)
