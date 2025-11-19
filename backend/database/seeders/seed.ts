@@ -120,7 +120,7 @@ async function seedDatabase() {
     const propertiesData = [
       // 12 FEATURED properties
       {
-        title: 'Casa moderna en Las Condes',
+        title: 'Casa moderna con piscina y jardín',
         description: 'Hermosa casa moderna con piscina y jardín, ubicada en la exclusiva comuna de Las Condes.',
         bedrooms: 4,
         bathrooms: 3,
@@ -135,7 +135,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Apartamento lujoso en Providencia',
+        title: 'Apartamento lujoso con vista al río',
         description: 'Departamento de lujo con vista al río, acabados premium, ubicado en Providencia.',
         bedrooms: 3,
         bathrooms: 2,
@@ -150,7 +150,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Casa familiar en Ñuñoa',
+        title: 'Casa familiar amplia',
         description: 'Amplia casa familiar perfecta para vivir en familia, sector residencial tranquilo.',
         bedrooms: 5,
         bathrooms: 2,
@@ -165,7 +165,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Departamento céntrico en Santiago',
+        title: 'Departamento céntrico',
         description: 'Apartamento en pleno centro de Santiago, ideal para inversión o uso propio.',
         bedrooms: 2,
         bathrooms: 1,
@@ -180,7 +180,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Casa con vista a la cordillera en San Isidro',
+        title: 'Casa con vista a la cordillera',
         description: 'Casa amplia con vistas panorámicas a la cordillera, sector premium de San Isidro.',
         bedrooms: 4,
         bathrooms: 3,
@@ -195,7 +195,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Oficina moderna en Sanhattan',
+        title: 'Oficina moderna en zona de negocios',
         description: 'Oficina con acabados modernos, ubicada en zona de negocios, excelente para empresas.',
         bedrooms: 0,
         bathrooms: 2,
@@ -210,7 +210,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Terreno para proyectos en Peñalolén',
+        title: 'Terreno para proyectos inmobiliarios',
         description: 'Gran terreno con potencial de desarrollo inmobiliario, ubicado en Peñalolén.',
         bedrooms: 0,
         bathrooms: 0,
@@ -225,7 +225,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Casa en barrio Bellavista',
+        title: 'Casa en barrio pintoresco',
         description: 'Hermosa casa en el pintoresco barrio Bellavista, cercana a gastronomía y cultura.',
         bedrooms: 3,
         bathrooms: 2,
@@ -240,7 +240,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Departamento en San Bernardo',
+        title: 'Departamento cómodo cerca de servicios',
         description: 'Cómodo departamento en San Bernardo, cerca de servicios y transporte.',
         bedrooms: 2,
         bathrooms: 1,
@@ -255,7 +255,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Casa con patio grande en Maipú',
+        title: 'Casa con patio grande',
         description: 'Vivienda unifamiliar con amplio patio, ideal para familias con niños.',
         bedrooms: 3,
         bathrooms: 2,
@@ -270,7 +270,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Comercial en sector Apoquindo',
+        title: 'Local comercial en importante avenida',
         description: 'Local comercial en importante avenida, perfecto para retail o servicios.',
         bedrooms: 0,
         bathrooms: 1,
@@ -285,7 +285,7 @@ async function seedDatabase() {
         isFeatured: true
       },
       {
-        title: 'Apartamento frente al río en Vitacura',
+        title: 'Apartamento de lujo frente al río',
         description: 'Lujo y confort en Vitacura, con vistas privilegiadas al río Mapocho.',
         bedrooms: 3,
         bathrooms: 2,
@@ -302,7 +302,7 @@ async function seedDatabase() {
       
       // 8 NON-FEATURED properties
       {
-        title: 'Casa en Quinta Normal',
+        title: 'Casa en zona consolidada',
         description: 'Propiedad lista para vivir en zona consolidada.',
         bedrooms: 2,
         bathrooms: 1,
@@ -317,7 +317,7 @@ async function seedDatabase() {
         isFeatured: false
       },
       {
-        title: 'Departamento en Estación Central',
+        title: 'Departamento accesible con buen transporte',
         description: 'Vivienda accesible con buen transporte público.',
         bedrooms: 2,
         bathrooms: 1,
@@ -332,7 +332,7 @@ async function seedDatabase() {
         isFeatured: false
       },
       {
-        title: 'Casa en Pudahuel',
+        title: 'Casa económica en zona de crecimiento',
         description: 'Vivienda económica en zona de crecimiento.',
         bedrooms: 3,
         bathrooms: 1,
@@ -347,7 +347,7 @@ async function seedDatabase() {
         isFeatured: false
       },
       {
-        title: 'Oficina pequeña en Independencia',
+        title: 'Oficina pequeña para negocios',
         description: 'Espacio para pequeños negocios, sector accesible.',
         bedrooms: 0,
         bathrooms: 1,
@@ -362,7 +362,7 @@ async function seedDatabase() {
         isFeatured: false
       },
       {
-        title: 'Departamento en Colina',
+        title: 'Departamento en nuevo proyecto residencial',
         description: 'Nuevo proyecto residencial en zona norte metropolitana.',
         bedrooms: 2,
         bathrooms: 2,
@@ -377,7 +377,7 @@ async function seedDatabase() {
         isFeatured: false
       },
       {
-        title: 'Casa en Lampa',
+        title: 'Casa con espacio verde',
         description: 'Propiedad con espacio verde, zona segura y familiar.',
         bedrooms: 4,
         bathrooms: 2,
@@ -392,7 +392,7 @@ async function seedDatabase() {
         isFeatured: false
       },
       {
-        title: 'Terreno agrícola en Paine',
+        title: 'Terreno rural para agronegocios',
         description: 'Terreno rural con potencial para agronegocios.',
         bedrooms: 0,
         bathrooms: 0,
@@ -407,7 +407,7 @@ async function seedDatabase() {
         isFeatured: false
       },
       {
-        title: 'Casa en Buin',
+        title: 'Casa tranquila en zona rural',
         description: 'Vivienda tranquila en zona rural periurbana.',
         bedrooms: 3,
         bathrooms: 2,
