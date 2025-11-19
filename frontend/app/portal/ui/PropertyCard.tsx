@@ -81,8 +81,20 @@ function normalizeMediaUrl(url?: string | null): string | undefined {
 }
 
 function getPrimaryImage(property: PortalProperty): string | undefined {
-  // Solo usar mainImageUrl si existe
-  return normalizeMediaUrl(property.mainImageUrl) || undefined;
+  // Usar mainImageUrl si existe
+  if (property.mainImageUrl) {
+    return normalizeMediaUrl(property.mainImageUrl);
+  }
+
+  // Fallback: si no hay mainImageUrl, intentar obtener la primera imagen de multimedia
+  if (property.multimedia && property.multimedia.length > 0) {
+    const firstImage = property.multimedia.find(m => m.type === 'PROPERTY_IMG' || m.format === 'IMG');
+    if (firstImage) {
+      return normalizeMediaUrl(firstImage.url);
+    }
+  }
+
+  return undefined;
 }
 
 function formatPrice(price: number, currency: Currency): string {
