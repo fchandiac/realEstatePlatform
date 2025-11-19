@@ -171,9 +171,9 @@ export default function PropertyGallery({
   const mainWidthPercent = (goldenRatio / (1 + goldenRatio)) * 100;
   const thumbWidthPercent = (1 / (1 + goldenRatio)) * 100;
 
-  const visibleCount = 5;
-  const displayedMedia = mediaList.slice(0, visibleCount);
-  const hasMoreImages = mediaList.length > visibleCount;
+  const maxVisibleImages = 4; // 1 principal + 3 miniaturas
+  const displayedMedia = mediaList.slice(0, maxVisibleImages);
+  const hasMoreImages = mediaList.length > maxVisibleImages;
 
   const handleMainImageClick = () => {
     setSelectedIndex(0);
@@ -233,8 +233,11 @@ export default function PropertyGallery({
           style={{ width: isSingleImage ? '0%' : 'auto' }}
         >
           {displayedMedia.slice(1).map((item, idx) => {
-            const remainingImages = displayedMedia.length - 1;
-            const thumbHeight = remainingImages === 1 ? '100%' : `calc((100% - ${(remainingImages - 1) * 16}px) / ${remainingImages})`;
+            // 3 miniaturas para distribuir en el espacio disponible (38.2% ancho, 100% alto)
+            const numThumbnails = displayedMedia.length - 1; // Cantidad de miniaturas reales
+            const totalThumbnails = hasMoreImages ? 3 : numThumbnails; // Si hay más, mostrar 3 espacios; si no, los que hay
+            const gapSize = 16; // gap-4 = 16px
+            const thumbHeight = `calc((100% - ${(totalThumbnails - 1) * gapSize}px) / ${totalThumbnails})`;
             
             return (
             <div
@@ -265,8 +268,10 @@ export default function PropertyGallery({
           })}
 
           {hasMoreImages && (() => {
-            const remainingImages = displayedMedia.length - 1;
-            const thumbHeight = remainingImages === 1 ? '100%' : `calc((100% - ${(remainingImages - 1) * 16}px) / ${remainingImages})`;
+            const totalThumbnails = 3;
+            const numThumbnails = displayedMedia.length - 1;
+            const gapSize = 16;
+            const thumbHeight = `calc((100% - ${(totalThumbnails - 1) * gapSize}px) / ${totalThumbnails})`;
             
             return (
             <button
@@ -281,7 +286,7 @@ export default function PropertyGallery({
               }}
             >
               <div className="text-center">
-                <div className="text-2xl font-bold">+{mediaList.length - visibleCount}</div>
+                <div className="text-2xl font-bold">+{mediaList.length - maxVisibleImages}</div>
                 <div className="text-xs">Ver más</div>
               </div>
             </button>
