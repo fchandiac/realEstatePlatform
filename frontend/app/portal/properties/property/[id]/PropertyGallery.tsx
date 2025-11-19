@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import FontAwesome from '@/components/FontAwesome/FontAwesome';
-import GalleryModal from './GalleryModal';
 
 interface MediaItem {
   id?: string;
@@ -11,6 +10,131 @@ interface MediaItem {
   format?: string;
 }
 
+// Gallery Modal Component
+function GalleryModal({
+  mediaList,
+  initialIndex,
+  propertyTitle,
+  onClose,
+}: {
+  mediaList: MediaItem[];
+  initialIndex: number;
+  propertyTitle: string;
+  onClose: () => void;
+}) {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      } else if (e.key === 'ArrowLeft') {
+        setCurrentIndex((prev) => (prev === 0 ? mediaList.length - 1 : prev - 1));
+      } else if (e.key === 'ArrowRight') {
+        setCurrentIndex((prev) => (prev === mediaList.length - 1 ? 0 : prev + 1));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeydown);
+    return () => window.removeEventListener('keydown', handleKeydown);
+  }, [mediaList.length, onClose]);
+
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev === 0 ? mediaList.length - 1 : prev - 1));
+  }, [mediaList.length]);
+
+  const goToNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev === mediaList.length - 1 ? 0 : prev + 1));
+  }, [mediaList.length]);
+
+  const handleThumbnailClick = (index: number) => {
+    setCurrentIndex(index);
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/90 flex flex-col"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      {/* Top Bar */}
+      <div className="flex items-center justify-between px-6 py-4 bg-black/50 backdrop-blur-sm border-b border-white/10">
+        <div className="text-white text-sm font-medium">
+          {currentIndex + 1} de {mediaList.length}
+        </div>
+
+        <button
+          onClick={onClose}
+          className="text-white hover:bg-white/10 p-2 rounded-lg transition-colors"
+          title="Cerrar (ESC)"
+        >
+          <FontAwesome icon="xmark" className="text-2xl" />
+        </button>
+      </div>
+
+      {/* Main Image Container */}
+      <div className="flex-1 flex items-center justify-center relative overflow-hidden px-4 py-8">
+        <button
+          onClick={goToPrevious}
+          className="absolute left-4 z-10 text-white hover:bg-white/20 p-3 rounded-lg transition-colors"
+          title="Anterior (Flecha izquierda)"
+        >
+          <FontAwesome icon="chevron-left" className="text-4xl" />
+        </button>
+
+        {mediaList[currentIndex]?.url ? (
+          <img
+            src={mediaList[currentIndex].url}
+            alt={`${propertyTitle} - ${currentIndex + 1}`}
+            className="max-w-full max-h-full object-contain"
+          />
+        ) : (
+          <div className="flex items-center justify-center text-white">
+            <FontAwesome icon="image-not-supported" className="text-6xl text-muted-foreground" />
+          </div>
+        )}
+
+        <button
+          onClick={goToNext}
+          className="absolute right-4 z-10 text-white hover:bg-white/20 p-3 rounded-lg transition-colors"
+          title="Siguiente (Flecha derecha)"
+        >
+          <FontAwesome icon="chevron-right" className="text-4xl" />
+        </button>
+      </div>
+
+      {/* Bottom Thumbnails Bar */}
+      <div className="bg-black/50 backdrop-blur-sm border-t border-white/10 px-4 py-4 overflow-x-auto">
+        <div className="flex gap-2 pb-2">
+          {mediaList.map((item, idx) => (
+            <button
+              key={`${item.url}-${idx}`}
+              onClick={() => handleThumbnailClick(idx)}
+              className={`flex-shrink-0 rounded-lg overflow-hidden transition-all ${
+                idx === currentIndex
+                  ? 'ring-2 ring-primary h-20 w-32'
+                  : 'opacity-60 hover:opacity-100 h-16 w-24'
+              }`}
+            >
+              {item.url ? (
+                <img
+                  src={item.url}
+                  alt={`Miniatura ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <FontAwesome icon="image-not-supported" className="text-muted-foreground" />
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Property Gallery Component
 interface PropertyGalleryProps {
   mainImageUrl?: string;
   multimedia?: MediaItem[];
@@ -25,16 +149,13 @@ export default function PropertyGallery({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Construir lista de imágenes: mainImageUrl primero, luego resto
   const mediaList = useMemo(() => {
     const list: MediaItem[] = [];
 
-    // Agregar mainImageUrl primero si existe
     if (mainImageUrl) {
       list.push({ url: mainImageUrl, type: 'MAIN_IMAGE' });
     }
 
-    // Agregar resto de multimedia (excluyendo duplicados con mainImageUrl)
     if (multimedia && multimedia.length > 0) {
       multimedia.forEach((item) => {
         if (item.url !== mainImageUrl) {
@@ -46,12 +167,10 @@ export default function PropertyGallery({
     return list;
   }, [mainImageUrl, multimedia]);
 
-  // Golden ratio: 1.618
   const goldenRatio = 1.618;
-  const mainWidthPercent = (goldenRatio / (1 + goldenRatio)) * 100; // ~61.8%
-  const thumbWidthPercent = (1 / (1 + goldenRatio)) * 100; // ~38.2%
+  const mainWidthPercent = (goldenRatio / (1 + goldenRatio)) * 100;
+  const thumbWidthPercent = (1 / (1 + goldenRatio)) * 100;
 
-  // Mostrar máximo 5 imágenes: 1 grande + 4 miniaturas
   const visibleCount = 5;
   const displayedMedia = mediaList.slice(0, visibleCount);
   const hasMoreImages = mediaList.length > visibleCount;
@@ -68,7 +187,7 @@ export default function PropertyGallery({
 
   if (mediaList.length === 0) {
     return (
-      <div className="w-full aspect-video rounded-lg bg-muted flex items-center justify-center">
+      <div className="w-full aspect-video rounded-lg flex items-center justify-center border border-border">
         <FontAwesome
           icon="image-not-supported"
           className="text-muted-foreground text-4xl"
@@ -79,7 +198,6 @@ export default function PropertyGallery({
 
   return (
     <>
-      {/* Main Gallery */}
       <div className="flex flex-col md:flex-row gap-4 h-96">
         {/* Main Image */}
         <div
@@ -94,7 +212,7 @@ export default function PropertyGallery({
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
-            <div className="w-full h-full bg-muted flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center border border-border">
               <FontAwesome
                 icon="image-not-supported"
                 className="text-muted-foreground text-3xl"
@@ -125,7 +243,7 @@ export default function PropertyGallery({
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               ) : (
-                <div className="w-full h-full bg-muted flex items-center justify-center">
+                <div className="w-full h-full flex items-center justify-center border border-border">
                   <FontAwesome
                     icon="image-not-supported"
                     className="text-muted-foreground text-lg"
@@ -135,7 +253,6 @@ export default function PropertyGallery({
             </div>
           ))}
 
-          {/* "Ver más" button if there are more images */}
           {hasMoreImages && (
             <button
               onClick={() => {
@@ -157,7 +274,6 @@ export default function PropertyGallery({
         </div>
       </div>
 
-      {/* Gallery Modal */}
       {isModalOpen && (
         <GalleryModal
           mediaList={mediaList}
