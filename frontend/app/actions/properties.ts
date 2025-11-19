@@ -1680,6 +1680,11 @@ export async function getPropertyLocation(propertyId: string): Promise<{
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => null);
+      console.error('❌ [getPropertyLocation] Failed to fetch:', {
+        status: res.status,
+        error: errorData?.message,
+        url: `${env.backendApiUrl}/properties/${propertyId}/full`,
+      });
       return {
         success: false,
         error: errorData?.message || `Failed to fetch property location: ${res.status}`,
@@ -1687,6 +1692,15 @@ export async function getPropertyLocation(propertyId: string): Promise<{
     }
 
     const fullData = await res.json();
+    console.log('📍 [getPropertyLocation] Full property data received:', {
+      propertyId,
+      state: fullData?.state,
+      city: fullData?.city,
+      address: fullData?.address,
+      latitude: fullData?.latitude,
+      longitude: fullData?.longitude,
+      allKeys: Object.keys(fullData || {}),
+    });
     
     // Extract location data from the full property response
     const locationData = {
@@ -1697,9 +1711,10 @@ export async function getPropertyLocation(propertyId: string): Promise<{
       longitude: fullData?.longitude,
     };
     
+    console.log('✅ [getPropertyLocation] Location data extracted:', locationData);
     return { success: true, data: locationData };
   } catch (error) {
-    console.error('Error fetching property location:', error);
+    console.error('❌ [getPropertyLocation] Error:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',

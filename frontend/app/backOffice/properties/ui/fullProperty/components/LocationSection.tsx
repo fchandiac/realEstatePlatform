@@ -52,8 +52,16 @@ const LocationSection: React.FC<LocationSectionProps> = ({
     const loadLocation = async () => {
       try {
         setLoading(true)
+        console.log('📍 [LocationSection] Loading location for property:', propertyId)
         const response = await getPropertyLocation(propertyId)
+        console.log('📍 [LocationSection] Response received:', {
+          success: response.success,
+          error: response.error,
+          data: response.data,
+        })
+        
         if (response.success && response.data) {
+          console.log('📍 [LocationSection] Setting form data:', response.data)
           setFormData({
             state: response.data.state || '',
             city: response.data.city || '',
@@ -62,10 +70,12 @@ const LocationSection: React.FC<LocationSectionProps> = ({
             longitude: response.data.longitude,
           })
         } else {
-          setError(response.error || 'Failed to load location')
+          const errorMsg = response.error || 'Failed to load location'
+          console.error('📍 [LocationSection] Error:', errorMsg)
+          setError(errorMsg)
         }
       } catch (err) {
-        console.error('Error loading location:', err)
+        console.error('❌ [LocationSection] Exception:', err)
         setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
         setLoading(false)
@@ -81,14 +91,17 @@ const LocationSection: React.FC<LocationSectionProps> = ({
   useEffect(() => {
     const loadRegions = async () => {
       try {
+        console.log('📍 [LocationSection] Loading regions...')
         const regionList = await getRegions()
+        console.log('📍 [LocationSection] Regions loaded:', regionList)
         const options: Option[] = regionList.map((region) => ({
           id: region.id,
           label: region.name,
         }))
+        console.log('📍 [LocationSection] Region options created:', options)
         setRegions(options)
       } catch (err) {
-        console.error('Error loading regions:', err)
+        console.error('❌ [LocationSection] Error loading regions:', err)
       }
     }
     loadRegions()
@@ -99,16 +112,20 @@ const LocationSection: React.FC<LocationSectionProps> = ({
     const loadCommunes = async () => {
       if (formData.state) {
         try {
+          console.log('📍 [LocationSection] Loading communes for state:', formData.state)
           const communeList = await getCommunesByRegion(formData.state)
+          console.log('📍 [LocationSection] Communes loaded:', communeList)
           const options: Option[] = communeList.map((commune) => ({
             id: commune.id,
             label: commune.name,
           }))
+          console.log('📍 [LocationSection] Commune options created:', options)
           setCommunes(options)
         } catch (err) {
-          console.error('Error loading communes:', err)
+          console.error('❌ [LocationSection] Error loading communes:', err)
         }
       } else {
+        console.log('📍 [LocationSection] No state selected, clearing communes')
         setCommunes([])
       }
     }
