@@ -17,7 +17,7 @@ const Switch: React.FC<SwitchProps> = ({ checked = false, onChange, label, label
   };
 
   return (
-    <label className="flex items-center gap-2 cursor-pointer select-none" data-test-id={props["data-test-id"] || "switch-root"}>
+    <label className="flex items-center gap-2 cursor-pointer select-none mt-1" data-test-id={props["data-test-id"] || "switch-root"}>
       {labelPosition === 'left' && label && (
         <span className="text-sm font-light">{label}</span>
       )}
