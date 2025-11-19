@@ -4,6 +4,8 @@ import CreateLocationPicker from './CreateLocationPickerWrapper';
 
 interface LocationPickerProps {
   onChange?: (coordinates: { lat: number; lng: number } | null) => void;
+  initialLat?: number;
+  initialLng?: number;
 }
 
 const LocationPicker: React.FC<LocationPickerProps> = (props) => {

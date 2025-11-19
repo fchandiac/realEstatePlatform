@@ -21,12 +21,16 @@ import { TextField } from '../TextField/TextField';
 
 interface CreateLocationPickerProps {
   onChange?: (coordinates: { lat: number; lng: number } | null) => void;
+  initialLat?: number;
+  initialLng?: number;
 }
 
 // (map click handler and view setter live in CreateLocationPickerMap)
 
 const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({ 
-  onChange 
+  onChange,
+  initialLat,
+  initialLng
 }) => {
   const [currentCoordinates, setCurrentCoordinates] = useState<{ lat: number; lng: number } | null>(null);
   const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(null);
@@ -72,6 +76,19 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
 
   // Obtener ubicación actual del usuario automáticamente al cargar
   useEffect(() => {
+    // Si tenemos coordenadas iniciales, usar esas
+    if (initialLat !== undefined && initialLng !== undefined) {
+      console.log('CreateLocationPicker - Usando coordenadas iniciales:', { lat: initialLat, lng: initialLng });
+      const initialCoords = { lat: initialLat, lng: initialLng };
+      setCurrentCoordinates(initialCoords);
+      setMapCenter([initialLat, initialLng]);
+      setMarkerPosition([initialLat, initialLng]);
+      setIsLoading(false);
+      setFlyToTarget([initialLat, initialLng]);
+      onChangeRef.current?.(initialCoords);
+      return;
+    }
+
     // Si el usuario ya seleccionó una ubicación manualmente, no hacer geolocalización automática
     if (isUserSelected) {
       console.log('CreateLocationPicker - Usuario ya seleccionó ubicación manualmente, saltando geolocalización automática');
@@ -160,7 +177,7 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
     };
 
     getLocation();
-  }, [isUserSelected]);
+  }, [initialLat, initialLng, isUserSelected]);
 
   const handleLocationSelect = (lat: number, lng: number) => {
     console.log('CreateLocationPicker - Click en mapa detectado:', { lat, lng });
