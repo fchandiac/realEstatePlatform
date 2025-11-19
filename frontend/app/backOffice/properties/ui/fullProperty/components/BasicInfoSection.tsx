@@ -54,6 +54,8 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
     propertyTypeId: '',
     description: '',
     status: '',
+    price: '',
+    currencyPrice: '',
   })
 
   // Load property data
@@ -71,6 +73,8 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
             propertyTypeId: response.data.propertyType?.id || '',
             description: response.data.description || '',
             status: response.data.status || '',
+            price: response.data.price?.toString() || '',
+            currencyPrice: response.data.currencyPrice || '',
           })
         } else {
           setError(response.error || 'Failed to load property data')
@@ -120,6 +124,8 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         propertyTypeId: formData.propertyTypeId,
         description: formData.description,
         status: formData.status,
+        price: formData.price ? parseFloat(formData.price) : undefined,
+        currencyPrice: formData.currencyPrice,
       })
 
       if (result.success) {
@@ -138,6 +144,8 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
             propertyTypeId: headerResponse.data.propertyType?.id || '',
             description: headerResponse.data.description || '',
             status: headerResponse.data.status || '',
+            price: headerResponse.data.price?.toString() || '',
+            currencyPrice: headerResponse.data.currencyPrice || '',
           })
           setSelectedStatus(headerResponse.data.status || null)
         }
@@ -220,17 +228,17 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         <div className="grid gap-4 sm:grid-cols-2">
           <TextField
             label="Precio"
-            value={propertyData?.price ? propertyData.price.toString() : ''}
-            onChange={() => {}}
+            value={formData.price}
+            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
             type="number"
             className="w-full"
-            readOnly
+            placeholder="Ej. 50000000"
           />
           <Select
             placeholder="Moneda"
             options={currencyOptions}
-            value={findOption(currencyOptions, propertyData?.currencyPrice)?.id ?? null}
-            onChange={() => null}
+            value={formData.currencyPrice}
+            onChange={(value) => setFormData({ ...formData, currencyPrice: value as string })}
           />
         </div>
         <TextField

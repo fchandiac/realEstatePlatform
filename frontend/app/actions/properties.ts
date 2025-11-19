@@ -526,6 +526,8 @@ export interface UpdatePropertyBasicDto {
   propertyTypeId?: string;
   assignedAgentId?: string;
   isFeatured?: boolean;
+  price?: number;
+  currencyPrice?: string;
 }
 
 /**
