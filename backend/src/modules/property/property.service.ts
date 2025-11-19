@@ -1753,6 +1753,10 @@ export class PropertyService {
         .filter(p => !p.mainImageUrl || p.mainImageUrl.trim() === '')
         .map(p => p.id);
 
+      console.log('🔍 [getPublishedPropertiesFiltered] Properties with mainImageUrl:', data.filter(p => p.mainImageUrl).length);
+      console.log('🔍 [getPublishedPropertiesFiltered] Properties WITHOUT mainImageUrl:', idsNeedingFallback.length);
+      console.log('🔍 [getPublishedPropertiesFiltered] IDs needing fallback:', idsNeedingFallback);
+
       let multimediaMap: Record<string, any[]> = {};
       if (idsNeedingFallback.length > 0) {
         console.log('📸 Loading multimedia for', idsNeedingFallback.length, 'properties without mainImageUrl');
