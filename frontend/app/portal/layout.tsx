@@ -2,7 +2,6 @@
 import PortalTopBar from "./ui/PortalTopBar";
 import PortalFooter from "./ui/PortalFooter";
 import Wsp from "./ui/Wsp";
-import NavBar from "./ui/NavBar";
 import CookieConsent from "./ui/CookieConsent";
 
 type PortalLayoutProps = {
@@ -20,11 +19,6 @@ export default function PortalLayout({ children }: PortalLayoutProps) {
       // onMenuClick={() => setSidebarOpen(true)} 
 
       />
-
-      {/* NavBar - Sticky under TopBar (will be below Slider on homepage) */}
-      <div className="sticky top-16 z-40 bg-background shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)]">
-        <NavBar />
-      </div>
       
       {/* <VisitorSideBar open={sidebarOpen} onClose={() => setSidebarOpen(false)} /> */}
       <main className="flex-1">
