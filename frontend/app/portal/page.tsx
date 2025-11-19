@@ -73,7 +73,15 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
       </div>
 
       {/* Regular Portal Properties Section */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900">
+            Busca tu propiedad ideal
+          </h2>
+          <p className="mt-2 text-gray-600">
+            Filtra y explora todas nuestras propiedades disponibles.
+          </p>
+        </div>
         <PortalClient initialProperties={properties} initialPagination={pagination} />
       </div>
     </>
