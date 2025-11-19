@@ -196,13 +196,18 @@ export default function PropertyGallery({
     );
   }
 
+  // Usar ancho completo si hay solo una imagen, sino usar proporción dorada
+  const isSingleImage = mediaList.length === 1;
+  const mainWidth = isSingleImage ? '100%' : `${mainWidthPercent}%`;
+  const thumbWidth = isSingleImage ? '0%' : `${thumbWidthPercent}%`;
+
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-4 h-96">
+      <div className={`flex flex-col ${isSingleImage ? '' : 'md:flex-row'} gap-4 h-96`}>
         {/* Main Image */}
         <div
           className="overflow-hidden rounded-lg shadow-md cursor-pointer group"
-          style={{ width: `${mainWidthPercent}%` }}
+          style={{ width: mainWidth }}
           onClick={handleMainImageClick}
         >
           {displayedMedia[0]?.url ? (
@@ -222,9 +227,10 @@ export default function PropertyGallery({
         </div>
 
         {/* Thumbnail Strip */}
+        {!isSingleImage && (
         <div
           className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-x-visible"
-          style={{ width: `${thumbWidthPercent}%` }}
+          style={{ width: thumbWidth }}
         >
           {displayedMedia.slice(1).map((item, idx) => (
             <div
@@ -272,6 +278,7 @@ export default function PropertyGallery({
             </button>
           )}
         </div>
+        )}
       </div>
 
       {isModalOpen && (
