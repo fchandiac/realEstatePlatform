@@ -229,8 +229,8 @@ export default function PropertyGallery({
         {/* Thumbnail Strip - Right on desktop, bottom on mobile */}
         {!isSingleImage && (
         <div
-          className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-y-auto md:overflow-x-visible"
-          style={{ width: thumbWidth, minWidth: thumbWidth }}
+          className="flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-y-auto md:overflow-x-visible flex-1"
+          style={{ width: isSingleImage ? '0%' : 'auto' }}
         >
           {displayedMedia.slice(1).map((item, idx) => {
             // 3 miniaturas para distribuir en el espacio disponible (38.2% ancho, 100% alto)
