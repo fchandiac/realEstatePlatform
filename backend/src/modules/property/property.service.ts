@@ -1675,7 +1675,7 @@ export class PropertyService {
       // Filter by currency
       if (filters?.currency && filters.currency !== '' && filters.currency !== 'all' && filters.currency !== null) {
         console.log('🔎 Filtering by currency:', filters.currency);
-        query = query.andWhere('property.currency = :currency', {
+        query = query.andWhere('property.currencyPrice = :currency', {
           currency: filters.currency,
         });
       }

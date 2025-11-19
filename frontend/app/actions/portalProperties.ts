@@ -88,7 +88,7 @@ export async function getPublishedPropertiesFiltered(filters: {
       title: prop.title,
       description: prop.description,
       price: prop.price,
-      currency: prop.currency || 'CLP',
+      currency: prop.currencyPrice || 'CLP',
       operationType: prop.operationType,
       state: prop.state,
       city: prop.city,
