@@ -305,8 +305,8 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
         <span
           className={`material-symbols-outlined transition-all ${
             isFavorited
-              ? 'text-red-500 fill-red-500'
-              : 'text-gray-400 hover:text-red-400'
+              ? 'text-accent fill-accent'
+              : 'text-gray-400 hover:text-accent'
           }`}
           style={{ fontSize: '28px' }}
         >
