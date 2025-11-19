@@ -9,6 +9,7 @@ import { useAlert } from '@/app/hooks/useAlert';
 import FontAwesome from '@/components/FontAwesome/FontAwesome';
 import { env } from '@/lib/env';
 import { togglePropertyFavorite } from '@/app/actions/properties';
+import PropertyMapWrapper from './PropertyMapWrapper';
 
 interface PropertyDetailClientProps {
   property: Property;
@@ -531,23 +532,14 @@ export default function PropertyDetailClient({
 
             {/* Map if coordinates available */}
             {property.latitude && property.longitude && (
-              <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border">
-                <iframe
-                  src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d${
-                    property.longitude
-                  }!3d${
-                    property.latitude
-                  }!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x${property.id.slice(0, 8)}!2s${encodeURIComponent(
-                    property.address || `${property.city}, ${property.state}`
-                  )}!5e0!3m2!1sen!2scl!4v1709292812260`}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
+              <PropertyMapWrapper
+                latitude={property.latitude}
+                longitude={property.longitude}
+                title={property.title}
+                address={property.address}
+                city={property.city}
+                state={property.state}
+              />
             )}
           </div>
         )}
