@@ -86,23 +86,41 @@ function isVideoFile(url: string): boolean {
   return videoExtensions.some(ext => lowerUrl.includes(ext));
 }
 
-function getPrimaryImage(property: PortalProperty): string | undefined {
+function getPrimaryMedia(property: PortalProperty): { type: 'image' | 'video'; url: string } | undefined {
   // Primero, intentar obtener la primera imagen de multimedia (más confiable)
   if (property.multimedia && property.multimedia.length > 0) {
+    // Buscar imagen primero
     const firstImage = property.multimedia.find(m => m.type === 'PROPERTY_IMG' || m.format === 'IMG');
     if (firstImage) {
       const url = normalizeMediaUrl(firstImage.url);
-      if (url && !isVideoFile(url)) return url;
+      if (url && !isVideoFile(url)) {
+        return { type: 'image', url };
+      }
+    }
+    
+    // Si no hay imagen, buscar video
+    const firstVideo = property.multimedia.find(m => m.type === 'PROPERTY_VIDEO' || isVideoFile(m.url));
+    if (firstVideo) {
+      const url = normalizeMediaUrl(firstVideo.url);
+      if (url) {
+        return { type: 'video', url };
+      }
     }
   }
 
-  // Fallback: usar mainImageUrl solo si NO es un video
-  if (property.mainImageUrl && !isVideoFile(property.mainImageUrl)) {
+  // Fallback: usar mainImageUrl
+  if (property.mainImageUrl) {
     const url = normalizeMediaUrl(property.mainImageUrl);
-    if (url) return url;
+    if (!url) return undefined;
+    
+    if (isVideoFile(url)) {
+      return { type: 'video', url };
+    } else {
+      return { type: 'image', url };
+    }
   }
 
-  // Si no hay imágenes, devolver undefined (mostrar placeholder)
+  // Si no hay nada, devolver undefined (mostrar placeholder)
   return undefined;
 }
 
@@ -119,14 +137,14 @@ function operationLabel(op: OperationType): string {
 }
 
 export default function PropertyCard({ property, href, onClick }: PropertyCardProps) {
-  const primaryImage = getPrimaryImage(property);
+  const primaryMedia = getPrimaryMedia(property);
   console.log('🎯 [PropertyCard] Property ID:', property.id);
   console.log('🎯 [PropertyCard] mainImageUrl:', property.mainImageUrl);
-  console.log('🎯 [PropertyCard] primaryImage (after getPrimaryImage):', primaryImage);
+  console.log('🎯 [PropertyCard] primaryMedia (after getPrimaryMedia):', primaryMedia);
   
-  const [imgSrc, setImgSrc] = useState<string | undefined>(() => {
-    console.log('🎯 [PropertyCard] Initial imgSrc state:', primaryImage);
-    return primaryImage;
+  const [mediaSrc, setMediaSrc] = useState<{ type: 'image' | 'video'; url: string } | undefined>(() => {
+    console.log('🎯 [PropertyCard] Initial mediaSrc state:', primaryMedia);
+    return primaryMedia;
   });
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoadingFav, setIsLoadingFav] = useState(false);
@@ -237,9 +255,9 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
     if (onClick) onClick(property.id);
   };
 
-  // Media container (img or fallback)
+  // Media container (img or video or fallback)
   const mediaEl = useMemo(() => {
-    if (!imgSrc) {
+    if (!mediaSrc) {
       return (
         <div className="flex items-center justify-center w-full h-full bg-gray-200">
           <span className="material-symbols-outlined text-gray-400" style={{ fontSize: '64px' }}>
@@ -249,20 +267,38 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
       );
     }
 
+    if (mediaSrc.type === 'video') {
+      return (
+        <video
+          src={mediaSrc.url}
+          className="object-cover w-full h-full"
+          style={{ aspectRatio: '16/9' }}
+          autoPlay
+          muted
+          loop
+          playsInline
+          onError={(e) => {
+            console.error('Error loading video:', mediaSrc.url);
+            setMediaSrc(undefined);
+          }}
+        />
+      );
+    }
+
+    // Image
     return (
       <img
-        src={imgSrc}
+        src={mediaSrc.url}
         alt={propertyTypeName || property.title}
         className="object-cover w-full h-full"
         style={{ aspectRatio: '16/9' }}
         onError={(e) => {
-          // evitar bucle: si ya mostró el error, no reintentar
           console.error('Error loading image:', e.currentTarget.src);
-          setImgSrc(undefined);
+          setMediaSrc(undefined);
         }}
       />
     );
-  }, [imgSrc, propertyTypeName, property.title]);
+  }, [mediaSrc, propertyTypeName, property.title]);
 
   const CardInner = (
     <div
