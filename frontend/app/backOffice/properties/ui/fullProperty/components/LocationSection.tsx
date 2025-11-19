@@ -46,6 +46,7 @@ const LocationSection: React.FC<LocationSectionProps> = ({
   })
   const [regions, setRegions] = useState<Option[]>([])
   const [communes, setCommunes] = useState<Option[]>([])
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false)
 
   // Load location data
   useEffect(() => {
@@ -69,14 +70,17 @@ const LocationSection: React.FC<LocationSectionProps> = ({
             latitude: response.data.latitude,
             longitude: response.data.longitude,
           })
+          setInitialDataLoaded(true)
         } else {
           const errorMsg = response.error || 'Failed to load location'
           console.error('📍 [LocationSection] Error:', errorMsg)
           setError(errorMsg)
+          setInitialDataLoaded(true)
         }
       } catch (err) {
         console.error('❌ [LocationSection] Exception:', err)
         setError(err instanceof Error ? err.message : 'Unknown error')
+        setInitialDataLoaded(true)
       } finally {
         setLoading(false)
       }
@@ -100,12 +104,21 @@ const LocationSection: React.FC<LocationSectionProps> = ({
         }))
         console.log('📍 [LocationSection] Region options created:', options)
         setRegions(options)
+        
+        // If we have initial data, try to match the state with region ID by name
+        if (initialDataLoaded && formData.state) {
+          const matchedRegion = regionList.find(r => r.name === formData.state)
+          if (matchedRegion) {
+            console.log('📍 [LocationSection] Matched region by name:', formData.state, '-> ID:', matchedRegion.id)
+            setFormData(prev => ({ ...prev, state: matchedRegion.id }))
+          }
+        }
       } catch (err) {
         console.error('❌ [LocationSection] Error loading regions:', err)
       }
     }
     loadRegions()
-  }, [])
+  }, [initialDataLoaded])
 
   // Load communes based on selected region
   useEffect(() => {
@@ -120,6 +133,17 @@ const LocationSection: React.FC<LocationSectionProps> = ({
             label: commune.name,
           }))
           console.log('📍 [LocationSection] Commune options created:', options)
+          console.log('📍 [LocationSection] Looking for city match:', formData.city, 'in', options)
+          
+          // If we have a city name, find and set its ID
+          if (formData.city) {
+            const matchedCommune = communeList.find(c => c.name === formData.city)
+            if (matchedCommune) {
+              console.log('📍 [LocationSection] Matched commune by name:', formData.city, '-> ID:', matchedCommune.id)
+              setFormData(prev => ({ ...prev, city: matchedCommune.id }))
+            }
+          }
+          
           setCommunes(options)
         } catch (err) {
           console.error('❌ [LocationSection] Error loading communes:', err)
@@ -130,7 +154,7 @@ const LocationSection: React.FC<LocationSectionProps> = ({
       }
     }
     loadCommunes()
-  }, [formData.state])
+  }, [formData.state, initialDataLoaded])
 
   const handleLocationChange = (coordinates: { lat: number; lng: number } | null) => {
     if (coordinates) {
