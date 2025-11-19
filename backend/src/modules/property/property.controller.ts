@@ -277,6 +277,21 @@ export class PropertyController {
     return { success: true, data };
   }
 
+  @Get('public/featured/paginated')
+  @ApiOperation({ summary: 'Get featured properties with pagination (public)' })
+  @ApiResponse({ status: 200, description: 'Paginated list of featured properties' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  async getPublicFeaturedPaginated(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const pageNum = page ? Math.max(1, parseInt(page, 10)) : 1;
+    const limitNum = limit ? Math.min(Math.max(1, parseInt(limit, 10)), 100) : 9;
+    const data = await this.propertyService.findPublishedFeaturedPublicPaginated(pageNum, limitNum);
+    return { success: true, ...data };
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get property by ID' })
   @ApiResponse({ status: 200, description: 'Property details', type: Property })
