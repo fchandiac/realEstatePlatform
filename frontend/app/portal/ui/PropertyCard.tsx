@@ -62,18 +62,16 @@ function normalizeMediaUrl(url?: string | null): string | undefined {
   // Sanea rutas con ../
   const cleaned = url.replace('/../', '/');
 
-  // Si ya es absoluta, devuélvela tal cual (canónica desde el backend)
-  try {
-    // Esto lanzará si no es URL absoluta
-    new URL(cleaned);
+  // Si ya es absoluta (http:// o https://), devuélvela tal cual
+  if (cleaned.startsWith('http://') || cleaned.startsWith('https://')) {
     return cleaned;
-  } catch {
-    // no-op
   }
 
-  // Si es relativa, prepend backend (misma base en SSR y cliente)
+  // Si es relativa (comienza con /), prepend backend API URL
   if (cleaned.startsWith('/')) {
-    return `${env.backendApiUrl}${cleaned}`;
+    // Asegurar que no tengamos doble /public/ si el backend ya lo agrega
+    const finalUrl = `${env.backendApiUrl}${cleaned}`;
+    return finalUrl;
   }
 
   // Cualquier otro caso, devolver limpiada
@@ -83,14 +81,16 @@ function normalizeMediaUrl(url?: string | null): string | undefined {
 function getPrimaryImage(property: PortalProperty): string | undefined {
   // Usar mainImageUrl si existe
   if (property.mainImageUrl) {
-    return normalizeMediaUrl(property.mainImageUrl);
+    const url = normalizeMediaUrl(property.mainImageUrl);
+    if (url) return url;
   }
 
   // Fallback: si no hay mainImageUrl, intentar obtener la primera imagen de multimedia
   if (property.multimedia && property.multimedia.length > 0) {
     const firstImage = property.multimedia.find(m => m.type === 'PROPERTY_IMG' || m.format === 'IMG');
     if (firstImage) {
-      return normalizeMediaUrl(firstImage.url);
+      const url = normalizeMediaUrl(firstImage.url);
+      if (url) return url;
     }
   }
 

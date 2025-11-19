@@ -82,6 +82,23 @@ export async function getPublishedPropertiesFiltered(filters: {
 
     const rawData = await response.json();
     
+    // Helper: Asegurar URLs absolutas
+    const ensureAbsoluteUrl = (url: string | null | undefined): string => {
+      if (!url) return '';
+      
+      // Si ya es absoluta, devolver tal cual
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        return url;
+      }
+      
+      // Si es relativa, prepend backend URL
+      if (url.startsWith('/')) {
+        return `${env.backendApiUrl}${url}`;
+      }
+      
+      return url;
+    };
+    
     // Mapear los datos del backend al formato esperado
     const mappedData: PropertyData[] = (rawData.data || []).map((prop: any) => ({
       id: prop.id,
@@ -96,7 +113,7 @@ export async function getPublishedPropertiesFiltered(filters: {
       bedrooms: prop.bedrooms,
       bathrooms: prop.bathrooms,
       totalArea: prop.builtSquareMeters,
-      mainImageUrl: prop.mainImageUrl,
+      mainImageUrl: ensureAbsoluteUrl(prop.mainImageUrl),
       createdAt: prop.createdAt,
       isFeatured: prop.isFeatured || false,
     }));
