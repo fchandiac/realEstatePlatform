@@ -64,16 +64,18 @@ function normalizeMediaUrl(url?: string | null): string | undefined {
 
   // Si ya es absoluta (http:// o https://), devuélvela tal cual
   if (cleaned.startsWith('http://') || cleaned.startsWith('https://')) {
+    console.log('✅ [PropertyCard] Already absolute:', cleaned);
     return cleaned;
   }
 
   // Si es relativa (comienza con /), prepend backend API URL
   if (cleaned.startsWith('/')) {
-    // Asegurar que no tengamos doble /public/ si el backend ya lo agrega
-    const finalUrl = `${env.backendApiUrl}${cleaned}`;
-    return finalUrl;
+    const absolute = `${env.backendApiUrl}${cleaned}`;
+    console.log('✅ [PropertyCard] Made absolute:', absolute);
+    return absolute;
   }
 
+  console.log('⚠️ [PropertyCard] Unexpected URL format:', url);
   // Cualquier otro caso, devolver limpiada
   return cleaned;
 }
@@ -110,7 +112,15 @@ function operationLabel(op: OperationType): string {
 }
 
 export default function PropertyCard({ property, href, onClick }: PropertyCardProps) {
-  const [imgSrc, setImgSrc] = useState<string | undefined>(() => getPrimaryImage(property));
+  const primaryImage = getPrimaryImage(property);
+  console.log('🎯 [PropertyCard] Property ID:', property.id);
+  console.log('🎯 [PropertyCard] mainImageUrl:', property.mainImageUrl);
+  console.log('🎯 [PropertyCard] primaryImage (after getPrimaryImage):', primaryImage);
+  
+  const [imgSrc, setImgSrc] = useState<string | undefined>(() => {
+    console.log('🎯 [PropertyCard] Initial imgSrc state:', primaryImage);
+    return primaryImage;
+  });
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoadingFav, setIsLoadingFav] = useState(false);
   const { showAlert } = useAlert();

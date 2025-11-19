@@ -82,20 +82,28 @@ export async function getPublishedPropertiesFiltered(filters: {
 
     const rawData = await response.json();
     
+    console.log('📦 Raw data from backend (first property mainImageUrl):', rawData.data?.[0]?.mainImageUrl);
+    
     // Helper: Asegurar URLs absolutas
     const ensureAbsoluteUrl = (url: string | null | undefined): string => {
       if (!url) return '';
       
+      console.log('🔗 Converting URL:', url);
+      
       // Si ya es absoluta, devolver tal cual
       if (url.startsWith('http://') || url.startsWith('https://')) {
+        console.log('✅ Already absolute:', url);
         return url;
       }
       
       // Si es relativa, prepend backend URL
       if (url.startsWith('/')) {
-        return `${env.backendApiUrl}${url}`;
+        const absolute = `${env.backendApiUrl}${url}`;
+        console.log('✅ Made absolute:', absolute);
+        return absolute;
       }
       
+      console.log('⚠️ Unexpected URL format:', url);
       return url;
     };
     
