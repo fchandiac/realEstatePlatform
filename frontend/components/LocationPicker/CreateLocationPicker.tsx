@@ -235,13 +235,13 @@ const CreateLocationPicker: React.FC<CreateLocationPickerProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <TextField
             label="Latitud"
-            value={currentCoordinates ? currentCoordinates.lat.toFixed(6) : ''}
+            value={currentCoordinates ? Number(currentCoordinates.lat).toFixed(6) : ''}
             onChange={() => {}}
             readOnly={true}
           />
           <TextField
             label="Longitud"
-            value={currentCoordinates ? currentCoordinates.lng.toFixed(6) : ''}
+            value={currentCoordinates ? Number(currentCoordinates.lng).toFixed(6) : ''}
             onChange={() => {}}
             readOnly={true}
           />
