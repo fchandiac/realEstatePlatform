@@ -148,6 +148,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
   });
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoadingFav, setIsLoadingFav] = useState(false);
+  const [cookiesAccepted, setCookiesAccepted] = useState(false);
   const { showAlert } = useAlert();
   
   const isUF = property.currencyPrice === 'UF';
@@ -181,6 +182,16 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
 
     checkFavorite();
   }, [property.id]);
+
+  // Check if cookies were accepted
+  useEffect(() => {
+    const consentCookie = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith('cookieConsent='));
+    
+    const accepted = consentCookie?.includes('accepted') || false;
+    setCookiesAccepted(accepted);
+  }, []);
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -360,24 +371,26 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
         </div>
       )}
 
-      {/* Favorite heart button */}
-      <button
-        onClick={handleToggleFavorite}
-        disabled={isLoadingFav}
-        className="absolute bottom-4 right-4 z-20 transition-all duration-200 hover:scale-110 disabled:opacity-50"
-        title={isFavorited ? 'Remover de favoritos' : 'Agregar a favoritos'}
-      >
-        <span
-          className={`material-symbols-outlined transition-all ${
-            isFavorited
-              ? 'text-accent fill-accent'
-              : 'text-gray-400 hover:text-accent'
-          }`}
-          style={{ fontSize: '28px' }}
+      {/* Favorite heart button - only show if cookies accepted */}
+      {cookiesAccepted && (
+        <button
+          onClick={handleToggleFavorite}
+          disabled={isLoadingFav}
+          className="absolute bottom-4 right-4 z-20 transition-all duration-200 hover:scale-110 disabled:opacity-50"
+          title={isFavorited ? 'Remover de favoritos' : 'Agregar a favoritos'}
         >
-          {isFavorited ? 'favorite' : 'favorite_border'}
-        </span>
-      </button>
+          <span
+            className={`material-symbols-outlined transition-all ${
+              isFavorited
+                ? 'text-accent fill-accent'
+                : 'text-gray-400 hover:text-accent'
+            }`}
+            style={{ fontSize: '28px' }}
+          >
+            {isFavorited ? 'favorite' : 'favorite_border'}
+          </span>
+        </button>
+      )}
 
       <div
         className="flex items-center justify-center w-full aspect-[16/9] bg-gray-200 text-gray-400 overflow-hidden"
