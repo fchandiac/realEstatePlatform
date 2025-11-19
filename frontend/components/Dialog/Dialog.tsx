@@ -242,23 +242,25 @@ const Dialog: React.FC<DialogProps> = ({
         onClick={(e) => e.stopPropagation()}
         data-test-id="dialog-content"
       >
-        {title && title !== '' && (
+        {(title && title !== '') || showCloseButton ? (
           <div className="flex items-center justify-between mb-2">
-            <h2 className="title p-1 flex-1" data-test-id="dialog-title">
-              {title}
-            </h2>
+            {title && title !== '' && (
+              <h2 className="title p-1 flex-1" data-test-id="dialog-title">
+                {title}
+              </h2>
+            )}
             {showCloseButton && (
               <Button
                 variant="outlined"
                 size="sm"
                 onClick={handleCloseButtonClick}
-                className="ml-2"
+                className={title && title !== '' ? 'ml-2' : ''}
               >
                 {closeButtonText}
               </Button>
             )}
           </div>
-        )}
+        ) : null}
 
         <div
           className={`w-full pt-2 ${scroll === 'paper' ? 'flex-1 overflow-y-auto' : ''}`}
