@@ -1763,7 +1763,17 @@ export class PropertyService {
         console.log('📸 Processing fallback for', idsNeedingFallback.length, 'properties without mainImageUrl');
         
         for (const property of data) {
-          if (!property.mainImageUrl || property.mainImageUrl.trim() === '') {
+          // Si mainImageUrl ya existe pero es un video, reemplazarlo con una imagen
+          const isVideoUrl = (url: string) => {
+            const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'];
+            return videoExtensions.some(ext => url.toLowerCase().includes(ext));
+          };
+          
+          const needsImageFallback = !property.mainImageUrl || 
+                                    property.mainImageUrl.trim() === '' || 
+                                    isVideoUrl(property.mainImageUrl);
+          
+          if (needsImageFallback) {
             // Buscar la primera imagen en multimedia
             const imageMultimedia = property.multimedia?.find(m => 
               m.format === MultimediaFormat.IMG && m.type === MultimediaType.PROPERTY_IMG

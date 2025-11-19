@@ -80,22 +80,29 @@ function normalizeMediaUrl(url?: string | null): string | undefined {
   return cleaned;
 }
 
-function getPrimaryImage(property: PortalProperty): string | undefined {
-  // Usar mainImageUrl si existe
-  if (property.mainImageUrl) {
-    const url = normalizeMediaUrl(property.mainImageUrl);
-    if (url) return url;
-  }
+function isVideoFile(url: string): boolean {
+  const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'];
+  const lowerUrl = url.toLowerCase();
+  return videoExtensions.some(ext => lowerUrl.includes(ext));
+}
 
-  // Fallback: si no hay mainImageUrl, intentar obtener la primera imagen de multimedia
+function getPrimaryImage(property: PortalProperty): string | undefined {
+  // Primero, intentar obtener la primera imagen de multimedia (más confiable)
   if (property.multimedia && property.multimedia.length > 0) {
     const firstImage = property.multimedia.find(m => m.type === 'PROPERTY_IMG' || m.format === 'IMG');
     if (firstImage) {
       const url = normalizeMediaUrl(firstImage.url);
-      if (url) return url;
+      if (url && !isVideoFile(url)) return url;
     }
   }
 
+  // Fallback: usar mainImageUrl solo si NO es un video
+  if (property.mainImageUrl && !isVideoFile(property.mainImageUrl)) {
+    const url = normalizeMediaUrl(property.mainImageUrl);
+    if (url) return url;
+  }
+
+  // Si no hay imágenes, devolver undefined (mostrar placeholder)
   return undefined;
 }
 
