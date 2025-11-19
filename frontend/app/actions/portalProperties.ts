@@ -3,6 +3,13 @@
 import { env } from '@/lib/env';
 import { revalidatePath } from 'next/cache';
 
+export interface MediaItem {
+  id: string;
+  url: string;
+  type?: string;
+  format?: string;
+}
+
 export interface PropertyData {
   id: string;
   title: string;
@@ -17,6 +24,7 @@ export interface PropertyData {
   bathrooms: number;
   totalArea: number;
   mainImageUrl: string;
+  multimedia?: MediaItem[];
   createdAt: string;
   isFeatured?: boolean;
 }
@@ -122,6 +130,12 @@ export async function getPublishedPropertiesFiltered(filters: {
       bathrooms: prop.bathrooms,
       totalArea: prop.builtSquareMeters,
       mainImageUrl: ensureAbsoluteUrl(prop.mainImageUrl),
+      multimedia: (prop.multimedia || []).map((m: any) => ({
+        id: m.id,
+        url: ensureAbsoluteUrl(m.url),
+        type: m.type,
+        format: m.format,
+      })),
       createdAt: prop.createdAt,
       isFeatured: prop.isFeatured || false,
     }));

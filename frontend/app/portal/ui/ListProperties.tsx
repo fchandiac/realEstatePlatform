@@ -16,6 +16,12 @@ interface PropertyFromAPI {
   bathrooms: number;
   totalArea: number;
   mainImageUrl: string;
+  multimedia?: Array<{
+    id: string;
+    url: string;
+    type?: string;
+    format?: string;
+  }>;
   createdAt: string;
   isFeatured?: boolean;
 }
@@ -127,6 +133,7 @@ export default function ListProperties({ properties, pagination, onPageChange, i
             state: property.state,
             city: property.city,
             mainImageUrl: property.mainImageUrl || null,
+            multimedia: property.multimedia || [],
             bedrooms: property.bedrooms,
             bathrooms: property.bathrooms,
             builtSquareMeters: property.totalArea,
