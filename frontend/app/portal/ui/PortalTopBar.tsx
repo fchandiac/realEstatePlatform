@@ -139,9 +139,12 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
         open={loginDialogOpen}
         onClose={() => setLoginDialogOpen(false)}
         title="Iniciar Sesión"
-        size="sm"
+        size="xs"
       >
-        <LoginForm />
+        <LoginForm 
+          logoSrc={identity?.urlLogo || "/PropLogo2.png"}
+          companyName={identity?.name}
+        />
       </Dialog>
 
       {/* Register Dialog */}
