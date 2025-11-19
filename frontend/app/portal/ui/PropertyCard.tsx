@@ -346,7 +346,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
             <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
               home
             </span>
-            <span className="text-thin text-xs text-gray-700">{property.builtSquareMeters} m²</span>
+            <span className="text-thin text-xs text-gray-700">{Math.round(property.builtSquareMeters)} m²</span>
           </div>
         )}
         {property.landSquareMeters != null && (

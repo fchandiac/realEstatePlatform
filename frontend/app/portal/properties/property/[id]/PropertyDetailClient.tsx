@@ -364,7 +364,7 @@ export default function PropertyDetailClient({
                         className="text-primary text-lg"
                       />
                       <span className="font-medium text-sm text-foreground">
-                        {property.builtSquareMeters} m² const.
+                        {Math.round(property.builtSquareMeters)} m² const.
                       </span>
                     </div>
                   )}
