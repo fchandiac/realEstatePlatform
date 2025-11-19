@@ -1669,7 +1669,8 @@ export async function getPropertyLocation(propertyId: string): Promise<{
       };
     }
 
-    const res = await fetch(`${env.backendApiUrl}/properties/${propertyId}/location`, {
+    // Use the /full endpoint which includes location data
+    const res = await fetch(`${env.backendApiUrl}/properties/${propertyId}/full`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -1685,8 +1686,18 @@ export async function getPropertyLocation(propertyId: string): Promise<{
       };
     }
 
-    const data = await res.json();
-    return { success: true, data };
+    const fullData = await res.json();
+    
+    // Extract location data from the full property response
+    const locationData = {
+      state: fullData?.state || '',
+      city: fullData?.city || '',
+      address: fullData?.address || '',
+      latitude: fullData?.latitude,
+      longitude: fullData?.longitude,
+    };
+    
+    return { success: true, data: locationData };
   } catch (error) {
     console.error('Error fetching property location:', error);
     return {

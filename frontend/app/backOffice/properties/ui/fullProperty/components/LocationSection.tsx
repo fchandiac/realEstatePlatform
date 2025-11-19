@@ -8,6 +8,7 @@ import Alert from '@/components/Alert/Alert'
 import { Button } from '@/components/Button/Button'
 import LocationPicker from '@/components/LocationPicker/LocationPicker'
 import { getPropertyLocation, updatePropertyLocation } from '@/app/actions/properties'
+import { getRegions, getCommunesByRegion } from '@/app/actions/locations'
 import { useAlert } from '@/app/hooks/useAlert'
 
 interface LocationSectionProps {
@@ -76,30 +77,42 @@ const LocationSection: React.FC<LocationSectionProps> = ({
     }
   }, [propertyId])
 
-  // Load regions - TODO: Replace with actual API call
+  // Load regions
   useEffect(() => {
-    // Placeholder regions - should come from backend
-    const regionList: Option[] = [
-      { id: 'METROPOLITANA', label: 'Región Metropolitana' },
-      { id: 'VALPARAISO', label: 'Región de Valparaíso' },
-      { id: 'BIOBIO', label: 'Región de Bío Bío' },
-      // Add more regions as needed
-    ]
-    setRegions(regionList)
+    const loadRegions = async () => {
+      try {
+        const regionList = await getRegions()
+        const options: Option[] = regionList.map((region) => ({
+          id: region.id,
+          label: region.name,
+        }))
+        setRegions(options)
+      } catch (err) {
+        console.error('Error loading regions:', err)
+      }
+    }
+    loadRegions()
   }, [])
 
-  // Load communes based on selected region - TODO: Replace with actual API call
+  // Load communes based on selected region
   useEffect(() => {
-    if (formData.state) {
-      // Placeholder communes - should come from backend based on state
-      const communeList: Option[] = [
-        { id: 'LAS_CONDES', label: 'Las Condes' },
-        { id: 'PROVIDENCIA', label: 'Providencia' },
-        { id: 'SANTIAGO', label: 'Santiago' },
-        // Add more communes as needed
-      ]
-      setCommunes(communeList)
+    const loadCommunes = async () => {
+      if (formData.state) {
+        try {
+          const communeList = await getCommunesByRegion(formData.state)
+          const options: Option[] = communeList.map((commune) => ({
+            id: commune.id,
+            label: commune.name,
+          }))
+          setCommunes(options)
+        } catch (err) {
+          console.error('Error loading communes:', err)
+        }
+      } else {
+        setCommunes([])
+      }
     }
+    loadCommunes()
   }, [formData.state])
 
   const handleLocationChange = (coordinates: { lat: number; lng: number } | null) => {
