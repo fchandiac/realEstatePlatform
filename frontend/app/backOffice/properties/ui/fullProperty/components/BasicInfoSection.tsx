@@ -5,6 +5,7 @@ import { TextField } from '@/components/TextField/TextField'
 import Select from '@/components/Select/Select'
 import CircularProgress from '@/components/CircularProgress/CircularProgress'
 import { listPropertyTypes, getBasicPropertyInfo, updatePropertyBasic } from '@/app/actions/properties'
+import { listAdminsAgents } from '@/app/actions/users'
 import { getStatusInSpanish } from '@/app/backOffice/properties/utils/statusTranslation'
 import { useAlert } from '@/app/hooks/useAlert'
 import { Button } from '@/components/Button/Button'
@@ -42,6 +43,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
 }) => {
   const { showAlert } = useAlert()
   const [propertyTypes, setPropertyTypes] = useState<Array<{ id: string; name: string }>>([])
+  const [agentsList, setAgentsList] = useState<Array<{ id: string; label: string }>>([])
   const [propertyData, setPropertyData] = useState<any>(null)
   const [loadingTypes, setLoadingTypes] = useState(true)
   const [loadingData, setLoadingData] = useState(true)
@@ -56,6 +58,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
     status: '',
     price: '',
     currencyPrice: '',
+    assignedAgentId: '',
   })
 
   // Load property data
@@ -75,6 +78,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
             status: response.data.status || '',
             price: response.data.price?.toString() || '',
             currencyPrice: response.data.currencyPrice || '',
+            assignedAgentId: response.data.assignedAgentId || '',
           })
         } else {
           setError(response.error || 'Failed to load property data')
@@ -92,20 +96,32 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
     }
   }, [propertyId])
 
-  // Load property types
+  // Load property types and agents
   useEffect(() => {
-    const loadPropertyTypes = async () => {
+    const loadData = async () => {
       try {
-        const response = await listPropertyTypes()
-        setPropertyTypes(response.data || [])
+        const [typesResponse, agentsResponse] = await Promise.all([
+          listPropertyTypes(),
+          listAdminsAgents()
+        ])
+        
+        setPropertyTypes(typesResponse.data || [])
+        
+        if (agentsResponse.success && agentsResponse.data) {
+          const formattedAgents = agentsResponse.data.data.map(u => ({
+            id: u.id,
+            label: `${u.personalInfo?.firstName || ''} ${u.personalInfo?.lastName || ''} (${u.email})`.trim() || u.username
+          }))
+          setAgentsList(formattedAgents)
+        }
       } catch (err) {
-        console.error('Error loading property types:', err)
+        console.error('Error loading initial data:', err)
       } finally {
         setLoadingTypes(false)
       }
     }
 
-    loadPropertyTypes()
+    loadData()
   }, [])
 
   const findOption = (options: Array<{ id: string; label: string }>, value?: string) => {
@@ -125,6 +141,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         description: formData.description,
         status: formData.status,
         currencyPrice: formData.currencyPrice,
+        assignedAgentId: formData.assignedAgentId,
       }
       
       // Only include price if it has a value
@@ -152,6 +169,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
             status: headerResponse.data.status || '',
             price: headerResponse.data.price?.toString() || '',
             currencyPrice: headerResponse.data.currencyPrice || '',
+            assignedAgentId: headerResponse.data.assignedAgentId || '',
           })
           setSelectedStatus(headerResponse.data.status || null)
         }
@@ -253,20 +271,18 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
           onChange={(value) => setFormData({ ...formData, currencyPrice: value as string })}
         />
 
-        {/* 4. Estado - Agente asignado (placeholder por ahora) */}
+        {/* 4. Estado - Agente asignado */}
         <Select
           placeholder="Estado"
           options={statusOptions}
           value={formData.status}
           onChange={(value) => setFormData({ ...formData, status: value as string })}
         />
-        {/* TODO: Implementar selector de agente asignado real */}
-        <TextField
-          label="Agente Asignado"
-          value={propertyData?.assignedAgent?.username || 'Sin asignar'}
-          onChange={() => {}}
-          readOnly
-          className="w-full bg-muted/50"
+        <Select
+          placeholder="Agente Asignado"
+          options={agentsList}
+          value={formData.assignedAgentId}
+          onChange={(value) => setFormData({ ...formData, assignedAgentId: value as string })}
         />
 
         {/* 5. Descripción */}
