@@ -296,16 +296,6 @@ export class PropertyController {
     return { success: true, ...data };
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get property by ID' })
-  @ApiResponse({ status: 200, description: 'Property details', type: Property })
-  @ApiResponse({ status: 404, description: 'Property not found' })
-  @ApiParam({ name: 'id', type: String, description: 'Property ID' })
-  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property viewed')
-  findOne(@Param('id') id: string) {
-    return this.propertyService.findOne(id);
-  }
-
   /**
    * Devuelve todos los detalles de la propiedad, incluyendo relaciones y datos agregados.
    */
@@ -316,6 +306,28 @@ export class PropertyController {
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Full property details viewed')
   async getFullProperty(@Param('id') id: string): Promise<GetFullPropertyDto> {
     return await this.propertyService.getFullProperty(id);
+  }
+
+  /**
+   * Actualiza solo la información básica de la propiedad
+   */
+  @Patch(':id/basic')
+  @ApiOperation({ summary: 'Update basic property information' })
+  @ApiResponse({ status: 200, description: 'Property updated', type: Property })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: UpdatePropertyBasicDto })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property basic info updated')
+  async updateBasic(
+    @Param('id') id: string,
+    @Body(ValidationPipe) dto: UpdatePropertyBasicDto,
+    @Req() request: any,
+  ): Promise<Property> {
+    console.log('✅ PATCH :id/basic endpoint called with:', { id, dto });
+    const user = request?.user;
+    const userId = user?.id || user?.sub || (typeof user === 'string' ? user : undefined);
+    return await this.propertyService.update(id, dto as UpdatePropertyDto, userId);
   }
 
   @Patch(':id')
@@ -335,33 +347,6 @@ export class PropertyController {
     const user = request?.user;
     const userId = user?.id || user?.sub || (typeof user === 'string' ? user : undefined);
     return this.propertyService.update(id, updatePropertyDto, userId);
-  }
-
-  /**
-   * Actualiza solo la información básica de la propiedad
-   */
-  @Patch(':id/basic')
-  @ApiOperation({ summary: 'Update basic property information' })
-  @ApiResponse({ status: 200, description: 'Property updated', type: Property })
-  @ApiParam({ name: 'id', type: String })
-  @ApiBody({ type: UpdatePropertyBasicDto })
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  @Audit(AuditAction.UPDATE, AuditEntityType.PROPERTY, 'Property basic info updated')
-  async updateBasic(
-    @Param('id') id: string,
-    @Body(ValidationPipe) dto: UpdatePropertyBasicDto,
-    @Req() request: any,
-  ): Promise<Property> {
-    const user = request?.user;
-    const userId = user?.id || user?.sub || (typeof user === 'string' ? user : undefined);
-    console.log('🔧 [updateBasic] CALLED');
-    console.log('🔧 [updateBasic] Property ID:', id);
-    console.log('🔧 [updateBasic] DTO received:', JSON.stringify(dto, null, 2));
-    console.log('🔧 [updateBasic] User ID:', userId);
-    const result = await this.propertyService.update(id, dto as UpdatePropertyDto, userId);
-    console.log('🔧 [updateBasic] Property updated, result:', { id: result.id, title: result.title });
-    return result;
   }
 
   @Delete(':id')
@@ -729,6 +714,19 @@ export class PropertyController {
     return {
       isFavorited,
     };
+  }
+
+  /**
+   * Get property by ID - GENERIC ENDPOINT (MUST BE LAST to not interfere with specific routes)
+   */
+  @Get(':id')
+  @ApiOperation({ summary: 'Get property by ID' })
+  @ApiResponse({ status: 200, description: 'Property details', type: Property })
+  @ApiResponse({ status: 404, description: 'Property not found' })
+  @ApiParam({ name: 'id', type: String, description: 'Property ID' })
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Property viewed')
+  findOne(@Param('id') id: string) {
+    return this.propertyService.findOne(id);
   }
 
   private extractUserId(req: any): string {

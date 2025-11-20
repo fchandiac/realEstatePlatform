@@ -97,7 +97,6 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
     const loadPropertyTypes = async () => {
       try {
         const response = await listPropertyTypes()
-        console.log('🏠 [BasicInfoSection] Property types loaded:', response.data)
         setPropertyTypes(response.data || [])
       } catch (err) {
         console.error('Error loading property types:', err)
@@ -133,9 +132,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
         updateData.price = parseFloat(formData.price)
       }
       
-      console.log('📤 [BasicInfoSection] Sending update data:', updateData)
       const result = await updatePropertyBasic(propertyId, updateData)
-      console.log('📥 [BasicInfoSection] Update result:', result)
 
       if (result.success) {
         showAlert({
@@ -232,10 +229,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
           placeholder="Tipo de propiedad"
           options={propertyTypeOptions}
           value={formData.propertyTypeId}
-          onChange={(value) => {
-            console.log('📝 [BasicInfoSection] propertyTypeId changed:', value)
-            setFormData({ ...formData, propertyTypeId: value as string })
-          }}
+          onChange={(value) => setFormData({ ...formData, propertyTypeId: value as string })}
         />
         <div className="grid gap-4 sm:grid-cols-2">
           <TextField
