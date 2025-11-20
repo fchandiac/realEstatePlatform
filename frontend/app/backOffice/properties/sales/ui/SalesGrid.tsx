@@ -8,6 +8,7 @@ import type { DataGridColumn } from '@/components/DataGrid/DataGrid';
 import { env } from '@/lib/env';
 import type { SalePropertyGridRow } from '@/app/actions/properties';
 import CreateProperty from '../../ui/createProperty/CreateProperty';
+import DeletePropertyButton from '../../ui/DeletePropertyButton';
 import { useAlert } from '@/app/contexts/AlertContext';
 
 type SalesGridProps = {
@@ -50,10 +51,15 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
     {
       field: 'actions',
       headerName: '',
-      width: 60,
+      width: 100,
       sortable: false,
       filterable: false,
-      actionComponent: ({ row }) => <SaleMoreButton property={row} />,
+      actionComponent: ({ row }) => (
+        <div className="flex items-center">
+          <DeletePropertyButton propertyId={row.id} propertyTitle={row.title} />
+          <SaleMoreButton property={row} />
+        </div>
+      ),
     },
   ];
 
