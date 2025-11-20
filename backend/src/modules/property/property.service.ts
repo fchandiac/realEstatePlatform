@@ -1059,6 +1059,20 @@ export class PropertyService {
     // Normalize aliases from getRawMany: use column names from mappings or fall back
     const row: any = { ...raw };
 
+    // Derived: status translation
+    if (fields.includes('status') && row.status) {
+      const statusMapping: Record<string, string> = {
+        [PropertyStatus.REQUEST]: 'Solicitud',
+        [PropertyStatus.PRE_APPROVED]: 'Pre-aprobada',
+        [PropertyStatus.PUBLISHED]: 'Publicada',
+        [PropertyStatus.INACTIVE]: 'Inactiva',
+        [PropertyStatus.SOLD]: 'Vendida',
+        [PropertyStatus.RENTED]: 'Arrendada',
+        [PropertyStatus.CONTRACT_IN_PROGRESS]: 'Contrato en curso',
+      };
+      row.status = statusMapping[row.status] || row.status;
+    }
+
     // Derived: assignedAgentName from personalInfo or username
     if (fields.includes('assignedAgentName')) {
       let name = '';
