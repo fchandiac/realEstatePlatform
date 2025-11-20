@@ -8,6 +8,7 @@ import LocationSection from './components/LocationSection'
 import MultimediaSection from './components/multimedia/MultimediaSection'
 import HistorySection from './components/HistorySection'
 import SEOSection from './components/SEOSection'
+import InternalNotesSection from './components/InternalNotesSection'
 import CircularProgress from '@/components/CircularProgress/CircularProgress'
 import { getPropertyHeaderInfo } from '@/app/actions/properties'
 import { getStatusInSpanish, getStatusChipClasses } from '@/app/backOffice/properties/utils/statusTranslation'
@@ -200,6 +201,9 @@ export default function FullPropertyDialog({
                 )}
                 {propertyId && activeSection === 'SEO y marketing' && (
                   <SEOSection propertyId={propertyId} propertyTitle={displayTitle} />
+                )}
+                {propertyId && activeSection === 'Nota interna' && (
+                  <InternalNotesSection propertyId={propertyId} />
                 )}
                 {propertyId && activeSection === 'Historial' && (
                   <HistorySection propertyId={propertyId} />

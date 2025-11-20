@@ -376,7 +376,7 @@ export interface Property {
   operationType: 'RENT' | 'SALE';
   availableFrom?: string;
   publicDescription?: string;
-  privateNotes?: string;
+  internalNotes?: string;
   isPublished: boolean;
   isFeatured: boolean;
   createdAt: string;
@@ -489,7 +489,7 @@ export interface UpdatePropertyDto {
   assignedAgentId?: string;
   availableFrom?: string;
   publicDescription?: string;
-  privateNotes?: string;
+  internalNotes?: string;
   isPublished?: boolean;
   isFeatured?: boolean;
   location?: {
