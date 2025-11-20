@@ -212,12 +212,23 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
       </header>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <TextField
-          label="Título"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          placeholder="Ej. Departamento con vista al parque"
-          className="w-full"
+        {/* 1. Título */}
+        <div className="md:col-span-2">
+          <TextField
+            label="Título"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            placeholder="Ej. Departamento con vista al parque"
+            className="w-full"
+          />
+        </div>
+
+        {/* 2. Tipo de propiedad - Operación */}
+        <Select
+          placeholder="Tipo de propiedad"
+          options={propertyTypeOptions}
+          value={formData.propertyTypeId}
+          onChange={(value) => setFormData({ ...formData, propertyTypeId: value as string })}
         />
         <Select
           placeholder="Operación"
@@ -225,47 +236,60 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
           value={formData.operationType}
           onChange={(value) => setFormData({ ...formData, operationType: value as string })}
         />
-        <Select
-          placeholder="Tipo de propiedad"
-          options={propertyTypeOptions}
-          value={formData.propertyTypeId}
-          onChange={(value) => setFormData({ ...formData, propertyTypeId: value as string })}
-        />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <TextField
-            label="Precio"
-            value={formData.price}
-            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-            type="number"
-            className="w-full"
-            placeholder="Ej. 50000000"
-          />
-          <Select
-            placeholder="Moneda"
-            options={currencyOptions}
-            value={formData.currencyPrice}
-            onChange={(value) => setFormData({ ...formData, currencyPrice: value as string })}
-          />
-        </div>
+
+        {/* 3. Precio - Moneda */}
         <TextField
-          label="Creado por"
-          value={creatorUserInfo}
-          onChange={() => {}}
-          readOnly
+          label="Precio"
+          value={formData.price}
+          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+          type="number"
+          className="w-full"
+          placeholder="Ej. 50000000"
         />
+        <Select
+          placeholder="Moneda"
+          options={currencyOptions}
+          value={formData.currencyPrice}
+          onChange={(value) => setFormData({ ...formData, currencyPrice: value as string })}
+        />
+
+        {/* 4. Estado - Agente asignado (placeholder por ahora) */}
         <Select
           placeholder="Estado"
           options={statusOptions}
           value={formData.status}
           onChange={(value) => setFormData({ ...formData, status: value as string })}
         />
-        <textarea
-          className="md:col-span-2 w-full px-3 py-2 border border-border rounded-md bg-background text-foreground text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
-          placeholder="Descripción de la propiedad"
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          rows={4}
+        {/* TODO: Implementar selector de agente asignado real */}
+        <TextField
+          label="Agente Asignado"
+          value={propertyData?.assignedAgent?.username || 'Sin asignar'}
+          onChange={() => {}}
+          readOnly
+          className="w-full bg-muted/50"
         />
+
+        {/* 5. Descripción */}
+        <div className="md:col-span-2">
+          <textarea
+            className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+            placeholder="Descripción de la propiedad"
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            rows={4}
+          />
+        </div>
+
+        {/* 6. Creado por */}
+        <div className="md:col-span-2">
+          <TextField
+            label="Creado por"
+            value={creatorUserInfo}
+            onChange={() => {}}
+            readOnly
+            className="w-full bg-muted/50"
+          />
+        </div>
       </div>
 
       <div className="flex justify-end mt-4">

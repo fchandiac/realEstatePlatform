@@ -29,6 +29,7 @@ function mapRow(row: any) {
     city: row.p_city ?? row.city,
     state: row.p_state ?? row.state,
     price: row.p_price ?? row.price,
+    currencyPrice: row.p_currencyPrice ?? row.currencyPrice,
     createdAt: row.p_createdAt ?? row.createdAt,
     // Puedes agregar más campos si los necesitas en el grid
   };
@@ -46,7 +47,34 @@ export default function SalesGrid({ rows, totalRows, title }: SalesGridProps) {
     { field: 'assignedAgentName', headerName: 'Agente', width: 180, sortable: true, filterable: true },
     { field: 'city', headerName: 'Ciudad', width: 150, sortable: true, filterable: true },
     { field: 'state', headerName: 'Región', width: 140, hide: true, sortable: true, filterable: true },
-    { field: 'price', headerName: 'Precio', type: 'number', renderType: 'currency', width: 140, align: 'right', headerAlign: 'right', sortable: true, filterable: true },
+    { 
+      field: 'price', 
+      headerName: 'Precio', 
+      type: 'number', 
+      width: 140, 
+      align: 'right', 
+      headerAlign: 'right', 
+      sortable: true, 
+      filterable: true,
+      renderCell: ({ row, value }) => {
+        if (value === undefined || value === null) return '';
+        const currency = row.currencyPrice || 'CLP';
+        
+        if (currency === 'UF') {
+          return `UF ${new Intl.NumberFormat('es-CL', { 
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2 
+          }).format(value)}`;
+        }
+        
+        return new Intl.NumberFormat('es-CL', { 
+          style: 'currency', 
+          currency: 'CLP',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).format(value);
+      }
+    },
     { field: 'createdAt', headerName: 'Creado', type: 'date', renderType: 'dateString', width: 100, sortable: true, filterable: true },
     {
       field: 'actions',
