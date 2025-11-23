@@ -27,6 +27,7 @@ import { NotificationsService } from './notifications.service';
 import {
   CreateNotificationDto,
   UpdateNotificationDto,
+  UpdateNotificationStatusDto,
 } from './dto/notification.dto';
 
 @Controller('notifications')
@@ -179,5 +180,39 @@ export class NotificationsController {
   @Audit(AuditAction.READ, AuditEntityType.NOTIFICATION, 'Obtener notificaciones de usuario')
   getNotificationsForUser(@Param('userId') userId: string) {
     return this.notificationsService.getNotificationsForUser(userId);
+  }
+
+  /**
+   * Mark all unread notifications as read for a user
+   */
+  @Patch('user/:userId/read-all')
+  @ApiOperation({ summary: 'Mark all unread notifications as read for user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Number of notifications marked as read',
+  })
+  @ApiParam({ name: 'userId', type: String })
+  @Audit(AuditAction.UPDATE, AuditEntityType.NOTIFICATION, 'Marcar todas las notificaciones como leídas')
+  markAllAsRead(@Param('userId') userId: string) {
+    return this.notificationsService.markAllAsRead(userId);
+  }
+
+  /**
+   * Update notification status
+   */
+  @Patch(':id/status')
+  @ApiOperation({ summary: 'Update notification status' })
+  @ApiResponse({
+    status: 200,
+    description: 'Notification status updated',
+  })
+  @ApiParam({ name: 'id', type: String })
+  @ApiBody({ type: UpdateNotificationStatusDto })
+  @Audit(AuditAction.UPDATE, AuditEntityType.NOTIFICATION, 'Actualizar status de notificación')
+  updateStatus(
+    @Param('id') id: string,
+    @Body() updateStatusDto: UpdateNotificationStatusDto,
+  ) {
+    return this.notificationsService.updateStatus(id, updateStatusDto.status);
   }
 }

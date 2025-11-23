@@ -59,6 +59,12 @@ export class CreateNotificationDto {
   multimediaId?: string;
 }
 
+export class UpdateNotificationStatusDto {
+  @IsEnum(NotificationStatus)
+  @IsNotEmpty()
+  status: NotificationStatus;
+}
+
 export class UpdateNotificationDto {
   @IsEnum(NotificationSenderType)
   @IsOptional()

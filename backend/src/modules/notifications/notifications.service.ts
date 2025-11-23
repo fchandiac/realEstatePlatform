@@ -183,6 +183,31 @@ export class NotificationsService {
       .getMany();
   }
 
+  /**
+   * Marca todas las notificaciones no leídas (status SEND) para un usuario como leídas (status OPEN)
+   */
+  async markAllAsRead(userId: string): Promise<number> {
+    const result = await this.notificationRepository
+      .createQueryBuilder()
+      .update(Notification)
+      .set({ status: NotificationStatus.OPEN })
+      .where(`JSON_CONTAINS(targetUserIds, JSON_ARRAY(:userId))`, { userId })
+      .andWhere('status = :currentStatus', { currentStatus: NotificationStatus.SEND })
+      .andWhere('deletedAt IS NULL')
+      .execute();
+
+    return result.affected || 0;
+  }
+
+  /**
+   * Actualiza el status de una notificación específica
+   */
+  async updateStatus(id: string, status: NotificationStatus): Promise<Notification> {
+    const notification = await this.findOne(id);
+    notification.status = status;
+    return await this.notificationRepository.save(notification);
+  }
+
   // Property-related notification methods
   async notifyPropertyStatusChange(
     property: Property,
