@@ -431,17 +431,7 @@ export default function PropertyDetailClient({
             </form>
 
             {/* WhatsApp Button */}
-            {property.assignedAgent?.username && (
-              <a
-                href={`https://wa.me/${property.assignedAgent.username.replace(/\D/g, '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 w-full flex items-center justify-center space-x-2 p-3 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold transition-colors"
-              >
-                <FontAwesome icon="whatsapp" />
-                <span>Contactar por WhatsApp</span>
-              </a>
-            )}
+            {/* WhatsApp Button eliminado por requerimiento */}
           </div>
         </div>
 
