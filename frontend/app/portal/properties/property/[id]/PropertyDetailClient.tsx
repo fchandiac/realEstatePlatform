@@ -403,20 +403,16 @@ export default function PropertyDetailClient({
                 disabled={isSubmitting}
               />
 
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1">
-                  Mensaje
-                </label>
-                <textarea
-                  name="message"
-                  placeholder="Escribe tu mensaje..."
-                  rows={4}
-                  value={formData.message}
-                  onChange={handleFormChange}
-                  disabled={isSubmitting}
-                  className="w-full p-3 rounded-lg bg-white border border-border text-foreground placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-150 resize-none"
-                />
-              </div>
+              <TextField
+                label="Mensaje"
+                type="textarea"
+                name="message"
+                placeholder="Escribe tu mensaje..."
+                value={formData.message}
+                onChange={handleFormChange}
+                disabled={isSubmitting}
+                rows={4}
+              />
 
               <Button
                 type="submit"
