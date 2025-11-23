@@ -12,18 +12,24 @@ import { User } from './user.entity';
 import { Multimedia } from './multimedia.entity';
 
 export enum NotificationType {
-  INTERES = 'INTERES',
-  CONTACTO = 'CONTACTO',
-  COMPROBANTE_DE_PAGO = 'COMPROBANTE_DE_PAGO',
-  AVISO_PAGO_VENCIDO = 'AVISO_PAGO_VENCIDO',
-  CAMBIO_ESTADO_PUBLICACION = 'CAMBIO_ESTADO_PUBLICACION',
-  CAMBIO_ESTADO_CONTRATO = 'CAMBIO_ESTADO_CONTRATO',
-  NUEVA_ASIGNACION_PROPIEDAD_AGENTE = 'NUEVA_ASIGNACION_PROPIEDAD_AGENTE',
+  INTEREST = 'INTEREST',
+  CONTACT = 'CONTACT',
+  PAYMENT_RECEIPT = 'PAYMENT_RECEIPT',
+  PAYMENT_OVERDUE = 'PAYMENT_OVERDUE',
+  PUBLICATION_STATUS_CHANGE = 'PUBLICATION_STATUS_CHANGE',
+  CONTRACT_STATUS_CHANGE = 'CONTRACT_STATUS_CHANGE',
+  PROPERTY_AGENT_ASSIGNMENT = 'PROPERTY_AGENT_ASSIGNMENT',
 }
 
 export enum NotificationStatus {
   SEND = 'SEND',
   OPEN = 'OPEN',
+}
+
+export enum NotificationSenderType {
+  USER = 'USER',
+  SYSTEM = 'SYSTEM',
+  ANONYMOUS = 'ANONYMOUS',
 }
 
 export interface NotificationTarget {
@@ -36,24 +42,38 @@ export class Notification {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ type: 'enum', enum: NotificationSenderType, default: NotificationSenderType.SYSTEM })
+  senderType: NotificationSenderType;
+
+  @Column({ type: 'varchar', nullable: true })
+  senderId: string | null;
+
+  @Column({ type: 'varchar' })
+  senderName: string;
+
+  @Column({ type: 'boolean', default: false })
+  isSystem: boolean;
+
+  @Column({ type: 'text' })
+  message: string;
+
   @Column({ type: 'json' })
   targetUserIds: string[];
 
-  @Column({
-    type: 'enum',
-    enum: NotificationType,
-  })
+  @Column({ type: 'enum', enum: NotificationType })
   type: NotificationType;
 
   @Column({ type: 'json', nullable: true })
   targetMails: string[];
 
-  @Column({
-    type: 'enum',
-    enum: NotificationStatus,
-    default: NotificationStatus.SEND,
-  })
+  @Column({ type: 'enum', enum: NotificationStatus, default: NotificationStatus.SEND })
   status: NotificationStatus;
+
+  @Column({ type: 'varchar', nullable: true })
+  firstViewerId: string | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  firstViewedAt: Date | null;
 
   @CreateDateColumn()
   createdAt: Date;

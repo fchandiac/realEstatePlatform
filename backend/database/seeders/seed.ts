@@ -41,7 +41,7 @@ async function seedDatabase() {
         },
         lastLogin: new Date(),
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
     );
     console.log(`✓ Admin user created: ${adminUser.email}`);
@@ -99,11 +99,58 @@ async function seedDatabase() {
         lastLogin: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
-      })
+      }),
     ]);
     console.log(`✓ Created ${agents.length} agent users`);
     
-    // ===== STEP 2: SEED PROPERTY TYPES =====
+    // ===== STEP 2: CREATE SAMPLE NOTIFICATIONS =====
+    console.log('Creating sample notifications...');
+    const { Notification, NotificationType, NotificationStatus, NotificationSenderType } = require('../../src/entities/notification.entity');
+    const notificationRepository = AppDataSource.getRepository(Notification);
+
+    function getAgentName(agent: any) {
+      return agent?.personalInfo ? `${agent.personalInfo.firstName} ${agent.personalInfo.lastName}` : agent?.username || 'Agente';
+    }
+
+    await notificationRepository.save([
+      notificationRepository.create({
+        senderType: NotificationSenderType.USER,
+        senderId: agents[0].id,
+        senderName: getAgentName(agents[0]),
+        isSystem: false,
+        message: 'El agente está interesado en la propiedad #1234.',
+        targetUserIds: [adminUser.id],
+        type: NotificationType.INTEREST,
+        status: NotificationStatus.SEND,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }),
+      notificationRepository.create({
+        senderType: NotificationSenderType.SYSTEM,
+        senderId: null,
+        senderName: 'Sistema',
+        isSystem: true,
+        message: 'Se ha asignado una nueva propiedad al agente.',
+        targetUserIds: [agents[1].id],
+        type: NotificationType.PROPERTY_AGENT_ASSIGNMENT,
+        status: NotificationStatus.SEND,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }),
+      notificationRepository.create({
+        senderType: NotificationSenderType.USER,
+        senderId: agents[2].id,
+        senderName: getAgentName(agents[2]),
+        isSystem: false,
+        message: 'El agente solicita contacto.',
+        targetUserIds: [adminUser.id],
+        type: NotificationType.CONTACT,
+        status: NotificationStatus.SEND,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+    ]);
+    console.log('✓ Sample notifications created');
     console.log('Seeding property types...');
     const propertyTypeRepository = AppDataSource.getRepository(PropertyType);
     const propertyTypes = await propertyTypeRepository.save([
@@ -583,7 +630,7 @@ async function seedDatabase() {
       articleRepository.create({
         title: 'Análisis del Mercado Inmobiliario 2024',
         subtitle: 'Tendencias y proyecciones para el sector',
-        text: 'El mercado inmobiliario chileno ha mostrado importante dinamismo en los últimos meses. Los precios han experimentado variaciones según zona y tipo de propiedad. Santiago concentra la mayor demanda, con zonas premium manteniendo estabilidad. El sector de departamentos pequeños ha visto crecimiento debido a la demanda de profesionales jóvenes. Analiza las oportunidades de inversión según tus objetivos.',
+        text: 'El mercado inmobiliario chileno ha mostrado importante dinamismo en los últimos meses. Los precios han experimentado variaciones según zona y tipo de propiedad. Santiago concentra la mayor demanda, con zonas premium manteniendo estabilidad. El sector de departamentos pequeños ha visto crecimiento',
         category: ArticleCategory.MERCADO,
         isActive: true,
         createdAt: new Date(),

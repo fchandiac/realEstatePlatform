@@ -9,6 +9,7 @@ import {
   Notification,
   NotificationStatus,
   NotificationType,
+  NotificationSenderType,
 } from '../../entities/notification.entity';
 import { User } from '../../entities/user.entity';
 import { Property } from '../../entities/property.entity';
@@ -32,12 +33,21 @@ export class NotificationsService {
       if (assignedAgentId) {
         targetUserIds.push(assignedAgentId);
       }
+      // Datos del sender
+      const senderType = interestedUserId ? NotificationSenderType.USER : NotificationSenderType.ANONYMOUS;
+      const senderId = interestedUserId || undefined;
+      const senderName = interestedUserId ? await this.getUserName(interestedUserId) : 'Anónimo';
       // Crear notificación para cada destinatario
       const notifications: Notification[] = [];
       for (const userId of targetUserIds) {
         const dto: CreateNotificationDto = {
+          senderType,
+          senderId,
+          senderName,
+          isSystem: false,
+          message: `El usuario ${senderName} está interesado en la propiedad ${propertyId}.`,
           targetUserIds: [userId],
-          type: NotificationType.INTERES,
+          type: NotificationType.INTEREST,
         };
         const notification = await this.create(dto);
         notifications.push(notification);
@@ -67,7 +77,9 @@ export class NotificationsService {
   ): Promise<Notification> {
     const notification = this.notificationRepository.create({
       ...createNotificationDto,
-      status: NotificationStatus.SEND,
+      status: createNotificationDto.status ?? NotificationStatus.SEND,
+      firstViewerId: createNotificationDto.firstViewerId ?? null,
+      firstViewedAt: createNotificationDto.firstViewedAt ?? null,
     });
     const savedNotification = await this.notificationRepository.save(notification);
 
@@ -78,7 +90,7 @@ export class NotificationsService {
           this.emailService.sendMail({
             to: email,
             subject: `Nueva notificación: ${createNotificationDto.type}`,
-            text: `Has recibido una nueva notificación del tipo: ${createNotificationDto.type}`,
+            text: createNotificationDto.message || `Has recibido una nueva notificación del tipo: ${createNotificationDto.type}`,
             templateVariables: {
               notificationType: createNotificationDto.type,
               notificationId: savedNotification.id,
@@ -93,6 +105,17 @@ export class NotificationsService {
     }
 
     return savedNotification;
+  }
+
+  // Helper para obtener nombre de usuario
+  private async getUserName(userId: string): Promise<string> {
+    if (!('usersService' in this)) return 'Usuario';
+    try {
+      const user = await (this as any).usersService.findOne(userId);
+      return user?.name || user?.email || 'Usuario';
+    } catch {
+      return 'Usuario';
+    }
   }
 
   async findAll(page: number = 1, limit: number = 20): Promise<{ data: Notification[], total: number }> {
@@ -175,8 +198,13 @@ export class NotificationsService {
     }
 
     const createDto: CreateNotificationDto = {
+      senderType: NotificationSenderType.SYSTEM,
+      senderId: undefined,
+      senderName: 'Sistema',
+      isSystem: true,
+      message: `El estado de publicación de la propiedad ${property.id} ha cambiado.`,
       targetUserIds,
-      type: NotificationType.CAMBIO_ESTADO_PUBLICACION,
+      type: NotificationType.PUBLICATION_STATUS_CHANGE,
     };
 
     return await this.create(createDto);
@@ -184,8 +212,13 @@ export class NotificationsService {
 
   async notifyAgentAssigned(property: Property, agent: User): Promise<Notification> {
     const createDto: CreateNotificationDto = {
+      senderType: NotificationSenderType.SYSTEM,
+      senderId: undefined,
+      senderName: 'Sistema',
+      isSystem: true,
+      message: `Se te ha asignado la propiedad ${property.id}.`,
       targetUserIds: [agent.id],
-      type: NotificationType.NUEVA_ASIGNACION_PROPIEDAD_AGENTE,
+      type: NotificationType.PROPERTY_AGENT_ASSIGNMENT,
     };
 
     return await this.create(createDto);

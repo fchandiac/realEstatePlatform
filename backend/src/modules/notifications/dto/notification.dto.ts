@@ -7,9 +7,28 @@ import {
   IsString,
   IsEmail,
 } from 'class-validator';
-import { NotificationType } from '../../../entities/notification.entity';
+import { NotificationType, NotificationStatus, NotificationSenderType } from '../../../entities/notification.entity';
 
 export class CreateNotificationDto {
+  @IsEnum(NotificationSenderType)
+  @IsNotEmpty()
+  senderType: NotificationSenderType;
+
+  @IsString()
+  @IsOptional()
+  senderId?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  senderName: string;
+
+  @IsNotEmpty()
+  isSystem: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  message: string;
+
   @IsArray()
   @IsUUID('4', { each: true })
   @IsNotEmpty()
@@ -19,31 +38,73 @@ export class CreateNotificationDto {
   @IsNotEmpty()
   type: NotificationType;
 
-  @IsUUID('4')
-  @IsOptional()
-  multimediaId?: string;
-
   @IsArray()
   @IsEmail({}, { each: true })
   @IsOptional()
   targetMails?: string[];
+
+  @IsEnum(NotificationStatus)
+  @IsOptional()
+  status?: NotificationStatus;
+
+  @IsString()
+  @IsOptional()
+  firstViewerId?: string;
+
+  @IsOptional()
+  firstViewedAt?: Date;
+
+  @IsUUID('4')
+  @IsOptional()
+  multimediaId?: string;
 }
 
 export class UpdateNotificationDto {
+  @IsEnum(NotificationSenderType)
+  @IsOptional()
+  senderType?: NotificationSenderType;
+
+  @IsString()
+  @IsOptional()
+  senderId?: string;
+
+  @IsString()
+  @IsOptional()
+  senderName?: string;
+
+  @IsOptional()
+  isSystem?: boolean;
+
+  @IsString()
+  @IsOptional()
+  message?: string;
+
+  @IsArray()
+  @IsUUID('4', { each: true })
+  @IsOptional()
+  targetUserIds?: string[];
+
   @IsEnum(NotificationType)
   @IsOptional()
   type?: NotificationType;
 
-  @IsUUID('4')
-  @IsOptional()
-  multimediaId?: string;
-
-  @IsUUID('4')
-  @IsOptional()
-  viewerId?: string;
-
   @IsArray()
   @IsEmail({}, { each: true })
   @IsOptional()
   targetMails?: string[];
+
+  @IsEnum(NotificationStatus)
+  @IsOptional()
+  status?: NotificationStatus;
+
+  @IsString()
+  @IsOptional()
+  firstViewerId?: string;
+
+  @IsOptional()
+  firstViewedAt?: Date;
+
+  @IsUUID('4')
+  @IsOptional()
+  multimediaId?: string;
 }

@@ -1,279 +1,49 @@
-'use server'
+'use server';
 
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { env } from '@/lib/env'
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { env } from '@/lib/env';
 
-export interface Notification {
-  id: string
-  title: string
-  message: string
-  type: 'info' | 'success' | 'warning' | 'error'
-  read: boolean
-  userId: string
-  createdAt: string
-  updatedAt: string
+export interface CreateNotificationData {
+  senderType: 'USER' | 'SYSTEM' | 'ANONYMOUS';
+  senderId?: string;
+  senderName: string;
+  isSystem: boolean;
+  message: string;
+  targetUserIds: string[];
+  type: 'INTEREST' | 'CONTACT' | 'PAYMENT_RECEIPT' | 'PAYMENT_OVERDUE' | 'PUBLICATION_STATUS_CHANGE' | 'CONTRACT_STATUS_CHANGE' | 'PROPERTY_AGENT_ASSIGNMENT';
+  targetMails?: string[];
+  multimediaId?: string;
 }
 
-export interface CreateNotificationDto {
-  title: string
-  message: string
-  type: 'info' | 'success' | 'warning' | 'error'
-  userId?: string
-}
-
-export interface NotificationSettings {
-  id: string
-  userId: string
-  emailNotifications: boolean
-  pushNotifications: boolean
-  smsNotifications: boolean
-  notifyOnPropertyUpdates: boolean
-  notifyOnNewInquiries: boolean
-  createdAt: string
-  updatedAt: string
-}
-
-/**
- * Obtiene las notificaciones del usuario actual
- */
-export async function getUserNotifications(): Promise<Notification[]> {
-  const session = await getServerSession(authOptions)
-  
-  if (!session?.accessToken) {
-    throw new Error('No authenticated')
-  }
-
+export async function createNotification(data: CreateNotificationData): Promise<{ success: boolean; error?: string; notification?: any }> {
   try {
-    const response = await fetch(`${env.backendApiUrl}/notifications`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    })
+    // Obtener sesión para autenticación
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch notifications: ${response.status}`)
+    const url = `${env.backendApiUrl}/notifications`;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
     }
 
-    return response.json()
-  } catch (error) {
-    console.error('Error fetching notifications:', error)
-    throw error
-  }
-}
-
-/**
- * Marca una notificación como leída
- */
-export async function markNotificationAsRead(id: string): Promise<void> {
-  const session = await getServerSession(authOptions)
-  
-  if (!session?.accessToken) {
-    throw new Error('No authenticated')
-  }
-
-  try {
-    const response = await fetch(`${env.backendApiUrl}/notifications/${id}/read`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to mark notification as read: ${response.status}`)
-    }
-  } catch (error) {
-    console.error('Error marking notification as read:', error)
-    throw error
-  }
-}
-
-/**
- * Marca todas las notificaciones como leídas
- */
-export async function markAllNotificationsAsRead(): Promise<void> {
-  const session = await getServerSession(authOptions)
-  
-  if (!session?.accessToken) {
-    throw new Error('No authenticated')
-  }
-
-  try {
-    const response = await fetch(`${env.backendApiUrl}/notifications/read-all`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to mark all notifications as read: ${response.status}`)
-    }
-  } catch (error) {
-    console.error('Error marking all notifications as read:', error)
-    throw error
-  }
-}
-
-/**
- * Envía una notificación a un usuario específico (admin only)
- */
-export async function sendNotification(data: CreateNotificationDto): Promise<Notification> {
-  const session = await getServerSession(authOptions)
-  
-  if (!session?.accessToken) {
-    throw new Error('No authenticated')
-  }
-
-  try {
-    const response = await fetch(`${env.backendApiUrl}/notifications`, {
+    const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(data),
-      cache: 'no-store'
-    })
+    });
 
     if (!response.ok) {
-      throw new Error(`Failed to send notification: ${response.status}`)
+      const errorData = await response.json().catch(() => null);
+      return { success: false, error: errorData?.message || `HTTP ${response.status}` };
     }
 
-    return response.json()
+    const notification = await response.json();
+    return { success: true, notification };
   } catch (error) {
-    console.error('Error sending notification:', error)
-    throw error
-  }
-}
-
-/**
- * Obtiene la configuración de notificaciones del usuario actual
- */
-export async function getNotificationSettings(): Promise<NotificationSettings> {
-  const session = await getServerSession(authOptions)
-  
-  if (!session?.accessToken) {
-    throw new Error('No authenticated')
-  }
-
-  try {
-    const response = await fetch(`${env.backendApiUrl}/notifications/settings`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch notification settings: ${response.status}`)
-    }
-
-    return response.json()
-  } catch (error) {
-    console.error('Error fetching notification settings:', error)
-    throw error
-  }
-}
-
-/**
- * Actualiza la configuración de notificaciones del usuario actual
- */
-export async function updateNotificationSettings(settings: Partial<NotificationSettings>): Promise<NotificationSettings> {
-  const session = await getServerSession(authOptions)
-  
-  if (!session?.accessToken) {
-    throw new Error('No authenticated')
-  }
-
-  try {
-    const response = await fetch(`${env.backendApiUrl}/notifications/settings`, {
-      method: 'PATCH',
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(settings),
-      cache: 'no-store'
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to update notification settings: ${response.status}`)
-    }
-
-    return response.json()
-  } catch (error) {
-    console.error('Error updating notification settings:', error)
-    throw error
-  }
-}
-
-/**
- * Elimina una notificación
- */
-export async function deleteNotification(id: string): Promise<void> {
-  const session = await getServerSession(authOptions)
-  
-  if (!session?.accessToken) {
-    throw new Error('No authenticated')
-  }
-
-  try {
-    const response = await fetch(`${env.backendApiUrl}/notifications/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to delete notification: ${response.status}`)
-    }
-  } catch (error) {
-    console.error('Error deleting notification:', error)
-    throw error
-  }
-}
-
-/**
- * Obtiene el conteo de notificaciones no leídas
- */
-export async function getUnreadNotificationsCount(): Promise<{ count: number }> {
-  const session = await getServerSession(authOptions)
-  
-  if (!session?.accessToken) {
-    throw new Error('No authenticated')
-  }
-
-  try {
-    const response = await fetch(`${env.backendApiUrl}/notifications/unread-count`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${session.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store'
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch unread notifications count: ${response.status}`)
-    }
-
-    return response.json()
-  } catch (error) {
-    console.error('Error fetching unread notifications count:', error)
-    throw error
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

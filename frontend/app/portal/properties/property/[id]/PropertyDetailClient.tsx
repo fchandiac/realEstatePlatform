@@ -197,8 +197,22 @@ export default function PropertyDetailClient({
     setIsSubmitting(true);
 
     try {
-      // TODO: Implement contact form submission to backend
-      // For now, show success message
+      // Enviar notificación de interés en propiedad
+      const notifyResult = await import('@/app/actions/propertyNotifications.server').then(mod =>
+        mod.notifyPropertyInterest({
+          propertyId: property.id,
+          assignedAgentId: property.assignedAgent?.id,
+          interestedUserId: undefined, // Si tienes el usuario logueado, pásalo aquí
+        })
+      );
+      if (!notifyResult.success) {
+        showAlert({
+          message: notifyResult.error || 'No se pudo notificar el interés',
+          type: 'error',
+          duration: 3000,
+        });
+      }
+
       showAlert({
         message: 'Mensaje enviado correctamente. El agente se pondrá en contacto pronto.',
         type: 'success',

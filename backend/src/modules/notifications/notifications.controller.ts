@@ -50,8 +50,7 @@ export class NotificationsController {
       required: ['propertyId'],
     }})
     async notifyInterestOnProperty(@Body() body: { propertyId: string; assignedAgentId?: string; interestedUserId?: string }) {
-      // Si el usuario está autenticado, puede obtener su id del token/session
-      // Si no, se puede enviar como null o string vacío
+      // El servicio ya construye el DTO completo y usa el método único
       return this.notificationsService.notifyInterestOnProperty(
         body.propertyId,
         body.interestedUserId || '',
