@@ -3,6 +3,7 @@
 import { SessionProvider } from 'next-auth/react';
 import { ReactNode } from 'react';
 import { AlertProvider } from '@/app/contexts/AlertContext';
+import { NotificationProvider } from '@/app/contexts/NotificationContext';
 
 type Props = {
   children: ReactNode;
@@ -14,7 +15,9 @@ export default function ClientProviders({ children, session }: Props & { session
   return (
     <SessionProvider session={session} refetchOnWindowFocus={false}>
       <AuthContextProvider>
-        <AlertProvider>{children}</AlertProvider>
+        <AlertProvider>
+          <NotificationProvider>{children}</NotificationProvider>
+        </AlertProvider>
       </AuthContextProvider>
     </SessionProvider>
   );

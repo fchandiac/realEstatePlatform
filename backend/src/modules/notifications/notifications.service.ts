@@ -208,6 +208,107 @@ export class NotificationsService {
     return await this.notificationRepository.save(notification);
   }
 
+  /**
+   * Get user notifications grid with filtering, sorting, and pagination
+   */
+  async userGridNotifications(
+    userId: string,
+    options: {
+      fields?: string;
+      sort?: 'asc' | 'desc';
+      sortField?: string;
+      search?: string;
+      filtration?: boolean;
+      filters?: string;
+      pagination?: boolean;
+      page?: number;
+      limit?: number;
+    } = {}
+  ): Promise<{ data: Notification[]; total: number; page: number; limit: number; totalPages: number }> {
+    const {
+      fields,
+      sort = 'desc',
+      sortField = 'createdAt',
+      search,
+      filtration = false,
+      filters,
+      pagination = true,
+      page = 1,
+      limit = 25,
+    } = options;
+
+    let queryBuilder = this.notificationRepository
+      .createQueryBuilder('notification')
+      .where(`JSON_CONTAINS(notification.targetUserIds, JSON_ARRAY(:userId))`, { userId })
+      .andWhere('notification.deletedAt IS NULL');
+
+    // Apply search filter
+    if (search && search.trim()) {
+      queryBuilder = queryBuilder.andWhere(
+        '(notification.message LIKE :search OR notification.senderName LIKE :search)',
+        { search: `%${search.trim()}%` }
+      );
+    }
+
+    // Apply additional filters
+    if (filtration && filters) {
+      const filterPairs = filters.split(',');
+      for (const filterPair of filterPairs) {
+        const [field, value] = filterPair.split('-');
+        if (field && value) {
+          switch (field) {
+            case 'type':
+              queryBuilder = queryBuilder.andWhere('notification.type = :type', { type: value });
+              break;
+            case 'status':
+              queryBuilder = queryBuilder.andWhere('notification.status = :status', { status: value });
+              break;
+            case 'senderType':
+              queryBuilder = queryBuilder.andWhere('notification.senderType = :senderType', { senderType: value });
+              break;
+            case 'isSystem':
+              queryBuilder = queryBuilder.andWhere('notification.isSystem = :isSystem', { isSystem: value === 'true' });
+              break;
+          }
+        }
+      }
+    }
+
+    // Apply sorting
+    const validSortFields = ['createdAt', 'updatedAt', 'type', 'status', 'senderName', 'senderType'];
+    const sortBy = validSortFields.includes(sortField) ? sortField : 'createdAt';
+    const sortOrder = sort === 'asc' ? 'ASC' : 'DESC';
+    queryBuilder = queryBuilder.orderBy(`notification.${sortBy}`, sortOrder);
+
+    // Get total count
+    const total = await queryBuilder.getCount();
+
+    // Apply pagination
+    if (pagination) {
+      queryBuilder = queryBuilder.skip((page - 1) * limit).take(limit);
+    }
+
+    // Select specific fields if requested
+    if (fields) {
+      const fieldList = fields.split(',').map(f => f.trim());
+      const selectFields = fieldList.map(field => `notification.${field}`);
+      queryBuilder = queryBuilder.select(selectFields);
+    }
+
+    // Execute query
+    const data = await queryBuilder.getMany();
+
+    const totalPages = pagination ? Math.ceil(total / limit) : 1;
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages,
+    };
+  }
+
   // Property-related notification methods
   async notifyPropertyStatusChange(
     property: Property,

@@ -21,6 +21,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { JweAuthGuard } from '../../auth/jwe/jwe-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Audit } from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 import { NotificationsService } from './notifications.service';
@@ -33,7 +34,7 @@ import {
 @Controller('notifications')
 @ApiTags('Notifications')
 @ApiBearerAuth()
-@UseGuards(JweAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class NotificationsController {
     /**
      * Notifica interés en propiedad a administradores y agente asignado
@@ -214,5 +215,53 @@ export class NotificationsController {
     @Body() updateStatusDto: UpdateNotificationStatusDto,
   ) {
     return this.notificationsService.updateStatus(id, updateStatusDto.status);
+  }
+
+  /**
+   * Get user notifications grid with filtering, sorting, and pagination
+   */
+  @Get('user/:userId/grid')
+  @ApiOperation({ summary: 'Get user notifications grid' })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated grid of user notifications',
+  })
+  @ApiParam({ name: 'userId', type: String })
+  @ApiQuery({ name: 'fields', required: false, type: String, description: 'Comma-separated list of fields' })
+  @ApiQuery({ name: 'sort', required: false, enum: ['asc', 'desc'], example: 'desc' })
+  @ApiQuery({ name: 'sortField', required: false, type: String, example: 'createdAt' })
+  @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiQuery({ name: 'filtration', required: false, type: Boolean })
+  @ApiQuery({ name: 'filters', required: false, type: String, description: 'Comma-separated filters like "type-INTEREST,status-SEND"' })
+  @ApiQuery({ name: 'pagination', required: false, type: Boolean })
+  @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, type: Number, example: 25 })
+  @Audit(AuditAction.READ, AuditEntityType.NOTIFICATION, 'Obtener grid de notificaciones de usuario')
+  getUserGridNotifications(
+    @Param('userId') userId: string,
+    @Query('fields') fields?: string,
+    @Query('sort') sort?: 'asc' | 'desc',
+    @Query('sortField') sortField?: string,
+    @Query('search') search?: string,
+    @Query('filtration') filtration?: string,
+    @Query('filters') filters?: string,
+    @Query('pagination') pagination?: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page?: number,
+    @Query('limit', new DefaultValuePipe(25), ParseIntPipe) limit?: number,
+  ) {
+    const filtrationBool = filtration === 'true';
+    const paginationBool = pagination !== 'false'; // Default to true
+
+    return this.notificationsService.userGridNotifications(userId, {
+      fields,
+      sort,
+      sortField,
+      search,
+      filtration: filtrationBool,
+      filters,
+      pagination: paginationBool,
+      page,
+      limit,
+    });
   }
 }

@@ -49,7 +49,7 @@ const menuItems = [
   },
   // { label: 'Reportes' },
   // { label: 'Auditoría' },
-  // { label: 'Notificaciones' },
+  { label: 'Notificaciones', url: '/backOffice/notifications' },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
