@@ -34,6 +34,30 @@ import {
 @ApiBearerAuth()
 @UseGuards(JweAuthGuard)
 export class NotificationsController {
+    /**
+     * Notifica interés en propiedad a administradores y agente asignado
+     * Puede ser llamado por usuario autenticado o anónimo
+     */
+    @Post('property-interest')
+    @ApiOperation({ summary: 'Enviar notificación de interés en propiedad a administradores y agente asignado' })
+    @ApiBody({ schema: {
+      type: 'object',
+      properties: {
+        propertyId: { type: 'string' },
+        assignedAgentId: { type: 'string', nullable: true },
+        interestedUserId: { type: 'string', nullable: true },
+      },
+      required: ['propertyId'],
+    }})
+    async notifyInterestOnProperty(@Body() body: { propertyId: string; assignedAgentId?: string; interestedUserId?: string }) {
+      // Si el usuario está autenticado, puede obtener su id del token/session
+      // Si no, se puede enviar como null o string vacío
+      return this.notificationsService.notifyInterestOnProperty(
+        body.propertyId,
+        body.interestedUserId || '',
+        body.assignedAgentId
+      );
+    }
   constructor(private readonly notificationsService: NotificationsService) {}
 
   /**

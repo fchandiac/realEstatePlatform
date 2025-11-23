@@ -21,6 +21,41 @@ import { EmailService } from './email.service';
 
 @Injectable()
 export class NotificationsService {
+    /**
+     * Envía notificación de interés en propiedad a todos los administradores y al agente asignado
+     */
+    async notifyInterestOnProperty(propertyId: string, interestedUserId: string, assignedAgentId?: string): Promise<Notification[]> {
+      // Obtener todos los administradores
+      const admins = await this.getAdminUserIds();
+      // Construir lista de destinatarios
+      const targetUserIds = [...admins];
+      if (assignedAgentId) {
+        targetUserIds.push(assignedAgentId);
+      }
+      // Crear notificación para cada destinatario
+      const notifications: Notification[] = [];
+      for (const userId of targetUserIds) {
+        const dto: CreateNotificationDto = {
+          targetUserIds: [userId],
+          type: NotificationType.INTERES,
+        };
+        const notification = await this.create(dto);
+        notifications.push(notification);
+      }
+      return notifications;
+    }
+
+    /**
+     * Obtiene los IDs de todos los usuarios administradores
+     */
+    private async getAdminUserIds(): Promise<string[]> {
+      // Requiere UsersService, puede inyectarse o importarse
+      // Aquí se asume que existe un método findAdminUsers() en UsersService
+      // y que NotificationsService tiene acceso a él
+      if (!('usersService' in this)) throw new Error('UsersService no disponible');
+      const admins = await (this as any).usersService.findAdminUsers({});
+      return admins.map((admin: any) => admin.id);
+    }
   constructor(
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
