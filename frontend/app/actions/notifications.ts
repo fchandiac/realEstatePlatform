@@ -240,3 +240,66 @@ export async function updateNotificationStatus(notificationId: string, status: '
     return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }
+
+/**
+ * Get notification by ID
+ */
+export async function getNotificationById(notificationId: string): Promise<{ success: boolean; error?: string; notification?: any }> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
+
+    if (!accessToken) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    const url = `${env.backendApiUrl}/notifications/${notificationId}`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return { success: false, error: errorData?.message || `HTTP ${response.status}` };
+    }
+
+    const notification = await response.json();
+    return { success: true, notification };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+/**
+ * Delete notification
+ */
+export async function deleteNotification(notificationId: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
+
+    if (!accessToken) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    const url = `${env.backendApiUrl}/notifications/${notificationId}`;
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return { success: false, error: errorData?.message || `HTTP ${response.status}` };
+    }
+
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}

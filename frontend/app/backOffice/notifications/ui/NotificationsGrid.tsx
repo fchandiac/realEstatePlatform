@@ -1,8 +1,11 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import DataGrid from '@/components/DataGrid/DataGridWrapper';
 import type { DataGridColumn } from '@/components/DataGrid/DataGrid';
 import MarkAsReadButton from '@/app/backOffice/notifications/ui/MarkAsReadButton';
+import DetailNotificationDialog from '@/app/backOffice/notifications/ui/DetailNotificationDialog';
+import DeleteNotificationDialog from '@/app/backOffice/notifications/ui/DeleteNotificationDialog';
+import IconButton from '@/components/IconButton/IconButton';
 import { useAlert } from '@/app/contexts/AlertContext';
 
 type NotificationRow = {
@@ -26,6 +29,27 @@ type NotificationsGridProps = {
 
 export default function NotificationsGrid({ rows, totalRows, title }: NotificationsGridProps) {
   const alert = useAlert();
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedNotificationId, setSelectedNotificationId] = useState<string | null>(null);
+  const [selectedNotificationMessage, setSelectedNotificationMessage] = useState<string>('');
+
+  const handleViewDetails = (notificationId: string, message: string) => {
+    setSelectedNotificationId(notificationId);
+    setSelectedNotificationMessage(message);
+    setDetailDialogOpen(true);
+  };
+
+  const handleDelete = (notificationId: string, message: string) => {
+    setSelectedNotificationId(notificationId);
+    setSelectedNotificationMessage(message);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleRefresh = () => {
+    // Refresh the page to reload notifications
+    window.location.reload();
+  };
 
   const columns: DataGridColumn[] = [
     {
@@ -110,27 +134,70 @@ export default function NotificationsGrid({ rows, totalRows, title }: Notificati
     {
       field: 'actions',
       headerName: '',
-      width: 100,
+      width: 140,
       sortable: false,
       filterable: false,
       actionComponent: ({ row }) => (
         <div className="flex items-center gap-1">
+          <IconButton
+            icon="visibility"
+            variant="text"
+            ariaLabel="Ver detalles"
+            onClick={() => handleViewDetails(row.id, row.message || '')}
+            style={{
+              minWidth: 32,
+              minHeight: 32,
+              width: 32,
+              height: 32,
+              padding: 4
+            }}
+          />
           {row.status === 'SEND' && (
             <MarkAsReadButton notificationId={row.id} />
           )}
+          <IconButton
+            icon="delete"
+            variant="text"
+            ariaLabel="Eliminar notificación"
+            onClick={() => handleDelete(row.id, row.message || '')}
+            className="text-red-500"
+            style={{
+              minWidth: 32,
+              minHeight: 32,
+              width: 32,
+              height: 32,
+              padding: 4
+            }}
+          />
         </div>
       ),
     },
   ];
 
   return (
-    <DataGrid
-      title={title || 'Notificaciones'}
-      columns={columns}
-      rows={rows}
-      totalRows={totalRows ?? rows.length}
-      height="70vh"
-      data-test-id="notifications-grid"
-    />
+    <>
+      <DataGrid
+        title={title || 'Notificaciones'}
+        columns={columns}
+        rows={rows}
+        totalRows={totalRows ?? rows.length}
+        height="70vh"
+        data-test-id="notifications-grid"
+      />
+
+      <DetailNotificationDialog
+        open={detailDialogOpen}
+        onClose={() => setDetailDialogOpen(false)}
+        notificationId={selectedNotificationId}
+      />
+
+      <DeleteNotificationDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        notificationId={selectedNotificationId}
+        notificationMessage={selectedNotificationMessage}
+        onSave={handleRefresh}
+      />
+    </>
   );
 }

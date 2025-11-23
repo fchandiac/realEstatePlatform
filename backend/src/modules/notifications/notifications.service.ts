@@ -142,6 +142,10 @@ export class NotificationsService {
     return notification;
   }
 
+  async getNotificationById(id: string): Promise<Notification> {
+    return this.findOne(id);
+  }
+
   async update(
     id: string,
     updateNotificationDto: UpdateNotificationDto,
