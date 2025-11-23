@@ -197,11 +197,14 @@ export async function updateAgent(
 
     // Preparar datos a actualizar
     const updateData: any = {}
-    if (data.firstName) updateData.firstName = data.firstName
-    if (data.lastName) updateData.lastName = data.lastName
-    if (data.phone) updateData.phone = data.phone
+    // Datos personales
+    updateData.personalInfo = {}
+    if (data.firstName) updateData.personalInfo.firstName = data.firstName
+    if (data.lastName) updateData.personalInfo.lastName = data.lastName
+    if (data.phone) updateData.personalInfo.phone = data.phone
+    if (avatarUrl) updateData.personalInfo.avatarUrl = avatarUrl
+    // Email puede ir fuera de personalInfo si el backend lo espera así
     if (data.email) updateData.email = data.email
-    if (avatarUrl) updateData.avatarUrl = avatarUrl
 
     // Actualizar agente
     const response = await fetch(`${env.backendApiUrl}/users/${id}`, {
