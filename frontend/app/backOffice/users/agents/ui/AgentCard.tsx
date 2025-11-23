@@ -68,17 +68,7 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onEdit, onDelete }) => {
                 <span className="material-symbols-outlined text-secondary" style={{ fontSize: '4rem' }}>person</span>
               )}
             </div>
-            {!avatarUrl && (
-              <IconButton
-                icon="add"
-                variant="containedPrimary"
-                size="xs"
-                className="absolute bottom-0 right-2 z-10"
-                aria-label="Agregar avatar"
-                title="Agregar avatar"
-                onClick={() => setShowAvatarDialog(true)}
-              />
-            )}
+            {/* El icono 'add' sobre el avatar ha sido removido */}
           </div>
         </div>
         {/* Columna de Información */}
