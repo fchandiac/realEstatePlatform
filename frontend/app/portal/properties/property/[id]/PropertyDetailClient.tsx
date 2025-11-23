@@ -92,14 +92,8 @@ export default function PropertyDetailClient({
       currency: 'CLP',
       minimumFractionDigits: 0,
     }).format(property.price);
-  } else if (property.currencyPrice === 'USD') {
-    priceFormatted = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-    }).format(property.price);
   } else {
-    priceFormatted = `${property.price} ${property.currencyPrice || ''}`;
+    priceFormatted = `${property.price}`;
   }
 
   const locationText = property.state && property.city
