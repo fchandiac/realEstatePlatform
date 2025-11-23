@@ -53,10 +53,9 @@ export default function MultimediaGrid({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Build complete media array: mainImageUrl first + additional multimedia (max 4)
+  // Build complete media array for modal: mainImageUrl first + all multimedia
   const allMedia = useMemo(() => {
     const items: (MediaItem & { type: 'image' | 'video' })[] = [];
-
     if (mainImageUrl) {
       items.push({
         id: 'main',
@@ -64,38 +63,34 @@ export default function MultimediaGrid({
         type: getMediaType({ url: mainImageUrl }),
       });
     }
-
-    // Add up to 3 more multimedia items (total max 4)
-    const remainingSlots = 4 - items.length;
     if (multimedia && multimedia.length > 0) {
-      const additionalMedia = multimedia.slice(0, remainingSlots);
       items.push(
-        ...additionalMedia.map((m) => ({
+        ...multimedia.map((m) => ({
           id: m.id,
           url: m.url,
           type: getMediaType(m),
         }))
       );
     }
-
+    // Debug log
     console.log('[MultimediaGrid] Debug:', {
       mainImageUrl,
       multimediaCount: multimedia?.length || 0,
       allMediaCount: items.length,
       items: items.map(i => ({ id: i.id, url: i.url?.substring(0, 50) })),
     });
-
     return items;
   }, [mainImageUrl, multimedia]);
 
-  // Determine layout based on image count
+  // Determine layout based on grid image count (max 3)
+  const gridMedia = allMedia.slice(0, 3);
   const layoutType = useMemo(() => {
-    if (allMedia.length === 0) return 'empty';
-    if (allMedia.length === 1) return 'single';
-    if (allMedia.length === 2) return 'double';
-    if (allMedia.length === 3) return 'triple';
-    return 'quad';
-  }, [allMedia.length]);
+    if (gridMedia.length === 0) return 'empty';
+    if (gridMedia.length === 1) return 'single';
+    if (gridMedia.length === 2) return 'double';
+    if (gridMedia.length === 3) return 'triple';
+    return 'empty';
+  }, [gridMedia.length]);
 
   if (layoutType === 'empty') {
     return null;
@@ -143,22 +138,9 @@ export default function MultimediaGrid({
           />
         )}
 
-        {/* Hover fullscreen icon */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-          <button className="bg-white/90 hover:bg-white p-3 rounded-full transition-colors">
-            <FontAwesome icon="expand" className="text-gray-800" />
-          </button>
-        </div>
-
-        {isVideo && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="bg-black/40 rounded-full p-4">
-              <span className="material-symbols-outlined text-white" style={{ fontSize: '32px' }}>
-                play_circle
-              </span>
-            </div>
-          </div>
-        )}
+        {/* Overlay oscuro al hacer hover, sin botón */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
+        {/* No mostrar icono de play en el grid, solo en el modal */}
       </div>
     );
   };
@@ -168,9 +150,8 @@ export default function MultimediaGrid({
     return (
       <>
         <div className="w-full rounded-lg overflow-hidden bg-gray-900" style={{ aspectRatio: '16/9' }}>
-          {renderMediaItem(allMedia[0], 0)}
+          {renderMediaItem(gridMedia[0], 0)}
         </div>
-
         {/* Fullscreen Modal */}
         {isModalOpen && (
           <FullscreenModal
@@ -194,15 +175,13 @@ export default function MultimediaGrid({
         <div className="w-full rounded-lg overflow-hidden flex gap-2" style={{ height: '400px', background: 'transparent' }}>
           {/* First image: ~61.8% width */}
           <div style={{ width: '61.8%', background: 'white' }} className="rounded-lg overflow-hidden">
-            {renderMediaItem(allMedia[0], 0)}
+            {renderMediaItem(gridMedia[0], 0)}
           </div>
-
           {/* Second image: ~38.2% width */}
           <div style={{ width: '38.2%', background: 'white' }} className="rounded-lg overflow-hidden">
-            {renderMediaItem(allMedia[1], 1)}
+            {renderMediaItem(gridMedia[1], 1)}
           </div>
         </div>
-
         {/* Fullscreen Modal */}
         {isModalOpen && (
           <FullscreenModal
@@ -219,7 +198,7 @@ export default function MultimediaGrid({
     );
   }
 
-  // LAYOUT TRIPLE & QUAD (to be implemented)
+  // LAYOUT TRIPLE (3 images)
   if (layoutType === 'triple') {
     // Golden ratio: left 61.8%, right 38.2% (stacked vertically)
     return (
@@ -227,20 +206,18 @@ export default function MultimediaGrid({
         <div className="w-full rounded-lg overflow-hidden flex gap-2" style={{ height: '400px', background: 'transparent' }}>
           {/* First image: ~61.8% width */}
           <div style={{ width: '61.8%', background: 'white' }} className="rounded-lg overflow-hidden">
-            {renderMediaItem(allMedia[0], 0)}
+            {renderMediaItem(gridMedia[0], 0)}
           </div>
-
           {/* Second and third images stacked vertically: ~38.2% width */}
           <div style={{ width: '38.2%', background: 'white' }} className="flex flex-col gap-2 rounded-lg overflow-hidden">
             <div style={{ height: '61.8%' }} className="rounded-lg overflow-hidden">
-              {renderMediaItem(allMedia[1], 1)}
+              {renderMediaItem(gridMedia[1], 1)}
             </div>
             <div style={{ height: '38.2%' }} className="rounded-lg overflow-hidden">
-              {renderMediaItem(allMedia[2], 2)}
+              {renderMediaItem(gridMedia[2], 2)}
             </div>
           </div>
         </div>
-
         {/* Fullscreen Modal */}
         {isModalOpen && (
           <FullscreenModal
@@ -257,27 +234,9 @@ export default function MultimediaGrid({
     );
   }
 
-  // LAYOUT QUAD (to be implemented)
-  return (
-    <>
-      <div className="w-full rounded-lg overflow-hidden bg-gray-900" style={{ aspectRatio: '16/9' }}>
-        {renderMediaItem(allMedia[0], 0)}
-      </div>
-
-      {/* Fullscreen Modal */}
-      {isModalOpen && (
-        <FullscreenModal
-          media={allMedia}
-          selectedIndex={selectedIndex}
-          propertyTitle={propertyTitle}
-          onClose={() => setIsModalOpen(false)}
-          onPrevious={handlePrevious}
-          onNext={handleNext}
-          onKeyDown={handleKeyDown}
-        />
-      )}
-    </>
-  );
+  // Si hay más de 3, mostrar solo los primeros 3 en el grid
+  // El modal mostrará todos los elementos
+  return null;
 }
 
 interface FullscreenModalProps {
@@ -352,10 +311,11 @@ function FullscreenModal({
                 e.stopPropagation();
                 onPrevious();
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full transition-colors"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-5 rounded-full transition-colors shadow-lg"
+              style={{ minWidth: '56px', minHeight: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               title="Anterior"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '32px' }}>
                 chevron_left
               </span>
             </button>
@@ -365,10 +325,11 @@ function FullscreenModal({
                 e.stopPropagation();
                 onNext();
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-5 rounded-full transition-colors shadow-lg"
+              style={{ minWidth: '56px', minHeight: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               title="Siguiente"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '32px' }}>
                 chevron_right
               </span>
             </button>
