@@ -19,6 +19,11 @@ import {
   UpdateNotificationDto,
 } from './dto/notification.dto';
 import { EmailService } from './email.service';
+import { UsersService } from '../users/users.service';
+
+export interface NotificationWithUserDetails extends Notification {
+  targetUsers?: Array<{ id: string; name: string }>;
+}
 
 @Injectable()
 export class NotificationsService {
@@ -59,17 +64,14 @@ export class NotificationsService {
      * Obtiene los IDs de todos los usuarios administradores
      */
     private async getAdminUserIds(): Promise<string[]> {
-      // Requiere UsersService, puede inyectarse o importarse
-      // Aquí se asume que existe un método findAdminUsers() en UsersService
-      // y que NotificationsService tiene acceso a él
-      if (!('usersService' in this)) throw new Error('UsersService no disponible');
-      const admins = await (this as any).usersService.findAdminUsers({});
-      return admins.map((admin: any) => admin.id);
+      const admins = await this.usersService.findAdminUsers({});
+      return admins.map((admin) => admin.id);
     }
   constructor(
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
     private readonly emailService: EmailService,
+    private readonly usersService: UsersService,
   ) {}
 
   async create(
@@ -109,9 +111,8 @@ export class NotificationsService {
 
   // Helper para obtener nombre de usuario
   private async getUserName(userId: string): Promise<string> {
-    if (!('usersService' in this)) return 'Usuario';
     try {
-      const user = await (this as any).usersService.findOne(userId);
+      const user = await this.usersService.findOne(userId);
       return user?.name || user?.email || 'Usuario';
     } catch {
       return 'Usuario';
@@ -142,8 +143,33 @@ export class NotificationsService {
     return notification;
   }
 
-  async getNotificationById(id: string): Promise<Notification> {
-    return this.findOne(id);
+  async getNotificationById(id: string): Promise<NotificationWithUserDetails> {
+    const notification = await this.findOne(id);
+
+    // Obtener nombres de usuarios destinatarios
+    const targetUsers: Array<{ id: string; name: string }> = [];
+    if (notification.targetUserIds && notification.targetUserIds.length > 0) {
+      for (const userId of notification.targetUserIds) {
+        try {
+          const user = await this.usersService.findOne(userId);
+          targetUsers.push({
+            id: userId,
+            name: user?.name || user?.email || `Usuario ${userId}`,
+          });
+        } catch {
+          // Usuario no encontrado o eliminado
+          targetUsers.push({
+            id: userId,
+            name: `Usuario desconocido (${userId})`,
+          });
+        }
+      }
+    }
+
+    return {
+      ...notification,
+      targetUsers,
+    };
   }
 
   async update(

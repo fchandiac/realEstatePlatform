@@ -6,6 +6,11 @@ import { getNotificationById } from '@/app/actions/notifications';
 import { useAlert } from '@/app/contexts/AlertContext';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 
+interface TargetUser {
+  id: string;
+  name: string;
+}
+
 interface DetailNotificationDialogProps {
   open: boolean;
   onClose: () => void;
@@ -197,19 +202,20 @@ const DetailNotificationDialog: React.FC<DetailNotificationDialogProps> = ({
             </div>
 
             {/* Target Users */}
-            {notification.targetUserIds && notification.targetUserIds.length > 0 && (
+            {notification.targetUsers && notification.targetUsers.length > 0 && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Usuarios Destinatarios ({notification.targetUserIds.length})
+                  Usuarios Destinatarios ({notification.targetUsers.length})
                 </label>
                 <div className="bg-gray-50 rounded-md p-3">
                   <div className="flex flex-wrap gap-2">
-                    {notification.targetUserIds.map((userId: string, index: number) => (
+                    {notification.targetUsers.map((user: TargetUser, index: number) => (
                       <span
                         key={index}
                         className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                        title={`ID: ${user.id}`}
                       >
-                        {userId}
+                        {user.name}
                       </span>
                     ))}
                   </div>

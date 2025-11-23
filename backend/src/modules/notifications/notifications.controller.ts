@@ -102,7 +102,7 @@ export class NotificationsController {
   @ApiOperation({ summary: 'Get notification by ID' })
   @ApiResponse({
     status: 200,
-    description: 'Notification details',
+    description: 'Notification details with user information',
   })
   @ApiResponse({
     status: 404,
@@ -111,7 +111,7 @@ export class NotificationsController {
   @ApiParam({ name: 'id', type: String })
   @Audit(AuditAction.READ, AuditEntityType.NOTIFICATION, 'Obtener notificación por ID')
   findOne(@Param('id') id: string) {
-    return this.notificationsService.findOne(id);
+    return this.notificationsService.getNotificationById(id);
   }
 
   /**
