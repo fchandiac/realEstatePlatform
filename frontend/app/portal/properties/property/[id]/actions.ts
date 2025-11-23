@@ -76,14 +76,17 @@ export async function getPublishedPropertyPublic(id: string): Promise<{
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => null);
-      console.error('Error fetching property:', {
-        status: res.status,
-        error: errorData,
-        id
-      });
+      // Solo loguear si hay un error relevante
+      if (errorData?.message && res.status !== 404) {
+        console.error('Error fetching property:', {
+          status: res.status,
+          error: errorData,
+          id
+        });
+      }
       return {
         success: false,
-        error: errorData?.message || `Property not found: ${res.status}`,
+        error: 'Propiedad no encontrada',
       };
     }
 

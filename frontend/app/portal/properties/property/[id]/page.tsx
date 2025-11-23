@@ -22,9 +22,12 @@ export default async function PropertyDetailPage({
           <h1 className="text-2xl font-bold text-foreground mb-4">
             Propiedad no encontrada
           </h1>
-          <p className="text-muted-foreground">
-            {propertyResult.error || 'No pudimos cargar los datos de la propiedad'}
-          </p>
+          {/* Solo mostrar mensaje secundario si es distinto al título */}
+          {propertyResult.error && propertyResult.error !== 'Propiedad no encontrada' && (
+            <p className="text-muted-foreground">
+              {propertyResult.error}
+            </p>
+          )}
         </div>
       </div>
     );
