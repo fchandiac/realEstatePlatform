@@ -261,54 +261,54 @@ export default function PropertyDetailClient({
               property.builtSquareMeters !== undefined || property.landSquareMeters !== undefined || 
               property.parkingSpaces !== undefined) && (
               <div className="mb-6 border-t pt-4">
-                <div className="flex flex-row items-center gap-6">
+                <div className="flex flex-row items-center gap-4 min-h-[40px] py-1">
                   {/* Características */}
                   {property.bedrooms != null && property.bedrooms > 0 && (
                     <div className="flex items-center space-x-1">
-                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
+                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
                         bed
                       </span>
-                      <span className="text-sm text-foreground">
+                      <span className="text-xs text-foreground">
                         {property.bedrooms}
                       </span>
                     </div>
                   )}
                   {property.bathrooms != null && property.bathrooms > 0 && (
                     <div className="flex items-center space-x-1">
-                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
+                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
                         bathtub
                       </span>
-                      <span className="text-sm text-foreground">
+                      <span className="text-xs text-foreground">
                         {property.bathrooms}
                       </span>
                     </div>
                   )}
                   {property.builtSquareMeters != null && property.builtSquareMeters > 0 && (
                     <div className="flex items-center space-x-1">
-                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
+                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
                         home
                       </span>
-                      <span className="text-sm text-foreground">
+                      <span className="text-xs text-foreground">
                         {Math.round(property.builtSquareMeters)}
                       </span>
                     </div>
                   )}
                   {property.landSquareMeters != null && property.landSquareMeters > 0 && (
                     <div className="flex items-center space-x-1">
-                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
+                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
                         screenshot_frame_2
                       </span>
-                      <span className="text-sm text-foreground">
+                      <span className="text-xs text-foreground">
                         {property.landSquareMeters}
                       </span>
                     </div>
                   )}
                   {property.parkingSpaces != null && property.parkingSpaces > 0 && (
                     <div className="flex items-center space-x-1">
-                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
+                      <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
                         local_parking
                       </span>
-                      <span className="text-sm text-foreground">
+                      <span className="text-xs text-foreground">
                         {property.parkingSpaces}
                       </span>
                     </div>
@@ -318,7 +318,7 @@ export default function PropertyDetailClient({
                     <button
                       onClick={handleToggleFavorite}
                       disabled={isLoadingFav}
-                      className="flex items-center justify-center p-2 rounded-full transition-all duration-200 hover:scale-110 disabled:opacity-50"
+                      className="flex items-center justify-center p-1 rounded-full transition-all duration-200 hover:scale-110 disabled:opacity-50"
                       title={isFavorited ? 'Remover de favoritos' : 'Agregar a favoritos'}
                     >
                       <span
@@ -327,7 +327,7 @@ export default function PropertyDetailClient({
                             ? 'text-red-500 fill-red-500'
                             : 'text-gray-400 hover:text-red-500'
                         }`}
-                        style={{ fontSize: '28px' }}
+                        style={{ fontSize: '22px' }}
                       >
                         {isFavorited ? 'favorite' : 'favorite_border'}
                       </span>
@@ -341,7 +341,7 @@ export default function PropertyDetailClient({
             {property.description && (
               <div className="border-t pt-4">
                 <h3 className="text-xl font-semibold text-foreground mb-3">
-                  Descripción General
+                  Descripción
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed text-justify">
                   {property.description}
