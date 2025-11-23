@@ -241,25 +241,6 @@ export default function PropertyDetailClient({
               {locationText}
             </span>
           </div>
-
-          {/* Favorites Count and Button */}
-          <div className="flex items-center justify-center space-x-4 text-sm mt-4">
-            {/* Favorite button */}
-            <button
-              onClick={handleToggleFavorite}
-              disabled={isLoadingFav}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
-              title={isFavorited ? 'Remover de favoritos' : 'Agregar a favoritos'}
-            >
-              <FontAwesome
-                icon={isFavorited ? 'heart' : 'heart'}
-                className={isFavorited ? 'text-red-500 fill-red-500' : 'text-red-500'}
-              />
-              <span className="text-red-600 font-medium text-xs">
-                {isFavorited ? 'En tus favoritos' : 'Agregar a favoritos'}
-              </span>
-            </button>
-          </div>
         </div>
 
         {/* Main Content - Two Column Layout */}
@@ -280,57 +261,78 @@ export default function PropertyDetailClient({
               property.builtSquareMeters !== undefined || property.landSquareMeters !== undefined || 
               property.parkingSpaces !== undefined) && (
               <div className="mb-6 border-t pt-4">
-                <div className="flex flex-wrap items-center gap-6">
+                <div className="flex flex-row items-center gap-6">
+                  {/* Características */}
                   {property.bedrooms != null && property.bedrooms > 0 && (
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1">
                       <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
                         bed
                       </span>
                       <span className="text-sm text-foreground">
-                        {property.bedrooms} {property.bedrooms === 1 ? 'Dormitorio' : 'Dormitorios'}
+                        {property.bedrooms}
                       </span>
                     </div>
                   )}
                   {property.bathrooms != null && property.bathrooms > 0 && (
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1">
                       <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
                         bathtub
                       </span>
                       <span className="text-sm text-foreground">
-                        {property.bathrooms} {property.bathrooms === 1 ? 'Baño' : 'Baños'}
+                        {property.bathrooms}
                       </span>
                     </div>
                   )}
                   {property.builtSquareMeters != null && property.builtSquareMeters > 0 && (
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1">
                       <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
                         home
                       </span>
                       <span className="text-sm text-foreground">
-                        {Math.round(property.builtSquareMeters)} m² const.
+                        {Math.round(property.builtSquareMeters)}
                       </span>
                     </div>
                   )}
                   {property.landSquareMeters != null && property.landSquareMeters > 0 && (
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1">
                       <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
                         screenshot_frame_2
                       </span>
                       <span className="text-sm text-foreground">
-                        {property.landSquareMeters} m² terreno
+                        {property.landSquareMeters}
                       </span>
                     </div>
                   )}
                   {property.parkingSpaces != null && property.parkingSpaces > 0 && (
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1">
                       <span className="material-symbols-rounded text-primary" style={{ fontSize: '24px' }}>
                         local_parking
                       </span>
                       <span className="text-sm text-foreground">
-                        {property.parkingSpaces} {property.parkingSpaces === 1 ? 'Estacionamiento' : 'Estacionamientos'}
+                        {property.parkingSpaces}
                       </span>
                     </div>
                   )}
+                  {/* Botón de favorito alineado vertical y derecha */}
+                  <div className="flex-1 flex justify-end items-center">
+                    <button
+                      onClick={handleToggleFavorite}
+                      disabled={isLoadingFav}
+                      className="flex items-center justify-center p-2 rounded-full transition-all duration-200 hover:scale-110 disabled:opacity-50"
+                      title={isFavorited ? 'Remover de favoritos' : 'Agregar a favoritos'}
+                    >
+                      <span
+                        className={`material-symbols-outlined transition-all ${
+                          isFavorited
+                            ? 'text-red-500 fill-red-500'
+                            : 'text-gray-400 hover:text-red-500'
+                        }`}
+                        style={{ fontSize: '28px' }}
+                      >
+                        {isFavorited ? 'favorite' : 'favorite_border'}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

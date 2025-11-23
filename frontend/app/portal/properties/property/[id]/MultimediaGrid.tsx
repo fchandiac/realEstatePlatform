@@ -167,7 +167,7 @@ export default function MultimediaGrid({
   if (layoutType === 'single') {
     return (
       <>
-        <div className="w-full rounded-lg overflow-hidden shadow-md bg-gray-900" style={{ aspectRatio: '16/9' }}>
+        <div className="w-full rounded-lg overflow-hidden bg-gray-900" style={{ aspectRatio: '16/9' }}>
           {renderMediaItem(allMedia[0], 0)}
         </div>
 
@@ -191,14 +191,14 @@ export default function MultimediaGrid({
   if (layoutType === 'double') {
     return (
       <>
-        <div className="w-full rounded-lg overflow-hidden shadow-md bg-gray-900 flex gap-2" style={{ height: '400px' }}>
+        <div className="w-full rounded-lg overflow-hidden flex gap-2" style={{ height: '400px', background: 'transparent' }}>
           {/* First image: ~61.8% width */}
-          <div style={{ width: '61.8%' }}>
+          <div style={{ width: '61.8%', background: 'white' }} className="rounded-lg overflow-hidden">
             {renderMediaItem(allMedia[0], 0)}
           </div>
 
           {/* Second image: ~38.2% width */}
-          <div style={{ width: '38.2%' }}>
+          <div style={{ width: '38.2%', background: 'white' }} className="rounded-lg overflow-hidden">
             {renderMediaItem(allMedia[1], 1)}
           </div>
         </div>
@@ -220,9 +220,47 @@ export default function MultimediaGrid({
   }
 
   // LAYOUT TRIPLE & QUAD (to be implemented)
+  if (layoutType === 'triple') {
+    // Golden ratio: left 61.8%, right 38.2% (stacked vertically)
+    return (
+      <>
+        <div className="w-full rounded-lg overflow-hidden flex gap-2" style={{ height: '400px', background: 'transparent' }}>
+          {/* First image: ~61.8% width */}
+          <div style={{ width: '61.8%', background: 'white' }} className="rounded-lg overflow-hidden">
+            {renderMediaItem(allMedia[0], 0)}
+          </div>
+
+          {/* Second and third images stacked vertically: ~38.2% width */}
+          <div style={{ width: '38.2%', background: 'white' }} className="flex flex-col gap-2 rounded-lg overflow-hidden">
+            <div style={{ height: '61.8%' }} className="rounded-lg overflow-hidden">
+              {renderMediaItem(allMedia[1], 1)}
+            </div>
+            <div style={{ height: '38.2%' }} className="rounded-lg overflow-hidden">
+              {renderMediaItem(allMedia[2], 2)}
+            </div>
+          </div>
+        </div>
+
+        {/* Fullscreen Modal */}
+        {isModalOpen && (
+          <FullscreenModal
+            media={allMedia}
+            selectedIndex={selectedIndex}
+            propertyTitle={propertyTitle}
+            onClose={() => setIsModalOpen(false)}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            onKeyDown={handleKeyDown}
+          />
+        )}
+      </>
+    );
+  }
+
+  // LAYOUT QUAD (to be implemented)
   return (
     <>
-      <div className="w-full rounded-lg overflow-hidden shadow-md bg-gray-900" style={{ aspectRatio: '16/9' }}>
+      <div className="w-full rounded-lg overflow-hidden bg-gray-900" style={{ aspectRatio: '16/9' }}>
         {renderMediaItem(allMedia[0], 0)}
       </div>
 
