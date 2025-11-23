@@ -409,12 +409,12 @@ export default function PropertyDetailClient({
                 </label>
                 <textarea
                   name="message"
-                  placeholder="Me interesa esta propiedad. Por favor, contáctame para más detalles o para agendar una visita."
+                  placeholder="Escribe tu mensaje..."
                   rows={4}
                   value={formData.message}
                   onChange={handleFormChange}
                   disabled={isSubmitting}
-                  className="w-full p-3 rounded-lg bg-white border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-150 resize-none"
+                  className="w-full p-3 rounded-lg bg-white border border-border text-foreground placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-150 resize-none"
                 />
               </div>
 
