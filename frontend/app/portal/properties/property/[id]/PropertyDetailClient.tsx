@@ -414,7 +414,7 @@ export default function PropertyDetailClient({
                   value={formData.message}
                   onChange={handleFormChange}
                   disabled={isSubmitting}
-                  className="w-full p-3 rounded-lg bg-muted border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-150 resize-none"
+                  className="w-full p-3 rounded-lg bg-white border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-150 resize-none"
                 />
               </div>
 
