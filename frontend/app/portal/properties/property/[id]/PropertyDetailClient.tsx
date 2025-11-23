@@ -83,11 +83,24 @@ export default function PropertyDetailClient({
       : property.assignedAgent?.personalInfo?.firstName ||
         'Agente Inmobiliario';
 
-  const priceFormatted = new Intl.NumberFormat('es-CL', {
-    style: 'currency',
-    currency: property.currencyPrice === 'UF' ? 'USD' : 'CLP',
-    minimumFractionDigits: 0,
-  }).format(property.price);
+  let priceFormatted = '';
+  if (property.currencyPrice === 'UF') {
+    priceFormatted = `${new Intl.NumberFormat('es-CL', { minimumFractionDigits: 0 }).format(property.price)} UF`;
+  } else if (property.currencyPrice === 'CLP') {
+    priceFormatted = new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      minimumFractionDigits: 0,
+    }).format(property.price);
+  } else if (property.currencyPrice === 'USD') {
+    priceFormatted = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+    }).format(property.price);
+  } else {
+    priceFormatted = `${property.price} ${property.currencyPrice || ''}`;
+  }
 
   const locationText = property.state && property.city
     ? `${property.city}, ${property.state}`
@@ -360,17 +373,24 @@ export default function PropertyDetailClient({
             {/* Agent Info */}
             {property.assignedAgent && (
               <div className="flex flex-col items-center space-y-3 mb-6">
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
-                  <FontAwesome
-                    icon="user"
-                    className="text-primary text-2xl"
-                  />
+                <div className="w-24 h-24 rounded-full border-4 border-secondary bg-primary/20 flex items-center justify-center overflow-hidden">
+                  {property.assignedAgent.personalInfo && 'avatarUrl' in property.assignedAgent.personalInfo && property.assignedAgent.personalInfo.avatarUrl ? (
+                    <img
+                      src={normalizeImageUrl((property.assignedAgent.personalInfo as any).avatarUrl)}
+                      alt={agentName}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <FontAwesome
+                      icon="user"
+                      className="text-primary text-4xl"
+                    />
+                  )}
                 </div>
                 <div className="text-center">
                   <p className="text-lg font-semibold text-foreground">
                     {agentName}
                   </p>
-                  {/* No mostrar username, solo nombre real del agente */}
                 </div>
               </div>
             )}
