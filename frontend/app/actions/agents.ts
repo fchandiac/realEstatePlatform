@@ -84,6 +84,7 @@ export async function createAgent(data: {
       const uploadFormData = new FormData()
       uploadFormData.append('file', data.avatarFile)
       uploadFormData.append('path', 'public/users')
+      uploadFormData.append('type', 'AGENT_IMG')
 
       const uploadRes = await fetch(`${env.backendApiUrl}/multimedia/upload`, {
         method: 'POST',
@@ -178,6 +179,7 @@ export async function updateAgent(
       const uploadFormData = new FormData()
       uploadFormData.append('file', data.avatarFile)
       uploadFormData.append('path', 'public/users')
+      uploadFormData.append('type', 'AGENT_IMG')
 
       const uploadRes = await fetch(`${env.backendApiUrl}/multimedia/upload`, {
         method: 'POST',
