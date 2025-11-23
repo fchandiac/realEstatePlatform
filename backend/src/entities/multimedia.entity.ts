@@ -16,6 +16,7 @@ export enum MultimediaFormat {
 }
 
 export enum MultimediaType {
+    AGENT_IMG = 'AGENT_IMG',
   DNI_FRONT = 'DNI_FRONT',
   DNI_REAR = 'DNI_REAR',
   SLIDE = 'SLIDE',

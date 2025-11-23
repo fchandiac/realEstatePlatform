@@ -53,6 +53,7 @@ export class StaticFilesService implements OnModuleInit {
   // Obtiene la ruta completa para un tipo de archivo específico
   getUploadPath(type: MultimediaType): string {
     const paths = {
+      [MultimediaType.AGENT_IMG]: 'users',
       [MultimediaType.DNI_FRONT]: 'docs/dni/front',
       [MultimediaType.DNI_REAR]: 'docs/dni/rear',
       [MultimediaType.SLIDE]: 'web/slides',
