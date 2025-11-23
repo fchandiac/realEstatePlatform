@@ -84,7 +84,7 @@ const AgentList: React.FC<AgentListProps> = ({
               variant="primary"
               onClick={() => setCreateDialogOpen(true)}
               icon="add"
-              size={'lg'}
+              size={'sm'}
             />
           </div>
           <div className="w-full max-w-sm">

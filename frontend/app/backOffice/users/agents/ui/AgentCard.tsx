@@ -52,104 +52,82 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onEdit, onDelete }) => {
     : undefined
 
   return (
-    <div className="bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
-      {/* Avatar and Header */}
-      <div className="flex items-start gap-4 mb-4">
-        <div className="relative flex-shrink-0 mx-auto">
-          <div className="h-12 w-12 rounded-full bg-muted border-2 border-secondary flex items-center justify-center overflow-hidden">
-            {avatarUrl ? (
-              <img
-                src={avatarUrl}
-                alt={`Avatar ${fullName}`}
-                className="h-full w-full object-cover"
+    <article className="border border-neutral-200 bg-white rounded-lg shadow-sm p-4 flex flex-col justify-between min-w-[260px]">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-6 md:gap-4 items-stretch">
+        {/* Columna del Avatar */}
+        <div className="flex justify-center items-center h-full md:h-full md:justify-center md:items-center">
+          <div className="relative flex-shrink-0 mx-auto">
+            <div className="h-24 w-24 rounded-full bg-neutral-100 border-4 border-secondary flex items-center justify-center overflow-hidden">
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={`Avatar ${fullName}`}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="material-symbols-outlined text-secondary" style={{ fontSize: '4rem' }}>person</span>
+              )}
+            </div>
+            {!avatarUrl && (
+              <IconButton
+                icon="add"
+                variant="containedPrimary"
+                size="xs"
+                className="absolute bottom-0 right-2 z-10"
+                aria-label="Agregar avatar"
+                title="Agregar avatar"
+                onClick={() => setShowAvatarDialog(true)}
               />
-            ) : (
-              <span className="material-symbols-outlined text-secondary" style={{ fontSize: '2rem' }}>person</span>
             )}
           </div>
-          {!avatarUrl && (
-            <IconButton
-              icon="add"
-              variant="containedPrimary"
-              size="xs"
-              className="absolute bottom-0 right-2 z-10"
-              aria-label="Agregar avatar"
-              title="Agregar avatar"
-              onClick={() => setShowAvatarDialog(true)}
-            />
-          )}
         </div>
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-foreground">{fullName}</h3>
-          <p className="text-sm text-muted-foreground">@{agent.username}</p>
-              {/* Diálogo para subir avatar */}
-              {/* Reemplaza por el componente que uses para subir avatar de agentes */}
-              {/* <UploadUserAvatarDialog
-                open={showAvatarDialog}
-                onClose={() => setShowAvatarDialog(false)}
-                userId={agent.id}
-                currentAvatarUrl={agent.personalInfo?.avatarUrl || undefined}
-              /> */}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="space-y-2 flex-1">
-        <div>
-          <p className="text-xs text-muted-foreground">Email</p>
-          <p className="text-sm text-foreground break-all">{agent.email}</p>
-        </div>
-
-        {agent.personalInfo?.phone && (
-          <div>
-            <p className="text-xs text-muted-foreground">Teléfono</p>
-            <p className="text-sm text-foreground">{agent.personalInfo.phone}</p>
-          </div>
-        )}
-
-        <div>
-          <p className="text-xs text-muted-foreground">Estado</p>
-          <div className="flex items-center gap-2 mt-1">
-            <span
-              className={`${getStatusColor(agent.status)} text-white text-xs px-3 py-1 rounded-full`}
-            >
+        {/* Columna de Información */}
+        <div className="flex flex-col gap-4 sm:gap-2 w-full overflow-hidden">
+          {/* Status badge */}
+          <div className="flex w-full justify-end mb-2">
+            <span className={`text-[8px] font-light uppercase px-2 py-0.5 rounded-full ${getStatusColor(agent.status)} text-white`}>
               {getStatusLabel(agent.status)}
             </span>
           </div>
-        </div>
-
-        {agent.lastLogin && (
-          <div>
-            <p className="text-xs text-muted-foreground">Último acceso</p>
-            <p className="text-sm text-foreground">
-              {new Date(agent.lastLogin).toLocaleDateString('es-CL')}
-            </p>
+          {/* Nombre */}
+          <h3 className="text-lg font-semibold text-foreground truncate break-all">{fullName}</h3>
+          {/* Nombre de usuario */}
+          <p className="text-xs font-light text-neutral-600 truncate break-all">@{agent.username}</p>
+          {/* Correo con icono */}
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-neutral-500" style={{ fontSize: '0.875rem' }}>email</span>
+            <p className="text-xs font-light text-neutral-500 truncate break-all">{agent.email}</p>
           </div>
-        )}
-      </div>
-
-      {/* Actions Footer */}
-      <div className="flex justify-between items-center gap-2 mt-4">
-        <p className="text-xs text-muted-foreground">
-          Creado: {new Date(agent.createdAt).toLocaleDateString('es-CL')}
-        </p>
-        <div className="flex gap-2">
-          <IconButton
-            icon="edit"
-            variant="text"
-            onClick={() => onEdit(agent)}
-            title="Editar agente"
-          />
-          <IconButton
-            icon="delete"
-            variant="text"
-            className="text-red-500 hover:text-red-600"
-            onClick={() => onDelete(agent)}
-            title="Eliminar agente"
-          />
+          {/* Teléfono con icono */}
+          {agent.personalInfo?.phone && (
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-neutral-500" style={{ fontSize: '0.875rem' }}>phone</span>
+              <p className="text-xs font-light text-neutral-500 truncate break-all">{agent.personalInfo.phone}</p>
+            </div>
+          )}
         </div>
       </div>
-    </div>
+      <div className="flex justify-end gap-2 mt-4">
+        <IconButton
+          icon="edit"
+          variant="text"
+          size="sm"
+          aria-label={`Editar ${fullName}`}
+          title="Editar"
+          onClick={() => onEdit(agent)}
+          className="text-secondary"
+        />
+        <IconButton
+          icon="delete"
+          variant="text"
+          size="sm"
+          aria-label={`Eliminar ${fullName}`}
+          title="Eliminar"
+          onClick={() => onDelete(agent)}
+          className="text-secondary"
+        />
+      </div>
+    </article>
   )
 }
 
