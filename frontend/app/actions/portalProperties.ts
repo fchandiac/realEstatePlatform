@@ -27,6 +27,17 @@ export interface PropertyData {
   multimedia?: MediaItem[];
   createdAt: string;
   isFeatured?: boolean;
+  propertyType?: {
+    id: string;
+    name: string;
+    hasBedrooms?: boolean;
+    hasBathrooms?: boolean;
+    hasBuiltSquareMeters?: boolean;
+    hasLandSquareMeters?: boolean;
+    hasParkingSpaces?: boolean;
+    hasFloors?: boolean;
+    hasConstructionYear?: boolean;
+  };
 }
 
 export interface PublishedPropertiesResponse {
@@ -138,6 +149,17 @@ export async function getPublishedPropertiesFiltered(filters: {
       })),
       createdAt: prop.createdAt,
       isFeatured: prop.isFeatured || false,
+      propertyType: prop.propertyType ? {
+        id: prop.propertyType.id,
+        name: prop.propertyType.name,
+        hasBedrooms: prop.propertyType.hasBedrooms,
+        hasBathrooms: prop.propertyType.hasBathrooms,
+        hasBuiltSquareMeters: prop.propertyType.hasBuiltSquareMeters,
+        hasLandSquareMeters: prop.propertyType.hasLandSquareMeters,
+        hasParkingSpaces: prop.propertyType.hasParkingSpaces,
+        hasFloors: prop.propertyType.hasFloors,
+        hasConstructionYear: prop.propertyType.hasConstructionYear,
+      } : undefined,
     }));
 
     console.log('✅ Properties fetched:', mappedData.length, 'items');

@@ -24,6 +24,17 @@ interface PropertyFromAPI {
   }>;
   createdAt: string;
   isFeatured?: boolean;
+  propertyType?: {
+    id: string;
+    name: string;
+    hasBedrooms?: boolean;
+    hasBathrooms?: boolean;
+    hasBuiltSquareMeters?: boolean;
+    hasLandSquareMeters?: boolean;
+    hasParkingSpaces?: boolean;
+    hasFloors?: boolean;
+    hasConstructionYear?: boolean;
+  };
 }
 
 interface PaginationData {
@@ -132,6 +143,7 @@ export default function ListProperties({ properties, pagination, onPageChange, i
             currencyPrice: (property.currency as 'CLP' | 'UF') || 'CLP',
             state: property.state,
             city: property.city,
+            propertyType: property.propertyType,
             mainImageUrl: property.mainImageUrl || null,
             multimedia: property.multimedia || [],
             bedrooms: property.bedrooms,

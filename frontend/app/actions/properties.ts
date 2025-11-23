@@ -1199,7 +1199,17 @@ export interface PublicPropertyItem {
   state?: string;
   mainImageUrl?: string;
   publishedAt?: string;
-  propertyType?: { id: string; name: string };
+  propertyType?: { 
+    id: string; 
+    name: string;
+    hasBedrooms?: boolean;
+    hasBathrooms?: boolean;
+    hasBuiltSquareMeters?: boolean;
+    hasLandSquareMeters?: boolean;
+    hasParkingSpaces?: boolean;
+    hasFloors?: boolean;
+    hasConstructionYear?: boolean;
+  };
   bedrooms?: number;
   bathrooms?: number;
   builtSquareMeters?: number;
@@ -2046,6 +2056,17 @@ export async function getPublishedFeaturedProperties(page: number = 1): Promise<
     totalArea?: number;
     mainImageUrl?: string;
     isFeatured: boolean;
+    propertyType?: {
+      id: string;
+      name: string;
+      hasBedrooms?: boolean;
+      hasBathrooms?: boolean;
+      hasBuiltSquareMeters?: boolean;
+      hasLandSquareMeters?: boolean;
+      hasParkingSpaces?: boolean;
+      hasFloors?: boolean;
+      hasConstructionYear?: boolean;
+    };
   }>;
   pagination?: {
     total: number;

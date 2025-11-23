@@ -112,6 +112,13 @@ export class PropertyService {
       'p.favorites',
       'pt.id',
       'pt.name',
+      'pt.hasBedrooms',
+      'pt.hasBathrooms',
+      'pt.hasBuiltSquareMeters',
+      'pt.hasLandSquareMeters',
+      'pt.hasParkingSpaces',
+      'pt.hasFloors',
+      'pt.hasConstructionYear',
     ]);
 
     const items = await qb.getMany();
@@ -188,7 +195,17 @@ export class PropertyService {
         currencyPrice: p.currencyPrice,
         state: p.state ?? null,
         city: p.city ?? null,
-        propertyType: p.propertyType ? { id: p.propertyType.id, name: p.propertyType.name } : null,
+        propertyType: p.propertyType ? { 
+          id: p.propertyType.id, 
+          name: p.propertyType.name,
+          hasBedrooms: p.propertyType.hasBedrooms,
+          hasBathrooms: p.propertyType.hasBathrooms,
+          hasBuiltSquareMeters: p.propertyType.hasBuiltSquareMeters,
+          hasLandSquareMeters: p.propertyType.hasLandSquareMeters,
+          hasParkingSpaces: p.propertyType.hasParkingSpaces,
+          hasFloors: p.propertyType.hasFloors,
+          hasConstructionYear: p.propertyType.hasConstructionYear
+        } : null,
         mainImageUrl: hasMainImage ? toAbsoluteMediaUrl(normalize(p.mainImageUrl)) : null,
         bedrooms: p.bedrooms ?? null,
         bathrooms: p.bathrooms ?? null,
@@ -279,7 +296,14 @@ export class PropertyService {
         'p.operationType',
         'p.favorites',
         'pt.id',
-        'pt.name'
+        'pt.name',
+        'pt.hasBedrooms',
+        'pt.hasBathrooms',
+        'pt.hasBuiltSquareMeters',
+        'pt.hasLandSquareMeters',
+        'pt.hasParkingSpaces',
+        'pt.hasFloors',
+        'pt.hasConstructionYear'
       ])
       // Use the PropertyStatus enum value for published
       .where('p.status = :status', { status: PropertyStatus.PUBLISHED })
@@ -324,7 +348,14 @@ export class PropertyService {
         'p.operationType',
         'p.favorites',
         'pt.id',
-        'pt.name'
+        'pt.name',
+        'pt.hasBedrooms',
+        'pt.hasBathrooms',
+        'pt.hasBuiltSquareMeters',
+        'pt.hasLandSquareMeters',
+        'pt.hasParkingSpaces',
+        'pt.hasFloors',
+        'pt.hasConstructionYear'
       ])
       .where('p.status = :status', { status: PropertyStatus.PUBLISHED })
       .andWhere('p.isFeatured = :isFeatured', { isFeatured: true })
@@ -1744,6 +1775,7 @@ export class PropertyService {
 
       let query = this.propertyRepository
         .createQueryBuilder('property')
+        .leftJoinAndSelect('property.propertyType', 'pt')
         .where('property.status = :status', { status: PropertyStatus.PUBLISHED })
         .andWhere('property.deletedAt IS NULL');
 
@@ -1761,7 +1793,6 @@ export class PropertyService {
       if (filters?.typeProperty && filters.typeProperty !== '' && filters.typeProperty !== null) {
         console.log('🔎 Filtering by typeProperty:', filters.typeProperty);
         query = query
-          .leftJoin('property.propertyType', 'pt')
           .andWhere('pt.name = :typeProperty', { typeProperty: filters.typeProperty });
       }
 

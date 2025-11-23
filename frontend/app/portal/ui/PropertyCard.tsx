@@ -19,6 +19,13 @@ type MediaItem = {
 type PropertyTypeLite = {
   id: string;
   name: string;
+  hasBedrooms?: boolean;
+  hasBathrooms?: boolean;
+  hasBuiltSquareMeters?: boolean;
+  hasLandSquareMeters?: boolean;
+  hasParkingSpaces?: boolean;
+  hasFloors?: boolean;
+  hasConstructionYear?: boolean;
 };
 
 export interface PortalProperty {
@@ -403,7 +410,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
         className="property-icons-container justify-center flex items-center gap-3 px-4 py-2 bg-gray-100"
         data-test-id="property-card-icons"
       >
-        {property.bedrooms != null && (
+        {property.propertyType?.hasBedrooms && property.bedrooms != null && (
           <div className="flex items-center gap-1 whitespace-nowrap">
             <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
               bed
@@ -411,7 +418,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
             <span className="text-thin text-xs text-gray-700">{property.bedrooms}</span>
           </div>
         )}
-        {property.bathrooms != null && (
+        {property.propertyType?.hasBathrooms && property.bathrooms != null && (
           <div className="flex items-center gap-1 whitespace-nowrap">
             <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
               bathtub
@@ -419,7 +426,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
             <span className="text-thin text-xs text-gray-700">{property.bathrooms}</span>
           </div>
         )}
-        {property.builtSquareMeters != null && (
+        {property.propertyType?.hasBuiltSquareMeters && property.builtSquareMeters != null && (
           <div className="flex items-center gap-1 whitespace-nowrap">
             <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
               home
@@ -427,7 +434,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
             <span className="text-thin text-xs text-gray-700">{Math.round(property.builtSquareMeters)} m²</span>
           </div>
         )}
-        {property.landSquareMeters != null && (
+        {property.propertyType?.hasLandSquareMeters && property.landSquareMeters != null && (
           <div className="flex items-center gap-1 whitespace-nowrap">
             <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
               screenshot_frame_2
@@ -435,7 +442,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
             <span className="text-thin text-xs text-gray-700">{property.landSquareMeters} m²</span>
           </div>
         )}
-        {property.parkingSpaces != null && (
+        {property.propertyType?.hasParkingSpaces && property.parkingSpaces != null && (
           <div className="flex items-center gap-1 whitespace-nowrap">
             <span className="material-symbols-rounded text-primary" style={{ fontSize: '20px' }}>
               parking_sign
