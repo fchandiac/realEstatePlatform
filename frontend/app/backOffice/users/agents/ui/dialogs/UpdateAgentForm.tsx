@@ -89,10 +89,8 @@ const UpdateAgentForm: React.FC<UpdateAgentFormProps> = ({
         phone: values.phone?.trim(),
       }
 
-      // Add avatar file if it was changed
-      if (values.avatarFile) {
-        updateData.avatarFile = values.avatarFile
-      }
+      // Siempre enviar avatarFile (null si no hay)
+      updateData.avatarFile = values.avatarFile ?? null
 
       // Call updateAgent with all data at once
       const result = await updateAgent(agent.id, updateData)
@@ -160,6 +158,11 @@ const UpdateAgentForm: React.FC<UpdateAgentFormProps> = ({
         }
         return `${env.backendApiUrl}${agent.personalInfo.avatarUrl}`
       })(),
+      acceptedTypes: ['image/jpeg', 'image/png', 'image/webp'],
+      maxSize: 2, // MB
+      aspectRatio: '1:1',
+      buttonText: 'Cambiar avatar',
+      previewSize: 'md',
     },
     {
       name: 'status',
