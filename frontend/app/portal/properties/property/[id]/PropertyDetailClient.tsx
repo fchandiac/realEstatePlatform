@@ -78,9 +78,10 @@ export default function PropertyDetailClient({
   const mainImage = property.multimedia?.[0];
 
   const agentName =
-    property.assignedAgent?.personalInfo?.firstName ||
-    property.assignedAgent?.username ||
-    'Agente Inmobiliario';
+    property.assignedAgent?.personalInfo?.firstName && property.assignedAgent?.personalInfo?.lastName
+      ? `${property.assignedAgent.personalInfo.firstName} ${property.assignedAgent.personalInfo.lastName}`
+      : property.assignedAgent?.personalInfo?.firstName ||
+        'Agente Inmobiliario';
 
   const priceFormatted = new Intl.NumberFormat('es-CL', {
     style: 'currency',
