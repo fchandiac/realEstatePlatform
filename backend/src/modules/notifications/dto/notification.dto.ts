@@ -9,6 +9,32 @@ import {
 } from 'class-validator';
 import { NotificationType, NotificationStatus, NotificationSenderType } from '../../../entities/notification.entity';
 
+export class PropertyInterestDto {
+  @IsString()
+  @IsNotEmpty()
+  propertyId: string;
+
+  @IsString()
+  @IsOptional()
+  assignedAgentId?: string;
+
+  @IsString()
+  @IsOptional()
+  interestedUserId?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  interestedUserName: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  interestedUserEmail: string;
+
+  @IsString()
+  @IsNotEmpty()
+  interestedUserMessage: string;
+}
+
 export class CreateNotificationDto {
   @IsEnum(NotificationSenderType)
   @IsNotEmpty()

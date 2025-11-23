@@ -29,6 +29,7 @@ import {
   CreateNotificationDto,
   UpdateNotificationDto,
   UpdateNotificationStatusDto,
+  PropertyInterestDto,
 } from './dto/notification.dto';
 
 @Controller('notifications')
@@ -42,21 +43,15 @@ export class NotificationsController {
      */
     @Post('property-interest')
     @ApiOperation({ summary: 'Enviar notificación de interés en propiedad a administradores y agente asignado' })
-    @ApiBody({ schema: {
-      type: 'object',
-      properties: {
-        propertyId: { type: 'string' },
-        assignedAgentId: { type: 'string', nullable: true },
-        interestedUserId: { type: 'string', nullable: true },
-      },
-      required: ['propertyId'],
-    }})
-    async notifyInterestOnProperty(@Body() body: { propertyId: string; assignedAgentId?: string; interestedUserId?: string }) {
-      // El servicio ya construye el DTO completo y usa el método único
+    @ApiBody({ type: PropertyInterestDto })
+    async notifyInterestOnProperty(@Body() body: PropertyInterestDto) {
       return this.notificationsService.notifyInterestOnProperty(
         body.propertyId,
-        body.interestedUserId || '',
-        body.assignedAgentId
+        body.assignedAgentId,
+        body.interestedUserId,
+        body.interestedUserName,
+        body.interestedUserEmail,
+        body.interestedUserMessage
       );
     }
   constructor(private readonly notificationsService: NotificationsService) {}

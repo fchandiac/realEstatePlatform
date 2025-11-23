@@ -1,6 +1,12 @@
 'use server';
 
+'use server';
+
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { env } from '@/lib/env';
+
+// Define Property type locally to avoid importing auth dependencies
 
 // Define Property type locally to avoid importing auth dependencies
 export interface Property {
@@ -112,5 +118,51 @@ export async function getPublishedPropertyPublic(id: string): Promise<{
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
     };
+  }
+}
+
+/**
+ * Notify property interest - sends notification to admins and assigned agent
+ * Server action that handles authentication
+ */
+export async function notifyPropertyInterest(data: {
+  propertyId: string;
+  assignedAgentId?: string;
+  name: string;
+  email: string;
+  message: string;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Get current session to determine if user is logged in
+    const session = await getServerSession(authOptions);
+    const currentUser = session?.user;
+
+    const url = `${env.backendApiUrl}/notifications/property-interest`;
+    
+    const body = {
+      propertyId: data.propertyId,
+      assignedAgentId: data.assignedAgentId,
+      interestedUserId: currentUser?.id, // Will be undefined if not logged in
+      interestedUserName: data.name,
+      interestedUserEmail: data.email,
+      interestedUserMessage: data.message,
+    };
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return { success: false, error: errorData?.message || `HTTP ${response.status}` };
+    }
+
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }

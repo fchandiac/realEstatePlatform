@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Property } from './actions';
+import { getPublishedPropertyPublic, notifyPropertyInterest, Property } from './actions';
 import { Button } from '@/components/Button/Button';
 import { TextField } from '@/components/TextField/TextField';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
@@ -198,19 +198,21 @@ export default function PropertyDetailClient({
 
     try {
       // Enviar notificación de interés en propiedad
-      const notifyResult = await import('@/app/actions/propertyNotifications.server').then(mod =>
-        mod.notifyPropertyInterest({
-          propertyId: property.id,
-          assignedAgentId: property.assignedAgent?.id,
-          interestedUserId: undefined, // Si tienes el usuario logueado, pásalo aquí
-        })
-      );
-      if (!notifyResult.success) {
+      const result = await notifyPropertyInterest({
+        propertyId: property.id,
+        assignedAgentId: property.assignedAgent?.id,
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      });
+
+      if (!result.success) {
         showAlert({
-          message: notifyResult.error || 'No se pudo notificar el interés',
+          message: result.error || 'No se pudo notificar el interés',
           type: 'error',
           duration: 3000,
         });
+        return;
       }
 
       showAlert({

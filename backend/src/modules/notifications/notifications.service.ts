@@ -30,7 +30,14 @@ export class NotificationsService {
     /**
      * Envía notificación de interés en propiedad a todos los administradores y al agente asignado
      */
-    async notifyInterestOnProperty(propertyId: string, interestedUserId: string, assignedAgentId?: string): Promise<Notification[]> {
+    async notifyInterestOnProperty(
+      propertyId: string,
+      assignedAgentId?: string,
+      interestedUserId?: string,
+      interestedUserName?: string,
+      interestedUserEmail?: string,
+      interestedUserMessage?: string
+    ): Promise<Notification[]> {
       // Obtener todos los administradores
       const admins = await this.getAdminUserIds();
       // Construir lista de destinatarios
@@ -41,7 +48,13 @@ export class NotificationsService {
       // Datos del sender
       const senderType = interestedUserId ? NotificationSenderType.USER : NotificationSenderType.ANONYMOUS;
       const senderId = interestedUserId || undefined;
-      const senderName = interestedUserId ? await this.getUserName(interestedUserId) : 'Anónimo';
+      const senderName = interestedUserId ? await this.getUserName(interestedUserId) : (interestedUserName || 'Anónimo');
+      
+      // Construir mensaje completo
+      const fullMessage = interestedUserEmail && interestedUserMessage
+        ? `${interestedUserName || 'Usuario'} (${interestedUserEmail}): ${interestedUserMessage}`
+        : `El usuario ${senderName} está interesado en la propiedad ${propertyId}.`;
+      
       // Crear notificación para cada destinatario
       const notifications: Notification[] = [];
       for (const userId of targetUserIds) {
@@ -50,7 +63,7 @@ export class NotificationsService {
           senderId,
           senderName,
           isSystem: false,
-          message: `El usuario ${senderName} está interesado en la propiedad ${propertyId}.`,
+          message: fullMessage,
           targetUserIds: [userId],
           type: NotificationType.INTEREST,
         };
