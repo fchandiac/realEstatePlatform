@@ -43,7 +43,8 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onEdit, onDelete }) => {
     ? `${agent.personalInfo.firstName || ''} ${agent.personalInfo.lastName || ''}`.trim()
     : agent.username
 
-  const avatarUrl = agent.personalInfo?.avatarUrl
+  const [avatarError, setAvatarError] = useState(false)
+  const avatarUrl = agent.personalInfo?.avatarUrl && !avatarError ? agent.personalInfo.avatarUrl : undefined
 
   return (
     <div className="bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
@@ -54,6 +55,10 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onEdit, onDelete }) => {
             src={avatarUrl}
             alt={fullName}
             className="w-12 h-12 rounded-full object-cover"
+            onError={() => {
+              setAvatarError(true)
+              showAlert({ message: 'Error al cargar la nueva imagen de avatar', type: 'error', duration: 3000 })
+            }}
           />
         ) : (
           <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
