@@ -369,14 +369,7 @@ export default function PropertyDetailClient({
                   <p className="text-lg font-semibold text-foreground">
                     {agentName}
                   </p>
-                  <div className="flex flex-col items-center text-sm text-muted-foreground mt-2 space-y-1">
-                    {property.assignedAgent.username && (
-                      <div className="flex items-center">
-                        <FontAwesome icon="phone" className="text-primary mr-2" />
-                        <span>{property.assignedAgent.username}</span>
-                      </div>
-                    )}
-                  </div>
+                  {/* No mostrar username, solo nombre real del agente */}
                 </div>
               </div>
             )}
