@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { env } from '@/lib/env';
 import { AgentType } from './types'
 import IconButton from '@/components/IconButton/IconButton'
 import { useAlert } from '@/app/hooks/useAlert'
@@ -39,37 +40,56 @@ const getStatusLabel = (status: string) => {
 const AgentCard: React.FC<AgentCardProps> = ({ agent, onEdit, onDelete }) => {
   const { showAlert } = useAlert()
 
+  const [showAvatarDialog, setShowAvatarDialog] = useState(false)
   const fullName = agent.personalInfo
     ? `${agent.personalInfo.firstName || ''} ${agent.personalInfo.lastName || ''}`.trim()
     : agent.username
-
-  const [avatarError, setAvatarError] = useState(false)
-  const avatarUrl = agent.personalInfo?.avatarUrl && !avatarError ? agent.personalInfo.avatarUrl : undefined
+  // Normalizar avatar URL como en AdminCard
+  const avatarUrl = agent.personalInfo?.avatarUrl
+    ? (agent.personalInfo.avatarUrl.startsWith('http')
+        ? agent.personalInfo.avatarUrl
+        : `${env.backendApiUrl}${agent.personalInfo.avatarUrl}`)
+    : undefined
 
   return (
     <div className="bg-card rounded-lg p-6 border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
       {/* Avatar and Header */}
       <div className="flex items-start gap-4 mb-4">
-        {avatarUrl ? (
-          <img
-            src={avatarUrl}
-            alt={fullName}
-            className="w-12 h-12 rounded-full object-cover"
-            onError={() => {
-              setAvatarError(true)
-              showAlert({ message: 'Error al cargar la nueva imagen de avatar', type: 'error', duration: 3000 })
-            }}
-          />
-        ) : (
-          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-            <span className="material-symbols-outlined text-muted-foreground">
-              person
-            </span>
+        <div className="relative flex-shrink-0 mx-auto">
+          <div className="h-12 w-12 rounded-full bg-muted border-2 border-secondary flex items-center justify-center overflow-hidden">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={`Avatar ${fullName}`}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="material-symbols-outlined text-secondary" style={{ fontSize: '2rem' }}>person</span>
+            )}
           </div>
-        )}
+          {!avatarUrl && (
+            <IconButton
+              icon="add"
+              variant="containedPrimary"
+              size="xs"
+              className="absolute bottom-0 right-2 z-10"
+              aria-label="Agregar avatar"
+              title="Agregar avatar"
+              onClick={() => setShowAvatarDialog(true)}
+            />
+          )}
+        </div>
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-foreground">{fullName}</h3>
           <p className="text-sm text-muted-foreground">@{agent.username}</p>
+              {/* Diálogo para subir avatar */}
+              {/* Reemplaza por el componente que uses para subir avatar de agentes */}
+              {/* <UploadUserAvatarDialog
+                open={showAvatarDialog}
+                onClose={() => setShowAvatarDialog(false)}
+                userId={agent.id}
+                currentAvatarUrl={agent.personalInfo?.avatarUrl || undefined}
+              /> */}
         </div>
       </div>
 
