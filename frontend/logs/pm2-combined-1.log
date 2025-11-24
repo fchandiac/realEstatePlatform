@@ -253,3 +253,795 @@
 2025-11-14T11:30:35:   opText: 'En Arriendo',
 2025-11-14T11:30:35:   hasOpText: true
 2025-11-14T11:30:35: }
+2025-11-14T11:32:07: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-14T11:32:07: ✅ Properties fetched: 6 items
+2025-11-14T11:32:07: PropertyCard Debug: {
+2025-11-14T11:32:07:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-14T11:32:07:   operationType: 'SALE',
+2025-11-14T11:32:07:   opText: 'En Venta',
+2025-11-14T11:32:07:   hasOpText: true
+2025-11-14T11:32:07: }
+2025-11-14T11:32:07: PropertyCard Debug: {
+2025-11-14T11:32:07:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-14T11:32:07:   operationType: 'SALE',
+2025-11-14T11:32:07:   opText: 'En Venta',
+2025-11-14T11:32:07:   hasOpText: true
+2025-11-14T11:32:07: }
+2025-11-14T11:32:07: PropertyCard Debug: {
+2025-11-14T11:32:07:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-14T11:32:07:   operationType: 'RENT',
+2025-11-14T11:32:07:   opText: 'En Arriendo',
+2025-11-14T11:32:07:   hasOpText: true
+2025-11-14T11:32:07: }
+2025-11-14T11:32:07: PropertyCard Debug: {
+2025-11-14T11:32:07:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-14T11:32:07:   operationType: 'RENT',
+2025-11-14T11:32:07:   opText: 'En Arriendo',
+2025-11-14T11:32:07:   hasOpText: true
+2025-11-14T11:32:07: }
+2025-11-14T11:32:07: PropertyCard Debug: {
+2025-11-14T11:32:07:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-14T11:32:07:   operationType: 'SALE',
+2025-11-14T11:32:07:   opText: 'En Venta',
+2025-11-14T11:32:07:   hasOpText: true
+2025-11-14T11:32:07: }
+2025-11-14T11:32:07: PropertyCard Debug: {
+2025-11-14T11:32:07:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-14T11:32:07:   operationType: 'RENT',
+2025-11-14T11:32:07:   opText: 'En Arriendo',
+2025-11-14T11:32:07:   hasOpText: true
+2025-11-14T11:32:07: }
+2025-11-14T11:32:12: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-14T11:32:12: ✅ Properties fetched: 6 items
+2025-11-14T11:32:12: PropertyCard Debug: {
+2025-11-14T11:32:12:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-14T11:32:12:   operationType: 'SALE',
+2025-11-14T11:32:12:   opText: 'En Venta',
+2025-11-14T11:32:12:   hasOpText: true
+2025-11-14T11:32:12: }
+2025-11-14T11:32:12: PropertyCard Debug: {
+2025-11-14T11:32:12:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-14T11:32:12:   operationType: 'SALE',
+2025-11-14T11:32:12:   opText: 'En Venta',
+2025-11-14T11:32:12:   hasOpText: true
+2025-11-14T11:32:12: }
+2025-11-14T11:32:12: PropertyCard Debug: {
+2025-11-14T11:32:12:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-14T11:32:12:   operationType: 'RENT',
+2025-11-14T11:32:12:   opText: 'En Arriendo',
+2025-11-14T11:32:12:   hasOpText: true
+2025-11-14T11:32:12: }
+2025-11-14T11:32:12: PropertyCard Debug: {
+2025-11-14T11:32:12:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-14T11:32:12:   operationType: 'RENT',
+2025-11-14T11:32:12:   opText: 'En Arriendo',
+2025-11-14T11:32:12:   hasOpText: true
+2025-11-14T11:32:12: }
+2025-11-14T11:32:12: PropertyCard Debug: {
+2025-11-14T11:32:12:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-14T11:32:12:   operationType: 'SALE',
+2025-11-14T11:32:12:   opText: 'En Venta',
+2025-11-14T11:32:12:   hasOpText: true
+2025-11-14T11:32:12: }
+2025-11-14T11:32:12: PropertyCard Debug: {
+2025-11-14T11:32:12:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-14T11:32:12:   operationType: 'RENT',
+2025-11-14T11:32:12:   opText: 'En Arriendo',
+2025-11-14T11:32:12:   hasOpText: true
+2025-11-14T11:32:12: }
+2025-11-14T11:33:23: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-14T11:33:23: ✅ Properties fetched: 6 items
+2025-11-14T11:33:23: PropertyCard Debug: {
+2025-11-14T11:33:23:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-14T11:33:23:   operationType: 'SALE',
+2025-11-14T11:33:23:   opText: 'En Venta',
+2025-11-14T11:33:23:   hasOpText: true
+2025-11-14T11:33:23: }
+2025-11-14T11:33:23: PropertyCard Debug: {
+2025-11-14T11:33:23:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-14T11:33:23:   operationType: 'SALE',
+2025-11-14T11:33:23:   opText: 'En Venta',
+2025-11-14T11:33:23:   hasOpText: true
+2025-11-14T11:33:23: }
+2025-11-14T11:33:23: PropertyCard Debug: {
+2025-11-14T11:33:23:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-14T11:33:23:   operationType: 'RENT',
+2025-11-14T11:33:23:   opText: 'En Arriendo',
+2025-11-14T11:33:23:   hasOpText: true
+2025-11-14T11:33:23: }
+2025-11-14T11:33:23: PropertyCard Debug: {
+2025-11-14T11:33:23:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-14T11:33:23:   operationType: 'RENT',
+2025-11-14T11:33:23:   opText: 'En Arriendo',
+2025-11-14T11:33:23:   hasOpText: true
+2025-11-14T11:33:23: }
+2025-11-14T11:33:23: PropertyCard Debug: {
+2025-11-14T11:33:23:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-14T11:33:23:   operationType: 'SALE',
+2025-11-14T11:33:23:   opText: 'En Venta',
+2025-11-14T11:33:23:   hasOpText: true
+2025-11-14T11:33:23: }
+2025-11-14T11:33:23: PropertyCard Debug: {
+2025-11-14T11:33:23:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-14T11:33:23:   operationType: 'RENT',
+2025-11-14T11:33:23:   opText: 'En Arriendo',
+2025-11-14T11:33:23:   hasOpText: true
+2025-11-14T11:33:23: }
+2025-11-14T11:34:46: Middleware - Acceso a backoffice: /backOffice/cms/slider
+2025-11-14T11:34:46: Middleware - Token presente: true
+2025-11-14T11:34:46: Middleware - Token role: ADMIN
+2025-11-14T11:34:46: Middleware - Acceso permitido para rol: ADMIN
+2025-11-14T11:34:47: Middleware - Acceso a backoffice: /backOffice/cms/slider
+2025-11-14T11:34:47: Middleware - Token presente: true
+2025-11-14T11:34:47: Middleware - Token role: ADMIN
+2025-11-14T11:34:47: Middleware - Acceso permitido para rol: ADMIN
+2025-11-14T11:34:47: Middleware - Acceso a backoffice: /backOffice/cms/slider
+2025-11-14T11:34:47: Middleware - Token presente: true
+2025-11-14T11:34:47: Middleware - Token role: ADMIN
+2025-11-14T11:34:47: Middleware - Acceso permitido para rol: ADMIN
+2025-11-14T12:19:16: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-14T12:19:16: ✅ Properties fetched: 6 items
+2025-11-14T12:21:37: Property fetched from /full endpoint: {
+2025-11-14T12:21:37:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-14T12:21:37:   title: 'save',
+2025-11-14T12:21:37:   status: 'PUBLISHED',
+2025-11-14T12:21:37:   state: 'Arica y Parinacota',
+2025-11-14T12:21:37:   city: 'Arica',
+2025-11-14T12:21:37:   address: 'test',
+2025-11-14T12:21:37:   latitude: '-37.89869800',
+2025-11-14T12:21:37:   longitude: '-72.86132800',
+2025-11-14T12:21:37:   multimedia: 1
+2025-11-14T12:21:37: }
+2025-11-15T08:51:06: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-15T08:51:06: ✅ Properties fetched: 6 items
+2025-11-15T08:51:06: PropertyCard Debug: {
+2025-11-15T08:51:06:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-15T08:51:06:   operationType: 'SALE',
+2025-11-15T08:51:06:   opText: 'En Venta',
+2025-11-15T08:51:06:   hasOpText: true
+2025-11-15T08:51:06: }
+2025-11-15T08:51:06: PropertyCard Debug: {
+2025-11-15T08:51:06:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-15T08:51:06:   operationType: 'SALE',
+2025-11-15T08:51:06:   opText: 'En Venta',
+2025-11-15T08:51:06:   hasOpText: true
+2025-11-15T08:51:06: }
+2025-11-15T08:51:06: PropertyCard Debug: {
+2025-11-15T08:51:06:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-15T08:51:06:   operationType: 'RENT',
+2025-11-15T08:51:06:   opText: 'En Arriendo',
+2025-11-15T08:51:06:   hasOpText: true
+2025-11-15T08:51:06: }
+2025-11-15T08:51:06: PropertyCard Debug: {
+2025-11-15T08:51:06:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-15T08:51:06:   operationType: 'RENT',
+2025-11-15T08:51:06:   opText: 'En Arriendo',
+2025-11-15T08:51:06:   hasOpText: true
+2025-11-15T08:51:06: }
+2025-11-15T08:51:06: PropertyCard Debug: {
+2025-11-15T08:51:06:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-15T08:51:06:   operationType: 'SALE',
+2025-11-15T08:51:06:   opText: 'En Venta',
+2025-11-15T08:51:06:   hasOpText: true
+2025-11-15T08:51:06: }
+2025-11-15T08:51:06: PropertyCard Debug: {
+2025-11-15T08:51:06:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-15T08:51:06:   operationType: 'RENT',
+2025-11-15T08:51:06:   opText: 'En Arriendo',
+2025-11-15T08:51:06:   hasOpText: true
+2025-11-15T08:51:06: }
+2025-11-17T03:22:43: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T03:22:43: ✅ Properties fetched: 6 items
+2025-11-17T03:22:43: PropertyCard Debug: {
+2025-11-17T03:22:43:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T03:22:43:   operationType: 'SALE',
+2025-11-17T03:22:43:   opText: 'En Venta',
+2025-11-17T03:22:43:   hasOpText: true
+2025-11-17T03:22:43: }
+2025-11-17T03:22:43: PropertyCard Debug: {
+2025-11-17T03:22:43:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-17T03:22:43:   operationType: 'SALE',
+2025-11-17T03:22:43:   opText: 'En Venta',
+2025-11-17T03:22:43:   hasOpText: true
+2025-11-17T03:22:43: }
+2025-11-17T03:22:43: PropertyCard Debug: {
+2025-11-17T03:22:43:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T03:22:43:   operationType: 'RENT',
+2025-11-17T03:22:43:   opText: 'En Arriendo',
+2025-11-17T03:22:43:   hasOpText: true
+2025-11-17T03:22:43: }
+2025-11-17T03:22:43: PropertyCard Debug: {
+2025-11-17T03:22:43:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-17T03:22:43:   operationType: 'RENT',
+2025-11-17T03:22:43:   opText: 'En Arriendo',
+2025-11-17T03:22:43:   hasOpText: true
+2025-11-17T03:22:43: }
+2025-11-17T03:22:43: PropertyCard Debug: {
+2025-11-17T03:22:43:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T03:22:43:   operationType: 'SALE',
+2025-11-17T03:22:43:   opText: 'En Venta',
+2025-11-17T03:22:43:   hasOpText: true
+2025-11-17T03:22:43: }
+2025-11-17T03:22:43: PropertyCard Debug: {
+2025-11-17T03:22:43:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-17T03:22:43:   operationType: 'RENT',
+2025-11-17T03:22:43:   opText: 'En Arriendo',
+2025-11-17T03:22:43:   hasOpText: true
+2025-11-17T03:22:43: }
+2025-11-17T15:38:39: Property fetched from /full endpoint: {
+2025-11-17T15:38:39:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T15:38:39:   title: 'save',
+2025-11-17T15:38:39:   status: 'PUBLISHED',
+2025-11-17T15:38:39:   state: 'Arica y Parinacota',
+2025-11-17T15:38:39:   city: 'Arica',
+2025-11-17T15:38:39:   address: 'test',
+2025-11-17T15:38:39:   latitude: '-37.89869800',
+2025-11-17T15:38:39:   longitude: '-72.86132800',
+2025-11-17T15:38:39:   multimedia: 1
+2025-11-17T15:38:39: }
+2025-11-17T15:45:40: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T15:45:40: ✅ Properties fetched: 6 items
+2025-11-17T15:46:05: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=2&page=1
+2025-11-17T15:46:05: ✅ Properties fetched: 0 items
+2025-11-17T15:46:05: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=2&page=1
+2025-11-17T15:46:05: ✅ Properties fetched: 0 items
+2025-11-17T15:46:08: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T15:46:08: ✅ Properties fetched: 6 items
+2025-11-17T15:46:08: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T15:46:08: ✅ Properties fetched: 6 items
+2025-11-17T15:46:11: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=9&page=1
+2025-11-17T15:46:11: ✅ Properties fetched: 0 items
+2025-11-17T15:46:12: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=9&page=1
+2025-11-17T15:46:12: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=9&page=1
+2025-11-17T15:46:12: ✅ Properties fetched: 0 items
+2025-11-17T15:46:12: ✅ Properties fetched: 0 items
+2025-11-17T15:46:52: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=9&city=2&page=1
+2025-11-17T15:46:52: ✅ Properties fetched: 0 items
+2025-11-17T15:46:53: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=9&city=2&page=1
+2025-11-17T15:46:53: ✅ Properties fetched: 0 items
+2025-11-17T15:46:54: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?currency=UF&state=9&city=2&page=1
+2025-11-17T15:46:54: ❌ Error fetching published properties: 500 Internal Server Error - {"statusCode":500,"message":"Internal server error"}
+2025-11-17T15:46:54: 📍 URL intentado: http://72.61.6.232:3000/properties/published/filtered?currency=UF&state=9&city=2&page=1
+2025-11-17T15:46:58: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T15:46:58: ✅ Properties fetched: 6 items
+2025-11-17T15:47:03: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T15:47:03: ✅ Properties fetched: 6 items
+2025-11-17T15:47:07: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?currency=UF&page=1
+2025-11-17T15:47:07: ❌ Error fetching published properties: 500 Internal Server Error - {"statusCode":500,"message":"Internal server error"}
+2025-11-17T15:47:07: 📍 URL intentado: http://72.61.6.232:3000/properties/published/filtered?currency=UF&page=1
+2025-11-17T15:47:09: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T15:47:09: ✅ Properties fetched: 6 items
+2025-11-17T15:47:10: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T15:47:10: ✅ Properties fetched: 6 items
+2025-11-17T15:47:10: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T15:47:10: ✅ Properties fetched: 6 items
+2025-11-17T15:47:10: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T15:47:10: ✅ Properties fetched: 6 items
+2025-11-17T16:05:54: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T16:05:54: ✅ Properties fetched: 6 items
+2025-11-17T16:05:54: PropertyCard Debug: {
+2025-11-17T16:05:54:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T16:05:54:   operationType: 'SALE',
+2025-11-17T16:05:54:   opText: 'En Venta',
+2025-11-17T16:05:54:   hasOpText: true
+2025-11-17T16:05:54: }
+2025-11-17T16:05:54: PropertyCard Debug: {
+2025-11-17T16:05:54:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-17T16:05:54:   operationType: 'SALE',
+2025-11-17T16:05:54:   opText: 'En Venta',
+2025-11-17T16:05:54:   hasOpText: true
+2025-11-17T16:05:54: }
+2025-11-17T16:05:54: PropertyCard Debug: {
+2025-11-17T16:05:54:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T16:05:54:   operationType: 'RENT',
+2025-11-17T16:05:54:   opText: 'En Arriendo',
+2025-11-17T16:05:54:   hasOpText: true
+2025-11-17T16:05:54: }
+2025-11-17T16:05:54: PropertyCard Debug: {
+2025-11-17T16:05:54:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-17T16:05:54:   operationType: 'RENT',
+2025-11-17T16:05:54:   opText: 'En Arriendo',
+2025-11-17T16:05:54:   hasOpText: true
+2025-11-17T16:05:54: }
+2025-11-17T16:05:54: PropertyCard Debug: {
+2025-11-17T16:05:54:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T16:05:54:   operationType: 'SALE',
+2025-11-17T16:05:54:   opText: 'En Venta',
+2025-11-17T16:05:54:   hasOpText: true
+2025-11-17T16:05:54: }
+2025-11-17T16:05:54: PropertyCard Debug: {
+2025-11-17T16:05:54:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-17T16:05:54:   operationType: 'RENT',
+2025-11-17T16:05:54:   opText: 'En Arriendo',
+2025-11-17T16:05:54:   hasOpText: true
+2025-11-17T16:05:54: }
+2025-11-17T16:06:15: Property fetched from /full endpoint: {
+2025-11-17T16:06:15:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T16:06:15:   title: 'conservo truculenter bardus',
+2025-11-17T16:06:15:   status: 'PUBLISHED',
+2025-11-17T16:06:15:   state: 'Biobío',
+2025-11-17T16:06:15:   city: 'Coyhaique',
+2025-11-17T16:06:15:   address: null,
+2025-11-17T16:06:15:   latitude: '25.57696100',
+2025-11-17T16:06:15:   longitude: '-59.67362900',
+2025-11-17T16:06:15:   multimedia: 0
+2025-11-17T16:06:15: }
+2025-11-17T16:06:22: Property fetched from /full endpoint: {
+2025-11-17T16:06:22:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T16:06:22:   title: 'conservo truculenter bardus',
+2025-11-17T16:06:22:   status: 'PUBLISHED',
+2025-11-17T16:06:22:   state: 'Biobío',
+2025-11-17T16:06:22:   city: 'Coyhaique',
+2025-11-17T16:06:22:   address: null,
+2025-11-17T16:06:22:   latitude: '25.57696100',
+2025-11-17T16:06:22:   longitude: '-59.67362900',
+2025-11-17T16:06:22:   multimedia: 0
+2025-11-17T16:06:22: }
+2025-11-17T16:12:56: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T16:12:56: ✅ Properties fetched: 6 items
+2025-11-17T16:14:05: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T16:14:05: ✅ Properties fetched: 6 items
+2025-11-17T16:14:11: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&page=1
+2025-11-17T16:14:11: ✅ Properties fetched: 3 items
+2025-11-17T16:14:11: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&page=1
+2025-11-17T16:14:11: ✅ Properties fetched: 3 items
+2025-11-17T16:14:14: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&typeProperty=Departamento&page=1
+2025-11-17T16:14:14: ✅ Properties fetched: 0 items
+2025-11-17T16:14:14: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&typeProperty=Departamento&page=1
+2025-11-17T16:14:14: ✅ Properties fetched: 0 items
+2025-11-17T16:14:14: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&typeProperty=Departamento&page=1
+2025-11-17T16:14:14: ✅ Properties fetched: 0 items
+2025-11-17T16:14:17: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&state=3&typeProperty=Departamento&page=1
+2025-11-17T16:14:17: ✅ Properties fetched: 0 items
+2025-11-17T16:14:17: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&state=3&typeProperty=Departamento&page=1
+2025-11-17T16:14:17: ✅ Properties fetched: 0 items
+2025-11-17T16:14:26: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&typeProperty=Departamento&page=1
+2025-11-17T16:14:26: ✅ Properties fetched: 0 items
+2025-11-17T16:14:26: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&typeProperty=Departamento&page=1
+2025-11-17T16:14:27: ✅ Properties fetched: 0 items
+2025-11-17T16:14:42: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&page=1
+2025-11-17T16:14:42: ✅ Properties fetched: 3 items
+2025-11-17T16:14:42: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&page=1
+2025-11-17T16:14:42: ✅ Properties fetched: 3 items
+2025-11-17T16:14:42: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&page=1
+2025-11-17T16:14:42: ✅ Properties fetched: 3 items
+2025-11-17T16:14:50: Property fetched from /full endpoint: {
+2025-11-17T16:14:50:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T16:14:50:   title: 'aggredior excepturi vulpes',
+2025-11-17T16:14:50:   status: 'PUBLISHED',
+2025-11-17T16:14:50:   state: "O'Higgins",
+2025-11-17T16:14:50:   city: 'Santa María',
+2025-11-17T16:14:50:   address: null,
+2025-11-17T16:14:50:   latitude: '78.97196800',
+2025-11-17T16:14:50:   longitude: '-143.45709700',
+2025-11-17T16:14:50:   multimedia: 0
+2025-11-17T16:14:50: }
+2025-11-17T16:47:32: Property fetched from /full endpoint: {
+2025-11-17T16:47:32:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T16:47:32:   title: 'aggredior excepturi vulpes',
+2025-11-17T16:47:32:   status: 'PUBLISHED',
+2025-11-17T16:47:32:   state: "O'Higgins",
+2025-11-17T16:47:32:   city: 'Santa María',
+2025-11-17T16:47:32:   address: null,
+2025-11-17T16:47:32:   latitude: '78.97196800',
+2025-11-17T16:47:32:   longitude: '-143.45709700',
+2025-11-17T16:47:32:   multimedia: 0
+2025-11-17T16:47:32: }
+2025-11-17T17:24:21: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:24:21: ✅ Properties fetched: 6 items
+2025-11-17T17:24:21: PropertyCard Debug: {
+2025-11-17T17:24:21:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T17:24:21:   operationType: 'SALE',
+2025-11-17T17:24:21:   opText: 'En Venta',
+2025-11-17T17:24:21:   hasOpText: true
+2025-11-17T17:24:21: }
+2025-11-17T17:24:21: PropertyCard Debug: {
+2025-11-17T17:24:21:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-17T17:24:21:   operationType: 'SALE',
+2025-11-17T17:24:21:   opText: 'En Venta',
+2025-11-17T17:24:21:   hasOpText: true
+2025-11-17T17:24:21: }
+2025-11-17T17:24:21: PropertyCard Debug: {
+2025-11-17T17:24:21:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T17:24:21:   operationType: 'RENT',
+2025-11-17T17:24:21:   opText: 'En Arriendo',
+2025-11-17T17:24:21:   hasOpText: true
+2025-11-17T17:24:21: }
+2025-11-17T17:24:21: PropertyCard Debug: {
+2025-11-17T17:24:21:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-17T17:24:21:   operationType: 'RENT',
+2025-11-17T17:24:21:   opText: 'En Arriendo',
+2025-11-17T17:24:21:   hasOpText: true
+2025-11-17T17:24:21: }
+2025-11-17T17:24:21: PropertyCard Debug: {
+2025-11-17T17:24:21:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T17:24:21:   operationType: 'SALE',
+2025-11-17T17:24:21:   opText: 'En Venta',
+2025-11-17T17:24:21:   hasOpText: true
+2025-11-17T17:24:21: }
+2025-11-17T17:24:21: PropertyCard Debug: {
+2025-11-17T17:24:21:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-17T17:24:21:   operationType: 'RENT',
+2025-11-17T17:24:21:   opText: 'En Arriendo',
+2025-11-17T17:24:21:   hasOpText: true
+2025-11-17T17:24:21: }
+2025-11-17T17:24:42: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:24:42: ✅ Properties fetched: 6 items
+2025-11-17T17:24:56: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:24:56: ✅ Properties fetched: 6 items
+2025-11-17T17:24:56: PropertyCard Debug: {
+2025-11-17T17:24:56:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T17:24:56:   operationType: 'SALE',
+2025-11-17T17:24:56:   opText: 'En Venta',
+2025-11-17T17:24:56:   hasOpText: true
+2025-11-17T17:24:56: }
+2025-11-17T17:24:56: PropertyCard Debug: {
+2025-11-17T17:24:56:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-17T17:24:56:   operationType: 'SALE',
+2025-11-17T17:24:56:   opText: 'En Venta',
+2025-11-17T17:24:56:   hasOpText: true
+2025-11-17T17:24:56: }
+2025-11-17T17:24:56: PropertyCard Debug: {
+2025-11-17T17:24:56:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T17:24:56:   operationType: 'RENT',
+2025-11-17T17:24:56:   opText: 'En Arriendo',
+2025-11-17T17:24:56:   hasOpText: true
+2025-11-17T17:24:56: }
+2025-11-17T17:24:56: PropertyCard Debug: {
+2025-11-17T17:24:56:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-17T17:24:56:   operationType: 'RENT',
+2025-11-17T17:24:56:   opText: 'En Arriendo',
+2025-11-17T17:24:56:   hasOpText: true
+2025-11-17T17:24:56: }
+2025-11-17T17:24:56: PropertyCard Debug: {
+2025-11-17T17:24:56:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T17:24:56:   operationType: 'SALE',
+2025-11-17T17:24:56:   opText: 'En Venta',
+2025-11-17T17:24:56:   hasOpText: true
+2025-11-17T17:24:56: }
+2025-11-17T17:24:56: PropertyCard Debug: {
+2025-11-17T17:24:56:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-17T17:24:56:   operationType: 'RENT',
+2025-11-17T17:24:56:   opText: 'En Arriendo',
+2025-11-17T17:24:56:   hasOpText: true
+2025-11-17T17:24:56: }
+2025-11-17T17:25:00: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:25:00: ✅ Properties fetched: 6 items
+2025-11-17T17:25:00: PropertyCard Debug: {
+2025-11-17T17:25:00:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T17:25:00:   operationType: 'SALE',
+2025-11-17T17:25:00:   opText: 'En Venta',
+2025-11-17T17:25:00:   hasOpText: true
+2025-11-17T17:25:00: }
+2025-11-17T17:25:00: PropertyCard Debug: {
+2025-11-17T17:25:00:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-17T17:25:00:   operationType: 'SALE',
+2025-11-17T17:25:00:   opText: 'En Venta',
+2025-11-17T17:25:00:   hasOpText: true
+2025-11-17T17:25:00: }
+2025-11-17T17:25:00: PropertyCard Debug: {
+2025-11-17T17:25:00:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T17:25:00:   operationType: 'RENT',
+2025-11-17T17:25:00:   opText: 'En Arriendo',
+2025-11-17T17:25:00:   hasOpText: true
+2025-11-17T17:25:00: }
+2025-11-17T17:25:00: PropertyCard Debug: {
+2025-11-17T17:25:00:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-17T17:25:00:   operationType: 'RENT',
+2025-11-17T17:25:00:   opText: 'En Arriendo',
+2025-11-17T17:25:00:   hasOpText: true
+2025-11-17T17:25:00: }
+2025-11-17T17:25:00: PropertyCard Debug: {
+2025-11-17T17:25:00:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T17:25:00:   operationType: 'SALE',
+2025-11-17T17:25:00:   opText: 'En Venta',
+2025-11-17T17:25:00:   hasOpText: true
+2025-11-17T17:25:00: }
+2025-11-17T17:25:00: PropertyCard Debug: {
+2025-11-17T17:25:00:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-17T17:25:00:   operationType: 'RENT',
+2025-11-17T17:25:00:   opText: 'En Arriendo',
+2025-11-17T17:25:00:   hasOpText: true
+2025-11-17T17:25:00: }
+2025-11-17T17:25:01: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:25:01: ✅ Properties fetched: 6 items
+2025-11-17T17:25:01: PropertyCard Debug: {
+2025-11-17T17:25:01:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T17:25:01:   operationType: 'SALE',
+2025-11-17T17:25:01:   opText: 'En Venta',
+2025-11-17T17:25:01:   hasOpText: true
+2025-11-17T17:25:01: }
+2025-11-17T17:25:01: PropertyCard Debug: {
+2025-11-17T17:25:01:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-17T17:25:01:   operationType: 'SALE',
+2025-11-17T17:25:01:   opText: 'En Venta',
+2025-11-17T17:25:01:   hasOpText: true
+2025-11-17T17:25:01: }
+2025-11-17T17:25:01: PropertyCard Debug: {
+2025-11-17T17:25:01:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T17:25:01:   operationType: 'RENT',
+2025-11-17T17:25:01:   opText: 'En Arriendo',
+2025-11-17T17:25:01:   hasOpText: true
+2025-11-17T17:25:01: }
+2025-11-17T17:25:01: PropertyCard Debug: {
+2025-11-17T17:25:01:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-17T17:25:01:   operationType: 'RENT',
+2025-11-17T17:25:01:   opText: 'En Arriendo',
+2025-11-17T17:25:01:   hasOpText: true
+2025-11-17T17:25:01: }
+2025-11-17T17:25:01: PropertyCard Debug: {
+2025-11-17T17:25:01:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T17:25:01:   operationType: 'SALE',
+2025-11-17T17:25:01:   opText: 'En Venta',
+2025-11-17T17:25:01:   hasOpText: true
+2025-11-17T17:25:01: }
+2025-11-17T17:25:01: PropertyCard Debug: {
+2025-11-17T17:25:01:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-17T17:25:01:   operationType: 'RENT',
+2025-11-17T17:25:01:   opText: 'En Arriendo',
+2025-11-17T17:25:01:   hasOpText: true
+2025-11-17T17:25:01: }
+2025-11-17T17:29:37: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:29:37: ✅ Properties fetched: 6 items
+2025-11-17T17:29:37: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:29:37: ✅ Properties fetched: 6 items
+2025-11-17T17:29:38: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:29:38: ✅ Properties fetched: 6 items
+2025-11-17T17:29:38: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:29:38: ✅ Properties fetched: 6 items
+2025-11-17T17:29:38: PropertyCard Debug: {
+2025-11-17T17:29:38:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T17:29:38:   operationType: 'SALE',
+2025-11-17T17:29:38:   opText: 'En Venta',
+2025-11-17T17:29:38:   hasOpText: true
+2025-11-17T17:29:38: }
+2025-11-17T17:29:38: PropertyCard Debug: {
+2025-11-17T17:29:38:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-17T17:29:38:   operationType: 'SALE',
+2025-11-17T17:29:38:   opText: 'En Venta',
+2025-11-17T17:29:38:   hasOpText: true
+2025-11-17T17:29:38: }
+2025-11-17T17:29:38: PropertyCard Debug: {
+2025-11-17T17:29:38:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T17:29:38:   operationType: 'RENT',
+2025-11-17T17:29:38:   opText: 'En Arriendo',
+2025-11-17T17:29:38:   hasOpText: true
+2025-11-17T17:29:38: }
+2025-11-17T17:29:38: PropertyCard Debug: {
+2025-11-17T17:29:38:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-17T17:29:38:   operationType: 'RENT',
+2025-11-17T17:29:38:   opText: 'En Arriendo',
+2025-11-17T17:29:38:   hasOpText: true
+2025-11-17T17:29:38: }
+2025-11-17T17:29:38: PropertyCard Debug: {
+2025-11-17T17:29:38:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T17:29:38:   operationType: 'SALE',
+2025-11-17T17:29:38:   opText: 'En Venta',
+2025-11-17T17:29:38:   hasOpText: true
+2025-11-17T17:29:38: }
+2025-11-17T17:29:38: PropertyCard Debug: {
+2025-11-17T17:29:38:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-17T17:29:38:   operationType: 'RENT',
+2025-11-17T17:29:38:   opText: 'En Arriendo',
+2025-11-17T17:29:38:   hasOpText: true
+2025-11-17T17:29:38: }
+2025-11-17T17:29:41: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:29:41: ✅ Properties fetched: 6 items
+2025-11-17T17:29:41: PropertyCard Debug: {
+2025-11-17T17:29:41:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T17:29:41:   operationType: 'SALE',
+2025-11-17T17:29:41:   opText: 'En Venta',
+2025-11-17T17:29:41:   hasOpText: true
+2025-11-17T17:29:41: }
+2025-11-17T17:29:41: PropertyCard Debug: {
+2025-11-17T17:29:41:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-17T17:29:41:   operationType: 'SALE',
+2025-11-17T17:29:41:   opText: 'En Venta',
+2025-11-17T17:29:41:   hasOpText: true
+2025-11-17T17:29:41: }
+2025-11-17T17:29:41: PropertyCard Debug: {
+2025-11-17T17:29:41:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T17:29:41:   operationType: 'RENT',
+2025-11-17T17:29:41:   opText: 'En Arriendo',
+2025-11-17T17:29:41:   hasOpText: true
+2025-11-17T17:29:41: }
+2025-11-17T17:29:41: PropertyCard Debug: {
+2025-11-17T17:29:41:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-17T17:29:41:   operationType: 'RENT',
+2025-11-17T17:29:41:   opText: 'En Arriendo',
+2025-11-17T17:29:41:   hasOpText: true
+2025-11-17T17:29:41: }
+2025-11-17T17:29:41: PropertyCard Debug: {
+2025-11-17T17:29:41:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T17:29:41:   operationType: 'SALE',
+2025-11-17T17:29:41:   opText: 'En Venta',
+2025-11-17T17:29:41:   hasOpText: true
+2025-11-17T17:29:41: }
+2025-11-17T17:29:41: PropertyCard Debug: {
+2025-11-17T17:29:41:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-17T17:29:41:   operationType: 'RENT',
+2025-11-17T17:29:41:   opText: 'En Arriendo',
+2025-11-17T17:29:41:   hasOpText: true
+2025-11-17T17:29:41: }
+2025-11-17T17:29:43: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:29:43: ✅ Properties fetched: 6 items
+2025-11-17T17:29:43: PropertyCard Debug: {
+2025-11-17T17:29:43:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T17:29:43:   operationType: 'SALE',
+2025-11-17T17:29:43:   opText: 'En Venta',
+2025-11-17T17:29:43:   hasOpText: true
+2025-11-17T17:29:43: }
+2025-11-17T17:29:43: PropertyCard Debug: {
+2025-11-17T17:29:43:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-17T17:29:43:   operationType: 'SALE',
+2025-11-17T17:29:43:   opText: 'En Venta',
+2025-11-17T17:29:43:   hasOpText: true
+2025-11-17T17:29:43: }
+2025-11-17T17:29:43: PropertyCard Debug: {
+2025-11-17T17:29:43:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T17:29:43:   operationType: 'RENT',
+2025-11-17T17:29:43:   opText: 'En Arriendo',
+2025-11-17T17:29:43:   hasOpText: true
+2025-11-17T17:29:43: }
+2025-11-17T17:29:43: PropertyCard Debug: {
+2025-11-17T17:29:43:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-17T17:29:43:   operationType: 'RENT',
+2025-11-17T17:29:43:   opText: 'En Arriendo',
+2025-11-17T17:29:43:   hasOpText: true
+2025-11-17T17:29:43: }
+2025-11-17T17:29:43: PropertyCard Debug: {
+2025-11-17T17:29:43:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T17:29:43:   operationType: 'SALE',
+2025-11-17T17:29:43:   opText: 'En Venta',
+2025-11-17T17:29:43:   hasOpText: true
+2025-11-17T17:29:43: }
+2025-11-17T17:29:43: PropertyCard Debug: {
+2025-11-17T17:29:43:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-17T17:29:43:   operationType: 'RENT',
+2025-11-17T17:29:43:   opText: 'En Arriendo',
+2025-11-17T17:29:43:   hasOpText: true
+2025-11-17T17:29:43: }
+2025-11-17T17:29:45: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-17T17:29:45: ✅ Properties fetched: 6 items
+2025-11-17T17:29:45: PropertyCard Debug: {
+2025-11-17T17:29:45:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-17T17:29:45:   operationType: 'SALE',
+2025-11-17T17:29:45:   opText: 'En Venta',
+2025-11-17T17:29:45:   hasOpText: true
+2025-11-17T17:29:45: }
+2025-11-17T17:29:45: PropertyCard Debug: {
+2025-11-17T17:29:45:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-17T17:29:45:   operationType: 'SALE',
+2025-11-17T17:29:45:   opText: 'En Venta',
+2025-11-17T17:29:45:   hasOpText: true
+2025-11-17T17:29:45: }
+2025-11-17T17:29:45: PropertyCard Debug: {
+2025-11-17T17:29:45:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-17T17:29:45:   operationType: 'RENT',
+2025-11-17T17:29:45:   opText: 'En Arriendo',
+2025-11-17T17:29:45:   hasOpText: true
+2025-11-17T17:29:45: }
+2025-11-17T17:29:45: PropertyCard Debug: {
+2025-11-17T17:29:45:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-17T17:29:45:   operationType: 'RENT',
+2025-11-17T17:29:45:   opText: 'En Arriendo',
+2025-11-17T17:29:45:   hasOpText: true
+2025-11-17T17:29:45: }
+2025-11-17T17:29:45: PropertyCard Debug: {
+2025-11-17T17:29:45:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-17T17:29:45:   operationType: 'SALE',
+2025-11-17T17:29:45:   opText: 'En Venta',
+2025-11-17T17:29:45:   hasOpText: true
+2025-11-17T17:29:45: }
+2025-11-17T17:29:45: PropertyCard Debug: {
+2025-11-17T17:29:45:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-17T17:29:45:   operationType: 'RENT',
+2025-11-17T17:29:45:   opText: 'En Arriendo',
+2025-11-17T17:29:45:   hasOpText: true
+2025-11-17T17:29:45: }
+2025-11-18T22:56:15:    ▲ Next.js 15.3.3
+2025-11-18T22:56:15:    - Local:        http://localhost:3001
+2025-11-18T22:56:15:    - Network:      http://0.0.0.0:3001
+2025-11-18T22:56:15: 
+2025-11-18T22:56:15:  ✓ Starting...
+2025-11-18T22:56:15:  ✓ Ready in 124ms
+2025-11-18T22:56:26: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-18T22:56:26: ✅ Properties fetched: 6 items
+2025-11-19T00:50:37: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-19T00:50:37: ✅ Properties fetched: 6 items
+2025-11-19T00:50:46: Property fetched from /full endpoint: {
+2025-11-19T00:50:46:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-19T00:50:46:   title: 'trepide bonus callide',
+2025-11-19T00:50:46:   status: 'PUBLISHED',
+2025-11-19T00:50:46:   state: 'Antofagasta',
+2025-11-19T00:50:46:   city: 'Salamanca',
+2025-11-19T00:50:46:   address: null,
+2025-11-19T00:50:46:   latitude: '-18.35371800',
+2025-11-19T00:50:46:   longitude: '-168.34567200',
+2025-11-19T00:50:46:   multimedia: 1
+2025-11-19T00:50:46: }
+2025-11-19T00:58:09: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-19T00:58:09: ✅ Properties fetched: 6 items
+2025-11-19T01:01:26: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&page=1
+2025-11-19T01:01:26: ✅ Properties fetched: 3 items
+2025-11-19T01:01:26: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&page=1
+2025-11-19T01:01:26: ✅ Properties fetched: 3 items
+2025-11-19T01:01:27: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&typeProperty=Casa&page=1
+2025-11-19T01:01:27: ✅ Properties fetched: 0 items
+2025-11-19T01:01:27: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&typeProperty=Casa&page=1
+2025-11-19T01:01:27: ✅ Properties fetched: 0 items
+2025-11-19T01:01:28: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&typeProperty=Casa&page=1
+2025-11-19T01:01:28: ✅ Properties fetched: 0 items
+2025-11-19T01:01:30: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&state=9&typeProperty=Casa&page=1
+2025-11-19T01:01:30: ✅ Properties fetched: 0 items
+2025-11-19T01:01:30: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?operation=RENT&state=9&typeProperty=Casa&page=1
+2025-11-19T01:01:30: ✅ Properties fetched: 0 items
+2025-11-19T01:06:52: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-19T01:06:52: ✅ Properties fetched: 6 items
+2025-11-19T01:06:59: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=9&typeProperty=Casa&page=1
+2025-11-19T01:06:59: ✅ Properties fetched: 0 items
+2025-11-19T01:06:59: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=9&typeProperty=Casa&page=1
+2025-11-19T01:06:59: ✅ Properties fetched: 0 items
+2025-11-19T01:07:01: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=9&page=1
+2025-11-19T01:07:01: ✅ Properties fetched: 0 items
+2025-11-19T01:07:02: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=9&page=1
+2025-11-19T01:07:02: ✅ Properties fetched: 0 items
+2025-11-19T01:07:02: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?state=9&page=1
+2025-11-19T01:07:02: ✅ Properties fetched: 0 items
+2025-11-19T01:07:03: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-19T01:07:03: ✅ Properties fetched: 6 items
+2025-11-19T01:07:03: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-19T01:07:03: ✅ Properties fetched: 6 items
+2025-11-23T14:04:26: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-23T14:04:26: ✅ Properties fetched: 6 items
+2025-11-23T14:05:48: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-23T14:05:48: ✅ Properties fetched: 6 items
+2025-11-23T14:05:53: Property fetched from /full endpoint: {
+2025-11-23T14:05:53:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-23T14:05:53:   title: 'trepide bonus callide',
+2025-11-23T14:05:53:   status: 'PUBLISHED',
+2025-11-23T14:05:53:   state: 'Antofagasta',
+2025-11-23T14:05:53:   city: 'Salamanca',
+2025-11-23T14:05:53:   address: null,
+2025-11-23T14:05:53:   latitude: '-18.35371800',
+2025-11-23T14:05:53:   longitude: '-168.34567200',
+2025-11-23T14:05:53:   multimedia: 1
+2025-11-23T14:05:53: }
+2025-11-23T14:06:11: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-23T14:06:11: ✅ Properties fetched: 6 items
+2025-11-23T14:06:11: PropertyCard Debug: {
+2025-11-23T14:06:11:   id: 'cdb800ce-1f35-4509-a803-38b7242ccc94',
+2025-11-23T14:06:11:   operationType: 'SALE',
+2025-11-23T14:06:11:   opText: 'En Venta',
+2025-11-23T14:06:11:   hasOpText: true
+2025-11-23T14:06:11: }
+2025-11-23T14:06:11: PropertyCard Debug: {
+2025-11-23T14:06:11:   id: '9185755a-0805-4b55-9682-85314909abd1',
+2025-11-23T14:06:11:   operationType: 'SALE',
+2025-11-23T14:06:11:   opText: 'En Venta',
+2025-11-23T14:06:11:   hasOpText: true
+2025-11-23T14:06:11: }
+2025-11-23T14:06:11: PropertyCard Debug: {
+2025-11-23T14:06:11:   id: 'c188ae80-2474-4277-afea-f0d5e65d2966',
+2025-11-23T14:06:11:   operationType: 'RENT',
+2025-11-23T14:06:11:   opText: 'En Arriendo',
+2025-11-23T14:06:11:   hasOpText: true
+2025-11-23T14:06:11: }
+2025-11-23T14:06:11: PropertyCard Debug: {
+2025-11-23T14:06:11:   id: '121e1c19-891b-4bdc-b910-a0a653829179',
+2025-11-23T14:06:11:   operationType: 'RENT',
+2025-11-23T14:06:11:   opText: 'En Arriendo',
+2025-11-23T14:06:11:   hasOpText: true
+2025-11-23T14:06:11: }
+2025-11-23T14:06:11: PropertyCard Debug: {
+2025-11-23T14:06:11:   id: '0d189e3b-1ce7-4d9a-bd7c-fb04b324988f',
+2025-11-23T14:06:11:   operationType: 'SALE',
+2025-11-23T14:06:11:   opText: 'En Venta',
+2025-11-23T14:06:11:   hasOpText: true
+2025-11-23T14:06:11: }
+2025-11-23T14:06:11: PropertyCard Debug: {
+2025-11-23T14:06:11:   id: 'daa023af-9213-4424-ad77-88cbd37e0ed9',
+2025-11-23T14:06:11:   operationType: 'RENT',
+2025-11-23T14:06:11:   opText: 'En Arriendo',
+2025-11-23T14:06:11:   hasOpText: true
+2025-11-23T14:06:11: }
