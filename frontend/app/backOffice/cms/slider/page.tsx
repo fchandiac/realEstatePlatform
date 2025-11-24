@@ -28,7 +28,7 @@ export default async function SliderPage({ searchParams }: SliderPageProps) {
   }
 
   return (
-    <div className="p-4">
+    <div >
       
       <Suspense fallback={<DotProgress />}>
         <SlideList slides={result.data || []} />

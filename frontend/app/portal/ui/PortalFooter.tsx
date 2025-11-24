@@ -12,7 +12,9 @@ import {
   faYoutube
 } from "@fortawesome/free-brands-svg-icons";
 import { getIdentity } from "@/app/actions/identity";
+import { submitContactForm } from "@/app/actions/contact";
 import { env } from "@/lib/env";
+import { useAlert } from "@/app/hooks/useAlert";
 
 interface SocialMediaItem {
   url?: string;
@@ -333,25 +335,97 @@ const PortalFooter: React.FC = () => {
 
 // Formulario de contacto usando TextField y Button
 export const ContactForm: React.FC = () => {
+  const { showAlert } = useAlert();
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [mensaje, setMensaje] = useState("");
-  const [enviado, setEnviado] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setEnviado(true);
-    setTimeout(() => setEnviado(false), 3000);
+
+    if (!nombre.trim() || !email.trim() || !mensaje.trim()) {
+      showAlert({
+        message: 'Por favor completa todos los campos',
+        type: 'error',
+        duration: 3000
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await submitContactForm({
+        name: nombre.trim(),
+        email: email.trim(),
+        message: mensaje.trim(),
+      });
+
+      showAlert({
+        message: 'Mensaje enviado exitosamente. Nos pondremos en contacto contigo pronto.',
+        type: 'success',
+        duration: 5000
+      });
+
+      // Limpiar formulario
+      setNombre("");
+      setEmail("");
+      setMensaje("");
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      showAlert({
+        message: 'Error al enviar el mensaje. Por favor intenta nuevamente.',
+        type: 'error',
+        duration: 5000
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-  <TextField label="Tu Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} name="nombre" placeholder="Nombre" className="text-sm font-extralight" />
-  <TextField label="Tu Correo Electrónico" value={email} onChange={(e) => setEmail(e.target.value)} name="email" type="email" placeholder="Correo Electrónico" className="text-sm font-extralight" />
-  <TextField label="Tu Mensaje" value={mensaje} onChange={(e) => setMensaje(e.target.value)} name="mensaje" type="text" placeholder="Mensaje" className="text-sm font-extralight" rows={4} />
+      <TextField
+        label="Tu Nombre"
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
+        name="nombre"
+        placeholder="Nombre"
+        className="text-sm font-extralight"
+        disabled={loading}
+      />
+      <TextField
+        label="Tu Correo Electrónico"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        name="email"
+        type="email"
+        placeholder="Correo Electrónico"
+        className="text-sm font-extralight"
+        disabled={loading}
+      />
+      <TextField
+        label="Tu Mensaje"
+        value={mensaje}
+        onChange={(e) => setMensaje(e.target.value)}
+        name="mensaje"
+        type="text"
+        placeholder="Mensaje"
+        className="text-sm font-extralight"
+        rows={4}
+        disabled={loading}
+      />
       <div className="flex justify-end">
-        <IconButton icon="send" variant="text" type="submit" className="bg-background text-foreground">
-          <span className="material-symbols-rounded text-2xl text-foreground">send</span>
+        <IconButton
+          icon="send"
+          variant="text"
+          type="submit"
+          className="bg-background text-foreground"
+          disabled={loading}
+        >
+          <span className="material-symbols-rounded text-2xl text-foreground">
+            {loading ? 'hourglass_empty' : 'send'}
+          </span>
         </IconButton>
       </div>
     </form>

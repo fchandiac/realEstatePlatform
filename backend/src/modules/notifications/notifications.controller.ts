@@ -31,6 +31,7 @@ import {
   UpdateNotificationStatusDto,
   PropertyInterestDto,
 } from './dto/notification.dto';
+import { ContactDto } from './dto/contact.dto';
 import { NotificationType, NotificationSenderType } from '../../entities/notification.entity';
 
 @Controller('notifications')
@@ -81,6 +82,20 @@ export class NotificationsController {
         body.interestedUserName,
         body.interestedUserEmail,
         body.interestedUserMessage
+      );
+    }
+
+    /**
+     * Notifica contacto general desde portal público (sin autenticación)
+     */
+    @Post('public/contact')
+    @ApiOperation({ summary: 'Enviar notificación de contacto general desde portal público' })
+    @ApiBody({ type: ContactDto })
+    async notifyPublicContact(@Body() body: ContactDto) {
+      return this.notificationsService.notifyContactToAdmins(
+        body.name,
+        body.email,
+        body.message
       );
     }
 

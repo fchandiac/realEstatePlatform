@@ -101,7 +101,7 @@ const AdminList: React.FC<AdminListProps> = ({
                             variant="containedPrimary"
                             onClick={() => setOpenCreateDialog(true)}
                             icon="add"
-                            size={'lg'}
+                            size={'sm'}
                         />
                     </div>
                     <div className="w-full max-w-sm">

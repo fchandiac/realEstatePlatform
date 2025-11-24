@@ -105,7 +105,67 @@ export class NotificationsService {
 
     console.log(`🎯 Total notifications created: ${notifications.length}`);
     return notifications;
-  }    /**
+  }
+
+  /**
+   * Envía notificación de contacto general a todos los administradores
+   */
+  async notifyContactToAdmins(
+    contactName: string,
+    contactEmail: string,
+    contactMessage: string
+  ): Promise<Notification[]> {
+    console.log('🔄 notifyContactToAdmins called with:', {
+      contactName,
+      contactEmail,
+      contactMessage,
+    });
+
+    // Obtener todos los administradores
+    const admins = await this.getAdminUserIds();
+    console.log('👥 Found admins:', admins);
+
+    // Construir mensaje completo
+    const fullMessage = `${contactName} (${contactEmail}): ${contactMessage}`;
+
+    console.log('📝 Full message:', fullMessage);
+
+    // Crear notificación para cada administrador
+    const notifications: Notification[] = [];
+    for (const userId of admins) {
+      console.log(`📤 Creating notification for admin: ${userId}`);
+
+      const dto: CreateNotificationDto = {
+        senderType: NotificationSenderType.ANONYMOUS,
+        senderId: undefined,
+        senderName: contactName,
+        isSystem: false,
+        message: fullMessage,
+        targetUserIds: [userId],
+        type: NotificationType.CONTACT,
+        // Agregar información adicional para correos
+        targetMails: [contactEmail],
+        interestedUserEmail: contactEmail,
+        interestedUserName: contactName,
+        interestedUserMessage: contactMessage,
+      };
+
+      console.log(`📧 DTO being created:`, {
+        interestedUserEmail: dto.interestedUserEmail,
+        interestedUserName: dto.interestedUserName,
+        interestedUserMessage: dto.interestedUserMessage,
+      });
+
+      const notification = await this.create(dto);
+      notifications.push(notification);
+      console.log(`✅ Notification created: ${notification.id}`);
+    }
+
+    console.log(`🎯 Total notifications created: ${notifications.length}`);
+    return notifications;
+  }
+
+    /**
      * Obtiene los IDs de todos los usuarios administradores
      */
     private async getAdminUserIds(): Promise<string[]> {
