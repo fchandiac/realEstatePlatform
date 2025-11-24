@@ -2,12 +2,39 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import StepperBaseForm, { StepperStep, BaseFormField } from '@/components/BaseForm/StepperBaseForm';
 import { listPropertyTypes, getPropertyTypeCharacteristics, PropertyTypeWithFeatures, publishProperty } from '@/app/actions/properties';
 import { getRegiones, getComunasByRegion } from '@/app/actions/commons';
 import Alert from '@/components/Alert/Alert';
 import PropertyCard, { PortalProperty } from '@/app/portal/ui/PropertyCard';
-import LocationPreview from '@/components/LocationPicker/LocationPreview';
+import CircularProgress from '@/components/CircularProgress/CircularProgress';
+import { Button } from '@/components/Button/Button';
+
+// Dynamic import for LocationPreview to avoid SSR issues with Leaflet
+const LocationPreview = dynamic(() => import('@/components/LocationPicker/LocationPreview'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full">
+      <h5 className="text-base font-semibold mb-2">Ubicación en mapa</h5>
+      <div
+        style={{
+          width: '100%',
+          height: '200px',
+          borderRadius: '0.375rem',
+          overflow: 'hidden',
+          backgroundColor: '#f3f4f6'
+        }}
+        className="flex items-center justify-center"
+      >
+        <div className="text-center text-gray-500 text-sm">
+          <div className="mb-2">📍</div>
+          <div>Cargando mapa...</div>
+        </div>
+      </div>
+    </div>
+  )
+});
 
 type FormValues = {
   title: string;
@@ -63,6 +90,8 @@ export default function PublishPropertyPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [loadingCharacteristics, setLoadingCharacteristics] = useState(false);
+  const [showPostSubmitLoading, setShowPostSubmitLoading] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   // Load property types and regions on mount
   useEffect(() => {
@@ -127,15 +156,27 @@ export default function PublishPropertyPage() {
     }
   }, [values.region]);
 
-  const handleChange = (field: string, value: unknown) => {
-    // Si es un campo numérico y el valor es un string, convertir a número
-    let finalValue: unknown = value;
-    if (field.match(/^(builtSquareMeters|landSquareMeters|bedrooms|bathrooms|parkingSpaces|floors|constructionYear)$/)) {
-      if (typeof value === 'string') {
-        finalValue = value === '' ? 0 : parseInt(value, 10);
-      }
+  // Handle post-submit loading delay
+  useEffect(() => {
+    if (showPostSubmitLoading) {
+      const timer = setTimeout(() => {
+        setShowPostSubmitLoading(false);
+        setShowSuccessMessage(true);
+      }, 3000); // 3 seconds delay
+
+      return () => clearTimeout(timer);
     }
-    setValues((prev: FormValues) => ({ ...prev, [field]: finalValue }));
+  }, [showPostSubmitLoading]);
+
+  const handleGoHome = () => {
+    // Limpiar estados antes de redirigir
+    setShowSuccessMessage(false);
+    setShowPostSubmitLoading(false);
+    router.push('/portal');
+  };
+
+  const handleChange = (field: string, value: unknown) => {
+    setValues(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async () => {
@@ -206,11 +247,11 @@ export default function PublishPropertyPage() {
         return;
       }
 
-      // Éxito: mostrar mensaje y redirigir al inicio
+      // Éxito: mostrar loading y luego mensaje de éxito
       console.log('✅ Propiedad publicada:', result.data.id);
       
-      // Redirigir al inicio del portal
-      router.push('/portal');
+      // Mostrar loading por 3 segundos antes del mensaje de éxito
+      setShowPostSubmitLoading(true);
     } catch (error) {
       console.error('Error publishing property:', error);
       setErrors(['Error al publicar la propiedad']);
@@ -539,18 +580,56 @@ export default function PublishPropertyPage() {
   return (
     <div className="min-h-screen bg-background py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        <StepperBaseForm
-          title="Publica tu propiedad"
-          subtitle="Completa los 5 pasos para publicar tu propiedad y encontrar compradores"
-          steps={steps}
-          values={values}
-          onChange={handleChange}
-          onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
-          submitLabel="Publicar propiedad"
-          errors={errors}
-          columns={2}
-        />
+        {showPostSubmitLoading ? (
+          // Loading después del envío exitoso
+          <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6">
+            <CircularProgress size={60} />
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl font-bold text-foreground">Procesando tu solicitud...</h2>
+              <p className="text-muted-foreground">
+                Tu propiedad está siendo enviada para revisión. Esto tomará solo un momento.
+              </p>
+            </div>
+          </div>
+        ) : showSuccessMessage ? (
+          // Mensaje de éxito
+          <div className="flex flex-col items-center justify-center min-h-[400px] space-y-6">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <span className="material-symbols-outlined text-green-600" style={{ fontSize: '32px' }}>
+                  check_circle
+                </span>
+              </div>
+              <h2 className="text-3xl font-bold text-foreground">¡Solicitud enviada correctamente!</h2>
+              <p className="text-lg text-muted-foreground max-w-md">
+                Tu solicitud de publicación ha sido recibida y será revisada por nuestro equipo en las próximas horas.
+                Te notificaremos cuando tu propiedad esté disponible en el portal.
+              </p>
+              <div className="pt-4">
+                <Button
+                  onClick={() => router.push('/portal')}
+                  className="px-8 py-3"
+                >
+                  Volver al inicio
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          // Stepper normal
+          <StepperBaseForm
+            title="Publica tu propiedad"
+            subtitle="Completa los 5 pasos para publicar tu propiedad y encontrar compradores"
+            steps={steps}
+            values={values}
+            onChange={handleChange}
+            onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
+            submitLabel="Publicar propiedad"
+            errors={errors}
+            columns={2}
+          />
+        )}
       </div>
     </div>
   );
