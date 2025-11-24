@@ -102,28 +102,62 @@ function isVideoFile(url: string): boolean {
 function getOrderedImages(property: PortalProperty): string[] {
   const images: string[] = [];
 
+  console.log('🔍 [getOrderedImages] Property multimedia details:', {
+    propertyId: property.id,
+    mainImageUrl: property.mainImageUrl,
+    multimedia: property.multimedia?.map(m => ({
+      id: m.id,
+      url: m.url,
+      type: m.type,
+      format: m.format
+    })) || []
+  });
+
   // Si hay mainImageUrl y es una imagen (no video), agregarla primero
   if (property.mainImageUrl) {
     const mainUrl = normalizeMediaUrl(property.mainImageUrl);
     if (mainUrl && !isVideoFile(mainUrl)) {
       images.push(mainUrl);
+      console.log('✅ [getOrderedImages] Added mainImageUrl:', mainUrl);
+    } else {
+      console.log('❌ [getOrderedImages] Skipped mainImageUrl:', { mainUrl, isVideo: isVideoFile(mainUrl || '') });
     }
   }
 
   // Agregar todas las imágenes del array multimedia (excluyendo videos)
   if (property.multimedia && property.multimedia.length > 0) {
-    property.multimedia.forEach(media => {
+    property.multimedia.forEach((media, index) => {
+      console.log(`🔍 [getOrderedImages] Processing media ${index}:`, {
+        url: media.url,
+        type: media.type,
+        format: media.format,
+        isVideo: isVideoFile(media.url)
+      });
+
       const url = normalizeMediaUrl(media.url);
-      if (url && !isVideoFile(url) && (media.type === 'PROPERTY_IMG' || media.format === 'IMG')) {
+      const isValidImage = url && !isVideoFile(url);
+
+      if (isValidImage) {
         // Evitar duplicados con mainImageUrl
         if (!images.includes(url)) {
           images.push(url);
+          console.log('✅ [getOrderedImages] Added multimedia image:', url);
+        } else {
+          console.log('⚠️ [getOrderedImages] Skipped duplicate:', url);
         }
+      } else {
+        console.log('❌ [getOrderedImages] Skipped invalid media:', {
+          url,
+          type: media.type,
+          format: media.format,
+          isVideo: isVideoFile(url || ''),
+          reason: !url ? 'no url' : isVideoFile(url) ? 'is video' : 'other'
+        });
       }
     });
   }
 
-  console.log('🖼️ [PropertyCard] Ordered images:', images);
+  console.log('🖼️ [getOrderedImages] Final ordered images:', images);
   return images;
 }
 
