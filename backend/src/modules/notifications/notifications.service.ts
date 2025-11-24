@@ -20,6 +20,8 @@ import {
 } from './dto/notification.dto';
 import { EmailService } from './email.service';
 import { UsersService } from '../users/users.service';
+import { MailService } from '../mail/mail.service';
+import { NOTIFICATION_MAIL_CONFIG, shouldSendEmail } from './notification-mail.config';
 
 export interface NotificationWithUserDetails extends Notification {
   targetUsers?: Array<{ id: string; name: string }>;
@@ -27,78 +29,120 @@ export interface NotificationWithUserDetails extends Notification {
 
 @Injectable()
 export class NotificationsService {
-    /**
-     * Envía notificación de interés en propiedad a todos los administradores y al agente asignado
-     */
-    async notifyInterestOnProperty(
-      propertyId: string,
-      assignedAgentId?: string,
-      interestedUserId?: string,
-      interestedUserName?: string,
-      interestedUserEmail?: string,
-      interestedUserMessage?: string
-    ): Promise<Notification[]> {
-      // Obtener todos los administradores
-      const admins = await this.getAdminUserIds();
-      // Construir lista de destinatarios
-      const targetUserIds = [...admins];
-      if (assignedAgentId) {
-        targetUserIds.push(assignedAgentId);
-      }
-      // Datos del sender
-      const senderType = interestedUserId ? NotificationSenderType.USER : NotificationSenderType.ANONYMOUS;
-      const senderId = interestedUserId || undefined;
-      const senderName = interestedUserId ? await this.getUserName(interestedUserId) : (interestedUserName || 'Anónimo');
-      
-      // Construir mensaje completo
-      const fullMessage = interestedUserEmail && interestedUserMessage
-        ? `${interestedUserName || 'Usuario'} (${interestedUserEmail}): ${interestedUserMessage}`
-        : `El usuario ${senderName} está interesado en la propiedad ${propertyId}.`;
-      
-      // Crear notificación para cada destinatario
-      const notifications: Notification[] = [];
-      for (const userId of targetUserIds) {
-        const dto: CreateNotificationDto = {
-          senderType,
-          senderId,
-          senderName,
-          isSystem: false,
-          message: fullMessage,
-          targetUserIds: [userId],
-          type: NotificationType.INTEREST,
-        };
-        const notification = await this.create(dto);
-        notifications.push(notification);
-      }
-      return notifications;
+  /**
+   * Envía notificación de interés en propiedad a todos los administradores y al agente asignado
+   */
+  async notifyInterestOnProperty(
+    propertyId: string,
+    assignedAgentId?: string,
+    interestedUserId?: string,
+    interestedUserName?: string,
+    interestedUserEmail?: string,
+    interestedUserMessage?: string
+  ): Promise<Notification[]> {
+    console.log('🔄 notifyInterestOnProperty called with:', {
+      propertyId,
+      assignedAgentId,
+      interestedUserId,
+      interestedUserName,
+      interestedUserEmail,
+      interestedUserMessage,
+    });
+
+    // Obtener todos los administradores
+    const admins = await this.getAdminUserIds();
+    console.log('👥 Found admins:', admins);
+
+    // Construir lista de destinatarios
+    const targetUserIds = [...admins];
+    if (assignedAgentId) {
+      targetUserIds.push(assignedAgentId);
+    }
+    console.log('📧 Target user IDs:', targetUserIds);
+
+    // Datos del sender
+    const senderType = interestedUserId ? NotificationSenderType.USER : NotificationSenderType.ANONYMOUS;
+    const senderId = interestedUserId || undefined;
+    const senderName = interestedUserId ? await this.getUserName(interestedUserId) : (interestedUserName || 'Anónimo');
+
+    // Construir mensaje completo
+    const fullMessage = interestedUserEmail && interestedUserMessage
+      ? `${interestedUserName || 'Usuario'} (${interestedUserEmail}): ${interestedUserMessage}`
+      : `El usuario ${senderName} está interesado en la propiedad ${propertyId}.`;
+
+    console.log('📝 Full message:', fullMessage);
+
+    // Crear notificación para cada destinatario
+    const notifications: Notification[] = [];
+    for (const userId of targetUserIds) {
+      console.log(`📤 Creating notification for user: ${userId}`);
+
+      const dto: CreateNotificationDto = {
+        senderType,
+        senderId,
+        senderName,
+        isSystem: false,
+        message: fullMessage,
+        targetUserIds: [userId],
+        type: NotificationType.INTEREST,
+        // Agregar información adicional para correos
+        targetMails: interestedUserEmail ? [interestedUserEmail] : undefined,
+        interestedUserEmail,
+        interestedUserName,
+        interestedUserMessage,
+      };
+
+      const notification = await this.create(dto);
+      notifications.push(notification);
+      console.log(`✅ Notification created: ${notification.id}`);
     }
 
-    /**
+    console.log(`🎯 Total notifications created: ${notifications.length}`);
+    return notifications;
+  }    /**
      * Obtiene los IDs de todos los usuarios administradores
      */
     private async getAdminUserIds(): Promise<string[]> {
-      const admins = await this.usersService.findAdminUsers({});
-      return admins.map((admin) => admin.id);
+      try {
+        const admins = await this.usersService.findAdminUsers({});
+        console.log('👥 Raw admins from service:', admins);
+        const adminIds = admins.map((admin) => admin.id);
+        console.log('🆔 Admin IDs extracted:', adminIds);
+        return adminIds;
+      } catch (error) {
+        console.error('❌ Error getting admin user IDs:', error);
+        return [];
+      }
     }
   constructor(
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly emailService: EmailService,
     private readonly usersService: UsersService,
+    private readonly mailService: MailService,
   ) {}
 
   async create(
     createNotificationDto: CreateNotificationDto,
   ): Promise<Notification> {
-    const notification = this.notificationRepository.create({
+    const notificationData = {
       ...createNotificationDto,
       status: createNotificationDto.status ?? NotificationStatus.SEND,
       firstViewerId: createNotificationDto.firstViewerId ?? null,
       firstViewedAt: createNotificationDto.firstViewedAt ?? null,
-    });
-    const savedNotification = await this.notificationRepository.save(notification);
+    };
 
-    // Send emails if targetMails are specified
+    const savedNotification = await this.notificationRepository.save(notificationData);
+
+    // Enviar correos si corresponde (ASÍNCRONO - no bloquea la respuesta)
+    this.sendNotificationEmails(savedNotification, createNotificationDto).catch(error => {
+      console.error('❌ ERROR ENVIANDO CORREOS DE NOTIFICACIÓN:', error);
+      console.error('Stack trace:', error.stack);
+    });
+
+    // Send emails if targetMails are specified (legacy support)
     if (createNotificationDto.targetMails && createNotificationDto.targetMails.length > 0) {
       try {
         const emailPromises = createNotificationDto.targetMails.map(email =>
@@ -391,5 +435,174 @@ export class NotificationsService {
     };
 
     return await this.create(createDto);
+  }
+
+  /**
+   * Envía correos electrónicos basados en la configuración de la notificación
+   * Este método se ejecuta de forma asíncrona para no bloquear la creación de notificaciones
+   */
+  private async sendNotificationEmails(
+    notification: Notification,
+    createDto: CreateNotificationDto
+  ): Promise<void> {
+    console.log(`📧 sendNotificationEmails called for notification: ${notification.id}, type: ${notification.type}`);
+
+    // Verificar si este tipo de notificación debe enviar correos
+    if (!shouldSendEmail(notification.type)) {
+      console.log(`❌ Email sending disabled for type: ${notification.type}`);
+      return;
+    }
+
+    const mailConfig = NOTIFICATION_MAIL_CONFIG[notification.type];
+    if (!mailConfig) {
+      console.warn(`⚠️ No mail config found for notification type: ${notification.type}`);
+      return;
+    }
+
+    console.log(`✅ Mail config found:`, mailConfig);
+
+    try {
+      // Extraer información del contexto de la notificación
+      const context = await this.buildMailContext(notification, createDto);
+      console.log(`📋 Mail context built:`, context);
+
+      // Enviar correo al usuario interesado si corresponde
+      if (mailConfig.sendToInterested && context.interestedUserEmail) {
+        console.log(`📤 Sending interest confirmation to: ${context.interestedUserEmail}`);
+        await this.mailService.sendInterestConfirmation(
+          context.interestedUserEmail,
+          context.interestedUserName || 'Usuario',
+          context.propertyTitle || 'Propiedad',
+          context.message
+        );
+        console.log(`✅ Interest confirmation sent to: ${context.interestedUserEmail}`);
+      } else {
+        console.log(`❌ Not sending to interested user - config: ${mailConfig.sendToInterested}, email: ${context.interestedUserEmail}`);
+      }
+
+      // Enviar notificaciones a administradores si corresponde
+      if (mailConfig.sendToAdmins && notification.targetUserIds) {
+        const adminEmails = await this.getAdminEmails(notification.targetUserIds);
+        console.log(`👥 Found admin emails:`, adminEmails);
+
+        for (const adminEmail of adminEmails) {
+          console.log(`📤 Sending admin notification to: ${adminEmail}`);
+          const adminUser = await this.userRepository.findOne({
+            where: { email: adminEmail, deletedAt: IsNull() }
+          });
+          if (adminUser) {
+            await this.mailService.sendAdminNotification(
+              adminEmail,
+              adminUser.name || 'Administrador',
+              context.interestedUserName || 'Usuario',
+              context.interestedUserEmail || '',
+              context.propertyTitle || 'Propiedad',
+              context.message || ''
+            );
+            console.log(`✅ Admin notification sent to: ${adminEmail}`);
+          } else {
+            console.log(`❌ Admin user not found for email: ${adminEmail}`);
+          }
+        }
+      } else {
+        console.log(`❌ Not sending to admins - config: ${mailConfig.sendToAdmins}, targetUserIds: ${notification.targetUserIds?.length || 0}`);
+      }
+
+      // Enviar notificación al agente asignado si corresponde
+      if (mailConfig.sendToAgent && context.agentEmail) {
+        console.log(`📤 Sending agent notification to: ${context.agentEmail}`);
+        const agentUser = await this.userRepository.findOne({
+          where: { email: context.agentEmail, deletedAt: IsNull() }
+        });
+        if (agentUser) {
+          await this.mailService.sendAdminNotification(
+            context.agentEmail,
+            agentUser.name || 'Agente',
+            context.interestedUserName || 'Usuario',
+            context.interestedUserEmail || '',
+            context.propertyTitle || 'Propiedad',
+            context.message || ''
+          );
+          console.log(`✅ Agent notification sent to: ${context.agentEmail}`);
+        } else {
+          console.log(`❌ Agent user not found for email: ${context.agentEmail}`);
+        }
+      } else {
+        console.log(`❌ Not sending to agent - config: ${mailConfig.sendToAgent}, agentEmail: ${context.agentEmail}`);
+      }
+
+    } catch (error) {
+      console.error(`❌ Error sending emails for notification ${notification.id}:`, error);
+      // No lanzamos el error para no afectar la creación de la notificación
+    }
+  }
+
+  /**
+   * Construye el contexto necesario para los correos basado en la notificación
+   */
+  private async buildMailContext(
+    notification: Notification,
+    createDto: CreateNotificationDto
+  ): Promise<any> {
+    const context: any = {
+      interestedUserEmail: notification.interestedUserEmail,
+      interestedUserName: notification.interestedUserName,
+      message: notification.interestedUserMessage,
+    };
+
+    // Para notificaciones de interés, intentar obtener información de la propiedad
+    if (notification.type === NotificationType.INTEREST) {
+      // Extraer propertyId del mensaje si está presente
+      const propertyMatch = notification.message?.match(/propiedad\s+([^\s.]+)/i);
+      if (propertyMatch) {
+        const propertyId = propertyMatch[1].trim();
+        try {
+          // Aquí podríamos hacer una consulta a la base de datos para obtener el título de la propiedad
+          // Por ahora, usamos el ID como título
+          context.propertyTitle = `Propiedad ${propertyId}`;
+          context.propertyId = propertyId;
+        } catch (error) {
+          console.warn(`Could not get property info for ${propertyId}:`, error);
+          context.propertyTitle = `Propiedad ${propertyId}`;
+        }
+      }
+
+      // Intentar obtener email del agente asignado si hay uno
+      if (notification.targetUserIds && notification.targetUserIds.length > 0) {
+        // Buscar si hay un agente asignado (no admin)
+        for (const userId of notification.targetUserIds) {
+          try {
+            const user = await this.usersService.findOne(userId);
+            if (user && user.role !== 'ADMIN') {
+              context.agentEmail = user.email;
+              context.agentName = user.name;
+              break; // Tomar el primer agente encontrado
+            }
+          } catch (error) {
+            console.warn(`Could not get user info for ${userId}:`, error);
+          }
+        }
+      }
+    }
+
+    return context;
+  }
+
+  /**
+   * Obtiene emails de administradores de una lista de userIds
+   */
+  private async getAdminEmails(userIds: string[]): Promise<string[]> {
+    const emails: string[] = [];
+    for (const userId of userIds) {
+      try {
+        const user = await this.usersService.findOne(userId);
+        if (user?.email && user.role === 'ADMIN') {
+          emails.push(user.email);
+        }
+      } catch (error) {
+        console.warn(`Could not get email for admin user ${userId}:`, error);
+      }
+    }
+    return emails;
   }
 }

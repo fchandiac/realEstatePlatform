@@ -83,6 +83,18 @@ export class CreateNotificationDto {
   @IsUUID('4')
   @IsOptional()
   multimediaId?: string;
+
+  @IsString()
+  @IsOptional()
+  interestedUserEmail?: string;
+
+  @IsString()
+  @IsOptional()
+  interestedUserName?: string;
+
+  @IsString()
+  @IsOptional()
+  interestedUserMessage?: string;
 }
 
 export class UpdateNotificationStatusDto {

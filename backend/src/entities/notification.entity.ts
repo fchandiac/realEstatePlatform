@@ -70,9 +70,18 @@ export class Notification {
   status: NotificationStatus;
 
   @Column({ type: 'varchar', nullable: true })
+  interestedUserEmail: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  interestedUserName: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  interestedUserMessage: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
   firstViewerId: string | null;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   firstViewedAt: Date | null;
 
   @CreateDateColumn()

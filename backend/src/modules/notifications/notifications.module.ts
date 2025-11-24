@@ -3,12 +3,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationsService } from './notifications.service';
 import { NotificationsController } from './notifications.controller';
 import { Notification } from '../../entities/notification.entity';
+import { User } from '../../entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { EmailService } from './email.service';
 import { UsersModule } from '../users/users.module';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Notification]), ConfigModule, UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([Notification, User]),
+    ConfigModule,
+    UsersModule,
+    MailModule
+  ],
   controllers: [NotificationsController],
   providers: [NotificationsService, EmailService],
   exports: [NotificationsService, EmailService],

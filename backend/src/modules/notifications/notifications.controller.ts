@@ -37,21 +37,33 @@ import {
 @ApiBearerAuth()
 export class NotificationsController {
     /**
-     * Notifica interés en propiedad a administradores y agente asignado (desde portal público)
-     * No requiere autenticación - accesible desde el portal público
+     * Endpoint de prueba para verificar envío de correos (SOLO PARA DESARROLLO)
      */
-    @Post('public/property-interest')
-    @ApiOperation({ summary: 'Enviar notificación de interés en propiedad desde portal público' })
-    @ApiBody({ type: PropertyInterestDto })
-    async notifyPublicPropertyInterest(@Body() body: PropertyInterestDto) {
-      return this.notificationsService.notifyInterestOnProperty(
-        body.propertyId,
-        body.assignedAgentId,
-        body.interestedUserId,
-        body.interestedUserName,
-        body.interestedUserEmail,
-        body.interestedUserMessage
-      );
+    @Post('test-email')
+    @ApiOperation({ summary: 'Test email sending (development only)' })
+    async testEmail(@Body() body: { email: string; name: string }) {
+      try {
+        // Crear una notificación de prueba
+        const testNotification = await this.notificationsService.notifyInterestOnProperty(
+          'test-property-id',
+          undefined, // sin agente
+          undefined, // usuario anónimo
+          body.name,
+          body.email,
+          'Este es un mensaje de prueba para verificar el envío de correos.'
+        );
+
+        return {
+          success: true,
+          message: 'Test notification created and emails should be sent',
+          notificationIds: testNotification.map(n => n.id)
+        };
+      } catch (error) {
+        return {
+          success: false,
+          error: error.message
+        };
+      }
     }
 
     /**
@@ -286,5 +298,57 @@ export class NotificationsController {
       page,
       limit,
     });
+  }
+
+  /**
+   * DEBUG: Probar envío completo de correos
+   */
+  @Post('test-full-email-flow')
+  @ApiOperation({ summary: 'DEBUG: Test complete email flow' })
+  async testFullEmailFlow(@Body() body: { email: string; name: string }) {
+    try {
+      console.log('🎯 TESTING FULL EMAIL FLOW');
+      console.log('Input:', body);
+
+      // 1. Crear notificación de interés
+      const notifications = await this.notificationsService.notifyInterestOnProperty(
+        'test-property-123',
+        undefined, // sin agente
+        undefined, // usuario anónimo
+        body.name,
+        body.email,
+        `Mensaje de prueba de ${body.name}`
+      );
+
+      console.log(`✅ Created ${notifications.length} notifications`);
+
+      // 2. Forzar envío de correos para la primera notificación
+      if (notifications.length > 0) {
+        const notification = notifications[0];
+        console.log('📧 Forcing email send for notification:', notification.id);
+
+        const service = this.notificationsService as any;
+        await service.sendNotificationEmails(notification, {
+          targetMails: body.email ? [body.email] : undefined,
+          interestedUserEmail: body.email,
+          interestedUserName: body.name,
+          interestedUserMessage: `Mensaje de prueba de ${body.name}`,
+        });
+      }
+
+      return {
+        success: true,
+        message: 'Full email flow test completed',
+        notificationsCreated: notifications.length,
+        notificationIds: notifications.map(n => n.id)
+      };
+    } catch (error) {
+      console.error('❌ FULL EMAIL FLOW TEST FAILED:', error);
+      return {
+        success: false,
+        error: error.message,
+        stack: error.stack
+      };
+    }
   }
 }
