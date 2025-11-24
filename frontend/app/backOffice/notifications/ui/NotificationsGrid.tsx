@@ -56,7 +56,7 @@ export default function NotificationsGrid({ rows, totalRows, title }: Notificati
       field: 'message',
       headerName: 'Mensaje',
       flex: 2,
-      minWidth: 300,
+      minWidth: 200,
       sortable: true,
       filterable: true,
       renderCell: ({ value }) => (
@@ -66,7 +66,7 @@ export default function NotificationsGrid({ rows, totalRows, title }: Notificati
     {
       field: 'type',
       headerName: 'Tipo',
-      width: 150,
+      width: 180,
       sortable: true,
       filterable: true,
       renderCell: ({ value }) => {
@@ -140,7 +140,7 @@ export default function NotificationsGrid({ rows, totalRows, title }: Notificati
       actionComponent: ({ row }) => (
         <div className="flex items-center gap-1">
           <IconButton
-            icon="visibility"
+            icon="more_horiz"
             variant="text"
             ariaLabel="Ver detalles"
             onClick={() => handleViewDetails(row.id, row.message || '')}
