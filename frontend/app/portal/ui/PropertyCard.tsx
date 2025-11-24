@@ -187,6 +187,15 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
   const images = getOrderedImages(property);
   const hasImages = images.length > 0;
   
+  console.log('🔍 [PropertyCard] Debug info:', {
+    propertyId: property.id,
+    mainImageUrl: property.mainImageUrl,
+    multimediaCount: property.multimedia?.length || 0,
+    imagesFound: images.length,
+    hasImages,
+    currentImageIndex: hasImages ? 0 : -1
+  });
+  
   const [mediaSrc, setMediaSrc] = useState<{ type: 'image' | 'video'; url: string } | undefined>(() => {
     console.log('🎯 [PropertyCard] Initial mediaSrc state:', primaryMedia);
     return primaryMedia;
@@ -450,10 +459,10 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
                 e.stopPropagation();
                 handlePrevImage();
               }}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-all duration-200 opacity-50 hover:opacity-100"
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/70 hover:bg-black/90 text-white rounded-full flex items-center justify-center transition-all duration-200 opacity-80 hover:opacity-100 shadow-lg"
               aria-label="Imagen anterior"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>
                 chevron_left
               </span>
             </button>
@@ -464,16 +473,16 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
                 e.stopPropagation();
                 handleNextImage();
               }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-all duration-200 opacity-50 hover:opacity-100"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/70 hover:bg-black/90 text-white rounded-full flex items-center justify-center transition-all duration-200 opacity-80 hover:opacity-100 shadow-lg"
               aria-label="Imagen siguiente"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>
                 chevron_right
               </span>
             </button>
 
             {/* Image counter */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/80 text-white text-sm px-3 py-1 rounded-full font-medium shadow-lg">
               {currentImageIndex + 1} / {images.length}
             </div>
           </>
