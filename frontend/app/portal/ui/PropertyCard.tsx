@@ -399,11 +399,8 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
 
   const CardInner = (
     <div
-      className="relative bg-white rounded-lg w-full text-left property-card shadow-lg overflow-hidden cursor-pointer"
+      className="relative bg-white rounded-lg w-full text-left property-card shadow-lg overflow-hidden"
       data-test-id="property-card-root"
-      onClick={handleClick}
-      role="button"
-      tabIndex={0}
     >
       {featured && (
         <div
