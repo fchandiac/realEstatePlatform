@@ -38,6 +38,7 @@ import { UpdatePropertyPriceDto } from './dto/update-property-price.dto';
 import { UpdatePropertySeoDto } from './dto/update-property-seo.dto';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
 import { GetFullPropertyDto } from './dto/get-full-property.dto';
+import { FilterRentPropertiesDto } from './dto/filter-rent-properties.dto';
 import { Audit } from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -542,6 +543,32 @@ export class PropertyController {
     @Query(new ValidationPipe({ transform: true })) filters: any,
   ) {
     return this.propertyService.getPublishedPropertiesFiltered(filters);
+  }
+
+  /**
+   * Get published rent properties with filters and pagination
+   * Automatically filters by operationType = 'RENT'
+   */
+  @Get('rent')
+  @ApiOperation({ summary: 'Get published rent properties with filters' })
+  @ApiResponse({ status: 200, description: 'Filtered rent properties list' })
+  @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiQuery({ name: 'priceMin', required: false, type: Number })
+  @ApiQuery({ name: 'priceMax', required: false, type: Number })
+  @ApiQuery({ name: 'bedrooms', required: false, type: Number })
+  @ApiQuery({ name: 'bathrooms', required: false, type: Number })
+  @ApiQuery({ name: 'typeProperty', required: false, type: String })
+  @ApiQuery({ name: 'state', required: false, type: String })
+  @ApiQuery({ name: 'city', required: false, type: String })
+  @ApiQuery({ name: 'currency', required: false, type: String })
+  @ApiQuery({ name: 'sort', required: false, type: String })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Rent properties filtered')
+  async getPublishedRentPropertiesFiltered(
+    @Query(new ValidationPipe({ transform: true })) dto: FilterRentPropertiesDto,
+  ) {
+    return this.propertyService.getPublishedRentPropertiesFiltered(dto);
   }
 
   /**

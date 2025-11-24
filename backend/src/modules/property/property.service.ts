@@ -9,6 +9,7 @@ import { UpdatePropertyLocationDto } from './dto/update-property-location.dto';
 import { CreatePropertyDto as NewCreatePropertyDto } from './dto/create-property.dto';
 import { UpdateMainImageDto } from './dto/create-property.dto';
 import { UpdatePropertyPriceDto } from './dto/update-property-price.dto';
+import { FilterRentPropertiesDto } from './dto/filter-rent-properties.dto';
 import { PropertyStatus } from '../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../common/enums/property-operation-type.enum';
 import { ChangeHistoryEntry, ViewEntry, LeadEntry } from '../../common/interfaces/property.interfaces';
@@ -2406,6 +2407,184 @@ export class PropertyService {
       viewsCount: (property.views || []).length,
       favoritesCount: 0,
     };
+  }
+
+  /**
+   * Get published rent properties with filters and pagination
+   * Automatically filters by operationType = 'RENT'
+   */
+  async getPublishedRentPropertiesFiltered(dto: FilterRentPropertiesDto): Promise<{
+    data: Property[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
+    try {
+      console.log('🔍 [PropertyService.getPublishedRentPropertiesFiltered] Starting with filters:', dto);
+
+      const limit = dto.limit || 9;
+      const page = Math.max(1, dto.page || 1);
+      const skip = (page - 1) * limit;
+
+      let query = this.propertyRepository
+        .createQueryBuilder('property')
+        .leftJoinAndSelect('property.propertyType', 'pt')
+        .where('property.status = :status', { status: PropertyStatus.PUBLISHED })
+        .andWhere('property.operationType = :operationType', { operationType: PropertyOperationType.RENT })
+        .andWhere('property.deletedAt IS NULL');
+
+      console.log('📋 [PropertyService] Base query created for rent properties');
+
+      // Apply search filter
+      if (dto.search && dto.search.trim() !== '') {
+        const searchTerm = `%${dto.search.trim()}%`;
+        query.andWhere(
+          '(LOWER(property.title) LIKE LOWER(:search) OR LOWER(property.description) LIKE LOWER(:search))',
+          { search: searchTerm }
+        );
+        console.log('🔎 Applied search filter:', dto.search);
+      }
+
+      // Apply additional filters
+      if (dto.filters) {
+        console.log('🔎 Applying additional filters:', dto.filters);
+
+        if (dto.filters.priceMin !== undefined) {
+          query.andWhere('property.price >= :priceMin', { priceMin: dto.filters.priceMin });
+        }
+
+        if (dto.filters.priceMax !== undefined) {
+          query.andWhere('property.price <= :priceMax', { priceMax: dto.filters.priceMax });
+        }
+
+        if (dto.filters.bedrooms !== undefined) {
+          query.andWhere('property.bedrooms >= :bedrooms', { bedrooms: dto.filters.bedrooms });
+        }
+
+        if (dto.filters.bathrooms !== undefined) {
+          query.andWhere('property.bathrooms >= :bathrooms', { bathrooms: dto.filters.bathrooms });
+        }
+
+        if (dto.filters.typeProperty) {
+          query.andWhere('pt.name = :typeProperty', { typeProperty: dto.filters.typeProperty });
+        }
+
+        if (dto.filters.state) {
+          query.andWhere('property.state = :state', { state: dto.filters.state });
+        }
+
+        if (dto.filters.city) {
+          query.andWhere('property.city = :city', { city: dto.filters.city });
+        }
+
+        if (dto.filters.currency && dto.filters.currency !== 'all') {
+          query.andWhere('property.currencyPrice = :currency', { currency: dto.filters.currency });
+        }
+      }
+
+      // Apply sorting
+      if (dto.sort) {
+        const [field, order] = dto.sort.split('_');
+        const sortOrder = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+
+        switch (field) {
+          case 'price':
+            query.orderBy('property.price', sortOrder);
+            break;
+          case 'created':
+            query.orderBy('property.createdAt', sortOrder);
+            break;
+          case 'title':
+            query.orderBy('property.title', sortOrder);
+            break;
+          default:
+            query.orderBy('property.createdAt', 'DESC');
+        }
+        console.log('🔄 Applied sorting:', { field, order: sortOrder });
+      } else {
+        query.orderBy('property.createdAt', 'DESC');
+      }
+
+      console.log('⏳ [PropertyService] Getting count...');
+      const total = await query.getCount();
+      console.log('✅ [PropertyService] Total count:', total);
+
+      console.log('⏳ [PropertyService] Fetching data with multimedia relations...');
+      const data = await query
+        .leftJoinAndSelect('property.multimedia', 'multimedia')
+        .skip(skip)
+        .take(limit)
+        .getMany();
+
+      console.log('✅ [PropertyService] Data fetched:', data.length, 'rent properties');
+
+      // Process multimedia fallback (same logic as getPublishedPropertiesFiltered)
+      const idsNeedingFallback = data
+        .filter(p => !p.mainImageUrl || p.mainImageUrl.trim() === '')
+        .map(p => p.id);
+
+      if (idsNeedingFallback.length > 0) {
+        for (const property of data) {
+          const needsImageFallback = !property.mainImageUrl ||
+                                    property.mainImageUrl.trim() === '' ||
+                                    this.isVideoUrl(property.mainImageUrl);
+
+          if (needsImageFallback) {
+            const imageMultimedia = property.multimedia?.find(m =>
+              m.format === MultimediaFormat.IMG && m.type === MultimediaType.PROPERTY_IMG
+            );
+
+            if (imageMultimedia) {
+              property.mainImageUrl = imageMultimedia.url;
+              console.log(`✅ Set mainImageUrl for rent property ${property.id} from multimedia`);
+            }
+          }
+        }
+      }
+
+      // Normalize URLs
+      for (const property of data) {
+        if (property.mainImageUrl) {
+          property.mainImageUrl = this.normalizeUrl(property.mainImageUrl);
+        }
+      }
+
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        data,
+        total,
+        page,
+        limit,
+        totalPages,
+      };
+    } catch (error) {
+      console.error('❌ Error in getPublishedRentPropertiesFiltered:', error);
+      throw error;
+    }
+  }
+
+  // Helper methods for URL processing
+  private isVideoUrl(url: string): boolean {
+    const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'];
+    return videoExtensions.some(ext => url.toLowerCase().includes(ext));
+  }
+
+  private normalizeUrl(url?: string): string | undefined {
+    if (!url) return url;
+
+    // Si ya tiene /img/ o /video/ no hacer nada
+    if (url.includes('/properties/img/') || url.includes('/properties/video/')) {
+      return url;
+    }
+
+    // Si está en /public/properties/ y no tiene subcarpeta, agregar /img/ por defecto
+    if (url.includes('/public/properties/') && !url.includes('/properties/img/') && !url.includes('/properties/video/')) {
+      return url.replace('/public/properties/', '/public/properties/img/');
+    }
+
+    return url;
   }
 
   /**
