@@ -108,8 +108,8 @@ export default function PropertyFilter({ initialFilters = {}, onFiltersChange, i
   }, [filters, onFiltersChange]);
 
   const operationOptions: SelectOption[] = [
-    { id: 'rent', label: 'Arriendo' },
     { id: 'sale', label: 'Venta' },
+    { id: 'rent', label: 'Arriendo' },
   ];
 
   const propertyTypeOptions: SelectOption[] = [
@@ -132,7 +132,7 @@ export default function PropertyFilter({ initialFilters = {}, onFiltersChange, i
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
           <div className="w-full">
             <Select
-              placeholder="Arriendo/Venta"
+              placeholder="Venta/Arriendo"
               options={operationOptions}
               value={filters.operation}
               onChange={(value) => handleFilterChange('operation', value)}
