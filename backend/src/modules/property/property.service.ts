@@ -330,6 +330,7 @@ export class PropertyService {
 
     const qb = this.propertyRepository.createQueryBuilder('p')
       .leftJoinAndSelect('p.propertyType', 'pt')
+      .leftJoinAndSelect('p.multimedia', 'multimedia')
       .select([
         'p.id',
         'p.title',

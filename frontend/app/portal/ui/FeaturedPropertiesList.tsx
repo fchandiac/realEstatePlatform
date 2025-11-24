@@ -21,6 +21,12 @@ interface PropertyFromAPI {
   totalArea?: number;
   mainImageUrl?: string;
   isFeatured: boolean;
+  multimedia?: {
+    id?: string;
+    url: string;
+    type?: string;
+    format?: string;
+  }[];
   propertyType?: {
     id: string;
     name: string;
@@ -171,6 +177,7 @@ export default function FeaturedPropertiesList({
             city: property.city || null,
             propertyType: property.propertyType,
             mainImageUrl: property.mainImageUrl || null,
+            multimedia: property.multimedia || [],
             bedrooms: property.bedrooms || null,
             bathrooms: property.bathrooms || null,
             builtSquareMeters: property.totalArea || null,
