@@ -7,8 +7,6 @@ interface LocationPreviewProps {
   className?: string;
 }
 
-const LocationPreviewMap = dynamic(() => import('./LocationPreviewMap'), { ssr: false });
-
 const LocationPreview: React.FC<LocationPreviewProps> = ({
   latitude,
   longitude,
@@ -25,9 +23,12 @@ const LocationPreview: React.FC<LocationPreviewProps> = ({
           overflow: 'hidden',
           backgroundColor: '#f3f4f6'
         }}
+        className="flex items-center justify-center"
       >
-        <div className="flex items-center justify-center h-full text-gray-500 text-sm">
-          Mapa: {latitude.toFixed(4)}, {longitude.toFixed(4)}
+        <div className="text-center text-gray-500 text-sm">
+          <div className="mb-2">📍</div>
+          <div>Lat: {latitude.toFixed(4)}</div>
+          <div>Lng: {longitude.toFixed(4)}</div>
         </div>
       </div>
     </div>

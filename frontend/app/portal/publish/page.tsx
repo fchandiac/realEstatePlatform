@@ -9,7 +9,27 @@ import Alert from '@/components/Alert/Alert';
 import PropertyCard, { PortalProperty } from '@/app/portal/ui/PropertyCard';
 import LocationPreview from '@/components/LocationPicker/LocationPreview';
 
-type FormValues = Record<string, unknown>;
+type FormValues = {
+  title: string;
+  propertyTypeId: string | null;
+  builtSquareMeters: number;
+  landSquareMeters: number;
+  bedrooms: number;
+  bathrooms: number;
+  parkingSpaces: number;
+  floors: number;
+  constructionYear: number;
+  price: string;
+  currencyPrice: string;
+  region: string | null;
+  city: string | null;
+  address: string;
+  coordinates: { lat: number; lng: number } | null;
+  multimedia: File[];
+  contactName: string;
+  contactPhone: string;
+  contactEmail: string;
+};
 
 const INITIAL_VALUES: FormValues = {
   title: '',
@@ -109,7 +129,7 @@ export default function PublishPropertyPage() {
 
   const handleChange = (field: string, value: unknown) => {
     // Si es un campo numérico y el valor es un string, convertir a número
-    let finalValue = value;
+    let finalValue: unknown = value;
     if (field.match(/^(builtSquareMeters|landSquareMeters|bedrooms|bathrooms|parkingSpaces|floors|constructionYear)$/)) {
       if (typeof value === 'string') {
         finalValue = value === '' ? 0 : parseInt(value, 10);
@@ -476,8 +496,8 @@ export default function PublishPropertyPage() {
             {/* Mapa de ubicación */}
             {values.coordinates && (
               <LocationPreview
-                latitude={(values.coordinates as { lat: number; lng: number }).lat}
-                longitude={(values.coordinates as { lat: number; lng: number }).lng}
+                latitude={values.coordinates.lat}
+                longitude={values.coordinates.lng}
               />
             )}
 
