@@ -137,7 +137,8 @@ export async function notifyPropertyInterest(data: {
     const session = await getServerSession(authOptions);
     const currentUser = session?.user;
 
-    const url = `${env.backendApiUrl}/notifications/property-interest`;
+    // Use public endpoint that doesn't require authentication
+    const url = `${env.backendApiUrl}/notifications/public/property-interest`;
     
     const body = {
       propertyId: data.propertyId,

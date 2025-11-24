@@ -35,13 +35,31 @@ import {
 @Controller('notifications')
 @ApiTags('Notifications')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 export class NotificationsController {
+    /**
+     * Notifica interés en propiedad a administradores y agente asignado (desde portal público)
+     * No requiere autenticación - accesible desde el portal público
+     */
+    @Post('public/property-interest')
+    @ApiOperation({ summary: 'Enviar notificación de interés en propiedad desde portal público' })
+    @ApiBody({ type: PropertyInterestDto })
+    async notifyPublicPropertyInterest(@Body() body: PropertyInterestDto) {
+      return this.notificationsService.notifyInterestOnProperty(
+        body.propertyId,
+        body.assignedAgentId,
+        body.interestedUserId,
+        body.interestedUserName,
+        body.interestedUserEmail,
+        body.interestedUserMessage
+      );
+    }
+
     /**
      * Notifica interés en propiedad a administradores y agente asignado
      * Puede ser llamado por usuario autenticado o anónimo
      */
     @Post('property-interest')
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({ summary: 'Enviar notificación de interés en propiedad a administradores y agente asignado' })
     @ApiBody({ type: PropertyInterestDto })
     async notifyInterestOnProperty(@Body() body: PropertyInterestDto) {
@@ -60,6 +78,7 @@ export class NotificationsController {
    * Create a new notification
    */
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create new notification' })
   @ApiResponse({
     status: 201,
@@ -75,6 +94,7 @@ export class NotificationsController {
    * Get all notifications with pagination
    */
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all notifications' })
   @ApiResponse({
     status: 200,
@@ -94,6 +114,7 @@ export class NotificationsController {
    * Get notification by ID
    */
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get notification by ID' })
   @ApiResponse({
     status: 200,
@@ -113,6 +134,7 @@ export class NotificationsController {
    * Update notification
    */
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update notification' })
   @ApiResponse({
     status: 200,
@@ -132,6 +154,7 @@ export class NotificationsController {
    * Delete notification (soft delete)
    */
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete notification' })
   @ApiResponse({
     status: 200,
@@ -147,6 +170,7 @@ export class NotificationsController {
    * Mark notification as opened
    */
   @Post(':id/open')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Mark notification as opened' })
   @ApiResponse({
     status: 200,
@@ -167,6 +191,7 @@ export class NotificationsController {
    * Get notifications for a specific user
    */
   @Get('user/:userId')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get notifications for user' })
   @ApiResponse({
     status: 200,
@@ -182,6 +207,7 @@ export class NotificationsController {
    * Mark all unread notifications as read for a user
    */
   @Patch('user/:userId/read-all')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Mark all unread notifications as read for user' })
   @ApiResponse({
     status: 200,
@@ -197,6 +223,7 @@ export class NotificationsController {
    * Update notification status
    */
   @Patch(':id/status')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update notification status' })
   @ApiResponse({
     status: 200,
@@ -216,6 +243,7 @@ export class NotificationsController {
    * Get user notifications grid with filtering, sorting, and pagination
    */
   @Get('user/:userId/grid')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get user notifications grid' })
   @ApiResponse({
     status: 200,
