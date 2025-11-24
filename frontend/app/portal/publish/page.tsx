@@ -7,6 +7,7 @@ import { listPropertyTypes, getPropertyTypeCharacteristics, PropertyTypeWithFeat
 import { getRegiones, getComunasByRegion } from '@/app/actions/commons';
 import Alert from '@/components/Alert/Alert';
 import PropertyCard, { PortalProperty } from '@/app/portal/ui/PropertyCard';
+import LocationPreview from '@/components/LocationPicker/LocationPreview';
 
 type FormValues = Record<string, unknown>;
 
@@ -146,6 +147,13 @@ export default function PublishPropertyPage() {
 
       // Llamar server action para publicar
       console.log('📤 [handleSubmit] Publicando propiedad...');
+      console.log('📤 [handleSubmit] Datos a enviar:', {
+        title: values.title,
+        propertyTypeId: values.propertyTypeId,
+        coordinates: values.coordinates,
+        multimediaCount: multimedia?.length || 0
+      });
+      
       const result = await publishProperty({
         title: values.title as string,
         propertyTypeId: values.propertyTypeId as string,
@@ -162,6 +170,10 @@ export default function PublishPropertyPage() {
         region: values.region as string,
         city: values.city as string,
         address: values.address as string,
+        coordinates: values.coordinates ? {
+          latitude: (values.coordinates as { lat: number; lng: number }).lat,
+          longitude: (values.coordinates as { lat: number; lng: number }).lng
+        } : undefined,
         contactName: values.contactName as string,
         contactPhone: values.contactPhone as string,
         contactEmail: values.contactEmail as string,
@@ -417,7 +429,14 @@ export default function PublishPropertyPage() {
           city: comunas.find(c => c.id === values.city)?.label || '',
           propertyType: selectedPropertyType ? {
             id: selectedPropertyType.id,
-            name: selectedPropertyType.name
+            name: selectedPropertyType.name,
+            hasBedrooms: selectedPropertyType.hasBedrooms,
+            hasBathrooms: selectedPropertyType.hasBathrooms,
+            hasBuiltSquareMeters: selectedPropertyType.hasBuiltSquareMeters,
+            hasLandSquareMeters: selectedPropertyType.hasLandSquareMeters,
+            hasParkingSpaces: selectedPropertyType.hasParkingSpaces,
+            hasFloors: selectedPropertyType.hasFloors,
+            hasConstructionYear: selectedPropertyType.hasConstructionYear,
           } : undefined,
           bedrooms: values.bedrooms as number || null,
           bathrooms: values.bathrooms as number || null,
@@ -453,6 +472,14 @@ export default function PublishPropertyPage() {
               <h5 className="text-base font-semibold mb-1">Dirección</h5>
               <p className="text-gray-700 text-sm">{values.address as string || 'No especificada'}</p>
             </div>
+
+            {/* Mapa de ubicación */}
+            {values.coordinates && (
+              <LocationPreview
+                latitude={(values.coordinates as { lat: number; lng: number }).lat}
+                longitude={(values.coordinates as { lat: number; lng: number }).lng}
+              />
+            )}
 
             {/* Otros datos adicionales - solo mostrar si hay elementos */}
             {((selectedPropertyType?.hasConstructionYear && (values.constructionYear as number) > 0) ||
