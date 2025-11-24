@@ -9,17 +9,27 @@ interface RentPageProps {
 }
 
 async function getRentProperties(searchParams: { [key: string]: string | string[] | undefined }) {
+  console.log('🔍 [getRentProperties] Raw searchParams:', searchParams);
+
   const filters: FilterRentPropertiesDto = {
     filters: {
-      typeProperty: typeof searchParams.typeProperty === 'string' ? searchParams.typeProperty : undefined,
-      state: typeof searchParams.state === 'string' ? searchParams.state : undefined,
-      city: typeof searchParams.city === 'string' ? searchParams.city : undefined,
-      currency: typeof searchParams.currency === 'string' ? searchParams.currency : 'CLP',
+      typeProperty: typeof searchParams.typeProperty === 'string' && searchParams.typeProperty ?
+        decodeURIComponent(searchParams.typeProperty) : undefined,
+      state: typeof searchParams.state === 'string' && searchParams.state ?
+        decodeURIComponent(searchParams.state) : undefined,
+      city: typeof searchParams.city === 'string' && searchParams.city ?
+        decodeURIComponent(searchParams.city) : undefined,
+      currency: typeof searchParams.currency === 'string' && searchParams.currency ?
+        decodeURIComponent(searchParams.currency) : 'CLP',
     },
-    sort: typeof searchParams.sort === 'string' ? searchParams.sort : 'created_desc',
-    page: typeof searchParams.page === 'string' ? parseInt(searchParams.page) : 1,
+    sort: typeof searchParams.sort === 'string' && searchParams.sort ?
+      decodeURIComponent(searchParams.sort) : 'created_desc',
+    page: typeof searchParams.page === 'string' && searchParams.page ?
+      parseInt(decodeURIComponent(searchParams.page)) : 1,
     limit: 9,
   };
+
+  console.log('🔍 [getRentProperties] Processed filters:', filters);
 
   try {
     const result = await getRentPropertiesFiltered(filters);

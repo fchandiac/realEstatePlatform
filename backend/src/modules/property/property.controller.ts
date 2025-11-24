@@ -39,6 +39,7 @@ import { UpdatePropertySeoDto } from './dto/update-property-seo.dto';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
 import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { FilterRentPropertiesDto } from './dto/filter-rent-properties.dto';
+import { FilterSalePropertiesDto } from './dto/filter-sale-properties.dto';
 import { Audit } from '../../common/interceptors/audit.interceptor';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -569,6 +570,32 @@ export class PropertyController {
     @Query(new ValidationPipe({ transform: true })) dto: FilterRentPropertiesDto,
   ) {
     return this.propertyService.getPublishedRentPropertiesFiltered(dto);
+  }
+
+  /**
+   * Get published sale properties with filters and pagination
+   * Automatically filters by operationType = 'SALE'
+   */
+  @Get('sale')
+  @ApiOperation({ summary: 'Get published sale properties with filters' })
+  @ApiResponse({ status: 200, description: 'Filtered sale properties list' })
+  @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiQuery({ name: 'priceMin', required: false, type: Number })
+  @ApiQuery({ name: 'priceMax', required: false, type: Number })
+  @ApiQuery({ name: 'bedrooms', required: false, type: Number })
+  @ApiQuery({ name: 'bathrooms', required: false, type: Number })
+  @ApiQuery({ name: 'typeProperty', required: false, type: String })
+  @ApiQuery({ name: 'state', required: false, type: String })
+  @ApiQuery({ name: 'city', required: false, type: String })
+  @ApiQuery({ name: 'currency', required: false, type: String })
+  @ApiQuery({ name: 'sort', required: false, type: String })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Sale properties filtered')
+  async getPublishedSalePropertiesFiltered(
+    @Query(new ValidationPipe({ transform: true })) dto: FilterSalePropertiesDto,
+  ) {
+    return this.propertyService.getPublishedSalePropertiesFiltered(dto);
   }
 
   /**

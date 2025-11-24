@@ -222,7 +222,7 @@ async function seedDatabase() {
     const propertyRepository = AppDataSource.getRepository(Property);
     
     const propertiesData = [
-      // 12 FEATURED properties
+      // 12 FEATURED properties (SALE)
       {
         title: 'Casa moderna con piscina y jardín',
         description: 'Hermosa casa moderna con piscina y jardín, ubicada en la exclusiva comuna de Las Condes.',
@@ -236,7 +236,8 @@ async function seedDatabase() {
         city: ComunaEnum.LAS_CONDES,
         latitude: -33.3882,
         longitude: -70.5683,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Apartamento lujoso con vista al río',
@@ -251,7 +252,8 @@ async function seedDatabase() {
         city: ComunaEnum.PROVIDENCIA,
         latitude: -33.4201,
         longitude: -70.6044,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Casa familiar amplia',
@@ -266,7 +268,8 @@ async function seedDatabase() {
         city: ComunaEnum.NUNOA,
         latitude: -33.4274,
         longitude: -70.5740,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Departamento céntrico',
@@ -281,7 +284,8 @@ async function seedDatabase() {
         city: ComunaEnum.RENCA,
         latitude: -33.4372,
         longitude: -70.6689,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Casa con vista a la cordillera',
@@ -296,7 +300,8 @@ async function seedDatabase() {
         city: ComunaEnum.VITACURA,
         latitude: -33.3943,
         longitude: -70.5348,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Oficina moderna en zona de negocios',
@@ -311,7 +316,8 @@ async function seedDatabase() {
         city: ComunaEnum.MACUL,
         latitude: -33.3944,
         longitude: -70.5340,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Terreno para proyectos inmobiliarios',
@@ -326,7 +332,8 @@ async function seedDatabase() {
         city: ComunaEnum.PENALOLEN,
         latitude: -33.4896,
         longitude: -70.4968,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Casa en barrio pintoresco',
@@ -341,7 +348,8 @@ async function seedDatabase() {
         city: ComunaEnum.RECOLETA,
         latitude: -33.4291,
         longitude: -70.6636,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Departamento cómodo cerca de servicios',
@@ -356,7 +364,8 @@ async function seedDatabase() {
         city: ComunaEnum.SAN_BERNARDO,
         latitude: -33.6063,
         longitude: -70.7120,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Casa con patio grande',
@@ -371,7 +380,8 @@ async function seedDatabase() {
         city: ComunaEnum.MAIPU,
         latitude: -33.5261,
         longitude: -70.7620,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Local comercial en importante avenida',
@@ -386,7 +396,8 @@ async function seedDatabase() {
         city: ComunaEnum.LAS_CONDES,
         latitude: -33.3890,
         longitude: -70.5700,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Apartamento de lujo frente al río',
@@ -401,10 +412,11 @@ async function seedDatabase() {
         city: ComunaEnum.VITACURA,
         latitude: -33.3807,
         longitude: -70.6044,
-        isFeatured: true
+        isFeatured: true,
+        operationType: PropertyOperationType.SALE
       },
       
-      // 8 NON-FEATURED properties
+      // 8 NON-FEATURED properties (SALE)
       {
         title: 'Casa en zona consolidada',
         description: 'Propiedad lista para vivir en zona consolidada.',
@@ -418,7 +430,8 @@ async function seedDatabase() {
         city: ComunaEnum.QUINTA_NORMAL,
         latitude: -33.4514,
         longitude: -70.6910,
-        isFeatured: false
+        isFeatured: false,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Departamento accesible con buen transporte',
@@ -433,7 +446,8 @@ async function seedDatabase() {
         city: ComunaEnum.ESTACION_CENTRAL,
         latitude: -33.4442,
         longitude: -70.6848,
-        isFeatured: false
+        isFeatured: false,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Casa económica en zona de crecimiento',
@@ -448,7 +462,8 @@ async function seedDatabase() {
         city: ComunaEnum.PUDAHUEL,
         latitude: -33.4081,
         longitude: -70.8168,
-        isFeatured: false
+        isFeatured: false,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Oficina pequeña para negocios',
@@ -463,7 +478,8 @@ async function seedDatabase() {
         city: ComunaEnum.INDEPENDENCIA,
         latitude: -33.4130,
         longitude: -70.6661,
-        isFeatured: false
+        isFeatured: false,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Departamento en nuevo proyecto residencial',
@@ -478,7 +494,8 @@ async function seedDatabase() {
         city: ComunaEnum.COLINA,
         latitude: -33.2161,
         longitude: -70.7298,
-        isFeatured: false
+        isFeatured: false,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Casa con espacio verde',
@@ -493,7 +510,8 @@ async function seedDatabase() {
         city: ComunaEnum.LAMPA,
         latitude: -33.3288,
         longitude: -70.8676,
-        isFeatured: false
+        isFeatured: false,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Terreno rural para agronegocios',
@@ -508,7 +526,8 @@ async function seedDatabase() {
         city: ComunaEnum.PAINE,
         latitude: -33.8097,
         longitude: -70.6361,
-        isFeatured: false
+        isFeatured: false,
+        operationType: PropertyOperationType.SALE
       },
       {
         title: 'Casa tranquila en zona rural',
@@ -523,7 +542,91 @@ async function seedDatabase() {
         city: ComunaEnum.BUIN,
         latitude: -33.7305,
         longitude: -70.7546,
-        isFeatured: false
+        isFeatured: false,
+        operationType: PropertyOperationType.SALE
+      },
+
+      // ===== RENT PROPERTIES =====
+      // 5 RENT properties to test filtering
+      {
+        title: 'Oficina moderna en Providencia',
+        description: 'Oficina completamente equipada en el corazón de Providencia, perfecta para empresas.',
+        bedrooms: 0,
+        bathrooms: 2,
+        builtSquareMeters: 85,
+        landSquareMeters: 0,
+        parkingSpaces: 2,
+        price: 850000,
+        state: RegionEnum.METROPOLITANA,
+        city: ComunaEnum.PROVIDENCIA,
+        latitude: -33.4314,
+        longitude: -70.6092,
+        isFeatured: true,
+        operationType: PropertyOperationType.RENT
+      },
+      {
+        title: 'Apartamento amoblado en Las Condes',
+        description: 'Hermoso apartamento completamente amoblado, listo para mudarse.',
+        bedrooms: 2,
+        bathrooms: 1,
+        builtSquareMeters: 75,
+        landSquareMeters: 0,
+        parkingSpaces: 1,
+        price: 650000,
+        state: RegionEnum.METROPOLITANA,
+        city: ComunaEnum.LAS_CONDES,
+        latitude: -33.4155,
+        longitude: -70.5831,
+        isFeatured: false,
+        operationType: PropertyOperationType.RENT
+      },
+      {
+        title: 'Casa para arriendo en Ñuñoa',
+        description: 'Casa familiar amplia, perfecta para familias.',
+        bedrooms: 3,
+        bathrooms: 2,
+        builtSquareMeters: 180,
+        landSquareMeters: 300,
+        parkingSpaces: 2,
+        price: 950000,
+        state: RegionEnum.METROPOLITANA,
+        city: ComunaEnum.NUNOA,
+        latitude: -33.4542,
+        longitude: -70.6044,
+        isFeatured: true,
+        operationType: PropertyOperationType.RENT
+      },
+      {
+        title: 'Local comercial en Santiago Centro',
+        description: 'Local comercial en zona de alto tránsito peatonal.',
+        bedrooms: 0,
+        bathrooms: 1,
+        builtSquareMeters: 120,
+        landSquareMeters: 0,
+        parkingSpaces: 0,
+        price: 450000,
+        state: RegionEnum.METROPOLITANA,
+        city: ComunaEnum.ESTACION_CENTRAL,
+        latitude: -33.4378,
+        longitude: -70.6504,
+        isFeatured: false,
+        operationType: PropertyOperationType.RENT
+      },
+      {
+        title: 'Oficina ejecutiva en Vitacura',
+        description: 'Oficina ejecutiva con vista panorámica, servicios incluidos.',
+        bedrooms: 0,
+        bathrooms: 3,
+        builtSquareMeters: 150,
+        landSquareMeters: 0,
+        parkingSpaces: 3,
+        price: 1200000,
+        state: RegionEnum.METROPOLITANA,
+        city: ComunaEnum.VITACURA,
+        latitude: -33.3894,
+        longitude: -70.5714,
+        isFeatured: true,
+        operationType: PropertyOperationType.RENT
       }
     ];
 
@@ -847,7 +950,7 @@ async function seedDatabase() {
     console.log(`\nResumen:`);
     console.log(`  • 1 admin user (${adminUser.email})`);
     console.log(`  • 3 agent users (agent1@re.cl, agent2@re.cl, agent3@re.cl)`);
-    console.log(`  • 20 published properties (12 featured)`);
+    console.log(`  • 25 published properties (12 featured for sale, 5 for rent)`);
     console.log(`  • 3 slides in Spanish`);
     console.log(`  • ${articles.length} blog articles by category`);
     console.log(`  • ${testimonials.length} testimonies`);

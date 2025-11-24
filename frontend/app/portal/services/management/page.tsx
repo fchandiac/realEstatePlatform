@@ -73,14 +73,7 @@ export default function PropertyManagementServicePage() {
       </div>
 
       {/* CTA final */}
-      <div className="flex justify-center">
-        <a
-          href="/portal/contact"
-          className="bg-primary text-background font-semibold px-8 py-4 rounded-full shadow hover:bg-primary/90 transition-colors text-lg"
-        >
-          Solicitar administración
-        </a>
-      </div>
+    
     </div>
   );
 }
