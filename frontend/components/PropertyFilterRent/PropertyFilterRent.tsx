@@ -8,11 +8,13 @@ import { Button } from '@/components/Button/Button';
 import { FilterRentPropertiesDto } from '@/app/actions/rentProperties';
 
 interface PropertyFilterRentProps {
+  initialFilters?: FilterRentPropertiesDto;
   onFiltersChange?: (filters: FilterRentPropertiesDto) => void;
   className?: string;
 }
 
 export default function PropertyFilterRent({
+  initialFilters,
   onFiltersChange,
   className = ''
 }: PropertyFilterRentProps) {
@@ -20,17 +22,25 @@ export default function PropertyFilterRent({
   const searchParams = useSearchParams();
   const { showAlert } = useAlert();
 
-  // Initialize filters from URL params
-  const [filters, setFilters] = useState<FilterRentPropertiesDto>({
-    filters: {
-      typeProperty: searchParams.get('typeProperty') || '',
-      state: searchParams.get('state') || '',
-      city: searchParams.get('city') || '',
-      currency: searchParams.get('currency') || 'CLP',
-    },
-    sort: searchParams.get('sort') || 'created_desc',
-    page: 1,
-    limit: 9,
+  // Initialize filters from initial props or URL params
+  const [filters, setFilters] = useState<FilterRentPropertiesDto>(() => {
+    // If initialFilters are provided, use them
+    if (initialFilters) {
+      return { ...initialFilters };
+    }
+
+    // Otherwise, initialize from URL params
+    return {
+      filters: {
+        typeProperty: searchParams.get('typeProperty') || '',
+        state: searchParams.get('state') || '',
+        city: searchParams.get('city') || '',
+        currency: searchParams.get('currency') || 'CLP',
+      },
+      sort: searchParams.get('sort') || 'created_desc',
+      page: 1,
+      limit: 9,
+    };
   });
 
   // Update URL when filters change
@@ -124,19 +134,31 @@ export default function PropertyFilterRent({
     { id: 'Terreno', label: 'Terreno' },
   ];
 
-  // Regions options
+  // Regions options - All Chilean regions matching backend enum
   const regions = [
     { id: '', label: 'Todas las regiones' },
-    { id: 'Región Metropolitana', label: 'Región Metropolitana' },
+    { id: 'Arica y Parinacota', label: 'Arica y Parinacota' },
+    { id: 'Tarapacá', label: 'Tarapacá' },
+    { id: 'Antofagasta', label: 'Antofagasta' },
+    { id: 'Atacama', label: 'Atacama' },
+    { id: 'Coquimbo', label: 'Coquimbo' },
     { id: 'Valparaíso', label: 'Valparaíso' },
+    { id: 'Metropolitana de Santiago', label: 'Metropolitana de Santiago' },
+    { id: "O'Higgins", label: "O'Higgins" },
+    { id: 'Maule', label: 'Maule' },
+    { id: 'Ñuble', label: 'Ñuble' },
     { id: 'Biobío', label: 'Biobío' },
-    // Add more regions as needed
+    { id: 'La Araucanía', label: 'La Araucanía' },
+    { id: 'Los Ríos', label: 'Los Ríos' },
+    { id: 'Los Lagos', label: 'Los Lagos' },
+    { id: 'Aysén', label: 'Aysén' },
+    { id: 'Magallanes', label: 'Magallanes' },
   ];
 
   // Communes options (filtered by selected region)
   const getCommunesForRegion = (region: string) => {
     const communesByRegion: Record<string, { id: string; label: string }[]> = {
-      'Región Metropolitana': [
+      'Metropolitana de Santiago': [
         { id: '', label: 'Todas las comunas' },
         { id: 'Santiago', label: 'Santiago' },
         { id: 'Providencia', label: 'Providencia' },

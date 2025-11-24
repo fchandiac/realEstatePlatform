@@ -10,12 +10,7 @@ interface RentPageProps {
 
 async function getRentProperties(searchParams: { [key: string]: string | string[] | undefined }) {
   const filters: FilterRentPropertiesDto = {
-    search: typeof searchParams.search === 'string' ? searchParams.search : undefined,
     filters: {
-      priceMin: typeof searchParams.priceMin === 'string' ? parseInt(searchParams.priceMin) : undefined,
-      priceMax: typeof searchParams.priceMax === 'string' ? parseInt(searchParams.priceMax) : undefined,
-      bedrooms: typeof searchParams.bedrooms === 'string' ? parseInt(searchParams.bedrooms) : undefined,
-      bathrooms: typeof searchParams.bathrooms === 'string' ? parseInt(searchParams.bathrooms) : undefined,
       typeProperty: typeof searchParams.typeProperty === 'string' ? searchParams.typeProperty : undefined,
       state: typeof searchParams.state === 'string' ? searchParams.state : undefined,
       city: typeof searchParams.city === 'string' ? searchParams.city : undefined,
@@ -28,22 +23,25 @@ async function getRentProperties(searchParams: { [key: string]: string | string[
 
   try {
     const result = await getRentPropertiesFiltered(filters);
-    return result;
+    return { filters, propertiesData: result };
   } catch (error) {
     console.error('Error fetching rent properties:', error);
     return {
-      data: [],
-      total: 0,
-      page: 1,
-      limit: 9,
-      totalPages: 0,
+      filters,
+      propertiesData: {
+        data: [],
+        total: 0,
+        page: 1,
+        limit: 9,
+        totalPages: 0,
+      }
     };
   }
 }
 
 export default async function RentPage({ searchParams }: RentPageProps) {
   const params = await searchParams;
-  const propertiesData = await getRentProperties(params);
+  const { filters, propertiesData } = await getRentProperties(params);
 
   return (
     <div className="min-h-screen bg-background">
@@ -61,7 +59,9 @@ export default async function RentPage({ searchParams }: RentPageProps) {
 
         <div className="space-y-6">
           <Suspense fallback={<div className="h-32 bg-muted animate-pulse rounded-lg" />}>
-            <PropertyFilterRent />
+            <PropertyFilterRent
+              initialFilters={filters}
+            />
           </Suspense>
 
           <Suspense fallback={<div className="h-96 bg-muted animate-pulse rounded-lg" />}>
