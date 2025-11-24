@@ -396,7 +396,7 @@ export default function PropertyDetailClient({
 
           {/* Right Column - Contact Form - Sticky */}
           <div className="w-full lg:w-1/4">
-            <div className="rounded-lg p-6 h-fit sticky top-24 mt-2">
+            <div className="rounded-lg p-6 h-fit sticky top-32">
               <h3 className="text-xl font-bold text-foreground text-center mb-4 pb-3 border-b">
                 Contáctanos
               </h3>
