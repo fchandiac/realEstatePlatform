@@ -31,6 +31,7 @@ import {
   UpdateNotificationStatusDto,
   PropertyInterestDto,
 } from './dto/notification.dto';
+import { NotificationType, NotificationSenderType } from '../../entities/notification.entity';
 
 @Controller('notifications')
 @ApiTags('Notifications')
@@ -344,6 +345,83 @@ export class NotificationsController {
       };
     } catch (error) {
       console.error('❌ FULL EMAIL FLOW TEST FAILED:', error);
+      return {
+        success: false,
+        error: error.message,
+        stack: error.stack
+      };
+    }
+  }
+
+  /**
+   * DEBUG: Test simple email sending without notification creation
+   */
+  @Post('test-email-send')
+  @ApiOperation({ summary: 'DEBUG: Test simple email sending' })
+  async testEmailSend(@Body() body: { email: string; name: string }) {
+    try {
+      console.log('🧪 TESTING SIMPLE EMAIL SEND');
+      console.log('Input:', body);
+
+      // Importar MailService directamente
+      const { MailService } = await import('../mail/mail.service');
+      const mailService = (this.notificationsService as any).mailService;
+
+      await mailService.sendInterestConfirmation(
+        body.email,
+        body.name,
+        'Propiedad de Prueba',
+        'Mensaje de prueba'
+      );
+
+      return {
+        success: true,
+        message: `Email sent to ${body.email}`
+      };
+    } catch (error) {
+      console.error('❌ EMAIL SEND TEST FAILED:', error);
+      return {
+        success: false,
+        error: error.message,
+        stack: error.stack
+      };
+    }
+  }
+
+  /**
+   * DEBUG: Test complete flow without auth
+   */
+  @Post('test-complete-flow')
+  // @UseGuards(JwtAuthGuard) // TEMPORALMENTE SIN AUTENTICACIÓN PARA TESTING
+  @ApiOperation({ summary: 'DEBUG: Test complete flow without auth' })
+  async testCompleteFlow(@Body() body: { email: string; name: string; message: string }) {
+    try {
+      console.log('🎯 TESTING COMPLETE FLOW WITHOUT AUTH');
+      console.log('Input:', body);
+
+      // Crear notificación directamente
+      const dto: CreateNotificationDto = {
+        senderType: NotificationSenderType.ANONYMOUS,
+        senderId: undefined,
+        senderName: body.name,
+        isSystem: false,
+        message: `Usuario ${body.name} está interesado en una propiedad`,
+        targetUserIds: ['admin-user-id'], // Usar un ID dummy
+        type: NotificationType.INTEREST,
+        interestedUserEmail: body.email,
+        interestedUserName: body.name,
+        interestedUserMessage: body.message,
+      };
+
+      const notification = await this.notificationsService.create(dto);
+
+      return {
+        success: true,
+        message: 'Complete flow test completed',
+        notificationId: notification.id
+      };
+    } catch (error) {
+      console.error('❌ COMPLETE FLOW TEST FAILED:', error);
       return {
         success: false,
         error: error.message,

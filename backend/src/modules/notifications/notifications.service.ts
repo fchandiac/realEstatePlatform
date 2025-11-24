@@ -92,6 +92,12 @@ export class NotificationsService {
         interestedUserMessage,
       };
 
+      console.log(`📧 DTO being created:`, {
+        interestedUserEmail: dto.interestedUserEmail,
+        interestedUserName: dto.interestedUserName,
+        interestedUserMessage: dto.interestedUserMessage,
+      });
+
       const notification = await this.create(dto);
       notifications.push(notification);
       console.log(`✅ Notification created: ${notification.id}`);
@@ -446,6 +452,12 @@ export class NotificationsService {
     createDto: CreateNotificationDto
   ): Promise<void> {
     console.log(`📧 sendNotificationEmails called for notification: ${notification.id}, type: ${notification.type}`);
+    console.log(`📧 Notification data:`, {
+      interestedUserEmail: notification.interestedUserEmail,
+      interestedUserName: notification.interestedUserName,
+      interestedUserMessage: notification.interestedUserMessage,
+      targetUserIds: notification.targetUserIds,
+    });
 
     // Verificar si este tipo de notificación debe enviar correos
     if (!shouldSendEmail(notification.type)) {
@@ -469,6 +481,12 @@ export class NotificationsService {
       // Enviar correo al usuario interesado si corresponde
       if (mailConfig.sendToInterested && context.interestedUserEmail) {
         console.log(`📤 Sending interest confirmation to: ${context.interestedUserEmail}`);
+        console.log(`📋 Context data:`, {
+          email: context.interestedUserEmail,
+          name: context.interestedUserName,
+          propertyTitle: context.propertyTitle,
+          message: context.message
+        });
         await this.mailService.sendInterestConfirmation(
           context.interestedUserEmail,
           context.interestedUserName || 'Usuario',
@@ -477,7 +495,11 @@ export class NotificationsService {
         );
         console.log(`✅ Interest confirmation sent to: ${context.interestedUserEmail}`);
       } else {
-        console.log(`❌ Not sending to interested user - config: ${mailConfig.sendToInterested}, email: ${context.interestedUserEmail}`);
+        console.log(`❌ Not sending to interested user:`);
+        console.log(`  - sendToInterested: ${mailConfig.sendToInterested}`);
+        console.log(`  - interestedUserEmail: "${context.interestedUserEmail}"`);
+        console.log(`  - email exists: ${!!context.interestedUserEmail}`);
+        console.log(`  - email trimmed: "${context.interestedUserEmail?.trim()}"`);
       }
 
       // Enviar notificaciones a administradores si corresponde
@@ -533,6 +555,7 @@ export class NotificationsService {
 
     } catch (error) {
       console.error(`❌ Error sending emails for notification ${notification.id}:`, error);
+      console.error('Stack trace:', error.stack);
       // No lanzamos el error para no afectar la creación de la notificación
     }
   }

@@ -2,40 +2,57 @@
 
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { createNotification } from './notifications';
+import { env } from '@/lib/env';
 
-export async function notifyPropertyInterest({ propertyId, assignedAgentId, interestedUserId }: {
+export async function notifyPropertyInterest({
+  propertyId,
+  assignedAgentId,
+  name,
+  email,
+  message
+}: {
   propertyId: string;
   assignedAgentId?: string;
   interestedUserId?: string;
+  name: string;
+  email: string;
+  message: string;
 }): Promise<{ success: boolean; error?: string }> {
   try {
-    // Obtener sesión para determinar el usuario interesado
+    // Obtener sesión para el token de autenticación
     const session = await getServerSession(authOptions);
-    const currentUserId = session?.user?.id || interestedUserId;
+    const accessToken = session?.accessToken;
 
-    // Preparar datos para la notificación
-    const notificationData = {
-      senderType: currentUserId ? 'USER' as const : 'ANONYMOUS' as const,
-      senderId: currentUserId,
-      senderName: currentUserId ? 'Usuario interesado' : 'Anónimo', // Podría obtener el nombre real del usuario
-      isSystem: false,
-      message: `Un usuario está interesado en la propiedad ${propertyId}.`,
-      targetUserIds: [] as string[], // Se llenará con admins y agente
-      type: 'INTEREST' as const,
-    };
-
-    // Obtener admins y agente asignado (esto debería hacerse en el backend, pero por simplicidad lo simulamos)
-    // En una implementación real, el backend debería manejar esto
-    const adminIds = ['admin-id-1', 'admin-id-2']; // Esto debería venir del backend
-    notificationData.targetUserIds = [...adminIds];
-    if (assignedAgentId) {
-      notificationData.targetUserIds.push(assignedAgentId);
+    if (!accessToken) {
+      return { success: false, error: 'No autenticado' };
     }
 
-    // Crear la notificación usando el action genérico
-    const result = await createNotification(notificationData);
-    return { success: result.success, error: result.error };
+    // Llamar al endpoint correcto del backend
+    const response = await fetch(`${env.backendApiUrl}/notifications/property-interest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        propertyId,
+        assignedAgentId,
+        interestedUserName: name,
+        interestedUserEmail: email,
+        interestedUserMessage: message,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        success: false,
+        error: errorData.message || `Error ${response.status}: ${response.statusText}`
+      };
+    }
+
+    const result = await response.json();
+    return { success: true };
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
