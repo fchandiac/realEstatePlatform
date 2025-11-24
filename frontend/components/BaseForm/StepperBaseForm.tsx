@@ -354,11 +354,17 @@ const StepperBaseForm: React.FC<StepperBaseFormProps> = ({
 			}
 
 			if (field.type === "location") {
+				const locationProps = commonProps as {
+					initialLat?: number;
+					initialLng?: number;
+				};
+
 				return (
 					<div key={field.name}>
 						<CreateLocationPicker
 							onChange={(coords) => onChange(field.name, coords)}
-							{...commonProps}
+							initialLat={locationProps.initialLat}
+							initialLng={locationProps.initialLng}
 						/>
 					</div>
 				);

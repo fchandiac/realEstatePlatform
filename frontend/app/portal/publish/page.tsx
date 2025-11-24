@@ -336,6 +336,10 @@ export default function PublishPropertyPage() {
       name: 'coordinates',
       label: 'Ubicación en mapa',
       type: 'location',
+      props: {
+        initialLat: -33.45,  // Santiago por defecto
+        initialLng: -70.6667
+      }
     }
   ];
 

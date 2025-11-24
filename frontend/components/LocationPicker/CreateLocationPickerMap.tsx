@@ -119,9 +119,20 @@ export default function CreateLocationPickerMap({
   onFlyEnd,
   flyToDuration
 }: CreateLocationPickerMapProps) {
+  // Validar y sanitizar center para evitar errores de Leaflet
+  const validCenter: [number, number] = React.useMemo(() => {
+    if (Array.isArray(center) && center.length === 2 && 
+        typeof center[0] === 'number' && typeof center[1] === 'number' &&
+        !isNaN(center[0]) && !isNaN(center[1])) {
+      return center;
+    }
+    // Coordenadas por defecto: Santiago, Chile
+    return [-33.45, -70.6667];
+  }, [center]);
+
   return (
     <MapContainer
-      center={center}
+      center={validCenter}
       zoom={15}
       style={{ height: '100%', width: '100%', cursor: 'crosshair' }}
       zoomControl={false}
@@ -129,7 +140,7 @@ export default function CreateLocationPickerMap({
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <ZoomControl position="topleft" />
-      <MapViewSetter center={center} shouldSetView={shouldSetView} />
+      <MapViewSetter center={validCenter} shouldSetView={shouldSetView} />
       <MapFlyToHandler target={flyToTarget} duration={flyToDuration} onFlyEnd={onFlyEnd} />
       <MapDragHandler />
       <MapClickHandler onLocationSelect={onLocationSelect} />
