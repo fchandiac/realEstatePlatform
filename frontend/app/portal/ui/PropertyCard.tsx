@@ -71,6 +71,12 @@ function normalizeMediaUrl(url?: string | null): string | undefined {
 
   // Si ya es absoluta (http:// o https://), devuélvela tal cual
   if (cleaned.startsWith('http://') || cleaned.startsWith('https://')) {
+    // Si apunta a localhost:3000 (frontend), convertirlo a backend
+    if (cleaned.includes('localhost:3000') || cleaned.includes('127.0.0.1:3000')) {
+      const backendUrl = cleaned.replace(/https?:\/\/[^\/]+/, env.backendApiUrl);
+      console.log('🔄 [PropertyCard] Converted localhost URL to backend:', backendUrl);
+      return backendUrl;
+    }
     console.log('✅ [PropertyCard] Already absolute:', cleaned);
     return cleaned;
   }
@@ -296,7 +302,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
           loop
           playsInline
           onError={(e) => {
-            console.error('Error loading video:', mediaSrc.url);
+            console.warn('⚠️ [PropertyCard] Video failed to load, showing fallback:', mediaSrc.url);
             setMediaSrc(undefined);
           }}
         />
@@ -311,7 +317,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
         className="object-cover w-full h-full"
         style={{ aspectRatio: '16/9' }}
         onError={(e) => {
-          console.error('Error loading image:', e.currentTarget.src);
+          console.warn('⚠️ [PropertyCard] Image failed to load, showing fallback:', e.currentTarget.src);
           setMediaSrc(undefined);
         }}
       />
@@ -320,31 +326,12 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
 
   const CardInner = (
     <div
-      className="relative bg-white rounded-lg w-full text-left property-card shadow-lg overflow-hidden group cursor-pointer"
+      className="relative bg-white rounded-lg w-full text-left property-card shadow-lg overflow-hidden cursor-pointer"
       data-test-id="property-card-root"
       onClick={handleClick}
       role="button"
       tabIndex={0}
     >
-      {/* Overlay al hacer hover */}
-      <div
-        className="absolute inset-0 bg-foreground opacity-0 group-hover:opacity-30 transition-opacity duration-200 z-10"
-        style={{ pointerEvents: 'none' }}
-      />
-      {/* Botón centrado sobre el overlay */}
-      <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            window.open(`/portal/properties/property/${property.id}`, '_blank');
-          }}
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 px-6 py-2 text-base font-semibold pointer-events-auto bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-          style={{ transform: 'translateY(-30%)' }}
-        >
-          Ver propiedad
-        </button>
-      </div>
-
       {featured && (
         <div
           className="featured-ribbon"
@@ -376,27 +363,6 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
         >
           {opText}
         </div>
-      )}
-
-      {/* Favorite heart button - only show if cookies accepted */}
-      {cookiesAccepted && (
-        <button
-          onClick={handleToggleFavorite}
-          disabled={isLoadingFav}
-          className="absolute bottom-4 right-4 z-20 transition-all duration-200 hover:scale-110 disabled:opacity-50"
-          title={isFavorited ? 'Remover de favoritos' : 'Agregar a favoritos'}
-        >
-          <span
-            className={`material-symbols-outlined transition-all ${
-              isFavorited
-                ? 'text-accent fill-accent'
-                : 'text-gray-400 hover:text-accent'
-            }`}
-            style={{ fontSize: '28px' }}
-          >
-            {isFavorited ? 'favorite' : 'favorite_border'}
-          </span>
-        </button>
       )}
 
       <div
@@ -473,6 +439,41 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
             {commune && <span className="text-xs text-gray-600 font-medium">{commune}</span>}
           </div>
         </div>
+      </div>
+
+      {/* Row inferior con botón y corazón */}
+      <div className="flex justify-between items-center px-6 py-1 border-t border-gray-100">
+        <Button
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            window.open(`/portal/properties/property/${property.id}`, '_blank');
+          }}
+          className="px-3 py-1 text-xs font-medium"
+          variant="primary"
+        >
+          Ver propiedad
+        </Button>
+
+        {/* Favorite heart button - only show if cookies accepted */}
+        {cookiesAccepted && (
+          <button
+            onClick={handleToggleFavorite}
+            disabled={isLoadingFav}
+            className="transition-all duration-200 hover:scale-110 disabled:opacity-50 p-2"
+            title={isFavorited ? 'Remover de favoritos' : 'Agregar a favoritos'}
+          >
+            <span
+              className={`material-symbols-outlined transition-all ${
+                isFavorited
+                  ? 'text-accent fill-accent'
+                  : 'text-gray-400 hover:text-accent'
+              }`}
+              style={{ fontSize: '24px' }}
+            >
+              {isFavorited ? 'favorite' : 'favorite_border'}
+            </span>
+          </button>
+        )}
       </div>
     </div>
   );
