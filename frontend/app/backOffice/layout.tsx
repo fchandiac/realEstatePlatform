@@ -84,7 +84,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <TopBar
         title={currentTitle}
         menuItems={menuItems}
-        showNotifications={false}
+        showNotifications={true}
         notificationCount={9}
         onNotificationsClick={() => {}}
         showUserButton={true}
