@@ -269,7 +269,7 @@ export default function PropertyDetailClient({
 
         {/* Main Content - Two Column Layout */}
         <div className="flex flex-col lg:flex-row gap-8 mb-8">
-          {/* Left Column - Images and Details */}
+          {/* Left Column - Images, Details and Map */}
           <div className="w-full lg:w-3/4 rounded-lg p-6">
             {/* Gallery Section */}
             <div className="mb-6">
@@ -363,7 +363,7 @@ export default function PropertyDetailClient({
 
             {/* Description */}
             {property.description && (
-              <div className="border-t pt-4">
+              <div className="mb-6 border-t pt-4">
                 <h3 className="text-xl font-semibold text-foreground mb-3">
                   Descripción
                 </h3>
@@ -372,109 +372,114 @@ export default function PropertyDetailClient({
                 </p>
               </div>
             )}
-          </div>
 
-          {/* Right Column - Contact Form */}
-          <div className="w-full lg:w-1/4 rounded-lg p-6 h-fit lg:sticky lg:top-20">
-            <h3 className="text-xl font-bold text-foreground text-center mb-4 pb-3 border-b">
-              Contáctanos
-            </h3>
-
-            {/* Agent Info */}
-            {property.assignedAgent && (
-              <div className="flex flex-col items-center space-y-3 mb-6">
-                <div className="w-24 h-24 rounded-full border-4 border-secondary bg-primary/20 flex items-center justify-center overflow-hidden">
-                  {property.assignedAgent.personalInfo && 'avatarUrl' in property.assignedAgent.personalInfo && property.assignedAgent.personalInfo.avatarUrl ? (
-                    <img
-                      src={normalizeImageUrl((property.assignedAgent.personalInfo as any).avatarUrl)}
-                      alt={agentName}
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  ) : (
-                    <FontAwesome
-                      icon="user"
-                      className="text-primary text-4xl"
-                    />
-                  )}
-                </div>
-                <div className="text-center">
-                  <p className="text-lg font-semibold text-foreground">
-                    {agentName}
-                  </p>
-                </div>
+            {/* Location Map Section - Moved inside left column */}
+            {(property.state || property.city || property.address || (property.latitude && property.longitude)) && (
+              <div className="border-t pt-4">
+                <h3 className="text-xl font-semibold text-foreground mb-3">
+                  Ubicación
+                </h3>
+                {/* Map if coordinates available */}
+                {property.latitude && property.longitude && (
+                  <PropertyMapWrapper
+                    latitude={property.latitude}
+                    longitude={property.longitude}
+                    title={property.title}
+                    address={property.address}
+                    city={property.city}
+                    state={property.state}
+                  />
+                )}
               </div>
             )}
+          </div>
 
-            {/* Contact Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <TextField
-                label="Nombre"
-                type="text"
-                placeholder="Tu Nombre"
-                name="name"
-                value={formData.name}
-                onChange={handleFormChange}
-                disabled={isSubmitting}
-              />
+          {/* Right Column - Contact Form - Sticky */}
+          <div className="w-full lg:w-1/4">
+            <div className="rounded-lg p-6 h-fit sticky top-24">
+              <h3 className="text-xl font-bold text-foreground text-center mb-4 pb-3 border-b">
+                Contáctanos
+              </h3>
 
-              <TextField
-                label="Correo"
-                type="email"
-                placeholder="Tu Correo Electrónico"
-                name="email"
-                value={formData.email}
-                onChange={handleFormChange}
-                disabled={isSubmitting}
-              />
+              {/* Agent Info */}
+              {property.assignedAgent && (
+                <div className="flex flex-col items-center space-y-3 mb-6">
+                  <div className="w-24 h-24 rounded-full border-4 border-secondary bg-primary/20 flex items-center justify-center overflow-hidden">
+                    {property.assignedAgent.personalInfo && 'avatarUrl' in property.assignedAgent.personalInfo && property.assignedAgent.personalInfo.avatarUrl ? (
+                      <img
+                        src={normalizeImageUrl((property.assignedAgent.personalInfo as any).avatarUrl)}
+                        alt={agentName}
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <FontAwesome
+                        icon="user"
+                        className="text-primary text-4xl"
+                      />
+                    )}
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-semibold text-foreground">
+                      {agentName}
+                    </p>
+                  </div>
+                </div>
+              )}
 
-              <TextField
-                label="Mensaje"
-                type="textarea"
-                name="message"
-                placeholder="Escribe tu mensaje..."
-                value={formData.message}
-                onChange={handleFormChange}
-                disabled={isSubmitting}
-                rows={4}
-              />
+              {/* Contact Form */}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <TextField
+                  label="Nombre"
+                  type="text"
+                  placeholder="Tu Nombre"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleFormChange}
+                  disabled={isSubmitting}
+                />
 
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full justify-center"
-              >
-                {isSubmitting ? (
-                  <>
-                    <CircularProgress size={20} />
-                    <span className="ml-2">Enviando...</span>
-                  </>
-                ) : (
-                  'Estoy interesado'
-                )}
-              </Button>
-            </form>
+                <TextField
+                  label="Correo"
+                  type="email"
+                  placeholder="Tu Correo Electrónico"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleFormChange}
+                  disabled={isSubmitting}
+                />
 
-            {/* WhatsApp Button */}
-            {/* WhatsApp Button eliminado por requerimiento */}
+                <TextField
+                  label="Mensaje"
+                  type="textarea"
+                  name="message"
+                  placeholder="Escribe tu mensaje..."
+                  value={formData.message}
+                  onChange={handleFormChange}
+                  disabled={isSubmitting}
+                  rows={4}
+                />
+
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full justify-center"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <CircularProgress size={20} />
+                      <span className="ml-2">Enviando...</span>
+                    </>
+                  ) : (
+                    'Estoy interesado'
+                  )}
+                </Button>
+              </form>
+
+              {/* WhatsApp Button */}
+              {/* WhatsApp Button eliminado por requerimiento */}
+            </div>
           </div>
         </div>
-
-        {/* Location Map Section */}
-        {(property.state || property.city || property.address || (property.latitude && property.longitude)) && (
-          <div className="w-full rounded-lg p-6">
-            {/* Map if coordinates available */}
-            {property.latitude && property.longitude && (
-              <PropertyMapWrapper
-                latitude={property.latitude}
-                longitude={property.longitude}
-                title={property.title}
-                address={property.address}
-                city={property.city}
-                state={property.state}
-              />
-            )}
-          </div>
-        )}
       </div>
     </main>
   );
