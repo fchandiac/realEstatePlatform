@@ -277,7 +277,7 @@ export default function PropertyFilterRent({
       ],
     };
 
-    return communesByRegion[region] || [{ id: '', label: 'Selecciona una región primero' }];
+    return communesByRegion[region] || [{ id: '', label: region ? 'Comunas no disponibles para esta región' : 'Selecciona una región primero' }];
   };
 
   // Sort options
@@ -317,9 +317,21 @@ export default function PropertyFilterRent({
           placeholder="Región"
           value={filters.filters?.state || ''}
           onChange={(value) => {
-            handleFilterChange('state', value);
-            // Clear commune when region changes
-            handleFilterChange('city', '');
+            // Update both state and clear city in a single state update
+            const newFilters = { ...filters };
+            if (!newFilters.filters) {
+              newFilters.filters = {};
+            }
+            newFilters.filters.state = value === null ? undefined : String(value);
+            newFilters.filters.city = ''; // Clear commune when region changes
+            newFilters.page = 1;
+
+            setFilters(newFilters);
+            updateURL(newFilters);
+
+            if (onFiltersChange) {
+              onFiltersChange(newFilters);
+            }
           }}
           options={regions}
         />
