@@ -68,6 +68,23 @@ export class NotificationsController {
     }
 
     /**
+     * Notifica interés en propiedad desde portal público (sin autenticación)
+     */
+    @Post('public/property-interest')
+    @ApiOperation({ summary: 'Enviar notificación de interés en propiedad desde portal público' })
+    @ApiBody({ type: PropertyInterestDto })
+    async notifyPublicPropertyInterest(@Body() body: PropertyInterestDto) {
+      return this.notificationsService.notifyInterestOnProperty(
+        body.propertyId,
+        body.assignedAgentId,
+        body.interestedUserId,
+        body.interestedUserName,
+        body.interestedUserEmail,
+        body.interestedUserMessage
+      );
+    }
+
+    /**
      * Notifica interés en propiedad a administradores y agente asignado
      * Puede ser llamado por usuario autenticado o anónimo
      */
