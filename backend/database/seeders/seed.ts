@@ -11,6 +11,7 @@ import { Article, ArticleCategory } from '../../src/entities/article.entity';
 import { Testimonial } from '../../src/entities/testimonial.entity';
 import { Identity } from '../../src/entities/identity.entity';
 import { AboutUs } from '../../src/entities/about-us.entity';
+import { TeamMember } from '../../src/entities/team-member.entity';
 import { RegionEnum } from '../../src/common/regions/regions.enum';
 import { ComunaEnum } from '../../src/common/regions/comunas.enum';
 
@@ -102,6 +103,73 @@ async function seedDatabase() {
       }),
     ]);
     console.log(`✓ Created ${agents.length} agent users`);
+    
+    // ===== STEP 1B: CREATE TEAM MEMBERS =====
+    console.log('Creating team members...');
+    const teamMemberRepository = AppDataSource.getRepository(TeamMember);
+    const teamMembers = await teamMemberRepository.save([
+      teamMemberRepository.create({
+        name: 'Ana López',
+        position: 'Directora de Ventas',
+        bio: 'Especialista en ventas inmobiliarias con más de 10 años de experiencia en el mercado chileno.',
+        phone: '+56 9 1111 2222',
+        mail: 'ana.lopez@realestate.cl',
+        multimediaUrl: undefined,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }),
+      teamMemberRepository.create({
+        name: 'Carlos Martínez',
+        position: 'Agente Inmobiliario Senior',
+        bio: 'Experto en propiedades comerciales y residenciales en Santiago.',
+        phone: '+56 9 3333 4444',
+        mail: 'carlos.martinez@realestate.cl',
+        multimediaUrl: undefined,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }),
+      teamMemberRepository.create({
+        name: 'María González',
+        position: 'Especialista en Arriendos',
+        bio: 'Dedicada a facilitar arriendos seguros y rentables para propietarios e inquilinos.',
+        phone: '+56 9 5555 6666',
+        mail: 'maria.gonzalez@realestate.cl',
+        multimediaUrl: undefined,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }),
+      teamMemberRepository.create({
+        name: 'Pedro Ramírez',
+        position: 'Analista de Mercado',
+        bio: 'Analiza tendencias del mercado inmobiliario para optimizar inversiones.',
+        phone: '+56 9 7777 8888',
+        mail: 'pedro.ramirez@realestate.cl',
+        multimediaUrl: undefined,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }),
+      teamMemberRepository.create({
+        name: 'Sofia Herrera',
+        position: 'Coordinadora de Marketing',
+        bio: 'Encargada de promocionar propiedades y gestionar la presencia digital.',
+        phone: '+56 9 9999 0000',
+        mail: 'sofia.herrera@realestate.cl',
+        multimediaUrl: undefined,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }),
+      teamMemberRepository.create({
+        name: 'Diego Silva',
+        position: 'Asesor Legal',
+        bio: 'Proporciona asesoría legal en transacciones inmobiliarias.',
+        phone: '+56 9 2222 3333',
+        mail: 'diego.silva@realestate.cl',
+        multimediaUrl: undefined,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
+    ]);
+    console.log(`✓ Created ${teamMembers.length} team members`);
     
     // ===== STEP 2: CREATE SAMPLE NOTIFICATIONS =====
     console.log('Creating sample notifications...');
@@ -217,12 +285,12 @@ async function seedDatabase() {
     ]);
     console.log(`✓ Created ${propertyTypes.length} property types`);
     
-    // ===== STEP 3: SEED 20 PUBLISHED PROPERTIES (12 FEATURED) =====
-    console.log('Seeding 20 published properties...');
+    // ===== STEP 3: SEED 12 PUBLISHED PROPERTIES (6 SALE + 6 RENT) =====
+    console.log('Seeding 12 published properties...');
     const propertyRepository = AppDataSource.getRepository(Property);
     
     const propertiesData = [
-      // 12 FEATURED properties (SALE)
+      // 6 SALE properties (mix of featured and non-featured)
       {
         title: 'Casa moderna con piscina y jardín',
         description: 'Hermosa casa moderna con piscina y jardín, ubicada en la exclusiva comuna de Las Condes.',
@@ -272,70 +340,6 @@ async function seedDatabase() {
         operationType: PropertyOperationType.SALE
       },
       {
-        title: 'Departamento céntrico',
-        description: 'Apartamento en pleno centro de Santiago, ideal para inversión o uso propio.',
-        bedrooms: 2,
-        bathrooms: 1,
-        builtSquareMeters: 85,
-        landSquareMeters: 0,
-        parkingSpaces: 1,
-        price: 450000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.RENCA,
-        latitude: -33.4372,
-        longitude: -70.6689,
-        isFeatured: true,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Casa con vista a la cordillera',
-        description: 'Casa amplia con vistas panorámicas a la cordillera, sector premium de San Isidro.',
-        bedrooms: 4,
-        bathrooms: 3,
-        builtSquareMeters: 250,
-        landSquareMeters: 400,
-        parkingSpaces: 2,
-        price: 1050000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.VITACURA,
-        latitude: -33.3943,
-        longitude: -70.5348,
-        isFeatured: true,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Oficina moderna en zona de negocios',
-        description: 'Oficina con acabados modernos, ubicada en zona de negocios, excelente para empresas.',
-        bedrooms: 0,
-        bathrooms: 2,
-        builtSquareMeters: 120,
-        landSquareMeters: 0,
-        parkingSpaces: 2,
-        price: 750000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.MACUL,
-        latitude: -33.3944,
-        longitude: -70.5340,
-        isFeatured: true,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Terreno para proyectos inmobiliarios',
-        description: 'Gran terreno con potencial de desarrollo inmobiliario, ubicado en Peñalolén.',
-        bedrooms: 0,
-        bathrooms: 0,
-        builtSquareMeters: 0,
-        landSquareMeters: 1000,
-        parkingSpaces: 0,
-        price: 350000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.PENALOLEN,
-        latitude: -33.4896,
-        longitude: -70.4968,
-        isFeatured: true,
-        operationType: PropertyOperationType.SALE
-      },
-      {
         title: 'Casa en barrio pintoresco',
         description: 'Hermosa casa en el pintoresco barrio Bellavista, cercana a gastronomía y cultura.',
         bedrooms: 3,
@@ -348,23 +352,7 @@ async function seedDatabase() {
         city: ComunaEnum.RECOLETA,
         latitude: -33.4291,
         longitude: -70.6636,
-        isFeatured: true,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Departamento cómodo cerca de servicios',
-        description: 'Cómodo departamento en San Bernardo, cerca de servicios y transporte.',
-        bedrooms: 2,
-        bathrooms: 1,
-        builtSquareMeters: 95,
-        landSquareMeters: 0,
-        parkingSpaces: 1,
-        price: 280000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.SAN_BERNARDO,
-        latitude: -33.6063,
-        longitude: -70.7120,
-        isFeatured: true,
+        isFeatured: false,
         operationType: PropertyOperationType.SALE
       },
       {
@@ -380,72 +368,6 @@ async function seedDatabase() {
         city: ComunaEnum.MAIPU,
         latitude: -33.5261,
         longitude: -70.7620,
-        isFeatured: true,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Local comercial en importante avenida',
-        description: 'Local comercial en importante avenida, perfecto para retail o servicios.',
-        bedrooms: 0,
-        bathrooms: 1,
-        builtSquareMeters: 200,
-        landSquareMeters: 0,
-        parkingSpaces: 4,
-        price: 600000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.LAS_CONDES,
-        latitude: -33.3890,
-        longitude: -70.5700,
-        isFeatured: true,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Apartamento de lujo frente al río',
-        description: 'Lujo y confort en Vitacura, con vistas privilegiadas al río Mapocho.',
-        bedrooms: 3,
-        bathrooms: 2,
-        builtSquareMeters: 140,
-        landSquareMeters: 0,
-        parkingSpaces: 2,
-        price: 950000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.VITACURA,
-        latitude: -33.3807,
-        longitude: -70.6044,
-        isFeatured: true,
-        operationType: PropertyOperationType.SALE
-      },
-      
-      // 8 NON-FEATURED properties (SALE)
-      {
-        title: 'Casa en zona consolidada',
-        description: 'Propiedad lista para vivir en zona consolidada.',
-        bedrooms: 2,
-        bathrooms: 1,
-        builtSquareMeters: 120,
-        landSquareMeters: 250,
-        parkingSpaces: 1,
-        price: 350000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.QUINTA_NORMAL,
-        latitude: -33.4514,
-        longitude: -70.6910,
-        isFeatured: false,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Departamento accesible con buen transporte',
-        description: 'Vivienda accesible con buen transporte público.',
-        bedrooms: 2,
-        bathrooms: 1,
-        builtSquareMeters: 80,
-        landSquareMeters: 0,
-        parkingSpaces: 0,
-        price: 220000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.ESTACION_CENTRAL,
-        latitude: -33.4442,
-        longitude: -70.6848,
         isFeatured: false,
         operationType: PropertyOperationType.SALE
       },
@@ -465,89 +387,8 @@ async function seedDatabase() {
         isFeatured: false,
         operationType: PropertyOperationType.SALE
       },
-      {
-        title: 'Oficina pequeña para negocios',
-        description: 'Espacio para pequeños negocios, sector accesible.',
-        bedrooms: 0,
-        bathrooms: 1,
-        builtSquareMeters: 60,
-        landSquareMeters: 0,
-        parkingSpaces: 1,
-        price: 180000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.INDEPENDENCIA,
-        latitude: -33.4130,
-        longitude: -70.6661,
-        isFeatured: false,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Departamento en nuevo proyecto residencial',
-        description: 'Nuevo proyecto residencial en zona norte metropolitana.',
-        bedrooms: 2,
-        bathrooms: 2,
-        builtSquareMeters: 110,
-        landSquareMeters: 0,
-        parkingSpaces: 1,
-        price: 380000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.COLINA,
-        latitude: -33.2161,
-        longitude: -70.7298,
-        isFeatured: false,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Casa con espacio verde',
-        description: 'Propiedad con espacio verde, zona segura y familiar.',
-        bedrooms: 4,
-        bathrooms: 2,
-        builtSquareMeters: 200,
-        landSquareMeters: 450,
-        parkingSpaces: 2,
-        price: 520000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.LAMPA,
-        latitude: -33.3288,
-        longitude: -70.8676,
-        isFeatured: false,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Terreno rural para agronegocios',
-        description: 'Terreno rural con potencial para agronegocios.',
-        bedrooms: 0,
-        bathrooms: 0,
-        builtSquareMeters: 0,
-        landSquareMeters: 5000,
-        parkingSpaces: 0,
-        price: 150000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.PAINE,
-        latitude: -33.8097,
-        longitude: -70.6361,
-        isFeatured: false,
-        operationType: PropertyOperationType.SALE
-      },
-      {
-        title: 'Casa tranquila en zona rural',
-        description: 'Vivienda tranquila en zona rural periurbana.',
-        bedrooms: 3,
-        bathrooms: 2,
-        builtSquareMeters: 130,
-        landSquareMeters: 600,
-        parkingSpaces: 1,
-        price: 290000000,
-        state: RegionEnum.METROPOLITANA,
-        city: ComunaEnum.BUIN,
-        latitude: -33.7305,
-        longitude: -70.7546,
-        isFeatured: false,
-        operationType: PropertyOperationType.SALE
-      },
 
-      // ===== RENT PROPERTIES =====
-      // 5 RENT properties to test filtering
+      // 6 RENT properties
       {
         title: 'Oficina moderna en Providencia',
         description: 'Oficina completamente equipada en el corazón de Providencia, perfecta para empresas.',
@@ -627,6 +468,22 @@ async function seedDatabase() {
         longitude: -70.5714,
         isFeatured: true,
         operationType: PropertyOperationType.RENT
+      },
+      {
+        title: 'Apartamento moderno en Recoleta',
+        description: 'Apartamento moderno y cómodo en Recoleta, cerca de transporte público.',
+        bedrooms: 2,
+        bathrooms: 1,
+        builtSquareMeters: 90,
+        landSquareMeters: 0,
+        parkingSpaces: 1,
+        price: 550000,
+        state: RegionEnum.METROPOLITANA,
+        city: ComunaEnum.RECOLETA,
+        latitude: -33.4250,
+        longitude: -70.6500,
+        isFeatured: false,
+        operationType: PropertyOperationType.RENT
       }
     ];
 
@@ -637,7 +494,7 @@ async function seedDatabase() {
           title: data.title,
           description: data.description,
           status: PropertyStatus.PUBLISHED,
-          operationType: PropertyOperationType.SALE,
+          operationType: data.operationType,
           price: data.price,
           currencyPrice: CurrencyPriceEnum.CLP,
           bathrooms: data.bathrooms,
@@ -950,7 +807,8 @@ async function seedDatabase() {
     console.log(`\nResumen:`);
     console.log(`  • 1 admin user (${adminUser.email})`);
     console.log(`  • 3 agent users (agent1@re.cl, agent2@re.cl, agent3@re.cl)`);
-    console.log(`  • 25 published properties (12 featured for sale, 5 for rent)`);
+    console.log(`  • 6 team members`);
+    console.log(`  • 12 published properties (6 sale, 6 rent)`);
     console.log(`  • 3 slides in Spanish`);
     console.log(`  • ${articles.length} blog articles by category`);
     console.log(`  • ${testimonials.length} testimonies`);
