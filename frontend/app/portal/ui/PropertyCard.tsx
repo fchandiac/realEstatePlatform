@@ -301,9 +301,13 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
           muted
           loop
           playsInline
+          preload="metadata"
           onError={(e) => {
             console.warn('⚠️ [PropertyCard] Video failed to load, showing fallback:', mediaSrc.url);
             setMediaSrc(undefined);
+          }}
+          onLoadedData={() => {
+            console.log('✅ [PropertyCard] Video loaded successfully');
           }}
         />
       );
