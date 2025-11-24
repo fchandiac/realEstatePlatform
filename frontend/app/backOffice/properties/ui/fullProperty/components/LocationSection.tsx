@@ -272,8 +272,8 @@ const LocationSection: React.FC<LocationSectionProps> = ({
           <p className="text-sm font-semibold text-foreground mb-2">Ubicar en mapa</p>
           <LocationPicker
             onChange={handleLocationChange}
-            initialLat={formData.latitude}
-            initialLng={formData.longitude}
+            initialLat={formData.latitude || -33.45}  // Santiago por defecto si no hay coordenadas
+            initialLng={formData.longitude || -70.6667} // Santiago por defecto si no hay coordenadas
           />
         </div>
       </div>
