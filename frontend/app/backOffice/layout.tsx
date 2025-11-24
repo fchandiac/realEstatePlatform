@@ -85,7 +85,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         title={currentTitle}
         menuItems={menuItems}
         showNotifications={true}
-        notificationCount={9}
         onNotificationsClick={() => {}}
         showUserButton={true}
         onUserClick={() => setShowMyAccountDialog(true)}

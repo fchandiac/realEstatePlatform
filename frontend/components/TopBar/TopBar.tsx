@@ -15,7 +15,6 @@ interface TopBarProps {
   onUserClick?: () => void;
   userName?: string;
   showNotifications?: boolean;
-  notificationCount?: number;
   onNotificationsClick?: () => void;
 }
 
@@ -45,7 +44,6 @@ const TopBar: React.FC<TopBarProps> = ({
   onUserClick,
   userName,
   showNotifications = false,
-  notificationCount = 0,
   onNotificationsClick
 }) => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -104,7 +102,6 @@ const TopBar: React.FC<TopBarProps> = ({
             {/* Notification button */}
             {showNotifications && (
               <NotificationButton
-                count={notificationCount}
                 onClick={onNotificationsClick}
                 data-test-id="top-bar-notifications"
               />

@@ -27,7 +27,6 @@ function MyPage() {
 
       // Notificaciones (opcional)
       showNotifications={true}
-      notificationCount={5} // Muestra badge con "5"
       onNotificationsClick={handleNotificationsClick}
 
       // Menú lateral (existente)
@@ -43,7 +42,6 @@ function MyPage() {
 function StandaloneNotification() {
   return (
     <NotificationButton
-      count={10}
       onClick={() => console.log('Notifications clicked')}
       className="custom-class"
       data-test-id="my-notifications"

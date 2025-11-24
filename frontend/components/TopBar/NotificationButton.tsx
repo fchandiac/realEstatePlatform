@@ -1,18 +1,21 @@
 import React from 'react';
+import { useNotification } from '@/app/contexts/NotificationContext';
 
 interface NotificationButtonProps {
-  count?: number;
   onClick?: () => void;
   className?: string;
   'data-test-id'?: string;
 }
 
 const NotificationButton: React.FC<NotificationButtonProps> = ({
-  count = 0,
   onClick,
   className = '',
   'data-test-id': dataTestId
 }) => {
+  const { unreadCount, loading } = useNotification();
+  
+  // Usar el conteo real del contexto, 0 mientras carga
+  const displayCount = loading.count ? 0 : unreadCount;
   return (
     <button
       type="button"
@@ -26,11 +29,11 @@ const NotificationButton: React.FC<NotificationButtonProps> = ({
         style={{ fontSize: 32, width: 32, height: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
         aria-hidden
       >
-        notifications
+        {loading.count ? 'hourglass_empty' : 'notifications'}
       </span>
-      {count > 0 && (
+      {displayCount > 0 && (
         <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center min-w-[18px]">
-          {count > 99 ? '99+' : count}
+          {displayCount > 99 ? '99+' : displayCount}
         </span>
       )}
     </button>
