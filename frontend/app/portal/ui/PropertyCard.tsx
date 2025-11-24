@@ -102,7 +102,10 @@ function isVideoFile(url: string): boolean {
 function getOrderedImages(property: PortalProperty): string[] {
   const images: string[] = [];
 
-  console.log('🔍 [getOrderedImages] Property multimedia details:', {
+  const isDebugProperty = property.id === '047c17f4-a582-4509-ac61-8177b12750ee';
+  const logPrefix = isDebugProperty ? '🔍🔍 [DEBUG PROPERTY]' : '🔍 [getOrderedImages]';
+
+  console.log(`${logPrefix} Property multimedia details:`, {
     propertyId: property.id,
     mainImageUrl: property.mainImageUrl,
     multimedia: property.multimedia?.map(m => ({
@@ -118,35 +121,47 @@ function getOrderedImages(property: PortalProperty): string[] {
     const mainUrl = normalizeMediaUrl(property.mainImageUrl);
     if (mainUrl && !isVideoFile(mainUrl)) {
       images.push(mainUrl);
-      console.log('✅ [getOrderedImages] Added mainImageUrl:', mainUrl);
+      console.log(`${logPrefix} Added mainImageUrl:`, mainUrl);
     } else {
-      console.log('❌ [getOrderedImages] Skipped mainImageUrl:', { mainUrl, isVideo: isVideoFile(mainUrl || '') });
+      console.log(`${logPrefix} Skipped mainImageUrl:`, { mainUrl, isVideo: isVideoFile(mainUrl || '') });
     }
   }
 
   // Agregar todas las imágenes del array multimedia (excluyendo videos)
   if (property.multimedia && property.multimedia.length > 0) {
+    console.log(`${logPrefix} Processing ${property.multimedia.length} multimedia items`);
+
     property.multimedia.forEach((media, index) => {
-      console.log(`🔍 [getOrderedImages] Processing media ${index}:`, {
+      console.log(`${logPrefix} Processing media ${index + 1}/${property.multimedia!.length}:`, {
+        id: media.id,
         url: media.url,
         type: media.type,
         format: media.format,
-        isVideo: isVideoFile(media.url)
+        isVideo: isVideoFile(media.url),
+        urlLength: media.url?.length || 0
       });
 
       const url = normalizeMediaUrl(media.url);
       const isValidImage = url && !isVideoFile(url);
 
+      console.log(`${logPrefix} Media ${index + 1} validation:`, {
+        originalUrl: media.url,
+        normalizedUrl: url,
+        isValidImage,
+        isVideo: isVideoFile(url || ''),
+        hasUrl: !!url
+      });
+
       if (isValidImage) {
         // Evitar duplicados con mainImageUrl
         if (!images.includes(url)) {
           images.push(url);
-          console.log('✅ [getOrderedImages] Added multimedia image:', url);
+          console.log(`${logPrefix} ✅ Added multimedia image ${index + 1}:`, url);
         } else {
-          console.log('⚠️ [getOrderedImages] Skipped duplicate:', url);
+          console.log(`${logPrefix} ⚠️ Skipped duplicate ${index + 1}:`, url);
         }
       } else {
-        console.log('❌ [getOrderedImages] Skipped invalid media:', {
+        console.log(`${logPrefix} ❌ Skipped invalid media ${index + 1}:`, {
           url,
           type: media.type,
           format: media.format,
@@ -155,9 +170,16 @@ function getOrderedImages(property: PortalProperty): string[] {
         });
       }
     });
+  } else {
+    console.log(`${logPrefix} No multimedia array found`);
   }
 
-  console.log('🖼️ [getOrderedImages] Final ordered images:', images);
+  console.log(`${logPrefix} Final result:`, {
+    totalMultimedia: property.multimedia?.length || 0,
+    imagesFound: images.length,
+    images: images
+  });
+
   return images;
 }
 
@@ -213,21 +235,25 @@ function operationLabel(op: OperationType): string {
 
 export default function PropertyCard({ property, href, onClick }: PropertyCardProps) {
   const primaryMedia = getPrimaryMedia(property);
-  console.log('🎯 [PropertyCard] Property ID:', property.id);
-  console.log('🎯 [PropertyCard] mainImageUrl:', property.mainImageUrl);
-  console.log('🎯 [PropertyCard] primaryMedia (after getPrimaryMedia):', primaryMedia);
+  const isDebugProperty = property.id === '047c17f4-a582-4509-ac61-8177b12750ee';
+  const logPrefix = isDebugProperty ? '🎯🎯 [DEBUG PROPERTY]' : '🎯 [PropertyCard]';
+
+  console.log(`${logPrefix} Property ID:`, property.id);
+  console.log(`${logPrefix} mainImageUrl:`, property.mainImageUrl);
+  console.log(`${logPrefix} primaryMedia (after getPrimaryMedia):`, primaryMedia);
   
   // Get ordered images for navigation
   const images = getOrderedImages(property);
   const hasImages = images.length > 0;
   
-  console.log('🔍 [PropertyCard] Debug info:', {
+  console.log(`${logPrefix} Debug info:`, {
     propertyId: property.id,
     mainImageUrl: property.mainImageUrl,
     multimediaCount: property.multimedia?.length || 0,
     imagesFound: images.length,
     hasImages,
-    currentImageIndex: hasImages ? 0 : -1
+    currentImageIndex: hasImages ? 0 : -1,
+    allImages: images
   });
   
   const [mediaSrc, setMediaSrc] = useState<{ type: 'image' | 'video'; url: string } | undefined>(() => {
