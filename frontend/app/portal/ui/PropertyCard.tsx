@@ -514,11 +514,6 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
                 chevron_right
               </span>
             </button>
-
-            {/* Image counter */}
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/80 text-white text-sm px-3 py-1 rounded-full font-medium shadow-lg">
-              {currentImageIndex + 1} / {images.length}
-            </div>
           </>
         )}
       </div>
