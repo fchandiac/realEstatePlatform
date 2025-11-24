@@ -99,6 +99,34 @@ function isVideoFile(url: string): boolean {
   return videoExtensions.some(ext => lowerUrl.includes(ext));
 }
 
+function getOrderedImages(property: PortalProperty): string[] {
+  const images: string[] = [];
+
+  // Si hay mainImageUrl y es una imagen (no video), agregarla primero
+  if (property.mainImageUrl) {
+    const mainUrl = normalizeMediaUrl(property.mainImageUrl);
+    if (mainUrl && !isVideoFile(mainUrl)) {
+      images.push(mainUrl);
+    }
+  }
+
+  // Agregar todas las imágenes del array multimedia (excluyendo videos)
+  if (property.multimedia && property.multimedia.length > 0) {
+    property.multimedia.forEach(media => {
+      const url = normalizeMediaUrl(media.url);
+      if (url && !isVideoFile(url) && (media.type === 'PROPERTY_IMG' || media.format === 'IMG')) {
+        // Evitar duplicados con mainImageUrl
+        if (!images.includes(url)) {
+          images.push(url);
+        }
+      }
+    });
+  }
+
+  console.log('🖼️ [PropertyCard] Ordered images:', images);
+  return images;
+}
+
 function getPrimaryMedia(property: PortalProperty): { type: 'image' | 'video'; url: string } | undefined {
   // Primero, intentar obtener la primera imagen de multimedia (más confiable)
   if (property.multimedia && property.multimedia.length > 0) {
@@ -155,10 +183,15 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
   console.log('🎯 [PropertyCard] mainImageUrl:', property.mainImageUrl);
   console.log('🎯 [PropertyCard] primaryMedia (after getPrimaryMedia):', primaryMedia);
   
+  // Get ordered images for navigation
+  const images = getOrderedImages(property);
+  const hasImages = images.length > 0;
+  
   const [mediaSrc, setMediaSrc] = useState<{ type: 'image' | 'video'; url: string } | undefined>(() => {
     console.log('🎯 [PropertyCard] Initial mediaSrc state:', primaryMedia);
     return primaryMedia;
   });
+  const [currentImageIndex, setCurrentImageIndex] = useState(hasImages ? 0 : -1);
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoadingFav, setIsLoadingFav] = useState(false);
   const [cookiesAccepted, setCookiesAccepted] = useState(false);
@@ -279,8 +312,44 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
     if (onClick) onClick(property.id);
   };
 
+  const handlePrevImage = () => {
+    setCurrentImageIndex(prev => {
+      const newIndex = prev <= 0 ? images.length - 1 : prev - 1;
+      console.log('⬅️ [PropertyCard] Previous image:', newIndex);
+      return newIndex;
+    });
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex(prev => {
+      const newIndex = prev >= images.length - 1 ? 0 : prev + 1;
+      console.log('➡️ [PropertyCard] Next image:', newIndex);
+      return newIndex;
+    });
+  };
+
   // Media container (img or video or fallback)
   const mediaEl = useMemo(() => {
+    // If we have images, show the current image from the array
+    if (hasImages && currentImageIndex >= 0 && currentImageIndex < images.length) {
+      const currentImageUrl = images[currentImageIndex];
+      return (
+        <img
+          src={currentImageUrl}
+          alt={`${propertyTypeName || property.title} - Imagen ${currentImageIndex + 1} de ${images.length}`}
+          className="object-cover w-full h-full"
+          style={{ aspectRatio: '16/9' }}
+          loading="lazy"
+          onError={(e) => {
+            console.warn('⚠️ [PropertyCard] Image failed to load, trying next:', e.currentTarget.src);
+            // Try next image automatically
+            handleNextImage();
+          }}
+        />
+      );
+    }
+
+    // Fallback to original logic if no images available
     if (!mediaSrc) {
       return (
         <div className="flex items-center justify-center w-full h-full bg-gray-200">
@@ -313,7 +382,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
       );
     }
 
-    // Image
+    // Fallback image (shouldn't reach here with new logic, but kept for safety)
     return (
       <img
         src={mediaSrc.url}
@@ -326,7 +395,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
         }}
       />
     );
-  }, [mediaSrc, propertyTypeName, property.title]);
+  }, [mediaSrc, hasImages, currentImageIndex, images, propertyTypeName, property.title]);
 
   const CardInner = (
     <div
@@ -370,10 +439,48 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
       )}
 
       <div
-        className="flex items-center justify-center w-full aspect-[16/9] bg-gray-200 text-gray-400 overflow-hidden"
+        className="flex items-center justify-center w-full aspect-[16/9] bg-gray-200 text-gray-400 overflow-hidden relative"
         data-test-id="property-card-media"
       >
         {mediaEl}
+
+        {/* Navigation chevrons - only show if multiple images */}
+        {hasImages && images.length > 1 && (
+          <>
+            {/* Previous button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrevImage();
+              }}
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-all duration-200 opacity-50 hover:opacity-100"
+              aria-label="Imagen anterior"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+                chevron_left
+              </span>
+            </button>
+
+            {/* Next button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNextImage();
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-all duration-200 opacity-50 hover:opacity-100"
+              aria-label="Imagen siguiente"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+                chevron_right
+              </span>
+            </button>
+
+            {/* Image counter */}
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+              {currentImageIndex + 1} / {images.length}
+            </div>
+          </>
+        )}
       </div>
 
       <div
