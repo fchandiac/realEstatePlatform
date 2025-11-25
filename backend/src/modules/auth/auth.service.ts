@@ -85,7 +85,7 @@ export class AuthService {
 
       // Build verification link
       const frontendUrl =
-        this.configService.get<string>('FRONTEND_URL') ||
+        this.configService.get<string>('FRONTEND_PUBLIC_URL') ||
         'http://localhost:3001';
       const verificationLink = `${frontendUrl}/portal/verify-email?token=${user.emailVerificationToken}`;
 
