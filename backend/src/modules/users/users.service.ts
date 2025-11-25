@@ -25,6 +25,7 @@ import {
 } from './dto/user.dto';
 import { UpdateAvatarDto } from './dto/update-avatar.dto';
 import { UserProfileResponseDto } from './dto/user-profile-response.dto';
+import { GridCommunityUsersQueryDto } from './dto/grid-community-users.dto';
 import { AuditService } from '../../audit/audit.service';
 import { AuditAction, AuditEntityType } from '../../common/enums/audit.enums';
 import { UserFavoriteData } from '../../common/interfaces/user-favorites.interface';
@@ -724,5 +725,180 @@ export class UsersService {
       token: emailVerificationToken,
       expiresAt: emailVerificationExpires,
     };
+  }
+
+  /**
+   * Get paginated grid of community users with search, filtering, and sorting
+   * Follows the same pattern as propertyService.gridSaleProperties
+   */
+  async gridCommunityUsers(query: any) {
+    // Allowed fields and mappings
+    const availableFields = [
+      'id',
+      'username',
+      'email',
+      'firstName',
+      'lastName',
+      'status',
+      'createdAt',
+      'updatedAt',
+    ];
+
+    const fieldMappings: Record<string, string> = {
+      id: 'u.id',
+      username: 'u.username',
+      email: 'u.email',
+      firstName: 'u.personalInfo',
+      lastName: 'u.personalInfo',
+      status: 'u.status',
+      createdAt: 'u.createdAt',
+      updatedAt: 'u.updatedAt',
+    };
+
+    const textSearchFields = [
+      'LOWER(u.username)',
+      'LOWER(u.email)',
+      'LOWER(JSON_UNQUOTE(JSON_EXTRACT(u.personalInfo, "$.firstName")))',
+      'LOWER(JSON_UNQUOTE(JSON_EXTRACT(u.personalInfo, "$.lastName")))',
+    ];
+
+    // Parse fields
+    const requested = (query.fields || '')
+      .split(',')
+      .map((f: string) => f.trim())
+      .filter((f: string) => f);
+    const fields = requested.length
+      ? requested.filter((f: string) => availableFields.includes(f))
+      : availableFields;
+
+    if (fields.length === 0) {
+      if (query.pagination === 'true') {
+        return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 };
+      }
+      return [];
+    }
+
+    // Build select (raw) for non-derived fields
+    const rawSelects = fields
+      .filter((f: string) => !['firstName', 'lastName'].includes(f))
+      .map((f: string) => {
+        if (fieldMappings[f]) return `${fieldMappings[f]} AS ${f}`;
+        return `u.${f} AS ${f}`;
+      });
+
+    // Always include personalInfo for firstName/lastName derivations if requested
+    const needPersonalInfo = fields.includes('firstName') || fields.includes('lastName');
+    if (needPersonalInfo) {
+      rawSelects.push('u.personalInfo');
+    }
+
+    // Fallback: ensure id exists
+    if (!rawSelects.find((s: string) => s.startsWith('u.id'))) {
+      rawSelects.unshift('u.id');
+    }
+
+    const qb = this.userRepository
+      .createQueryBuilder('u')
+      .where('u.deletedAt IS NULL')
+      .andWhere('u.role = :role', { role: UserRole.COMMUNITY });
+
+    // Global text search
+    if (query.search) {
+      const searchParam = `%${query.search.toLowerCase()}%`;
+      const searchConditions = textSearchFields.map((field) => `${field} LIKE :search`).join(' OR ');
+      qb.andWhere(`(${searchConditions})`, { search: searchParam });
+    }
+
+    // Column-based filters
+    const filtration = query.filtration === 'true';
+    if (filtration && query.filters) {
+      const items = query.filters
+        .split(',')
+        .map((f: string) => f.trim())
+        .filter((f: string) => f.includes('-'))
+        .map((f: string) => {
+          const dash = f.indexOf('-');
+          return {
+            column: f.substring(0, dash).trim(),
+            value: decodeURIComponent(f.substring(dash + 1).trim()),
+          };
+        })
+        .filter((f: any) => f.column && f.value && availableFields.includes(f.column));
+
+      for (const f of items) {
+        if (f.column === 'firstName' || f.column === 'lastName') {
+          const param = `%${f.value.toLowerCase()}%`;
+          const jsonPath = f.column === 'firstName' ? '$.firstName' : '$.lastName';
+          qb.andWhere(
+            `LOWER(JSON_UNQUOTE(JSON_EXTRACT(u.personalInfo, '${jsonPath}'))) LIKE :f_${f.column}`,
+            { [`f_${f.column}`]: param }
+          );
+        } else {
+          const mapping = fieldMappings[f.column] || `u.${f.column}`;
+          const dbField = mapping.split(' AS ')[0];
+          const param = `%${f.value.toLowerCase()}%`;
+          qb.andWhere(`LOWER(${dbField}) LIKE :f_${f.column}`, {
+            [`f_${f.column}`]: param,
+          });
+        }
+      }
+    }
+
+    // Sorting
+    const sortField = query.sortField || 'createdAt';
+    const sortOrder = query.sort === 'desc' ? 'DESC' : 'ASC';
+    const sortMapping = fieldMappings[sortField] || `u.${sortField}`;
+    const dbSortField = sortMapping.split(' AS ')[0];
+
+    if (availableFields.includes(sortField)) {
+      qb.orderBy(dbSortField, sortOrder as 'ASC' | 'DESC');
+    } else {
+      qb.orderBy('u.createdAt', 'DESC');
+    }
+
+    // Get total count before pagination
+    const total = await qb.getCount();
+
+    // Pagination
+    const usePagination = query.pagination === 'true';
+    const page = query.page ? parseInt(query.page, 10) : 1;
+    const limit = query.limit ? parseInt(query.limit, 10) : 10;
+
+    if (usePagination) {
+      qb.skip((page - 1) * limit).take(limit);
+    }
+
+    // Execute query
+    const rows = await qb.getRawMany();
+
+    // Derive firstName/lastName from personalInfo JSON
+    const mappedRows = rows.map((row: any) => {
+      const personalInfo = row.personalInfo ? JSON.parse(row.personalInfo) : {};
+      if (fields.includes('firstName')) {
+        row.firstName = personalInfo.firstName || '';
+      }
+      if (fields.includes('lastName')) {
+        row.lastName = personalInfo.lastName || '';
+      }
+      // Remove personalInfo from output if not explicitly requested
+      if (!fields.includes('personalInfo')) {
+        delete row.personalInfo;
+      }
+      return row;
+    });
+
+    // Return response
+    if (usePagination) {
+      const totalPages = Math.ceil(total / limit);
+      return {
+        data: mappedRows,
+        total,
+        page,
+        limit,
+        totalPages,
+      };
+    }
+
+    return mappedRows;
   }
 }

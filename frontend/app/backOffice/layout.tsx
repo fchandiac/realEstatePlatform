@@ -33,7 +33,7 @@ const menuItems = [
     children: [
       { label: 'Administradores', url: '/backOffice/users/administrators' },
       { label: 'Agentes', url: '/backOffice/users/agents' },
-      // { label: 'Comunidad' },
+      { label: 'Comunidad', url: '/backOffice/community' },
     ],
   },
   {

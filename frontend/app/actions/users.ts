@@ -6,6 +6,89 @@ import { authOptions } from '@/lib/auth';
 import { env } from '@/lib/env';
 import { revalidatePath } from 'next/cache';
 
+export type GridSort = 'asc' | 'desc';
+
+export interface CommunityUsersGridParams {
+  fields?: string; // comma-separated list of fields
+  sort?: GridSort;
+  sortField?: string;
+  search?: string;
+  filtration?: boolean;
+  filters?: string; // e.g. "status-ACTIVE,email-test@example.com"
+  pagination?: boolean;
+  page?: number;
+  limit?: number;
+}
+
+export interface CommunityUserGridRow {
+  id: string;
+  username?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: any;
+}
+
+export type CommunityUsersGridResponse =
+  | CommunityUserGridRow[]
+  | { data: CommunityUserGridRow[]; total: number; page: number; limit: number; totalPages: number };
+
+/**
+ * Get community users grid with pagination, search, and filtering
+ * Follows the same pattern as getSalePropertiesGrid
+ */
+export async function getCommunityUsersGrid(
+  params: CommunityUsersGridParams = {}
+): Promise<CommunityUsersGridResponse> {
+  const session = await getServerSession(authOptions);
+  const accessToken = session?.accessToken;
+
+  if (!accessToken) {
+    throw new Error('No hay una sesión activa para consultar usuarios de la comunidad.');
+  }
+
+  const url = new URL(`${env.backendApiUrl}/users/grid/community`);
+
+  // map boolean flags to 'true'|'false' strings
+  const setBoolParam = (key: string, value?: boolean) => {
+    if (typeof value === 'boolean') url.searchParams.set(key, value ? 'true' : 'false');
+  };
+
+  // attach params
+  if (params.fields) url.searchParams.set('fields', params.fields);
+  if (params.sort) url.searchParams.set('sort', params.sort);
+  if (params.sortField) url.searchParams.set('sortField', params.sortField);
+  if (typeof params.search === 'string') url.searchParams.set('search', params.search);
+  if (typeof params.filters === 'string') url.searchParams.set('filters', params.filters);
+  setBoolParam('filtration', params.filtration);
+  setBoolParam('pagination', params.pagination);
+  if (typeof params.page === 'number') url.searchParams.set('page', String(params.page));
+  if (typeof params.limit === 'number') url.searchParams.set('limit', String(params.limit));
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: 'application/json',
+    },
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    let message = `Error ${response.status} al obtener usuarios de la comunidad`;
+    try {
+      const payload = await response.json();
+      if (payload?.message) message = payload.message;
+    } catch {}
+    throw new Error(message);
+  }
+
+  const result = await response.json();
+  return result as CommunityUsersGridResponse;
+}
+
 export type ListAdministratorsParams = {
 	search?: string;
 };

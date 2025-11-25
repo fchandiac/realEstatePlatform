@@ -38,6 +38,7 @@ import {
 } from './dto/user.dto';
 import { UpdateAvatarDto } from './dto/update-avatar.dto';
 import { UserProfileResponseDto } from './dto/user-profile-response.dto';
+import { GridCommunityUsersQueryDto } from './dto/grid-community-users.dto';
 import { UserStatus, UserRole, Permission } from '../../entities/user.entity';
 import { JwtAuthGuard } from '../../modules/auth/guards/jwt-auth.guard';
 
@@ -165,6 +166,29 @@ export class UsersController {
       page: page ? Number(page) : undefined,
       limit: limit ? Number(limit) : undefined,
     });
+  }
+
+  /**
+   * Get community users grid with pagination, search, and filtering
+   * Follows the same pattern as properties grid
+   */
+  @Get('grid/community')
+  @ApiOperation({ summary: 'Get community users grid with pagination and filters' })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated grid of community users',
+  })
+  @ApiQuery({ name: 'fields', required: false, description: 'Comma-separated fields to include' })
+  @ApiQuery({ name: 'sort', required: false, enum: ['asc', 'desc'], description: 'Sort direction' })
+  @ApiQuery({ name: 'sortField', required: false, description: 'Field to sort by' })
+  @ApiQuery({ name: 'search', required: false, description: 'Global text search' })
+  @ApiQuery({ name: 'filtration', required: false, description: 'Enable column filters (true/false)' })
+  @ApiQuery({ name: 'filters', required: false, description: 'Column filters (e.g., "status-ACTIVE,email-test@example.com")' })
+  @ApiQuery({ name: 'pagination', required: false, description: 'Enable pagination (true/false)' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  gridCommunityUsers(@Query(ValidationPipe) query: GridCommunityUsersQueryDto) {
+    return this.usersService.gridCommunityUsers(query);
   }
 
   /**
