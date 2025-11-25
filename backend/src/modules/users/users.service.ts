@@ -681,8 +681,8 @@ export class UsersService {
 
     // Mark email as verified
     user.emailVerified = true;
-    user.emailVerificationToken = null;
-    user.emailVerificationExpires = null;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationExpires = undefined;
 
     return await this.userRepository.save(user);
   }

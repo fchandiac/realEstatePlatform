@@ -118,7 +118,7 @@ export class AuthController {
     description: 'Email already registered',
   })
   @ApiBody({ type: CreateUserCommunityDto })
-  @Audit(AuditAction.REGISTER, AuditEntityType.USER, 'New user registration')
+  @Audit(AuditAction.CREATE, AuditEntityType.USER, 'New user registration')
   async register(
     @Body(ValidationPipe) createUserCommunityDto: CreateUserCommunityDto,
   ) {
