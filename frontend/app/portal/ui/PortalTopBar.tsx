@@ -76,11 +76,11 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
   return (
     <>
       {/* Overlay */}
-      <div
+      {/* <div
         className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
         onClick={onClose}
         data-test-id="sidebar-overlay"
-      />
+      /> */}
 
       {/* Sidebar Panel */}
       <div
@@ -337,7 +337,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
 
       {/* Main TopBar */}
       <div
-        className="flex items-center justify-between h-16 w-full bg-background sm:px-8 md:px-24 box-border sticky top-0 left-0 z-50"
+        className="flex items-center justify-between h-16 w-full bg-background sm:px-8 md:px-24 box-border sticky top-0 left-0 z-40"
         data-test-id="topBar"
       >
         {/* Izquierda: icono imagen y nombre empresa */}
