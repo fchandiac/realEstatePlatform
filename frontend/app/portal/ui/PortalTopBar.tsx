@@ -84,7 +84,7 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
 
       {/* Sidebar Panel */}
       <div
-        className="fixed left-0 top-0 h-full w-64 bg-background z-50 shadow-xl transform transition-transform duration-300 ease-in-out"
+        className="fixed left-0 top-0 h-full w-64 bg-white/60 backdrop-blur backdrop-saturate-150 z-50 shadow-xl transform transition-transform duration-300 ease-in-out border border-white/20"
         data-test-id="sidebar-panel"
       >
         {/* Header */}
