@@ -76,11 +76,11 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
   return (
     <>
       {/* Overlay */}
-      {/* <div
+      <div
         className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
         onClick={onClose}
         data-test-id="sidebar-overlay"
-      /> */}
+      />
 
       {/* Sidebar Panel */}
       <div
@@ -88,32 +88,24 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
         data-test-id="sidebar-panel"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-3">
-            {identity?.urlLogo ? (
-              <img
-                src={identity.urlLogo}
-                alt="Logo"
-                className="w-8 h-8 object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-            ) : null}
-            <span className="material-symbols-outlined text-muted-foreground w-8 h-8 flex items-center justify-center hidden">
-              image_not_supported
-            </span>
-            <span className="font-medium text-foreground text-lg">
-              {identity?.name || "Plataforma Inmobiliaria"}
-            </span>
-          </div>
-          <IconButton
-            variant="text"
-            onClick={onClose}
-            icon="close"
-            className="text-muted-foreground hover:text-foreground"
-          />
+        <div className="flex flex-col items-center justify-center p-4 text-center gap-2">
+          {identity?.urlLogo ? (
+            <img
+              src={identity.urlLogo}
+              alt="Logo"
+              className="w-12 h-12 object-contain"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.nextElementSibling?.classList.remove('hidden');
+              }}
+            />
+          ) : null}
+          <span className="material-symbols-outlined text-muted-foreground w-12 h-12 flex items-center justify-center hidden">
+            image_not_supported
+          </span>
+          <span className="font-medium text-foreground text-sm">
+            {identity?.name || "Plataforma Inmobiliaria"}
+          </span>
         </div>
 
         {/* Navigation Menu */}
