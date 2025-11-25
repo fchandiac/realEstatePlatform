@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import IconButton from "@/components/IconButton/IconButton";
 import { Button } from "@/components/Button/Button";
 import Dialog from "@/components/Dialog/Dialog";
@@ -42,10 +43,12 @@ interface SidebarProps {
   identity: Identity | null;
   onLoginClick: () => void;
   onRegisterClick: () => void;
+  isUserLoggedIn?: boolean;
+  userName?: string;
 }
 
 // Sidebar Component
-function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick }: SidebarProps) {
+function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUserLoggedIn = false, userName = "" }: SidebarProps) {
   const router = useRouter();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
@@ -248,29 +251,38 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick }: Sid
 
         {/* Action Buttons */}
         <div className="p-4 border-t border-border">
-          <div className="space-y-3">
-            <Button
-              variant="outlined"
-              className="w-full justify-start"
-              onClick={() => { onLoginClick(); onClose(); }}
-              data-test-id="sidebar-login-btn"
-            >
-              <span className="material-symbols-outlined mr-2">login</span>
-              Ingresar
-            </Button>
-            <Button
-              variant="primary"
-              className="w-full justify-start"
-              onClick={() => { 
-                onClose();
-                onRegisterClick();
-              }}
-              data-test-id="sidebar-register-btn"
-            >
-              <span className="material-symbols-outlined mr-2">person_add</span>
-              Registrarse
-            </Button>
-          </div>
+          {isUserLoggedIn ? (
+            // Usuario logueado: mostrar nombre
+            <div className="flex items-center gap-2 px-3 py-3 text-sm font-medium text-foreground">
+              <span className="material-symbols-outlined text-primary">person</span>
+              <span>{userName?.split(' ')[0] || 'Usuario'}</span>
+            </div>
+          ) : (
+            // Usuario no logueado: mostrar botones
+            <div className="space-y-3">
+              <Button
+                variant="outlined"
+                className="w-full justify-start"
+                onClick={() => { onLoginClick(); onClose(); }}
+                data-test-id="sidebar-login-btn"
+              >
+                <span className="material-symbols-outlined mr-2">login</span>
+                Ingresar
+              </Button>
+              <Button
+                variant="primary"
+                className="w-full justify-start"
+                onClick={() => { 
+                  onClose();
+                  onRegisterClick();
+                }}
+                data-test-id="sidebar-register-btn"
+              >
+                <span className="material-symbols-outlined mr-2">person_add</span>
+                Registrarse
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -278,6 +290,7 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick }: Sid
 }
 
 export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma Inmobiliaria", uf = 34879 }: TopBarProps) {
+  const { data: session } = useSession();
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [registerDialogOpen, setRegisterDialogOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -318,6 +331,8 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
         identity={identity}
         onLoginClick={() => setLoginDialogOpen(true)}
         onRegisterClick={() => setRegisterDialogOpen(true)}
+        isUserLoggedIn={!!session?.user}
+        userName={session?.user?.name || ""}
       />
 
       {/* Main TopBar */}
@@ -365,16 +380,30 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
           <span className="hidden md:inline text-main text-xs font-normal whitespace-nowrap">
             UF hoy: {formatCLP(uf)}
           </span>
-          <div className="hidden sm:flex items-center gap-1">
-            <div className="h-6 w-px bg-foreground mx-2" />
-            <Button variant="text" className="text-xs text-foreground px-2" onClick={() => setLoginDialogOpen(true)}>
-              Ingresar
-            </Button>
-            <div className="h-6 w-px bg-foreground mx-2" />
-            <Button variant="text" className="text-xs text-foreground px-2" onClick={() => setRegisterDialogOpen(true)}>
-              Registrarse
-            </Button>
-          </div>
+          
+          {/* Show user info when logged in, otherwise show login/register buttons */}
+          {session?.user ? (
+            // Usuario logueado: mostrar nombre + ícono
+            <div className="hidden sm:flex items-center gap-3 ml-4 mr-4">
+              <div className="h-6 w-px bg-foreground mx-2" />
+              <span className="material-symbols-outlined text-primary">person</span>
+              <span className="text-xs text-foreground">
+                {session.user.name?.split(' ')[0] || 'Usuario'}
+              </span>
+            </div>
+          ) : (
+            // Usuario no logueado: mostrar botones de login/register
+            <div className="hidden sm:flex items-center gap-1">
+              <div className="h-6 w-px bg-foreground mx-2" />
+              <Button variant="text" className="text-xs text-foreground px-2" onClick={() => setLoginDialogOpen(true)}>
+                Ingresar
+              </Button>
+              <div className="h-6 w-px bg-foreground mx-2" />
+              <Button variant="text" className="text-xs text-foreground px-2" onClick={() => setRegisterDialogOpen(true)}>
+                Registrarse
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex sm:hidden items-center mr-2 gap-2">
