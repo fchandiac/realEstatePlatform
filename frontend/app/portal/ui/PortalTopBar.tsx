@@ -41,10 +41,11 @@ interface SidebarProps {
   onClose: () => void;
   identity: Identity | null;
   onLoginClick: () => void;
+  onRegisterClick: () => void;
 }
 
 // Sidebar Component
-function Sidebar({ open, onClose, identity, onLoginClick }: SidebarProps) {
+function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick }: SidebarProps) {
   const router = useRouter();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
@@ -257,6 +258,18 @@ function Sidebar({ open, onClose, identity, onLoginClick }: SidebarProps) {
               <span className="material-symbols-outlined mr-2">login</span>
               Ingresar
             </Button>
+            <Button
+              variant="primary"
+              className="w-full justify-start"
+              onClick={() => { 
+                onClose();
+                onRegisterClick();
+              }}
+              data-test-id="sidebar-register-btn"
+            >
+              <span className="material-symbols-outlined mr-2">person_add</span>
+              Registrarse
+            </Button>
           </div>
         </div>
       </div>
@@ -304,6 +317,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
         onClose={() => setSidebarOpen(false)}
         identity={identity}
         onLoginClick={() => setLoginDialogOpen(true)}
+        onRegisterClick={() => setRegisterDialogOpen(true)}
       />
 
       {/* Main TopBar */}
@@ -356,10 +370,10 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
             <Button variant="text" className="text-xs text-foreground px-2" onClick={() => setLoginDialogOpen(true)}>
               Ingresar
             </Button>
-            {/* <div className="h-6 w-px bg-foreground mx-2" /> */}
-            {/* <Button variant="text" className="text-xs text-foreground px-2" onClick={() => setRegisterDialogOpen(true)}>
+            <div className="h-6 w-px bg-foreground mx-2" />
+            <Button variant="text" className="text-xs text-foreground px-2" onClick={() => setRegisterDialogOpen(true)}>
               Registrarse
-            </Button> */}
+            </Button>
           </div>
         </div>
 
