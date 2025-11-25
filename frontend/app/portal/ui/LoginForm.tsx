@@ -10,10 +10,10 @@ interface LoginFormProps {
   onClose?: () => void;
   logoSrc?: string;
   companyName?: string;
-
+  onRegisterClick?: () => void;
 }
 
-export default function LoginForm({ onClose, logoSrc, companyName }: LoginFormProps) {
+export default function LoginForm({ onClose, logoSrc, companyName, onRegisterClick }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -122,6 +122,19 @@ export default function LoginForm({ onClose, logoSrc, companyName }: LoginFormPr
         >
           {isSubmitting ? "Ingresando..." : "Ingresar"}
         </Button>
+
+        <div className="text-center text-sm text-muted-foreground">
+          <span>¿No tienes cuenta? </span>
+          <Button
+            variant="text"
+            className="text-primary p-0 h-auto font-normal"
+            onClick={() => onRegisterClick?.()}
+            type="button"
+            data-test-id="portal-login-register-link"
+          >
+            Registrarse aquí
+          </Button>
+        </div>
       </form>
     </div>
   );

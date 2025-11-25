@@ -1,0 +1,1489 @@
+2025-11-24T18:49:38:    ▲ Next.js 15.3.3
+2025-11-24T18:49:38:    - Local:        http://localhost:3001
+2025-11-24T18:49:38:    - Network:      http://0.0.0.0:3001
+2025-11-24T18:49:38: 
+2025-11-24T18:49:38:  ✓ Starting...
+2025-11-24T18:49:38:  ✓ Ready in 132ms
+2025-11-24T18:53:09:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2025-11-24T18:53:10: > Ready on http://localhost:3001
+2025-11-24T18:53:12: Error fetching published featured properties (public): TypeError: fetch failed
+2025-11-24T18:53:12:     at async Y (.next/server/chunks/3841.js:1:26848)
+2025-11-24T18:53:12:     at async d (.next/server/app/portal/page.js:3:19003) {
+2025-11-24T18:53:12:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:12:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:12:     errno: -111,
+2025-11-24T18:53:12:     code: 'ECONNREFUSED',
+2025-11-24T18:53:12:     syscall: 'connect',
+2025-11-24T18:53:12:     address: '72.61.6.232',
+2025-11-24T18:53:12:     port: 3000
+2025-11-24T18:53:12:   }
+2025-11-24T18:53:12: }
+2025-11-24T18:53:12: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-24T18:53:12: Failed to fetch published properties: TypeError: fetch failed
+2025-11-24T18:53:12:     at async n (.next/server/app/portal/page.js:3:28762)
+2025-11-24T18:53:12:     at async d (.next/server/app/portal/page.js:3:19066) {
+2025-11-24T18:53:12:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:12:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:12:     errno: -111,
+2025-11-24T18:53:12:     code: 'ECONNREFUSED',
+2025-11-24T18:53:12:     syscall: 'connect',
+2025-11-24T18:53:12:     address: '72.61.6.232',
+2025-11-24T18:53:12:     port: 3000
+2025-11-24T18:53:12:   }
+2025-11-24T18:53:12: }
+2025-11-24T18:53:13:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:13:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:13:   digest: '3046482884',
+2025-11-24T18:53:13:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:13:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:13:     errno: -111,
+2025-11-24T18:53:13:     code: 'ECONNREFUSED',
+2025-11-24T18:53:13:     syscall: 'connect',
+2025-11-24T18:53:13:     address: '72.61.6.232',
+2025-11-24T18:53:13:     port: 3000
+2025-11-24T18:53:13:   }
+2025-11-24T18:53:13: }
+2025-11-24T18:53:13: Error fetching public slides: TypeError: fetch failed
+2025-11-24T18:53:13:     at async m (.next/server/app/portal/page.js:3:8722) {
+2025-11-24T18:53:13:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:13:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:13:     errno: -111,
+2025-11-24T18:53:13:     code: 'ECONNREFUSED',
+2025-11-24T18:53:13:     syscall: 'connect',
+2025-11-24T18:53:13:     address: '72.61.6.232',
+2025-11-24T18:53:13:     port: 3000
+2025-11-24T18:53:13:   }
+2025-11-24T18:53:13: }
+2025-11-24T18:53:13:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:13:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:13:   digest: '3046482884',
+2025-11-24T18:53:13:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:13:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:13:     errno: -111,
+2025-11-24T18:53:13:     code: 'ECONNREFUSED',
+2025-11-24T18:53:13:     syscall: 'connect',
+2025-11-24T18:53:13:     address: '72.61.6.232',
+2025-11-24T18:53:13:     port: 3000
+2025-11-24T18:53:13:   }
+2025-11-24T18:53:13: }
+2025-11-24T18:53:13:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:13:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:13:   digest: '3046482884',
+2025-11-24T18:53:13:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:13:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:13:     errno: -111,
+2025-11-24T18:53:13:     code: 'ECONNREFUSED',
+2025-11-24T18:53:13:     syscall: 'connect',
+2025-11-24T18:53:13:     address: '72.61.6.232',
+2025-11-24T18:53:13:     port: 3000
+2025-11-24T18:53:13:   }
+2025-11-24T18:53:13: }
+2025-11-24T18:53:26: Error fetching published featured properties (public): TypeError: fetch failed
+2025-11-24T18:53:26:     at async Y (.next/server/chunks/3841.js:1:26848)
+2025-11-24T18:53:26:     at async d (.next/server/app/portal/page.js:3:19003) {
+2025-11-24T18:53:26:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:26:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:26:     errno: -111,
+2025-11-24T18:53:26:     code: 'ECONNREFUSED',
+2025-11-24T18:53:26:     syscall: 'connect',
+2025-11-24T18:53:26:     address: '72.61.6.232',
+2025-11-24T18:53:26:     port: 3000
+2025-11-24T18:53:26:   }
+2025-11-24T18:53:26: }
+2025-11-24T18:53:26: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-24T18:53:26: Failed to fetch published properties: TypeError: fetch failed
+2025-11-24T18:53:26:     at async n (.next/server/app/portal/page.js:3:28762)
+2025-11-24T18:53:26:     at async d (.next/server/app/portal/page.js:3:19066) {
+2025-11-24T18:53:26:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:26:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:26:     errno: -111,
+2025-11-24T18:53:26:     code: 'ECONNREFUSED',
+2025-11-24T18:53:26:     syscall: 'connect',
+2025-11-24T18:53:26:     address: '72.61.6.232',
+2025-11-24T18:53:26:     port: 3000
+2025-11-24T18:53:26:   }
+2025-11-24T18:53:26: }
+2025-11-24T18:53:26:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:26:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:26:   digest: '3046482884',
+2025-11-24T18:53:26:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:26:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:26:     errno: -111,
+2025-11-24T18:53:26:     code: 'ECONNREFUSED',
+2025-11-24T18:53:26:     syscall: 'connect',
+2025-11-24T18:53:26:     address: '72.61.6.232',
+2025-11-24T18:53:26:     port: 3000
+2025-11-24T18:53:26:   }
+2025-11-24T18:53:26: }
+2025-11-24T18:53:26: Error fetching public slides: TypeError: fetch failed
+2025-11-24T18:53:26:     at async m (.next/server/app/portal/page.js:3:8722) {
+2025-11-24T18:53:26:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:26:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:26:     errno: -111,
+2025-11-24T18:53:26:     code: 'ECONNREFUSED',
+2025-11-24T18:53:26:     syscall: 'connect',
+2025-11-24T18:53:26:     address: '72.61.6.232',
+2025-11-24T18:53:26:     port: 3000
+2025-11-24T18:53:26:   }
+2025-11-24T18:53:26: }
+2025-11-24T18:53:26:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:26:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:26:   digest: '3046482884',
+2025-11-24T18:53:26:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:26:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:26:     errno: -111,
+2025-11-24T18:53:26:     code: 'ECONNREFUSED',
+2025-11-24T18:53:26:     syscall: 'connect',
+2025-11-24T18:53:26:     address: '72.61.6.232',
+2025-11-24T18:53:26:     port: 3000
+2025-11-24T18:53:26:   }
+2025-11-24T18:53:26: }
+2025-11-24T18:53:27:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:27:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:27:   digest: '3046482884',
+2025-11-24T18:53:27:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:27:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:27:     errno: -111,
+2025-11-24T18:53:27:     code: 'ECONNREFUSED',
+2025-11-24T18:53:27:     syscall: 'connect',
+2025-11-24T18:53:27:     address: '72.61.6.232',
+2025-11-24T18:53:27:     port: 3000
+2025-11-24T18:53:27:   }
+2025-11-24T18:53:27: }
+2025-11-24T18:53:54: Error fetching published featured properties (public): TypeError: fetch failed
+2025-11-24T18:53:54:     at async Y (.next/server/chunks/3841.js:1:26848)
+2025-11-24T18:53:54:     at async d (.next/server/app/portal/page.js:3:19003) {
+2025-11-24T18:53:54:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:54:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:54:     errno: -111,
+2025-11-24T18:53:54:     code: 'ECONNREFUSED',
+2025-11-24T18:53:54:     syscall: 'connect',
+2025-11-24T18:53:54:     address: '72.61.6.232',
+2025-11-24T18:53:54:     port: 3000
+2025-11-24T18:53:54:   }
+2025-11-24T18:53:54: }
+2025-11-24T18:53:54: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-24T18:53:54: Failed to fetch published properties: TypeError: fetch failed
+2025-11-24T18:53:54:     at async n (.next/server/app/portal/page.js:3:28762)
+2025-11-24T18:53:54:     at async d (.next/server/app/portal/page.js:3:19066) {
+2025-11-24T18:53:54:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:54:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:54:     errno: -111,
+2025-11-24T18:53:54:     code: 'ECONNREFUSED',
+2025-11-24T18:53:54:     syscall: 'connect',
+2025-11-24T18:53:54:     address: '72.61.6.232',
+2025-11-24T18:53:54:     port: 3000
+2025-11-24T18:53:54:   }
+2025-11-24T18:53:54: }
+2025-11-24T18:53:54:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:54:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:54:   digest: '3046482884',
+2025-11-24T18:53:54:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:54:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:54:     errno: -111,
+2025-11-24T18:53:54:     code: 'ECONNREFUSED',
+2025-11-24T18:53:54:     syscall: 'connect',
+2025-11-24T18:53:54:     address: '72.61.6.232',
+2025-11-24T18:53:54:     port: 3000
+2025-11-24T18:53:54:   }
+2025-11-24T18:53:54: }
+2025-11-24T18:53:54: Error fetching public slides: TypeError: fetch failed
+2025-11-24T18:53:54:     at async m (.next/server/app/portal/page.js:3:8722) {
+2025-11-24T18:53:54:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:54:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:54:     errno: -111,
+2025-11-24T18:53:54:     code: 'ECONNREFUSED',
+2025-11-24T18:53:54:     syscall: 'connect',
+2025-11-24T18:53:54:     address: '72.61.6.232',
+2025-11-24T18:53:54:     port: 3000
+2025-11-24T18:53:54:   }
+2025-11-24T18:53:54: }
+2025-11-24T18:53:55:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:55:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:55:   digest: '3046482884',
+2025-11-24T18:53:55:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:55:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:55:     errno: -111,
+2025-11-24T18:53:55:     code: 'ECONNREFUSED',
+2025-11-24T18:53:55:     syscall: 'connect',
+2025-11-24T18:53:55:     address: '72.61.6.232',
+2025-11-24T18:53:55:     port: 3000
+2025-11-24T18:53:55:   }
+2025-11-24T18:53:55: }
+2025-11-24T18:53:55:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:55:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:55:   digest: '3046482884',
+2025-11-24T18:53:55:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:55:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:55:     errno: -111,
+2025-11-24T18:53:55:     code: 'ECONNREFUSED',
+2025-11-24T18:53:55:     syscall: 'connect',
+2025-11-24T18:53:55:     address: '72.61.6.232',
+2025-11-24T18:53:55:     port: 3000
+2025-11-24T18:53:55:   }
+2025-11-24T18:53:55: }
+2025-11-24T18:55:01: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-24T18:55:02: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:55:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:55:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:55:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:55:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:55:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:55:02: ✅ Properties fetched: 9 items
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:55:02:   type: 'image',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:55:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:55:02:   totalMultimedia: 0,
+2025-11-24T18:55:02:   imagesFound: 1,
+2025-11-24T18:55:02:   images: [
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:55:02:   ]
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:55:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 1,
+2025-11-24T18:55:02:   hasImages: true,
+2025-11-24T18:55:02:   currentImageIndex: 0,
+2025-11-24T18:55:02:   allImages: [
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:55:02:   ]
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:55:02:   type: 'image',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:55:02:   type: 'image',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:55:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:55:02:   totalMultimedia: 0,
+2025-11-24T18:55:02:   imagesFound: 1,
+2025-11-24T18:55:02:   images: [
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:55:02:   ]
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:55:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 1,
+2025-11-24T18:55:02:   hasImages: true,
+2025-11-24T18:55:02:   currentImageIndex: 0,
+2025-11-24T18:55:02:   allImages: [
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:55:02:   ]
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:55:02:   type: 'image',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 9787e932-3a88-4ea1-abbc-14953e1f5955
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:55:02:   type: 'image',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:55:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:55:02:   multimedia: [
+2025-11-24T18:55:02:     {
+2025-11-24T18:55:02:       id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-24T18:55:02:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:55:02:       type: 'PROPERTY_IMG',
+2025-11-24T18:55:02:       format: 'IMG'
+2025-11-24T18:55:02:     },
+2025-11-24T18:55:02:     {
+2025-11-24T18:55:02:       id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-24T18:55:02:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:55:02:       type: 'PROPERTY_IMG',
+2025-11-24T18:55:02:       format: 'IMG'
+2025-11-24T18:55:02:     }
+2025-11-24T18:55:02:   ]
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Processing 2 multimedia items
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Processing media 1/2: {
+2025-11-24T18:55:02:   id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:55:02:   type: 'PROPERTY_IMG',
+2025-11-24T18:55:02:   format: 'IMG',
+2025-11-24T18:55:02:   isVideo: false,
+2025-11-24T18:55:02:   urlLength: 73
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-24T18:55:02:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:55:02:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:55:02:   isValidImage: true,
+2025-11-24T18:55:02:   isVideo: false,
+2025-11-24T18:55:02:   hasUrl: true
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 1: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Processing media 2/2: {
+2025-11-24T18:55:02:   id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:55:02:   type: 'PROPERTY_IMG',
+2025-11-24T18:55:02:   format: 'IMG',
+2025-11-24T18:55:02:   isVideo: false,
+2025-11-24T18:55:02:   urlLength: 73
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-24T18:55:02:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:55:02:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:55:02:   isValidImage: true,
+2025-11-24T18:55:02:   isVideo: false,
+2025-11-24T18:55:02:   hasUrl: true
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] ✅ Added multimedia image 2: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:55:02:   totalMultimedia: 2,
+2025-11-24T18:55:02:   imagesFound: 2,
+2025-11-24T18:55:02:   images: [
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-24T18:55:02:   ]
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:55:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:55:02:   multimediaCount: 2,
+2025-11-24T18:55:02:   imagesFound: 2,
+2025-11-24T18:55:02:   hasImages: true,
+2025-11-24T18:55:02:   currentImageIndex: 0,
+2025-11-24T18:55:02:   allImages: [
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-24T18:55:02:   ]
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:55:02:   type: 'image',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:55:02:   type: 'image',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:55:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:55:02:   multimedia: [
+2025-11-24T18:55:02:     {
+2025-11-24T18:55:02:       id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-24T18:55:02:       url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:55:02:       type: 'PROPERTY_IMG',
+2025-11-24T18:55:02:       format: 'IMG'
+2025-11-24T18:55:02:     },
+2025-11-24T18:55:02:     {
+2025-11-24T18:55:02:       id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:55:02:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:55:02:       type: 'PROPERTY_IMG',
+2025-11-24T18:55:02:       format: 'IMG'
+2025-11-24T18:55:02:     },
+2025-11-24T18:55:02:     {
+2025-11-24T18:55:02:       id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:55:02:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:55:02:       type: 'PROPERTY_IMG',
+2025-11-24T18:55:02:       format: 'IMG'
+2025-11-24T18:55:02:     }
+2025-11-24T18:55:02:   ]
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Processing 3 multimedia items
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Processing media 1/3: {
+2025-11-24T18:55:02:   id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:55:02:   type: 'PROPERTY_IMG',
+2025-11-24T18:55:02:   format: 'IMG',
+2025-11-24T18:55:02:   isVideo: false,
+2025-11-24T18:55:02:   urlLength: 73
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-24T18:55:02:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:55:02:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:55:02:   isValidImage: true,
+2025-11-24T18:55:02:   isVideo: false,
+2025-11-24T18:55:02:   hasUrl: true
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] ✅ Added multimedia image 1: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Processing media 2/3: {
+2025-11-24T18:55:02:   id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:55:02:   type: 'PROPERTY_IMG',
+2025-11-24T18:55:02:   format: 'IMG',
+2025-11-24T18:55:02:   isVideo: false,
+2025-11-24T18:55:02:   urlLength: 73
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-24T18:55:02:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:55:02:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:55:02:   isValidImage: true,
+2025-11-24T18:55:02:   isVideo: false,
+2025-11-24T18:55:02:   hasUrl: true
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 2: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Processing media 3/3: {
+2025-11-24T18:55:02:   id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:55:02:   type: 'PROPERTY_IMG',
+2025-11-24T18:55:02:   format: 'IMG',
+2025-11-24T18:55:02:   isVideo: false,
+2025-11-24T18:55:02:   urlLength: 72
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Media 3 validation: {
+2025-11-24T18:55:02:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:55:02:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:55:02:   isValidImage: true,
+2025-11-24T18:55:02:   isVideo: false,
+2025-11-24T18:55:02:   hasUrl: true
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] ✅ Added multimedia image 3: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:55:02:   totalMultimedia: 3,
+2025-11-24T18:55:02:   imagesFound: 3,
+2025-11-24T18:55:02:   images: [
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-24T18:55:02:   ]
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:55:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:55:02:   multimediaCount: 3,
+2025-11-24T18:55:02:   imagesFound: 3,
+2025-11-24T18:55:02:   hasImages: true,
+2025-11-24T18:55:02:   currentImageIndex: 0,
+2025-11-24T18:55:02:   allImages: [
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:55:02:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-24T18:55:02:   ]
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:55:02:   type: 'image',
+2025-11-24T18:55:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 5071a598-ff69-46b4-bee9-5e17086adfca
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 562e0504-25fc-4b64-8b65-785d028e4be7
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: a695ce66-af9b-4930-aad1-3521241770f6
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:02: 🎯 [PropertyCard] Property ID: aa5b90c8-4a74-49e6-aef1-4f2adaf97430
+2025-11-24T18:55:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:55:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:55:02:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimedia: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:55:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:55:02:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-24T18:55:02:   mainImageUrl: null,
+2025-11-24T18:55:02:   multimediaCount: 0,
+2025-11-24T18:55:02:   imagesFound: 0,
+2025-11-24T18:55:02:   hasImages: false,
+2025-11-24T18:55:02:   currentImageIndex: -1,
+2025-11-24T18:55:02:   allImages: []
+2025-11-24T18:55:02: }
+2025-11-24T18:55:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:55:15: Middleware - Acceso a backoffice: /backOffice
+2025-11-24T18:55:15: Middleware - Token presente: true
+2025-11-24T18:55:15: Middleware - Token role: ADMIN
+2025-11-24T18:55:15: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:55:15: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:55:15: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:55:15: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-24T18:55:15: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:55:15: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:55:15: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:55:15: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:55:15: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid
+2025-11-24T18:55:15: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:55:15: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:55:16: Middleware - Acceso a backoffice: /backOffice
+2025-11-24T18:55:16: Middleware - Token presente: true
+2025-11-24T18:55:16: Middleware - Token role: ADMIN
+2025-11-24T18:55:16: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:55:16: Middleware - Acceso a backoffice: /backOffice
+2025-11-24T18:55:16: Middleware - Token presente: true
+2025-11-24T18:55:16: Middleware - Token role: ADMIN
+2025-11-24T18:55:16: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:55:23: Middleware - Acceso a backoffice: /backOffice/users/administrators
+2025-11-24T18:55:23: Middleware - Token presente: true
+2025-11-24T18:55:23: Middleware - Token role: ADMIN
+2025-11-24T18:55:23: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:55:33: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:55:33: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:55:33: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-24T18:55:33: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:55:33: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:55:33: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:55:33: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:55:33: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid
+2025-11-24T18:55:33: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:55:33: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:55:36: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-24T18:55:36: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:36: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:36: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:36: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:36: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:55:36: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:55:36: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:55:36: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:36: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:36: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:55:36: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:55:36: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:36: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:55:36: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:55:36: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:55:36: ✅ Properties fetched: 9 items
+2025-11-24T18:56:11: Property fetched from /full endpoint: {
+2025-11-24T18:56:11:   id: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:56:11:   title: 'Casa familiar amplia',
+2025-11-24T18:56:11:   status: 'PUBLISHED',
+2025-11-24T18:56:11:   state: 'Metropolitana de Santiago',
+2025-11-24T18:56:11:   city: 'Ñuñoa',
+2025-11-24T18:56:11:   address: null,
+2025-11-24T18:56:11:   latitude: '-33.42740000',
+2025-11-24T18:56:11:   longitude: '-70.57400000',
+2025-11-24T18:56:11:   multimedia: 3
+2025-11-24T18:56:11: }
+2025-11-24T18:56:11: [MultimediaGrid] Debug: {
+2025-11-24T18:56:11:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:56:11:   multimediaCount: 2,
+2025-11-24T18:56:11:   allMediaCount: 3,
+2025-11-24T18:56:11:   items: [
+2025-11-24T18:56:11:     {
+2025-11-24T18:56:11:       id: 'main',
+2025-11-24T18:56:11:       url: 'http://72.61.6.232:3000/public/properties/img/1764'
+2025-11-24T18:56:11:     },
+2025-11-24T18:56:11:     {
+2025-11-24T18:56:11:       id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:56:11:       url: 'http://72.61.6.232:3000/public/properties/img/1764'
+2025-11-24T18:56:11:     },
+2025-11-24T18:56:11:     {
+2025-11-24T18:56:11:       id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:56:11:       url: 'http://72.61.6.232:3000/public/properties/img/1764'
+2025-11-24T18:56:11:     }
+2025-11-24T18:56:11:   ]
+2025-11-24T18:56:11: }
+2025-11-24T18:56:12: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:56:12: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:56:12: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-24T18:56:12: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:56:12: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:56:12: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:56:12: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:56:12: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid
+2025-11-24T18:56:12: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:56:12: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:56:45: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:56:45: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:56:45: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-24T18:56:45: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:56:45: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:56:45: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:56:45: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:56:45: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid
+2025-11-24T18:56:45: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:56:45: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:56:48: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-24T18:56:48: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:56:48: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:56:48: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:56:48: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:56:48: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:56:48: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:56:48: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:56:48: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:56:48: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:56:48: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:56:48: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:56:48: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:56:48: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:56:48: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:56:48: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:56:48: ✅ Properties fetched: 9 items
+2025-11-25T12:20:02: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-25T12:20:02: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-25T12:20:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-25T12:20:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-25T12:20:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-25T12:20:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-25T12:20:02: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-25T12:20:02: ✅ Properties fetched: 9 items
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-25T12:20:02:   type: 'image',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-25T12:20:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: {
+2025-11-25T12:20:02:   totalMultimedia: 0,
+2025-11-25T12:20:02:   imagesFound: 1,
+2025-11-25T12:20:02:   images: [
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-25T12:20:02:   ]
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-25T12:20:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 1,
+2025-11-25T12:20:02:   hasImages: true,
+2025-11-25T12:20:02:   currentImageIndex: 0,
+2025-11-25T12:20:02:   allImages: [
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-25T12:20:02:   ]
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-25T12:20:02:   type: 'image',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-25T12:20:02:   type: 'image',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-25T12:20:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: {
+2025-11-25T12:20:02:   totalMultimedia: 0,
+2025-11-25T12:20:02:   imagesFound: 1,
+2025-11-25T12:20:02:   images: [
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-25T12:20:02:   ]
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-25T12:20:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 1,
+2025-11-25T12:20:02:   hasImages: true,
+2025-11-25T12:20:02:   currentImageIndex: 0,
+2025-11-25T12:20:02:   allImages: [
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-25T12:20:02:   ]
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-25T12:20:02:   type: 'image',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 9787e932-3a88-4ea1-abbc-14953e1f5955
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-25T12:20:02:   type: 'image',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-25T12:20:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-25T12:20:02:   multimedia: [
+2025-11-25T12:20:02:     {
+2025-11-25T12:20:02:       id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-25T12:20:02:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-25T12:20:02:       type: 'PROPERTY_IMG',
+2025-11-25T12:20:02:       format: 'IMG'
+2025-11-25T12:20:02:     },
+2025-11-25T12:20:02:     {
+2025-11-25T12:20:02:       id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-25T12:20:02:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-25T12:20:02:       type: 'PROPERTY_IMG',
+2025-11-25T12:20:02:       format: 'IMG'
+2025-11-25T12:20:02:     }
+2025-11-25T12:20:02:   ]
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Processing 2 multimedia items
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Processing media 1/2: {
+2025-11-25T12:20:02:   id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-25T12:20:02:   type: 'PROPERTY_IMG',
+2025-11-25T12:20:02:   format: 'IMG',
+2025-11-25T12:20:02:   isVideo: false,
+2025-11-25T12:20:02:   urlLength: 73
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-25T12:20:02:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-25T12:20:02:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-25T12:20:02:   isValidImage: true,
+2025-11-25T12:20:02:   isVideo: false,
+2025-11-25T12:20:02:   hasUrl: true
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 1: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Processing media 2/2: {
+2025-11-25T12:20:02:   id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-25T12:20:02:   type: 'PROPERTY_IMG',
+2025-11-25T12:20:02:   format: 'IMG',
+2025-11-25T12:20:02:   isVideo: false,
+2025-11-25T12:20:02:   urlLength: 73
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-25T12:20:02:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-25T12:20:02:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-25T12:20:02:   isValidImage: true,
+2025-11-25T12:20:02:   isVideo: false,
+2025-11-25T12:20:02:   hasUrl: true
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] ✅ Added multimedia image 2: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: {
+2025-11-25T12:20:02:   totalMultimedia: 2,
+2025-11-25T12:20:02:   imagesFound: 2,
+2025-11-25T12:20:02:   images: [
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-25T12:20:02:   ]
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-25T12:20:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-25T12:20:02:   multimediaCount: 2,
+2025-11-25T12:20:02:   imagesFound: 2,
+2025-11-25T12:20:02:   hasImages: true,
+2025-11-25T12:20:02:   currentImageIndex: 0,
+2025-11-25T12:20:02:   allImages: [
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-25T12:20:02:   ]
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-25T12:20:02:   type: 'image',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-25T12:20:02:   type: 'image',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-25T12:20:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-25T12:20:02:   multimedia: [
+2025-11-25T12:20:02:     {
+2025-11-25T12:20:02:       id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-25T12:20:02:       url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-25T12:20:02:       type: 'PROPERTY_IMG',
+2025-11-25T12:20:02:       format: 'IMG'
+2025-11-25T12:20:02:     },
+2025-11-25T12:20:02:     {
+2025-11-25T12:20:02:       id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-25T12:20:02:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-25T12:20:02:       type: 'PROPERTY_IMG',
+2025-11-25T12:20:02:       format: 'IMG'
+2025-11-25T12:20:02:     },
+2025-11-25T12:20:02:     {
+2025-11-25T12:20:02:       id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-25T12:20:02:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-25T12:20:02:       type: 'PROPERTY_IMG',
+2025-11-25T12:20:02:       format: 'IMG'
+2025-11-25T12:20:02:     }
+2025-11-25T12:20:02:   ]
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Processing 3 multimedia items
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Processing media 1/3: {
+2025-11-25T12:20:02:   id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-25T12:20:02:   type: 'PROPERTY_IMG',
+2025-11-25T12:20:02:   format: 'IMG',
+2025-11-25T12:20:02:   isVideo: false,
+2025-11-25T12:20:02:   urlLength: 73
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-25T12:20:02:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-25T12:20:02:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-25T12:20:02:   isValidImage: true,
+2025-11-25T12:20:02:   isVideo: false,
+2025-11-25T12:20:02:   hasUrl: true
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] ✅ Added multimedia image 1: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Processing media 2/3: {
+2025-11-25T12:20:02:   id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-25T12:20:02:   type: 'PROPERTY_IMG',
+2025-11-25T12:20:02:   format: 'IMG',
+2025-11-25T12:20:02:   isVideo: false,
+2025-11-25T12:20:02:   urlLength: 73
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-25T12:20:02:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-25T12:20:02:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-25T12:20:02:   isValidImage: true,
+2025-11-25T12:20:02:   isVideo: false,
+2025-11-25T12:20:02:   hasUrl: true
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 2: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Processing media 3/3: {
+2025-11-25T12:20:02:   id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-25T12:20:02:   type: 'PROPERTY_IMG',
+2025-11-25T12:20:02:   format: 'IMG',
+2025-11-25T12:20:02:   isVideo: false,
+2025-11-25T12:20:02:   urlLength: 72
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Media 3 validation: {
+2025-11-25T12:20:02:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-25T12:20:02:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-25T12:20:02:   isValidImage: true,
+2025-11-25T12:20:02:   isVideo: false,
+2025-11-25T12:20:02:   hasUrl: true
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] ✅ Added multimedia image 3: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: {
+2025-11-25T12:20:02:   totalMultimedia: 3,
+2025-11-25T12:20:02:   imagesFound: 3,
+2025-11-25T12:20:02:   images: [
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-25T12:20:02:   ]
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-25T12:20:02:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-25T12:20:02:   multimediaCount: 3,
+2025-11-25T12:20:02:   imagesFound: 3,
+2025-11-25T12:20:02:   hasImages: true,
+2025-11-25T12:20:02:   currentImageIndex: 0,
+2025-11-25T12:20:02:   allImages: [
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-25T12:20:02:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-25T12:20:02:   ]
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-25T12:20:02:   type: 'image',
+2025-11-25T12:20:02:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 5071a598-ff69-46b4-bee9-5e17086adfca
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 562e0504-25fc-4b64-8b65-785d028e4be7
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: a695ce66-af9b-4930-aad1-3521241770f6
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:02: 🎯 [PropertyCard] Property ID: aa5b90c8-4a74-49e6-aef1-4f2adaf97430
+2025-11-25T12:20:02: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-25T12:20:02: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-25T12:20:02:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimedia: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🔍 [getOrderedImages] No multimedia array found
+2025-11-25T12:20:02: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Debug info: {
+2025-11-25T12:20:02:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-25T12:20:02:   mainImageUrl: null,
+2025-11-25T12:20:02:   multimediaCount: 0,
+2025-11-25T12:20:02:   imagesFound: 0,
+2025-11-25T12:20:02:   hasImages: false,
+2025-11-25T12:20:02:   currentImageIndex: -1,
+2025-11-25T12:20:02:   allImages: []
+2025-11-25T12:20:02: }
+2025-11-25T12:20:02: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-25T12:20:16: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-25T12:20:16: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-25T12:20:16: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-25T12:20:16: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-25T12:20:16: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-25T12:20:16: Middleware - Acceso a backoffice: /backOffice
+2025-11-25T12:20:16: Middleware - Token presente: true
+2025-11-25T12:20:16: Middleware - Token role: ADMIN
+2025-11-25T12:20:16: Middleware - Acceso permitido para rol: ADMIN
+2025-11-25T12:20:16: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-25T12:20:16: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-25T12:20:16: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid
+2025-11-25T12:20:16: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-25T12:20:16: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-25T12:20:16: Middleware - Acceso a backoffice: /backOffice
+2025-11-25T12:20:16: Middleware - Token presente: true
+2025-11-25T12:20:16: Middleware - Token role: ADMIN
+2025-11-25T12:20:16: Middleware - Acceso permitido para rol: ADMIN
+2025-11-25T12:20:16: Middleware - Acceso a backoffice: /backOffice
+2025-11-25T12:20:16: Middleware - Token presente: true
+2025-11-25T12:20:16: Middleware - Token role: ADMIN
+2025-11-25T12:20:16: Middleware - Acceso permitido para rol: ADMIN
+2025-11-25T16:38:21: 🔍 [getRentProperties] Raw searchParams: {}
+2025-11-25T16:38:21: 🔍 [getRentProperties] Processed filters: {
+2025-11-25T16:38:21:   filters: {
+2025-11-25T16:38:21:     typeProperty: undefined,
+2025-11-25T16:38:21:     state: undefined,
+2025-11-25T16:38:21:     city: undefined,
+2025-11-25T16:38:21:     currency: 'CLP'
+2025-11-25T16:38:21:   },
+2025-11-25T16:38:21:   sort: 'created_desc',
+2025-11-25T16:38:21:   page: 1,
+2025-11-25T16:38:21:   limit: 9
+2025-11-25T16:38:21: }
+2025-11-25T16:38:21: 🔍 [getRentPropertiesFiltered] Starting with filters: {
+2025-11-25T16:38:21:   filters: {
+2025-11-25T16:38:21:     typeProperty: undefined,
+2025-11-25T16:38:21:     state: undefined,
+2025-11-25T16:38:21:     city: undefined,
+2025-11-25T16:38:21:     currency: 'CLP'
+2025-11-25T16:38:21:   },
+2025-11-25T16:38:21:   sort: 'created_desc',
+2025-11-25T16:38:21:   page: 1,
+2025-11-25T16:38:21:   limit: 9
+2025-11-25T16:38:21: }
+2025-11-25T16:38:21: 🌐 [getRentPropertiesFiltered] Making request to: http://72.61.6.232:3000/properties/rent?currency=CLP&sort=created_desc&page=1&limit=9
+2025-11-25T16:38:21: ✅ [getRentPropertiesFiltered] Success: { total: 6, page: 1, totalPages: 1, dataLength: 6 }
+2025-11-25T16:38:29: 🔍 [getSaleProperties] Raw searchParams: {}
+2025-11-25T16:38:29: 🔍 [getSaleProperties] Processed filters: {
+2025-11-25T16:38:29:   filters: {
+2025-11-25T16:38:29:     typeProperty: undefined,
+2025-11-25T16:38:29:     state: undefined,
+2025-11-25T16:38:29:     city: undefined,
+2025-11-25T16:38:29:     currency: 'CLP'
+2025-11-25T16:38:29:   },
+2025-11-25T16:38:29:   sort: 'created_desc',
+2025-11-25T16:38:29:   page: 1,
+2025-11-25T16:38:29:   limit: 9
+2025-11-25T16:38:29: }
+2025-11-25T16:38:29: 🔍 [getSalePropertiesFiltered] Starting with filters: {
+2025-11-25T16:38:29:   filters: {
+2025-11-25T16:38:29:     typeProperty: undefined,
+2025-11-25T16:38:29:     state: undefined,
+2025-11-25T16:38:29:     city: undefined,
+2025-11-25T16:38:29:     currency: 'CLP'
+2025-11-25T16:38:29:   },
+2025-11-25T16:38:29:   sort: 'created_desc',
+2025-11-25T16:38:29:   page: 1,
+2025-11-25T16:38:29:   limit: 9
+2025-11-25T16:38:29: }
+2025-11-25T16:38:29: 🌐 [getSalePropertiesFiltered] Making request to: http://72.61.6.232:3000/properties/sale?currency=CLP&sort=created_desc&page=1&limit=9
+2025-11-25T16:38:29: ✅ [getSalePropertiesFiltered] Success: { total: 6, page: 1, totalPages: 1, dataLength: 6 }
+2025-11-25T16:40:31: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-25T16:40:31: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T16:40:31: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T16:40:31: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T16:40:31: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T16:40:31: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-25T16:40:31: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-25T16:40:31: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-25T16:40:31: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T16:40:31: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T16:40:31: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-25T16:40:31: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-25T16:40:31: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T16:40:31: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-25T16:40:31: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-25T16:40:31: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-25T16:40:31: ✅ Properties fetched: 9 items
+2025-11-25T16:40:43: Property fetched from /full endpoint: {
+2025-11-25T16:40:43:   id: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-25T16:40:43:   title: 'Casa familiar amplia',
+2025-11-25T16:40:43:   status: 'PUBLISHED',
+2025-11-25T16:40:43:   state: 'Metropolitana de Santiago',
+2025-11-25T16:40:43:   city: 'Ñuñoa',
+2025-11-25T16:40:43:   address: null,
+2025-11-25T16:40:43:   latitude: '-33.42740000',
+2025-11-25T16:40:43:   longitude: '-70.57400000',
+2025-11-25T16:40:43:   multimedia: 3
+2025-11-25T16:40:43: }
+2025-11-25T16:40:43: [MultimediaGrid] Debug: {
+2025-11-25T16:40:43:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-25T16:40:43:   multimediaCount: 2,
+2025-11-25T16:40:43:   allMediaCount: 3,
+2025-11-25T16:40:43:   items: [
+2025-11-25T16:40:43:     {
+2025-11-25T16:40:43:       id: 'main',
+2025-11-25T16:40:43:       url: 'http://72.61.6.232:3000/public/properties/img/1764'
+2025-11-25T16:40:43:     },
+2025-11-25T16:40:43:     {
+2025-11-25T16:40:43:       id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-25T16:40:43:       url: 'http://72.61.6.232:3000/public/properties/img/1764'
+2025-11-25T16:40:43:     },
+2025-11-25T16:40:43:     {
+2025-11-25T16:40:43:       id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-25T16:40:43:       url: 'http://72.61.6.232:3000/public/properties/img/1764'
+2025-11-25T16:40:43:     }
+2025-11-25T16:40:43:   ]
+2025-11-25T16:40:43: }
+2025-11-25T16:40:44: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-25T16:40:44: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-25T16:40:44: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-25T16:40:44: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-25T16:40:44: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-25T16:40:44: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-25T16:40:44: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-25T16:40:44: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid
+2025-11-25T16:40:44: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-25T16:40:44: [DEBUG] getUserGridNotifications - Response data length: Not an array

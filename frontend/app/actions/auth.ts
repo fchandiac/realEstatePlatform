@@ -460,3 +460,60 @@ export async function validateToken(token: string): Promise<{
     };
   }
 }
+
+/**
+ * Register a new COMMUNITY user from portal
+ * Sends verification email
+ */
+export async function registerUserAction(formData: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}): Promise<{
+  success: boolean;
+  error?: string;
+  message?: string;
+  userId?: string;
+}> {
+  try {
+    const response = await fetch(`${env.backendApiUrl}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error:
+          data.message ||
+          data.error ||
+          'Error al registrar usuario',
+      };
+    }
+
+    return {
+      success: true,
+      message:
+        data.message ||
+        'Registro exitoso. Revisa tu email para verificar tu cuenta.',
+      userId: data.userId,
+    };
+  } catch (error) {
+    console.error('Register error:', error);
+    return {
+      success: false,
+      error: 'Error de conexión. Intenta de nuevo.',
+    };
+  }
+}

@@ -15,6 +15,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../users/dto/user.dto';
+import { CreateUserCommunityDto } from '../users/dto/create-user-community.dto';
 import {
   Audit,
   AuditInterceptor,
@@ -89,5 +90,100 @@ export class AuthController {
   @Audit(AuditAction.LOGOUT, AuditEntityType.USER, 'User logout request')
   async signOut(@Headers('authorization') authorization?: string) {
     return this.authService.signOut(authorization);
+  }
+
+  /**
+   * Register new COMMUNITY user from portal
+   * Sends verification email
+   */
+  @Post('register')
+  @ApiOperation({ summary: 'Register new community user' })
+  @ApiResponse({
+    status: 200,
+    description: 'User registered successfully, verification email sent',
+    schema: {
+      example: {
+        success: true,
+        message: 'Usuario registrado exitosamente. Revisa tu correo para verificar tu cuenta.',
+        userId: 'uuid',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Validation error - invalid email format or weak password',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Email already registered',
+  })
+  @ApiBody({ type: CreateUserCommunityDto })
+  @Audit(AuditAction.REGISTER, AuditEntityType.USER, 'New user registration')
+  async register(
+    @Body(ValidationPipe) createUserCommunityDto: CreateUserCommunityDto,
+  ) {
+    return this.authService.register(createUserCommunityDto);
+  }
+
+  /**
+   * Verify user email with token
+   * Token sent to email during registration
+   */
+  @Post('verify-email')
+  @ApiOperation({ summary: 'Verify user email with token' })
+  @ApiResponse({
+    status: 200,
+    description: 'Email verified successfully',
+    schema: {
+      example: {
+        success: true,
+        message: 'Correo verificado exitosamente. Ya puedes iniciar sesión.',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid or expired token',
+  })
+  @ApiBody({
+    schema: {
+      properties: {
+        token: { type: 'string', example: 'verification-token-from-email' },
+      },
+    },
+  })
+  async verifyEmail(@Body('token') token: string) {
+    return this.authService.verifyEmail(token);
+  }
+
+  /**
+   * Resend verification email
+   * Generates new token and sends to email
+   */
+  @Post('resend-verification-email')
+  @ApiOperation({ summary: 'Resend verification email' })
+  @ApiResponse({
+    status: 200,
+    description: 'Verification email resent',
+    schema: {
+      example: {
+        success: true,
+        message: 'Correo de verificación reenviado. Revisa tu bandeja.',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found',
+  })
+  @ApiBody({
+    schema: {
+      properties: {
+        email: { type: 'string', example: 'user@example.com' },
+      },
+    },
+  })
+  async resendVerificationEmail(@Body('email') email: string) {
+    return this.authService.resendVerificationEmail(email);
   }
 }

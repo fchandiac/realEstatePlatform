@@ -383,6 +383,10 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
           <LoginForm
             logoSrc={identity?.urlLogo || "/PropLogo2.png"}
             companyName={identity?.name}
+            onRegisterClick={() => {
+              setLoginDialogOpen(false);
+              setRegisterDialogOpen(true);
+            }}
           />
         </Dialog>
 
@@ -393,7 +397,13 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
           title="Crear Cuenta"
           size="md"
         >
-          <RegisterForm />
+          <RegisterForm 
+            onClose={() => setRegisterDialogOpen(false)}
+            onRegisterClick={() => {
+              setRegisterDialogOpen(false);
+              setLoginDialogOpen(true);
+            }}
+          />
         </Dialog>
       </div>
     </React.Fragment>

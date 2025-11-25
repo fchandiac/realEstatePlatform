@@ -1,0 +1,214 @@
+2025-11-24T18:53:09:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2025-11-24T18:53:12: Error fetching published featured properties (public): TypeError: fetch failed
+2025-11-24T18:53:12:     at async Y (.next/server/chunks/3841.js:1:26848)
+2025-11-24T18:53:12:     at async d (.next/server/app/portal/page.js:3:19003) {
+2025-11-24T18:53:12:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:12:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:12:     errno: -111,
+2025-11-24T18:53:12:     code: 'ECONNREFUSED',
+2025-11-24T18:53:12:     syscall: 'connect',
+2025-11-24T18:53:12:     address: '72.61.6.232',
+2025-11-24T18:53:12:     port: 3000
+2025-11-24T18:53:12:   }
+2025-11-24T18:53:12: }
+2025-11-24T18:53:12: Failed to fetch published properties: TypeError: fetch failed
+2025-11-24T18:53:12:     at async n (.next/server/app/portal/page.js:3:28762)
+2025-11-24T18:53:12:     at async d (.next/server/app/portal/page.js:3:19066) {
+2025-11-24T18:53:12:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:12:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:12:     errno: -111,
+2025-11-24T18:53:12:     code: 'ECONNREFUSED',
+2025-11-24T18:53:12:     syscall: 'connect',
+2025-11-24T18:53:12:     address: '72.61.6.232',
+2025-11-24T18:53:12:     port: 3000
+2025-11-24T18:53:12:   }
+2025-11-24T18:53:12: }
+2025-11-24T18:53:13:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:13:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:13:   digest: '3046482884',
+2025-11-24T18:53:13:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:13:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:13:     errno: -111,
+2025-11-24T18:53:13:     code: 'ECONNREFUSED',
+2025-11-24T18:53:13:     syscall: 'connect',
+2025-11-24T18:53:13:     address: '72.61.6.232',
+2025-11-24T18:53:13:     port: 3000
+2025-11-24T18:53:13:   }
+2025-11-24T18:53:13: }
+2025-11-24T18:53:13: Error fetching public slides: TypeError: fetch failed
+2025-11-24T18:53:13:     at async m (.next/server/app/portal/page.js:3:8722) {
+2025-11-24T18:53:13:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:13:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:13:     errno: -111,
+2025-11-24T18:53:13:     code: 'ECONNREFUSED',
+2025-11-24T18:53:13:     syscall: 'connect',
+2025-11-24T18:53:13:     address: '72.61.6.232',
+2025-11-24T18:53:13:     port: 3000
+2025-11-24T18:53:13:   }
+2025-11-24T18:53:13: }
+2025-11-24T18:53:13:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:13:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:13:   digest: '3046482884',
+2025-11-24T18:53:13:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:13:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:13:     errno: -111,
+2025-11-24T18:53:13:     code: 'ECONNREFUSED',
+2025-11-24T18:53:13:     syscall: 'connect',
+2025-11-24T18:53:13:     address: '72.61.6.232',
+2025-11-24T18:53:13:     port: 3000
+2025-11-24T18:53:13:   }
+2025-11-24T18:53:13: }
+2025-11-24T18:53:13:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:13:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:13:   digest: '3046482884',
+2025-11-24T18:53:13:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:13:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:13:     errno: -111,
+2025-11-24T18:53:13:     code: 'ECONNREFUSED',
+2025-11-24T18:53:13:     syscall: 'connect',
+2025-11-24T18:53:13:     address: '72.61.6.232',
+2025-11-24T18:53:13:     port: 3000
+2025-11-24T18:53:13:   }
+2025-11-24T18:53:13: }
+2025-11-24T18:53:26: Error fetching published featured properties (public): TypeError: fetch failed
+2025-11-24T18:53:26:     at async Y (.next/server/chunks/3841.js:1:26848)
+2025-11-24T18:53:26:     at async d (.next/server/app/portal/page.js:3:19003) {
+2025-11-24T18:53:26:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:26:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:26:     errno: -111,
+2025-11-24T18:53:26:     code: 'ECONNREFUSED',
+2025-11-24T18:53:26:     syscall: 'connect',
+2025-11-24T18:53:26:     address: '72.61.6.232',
+2025-11-24T18:53:26:     port: 3000
+2025-11-24T18:53:26:   }
+2025-11-24T18:53:26: }
+2025-11-24T18:53:26: Failed to fetch published properties: TypeError: fetch failed
+2025-11-24T18:53:26:     at async n (.next/server/app/portal/page.js:3:28762)
+2025-11-24T18:53:26:     at async d (.next/server/app/portal/page.js:3:19066) {
+2025-11-24T18:53:26:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:26:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:26:     errno: -111,
+2025-11-24T18:53:26:     code: 'ECONNREFUSED',
+2025-11-24T18:53:26:     syscall: 'connect',
+2025-11-24T18:53:26:     address: '72.61.6.232',
+2025-11-24T18:53:26:     port: 3000
+2025-11-24T18:53:26:   }
+2025-11-24T18:53:26: }
+2025-11-24T18:53:26:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:26:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:26:   digest: '3046482884',
+2025-11-24T18:53:26:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:26:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:26:     errno: -111,
+2025-11-24T18:53:26:     code: 'ECONNREFUSED',
+2025-11-24T18:53:26:     syscall: 'connect',
+2025-11-24T18:53:26:     address: '72.61.6.232',
+2025-11-24T18:53:26:     port: 3000
+2025-11-24T18:53:26:   }
+2025-11-24T18:53:26: }
+2025-11-24T18:53:26: Error fetching public slides: TypeError: fetch failed
+2025-11-24T18:53:26:     at async m (.next/server/app/portal/page.js:3:8722) {
+2025-11-24T18:53:26:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:26:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:26:     errno: -111,
+2025-11-24T18:53:26:     code: 'ECONNREFUSED',
+2025-11-24T18:53:26:     syscall: 'connect',
+2025-11-24T18:53:26:     address: '72.61.6.232',
+2025-11-24T18:53:26:     port: 3000
+2025-11-24T18:53:26:   }
+2025-11-24T18:53:26: }
+2025-11-24T18:53:26:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:26:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:26:   digest: '3046482884',
+2025-11-24T18:53:26:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:26:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:26:     errno: -111,
+2025-11-24T18:53:26:     code: 'ECONNREFUSED',
+2025-11-24T18:53:26:     syscall: 'connect',
+2025-11-24T18:53:26:     address: '72.61.6.232',
+2025-11-24T18:53:26:     port: 3000
+2025-11-24T18:53:26:   }
+2025-11-24T18:53:26: }
+2025-11-24T18:53:27:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:27:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:27:   digest: '3046482884',
+2025-11-24T18:53:27:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:27:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:27:     errno: -111,
+2025-11-24T18:53:27:     code: 'ECONNREFUSED',
+2025-11-24T18:53:27:     syscall: 'connect',
+2025-11-24T18:53:27:     address: '72.61.6.232',
+2025-11-24T18:53:27:     port: 3000
+2025-11-24T18:53:27:   }
+2025-11-24T18:53:27: }
+2025-11-24T18:53:54: Error fetching published featured properties (public): TypeError: fetch failed
+2025-11-24T18:53:54:     at async Y (.next/server/chunks/3841.js:1:26848)
+2025-11-24T18:53:54:     at async d (.next/server/app/portal/page.js:3:19003) {
+2025-11-24T18:53:54:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:54:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:54:     errno: -111,
+2025-11-24T18:53:54:     code: 'ECONNREFUSED',
+2025-11-24T18:53:54:     syscall: 'connect',
+2025-11-24T18:53:54:     address: '72.61.6.232',
+2025-11-24T18:53:54:     port: 3000
+2025-11-24T18:53:54:   }
+2025-11-24T18:53:54: }
+2025-11-24T18:53:54: Failed to fetch published properties: TypeError: fetch failed
+2025-11-24T18:53:54:     at async n (.next/server/app/portal/page.js:3:28762)
+2025-11-24T18:53:54:     at async d (.next/server/app/portal/page.js:3:19066) {
+2025-11-24T18:53:54:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:54:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:54:     errno: -111,
+2025-11-24T18:53:54:     code: 'ECONNREFUSED',
+2025-11-24T18:53:54:     syscall: 'connect',
+2025-11-24T18:53:54:     address: '72.61.6.232',
+2025-11-24T18:53:54:     port: 3000
+2025-11-24T18:53:54:   }
+2025-11-24T18:53:54: }
+2025-11-24T18:53:54:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:54:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:54:   digest: '3046482884',
+2025-11-24T18:53:54:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:54:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:54:     errno: -111,
+2025-11-24T18:53:54:     code: 'ECONNREFUSED',
+2025-11-24T18:53:54:     syscall: 'connect',
+2025-11-24T18:53:54:     address: '72.61.6.232',
+2025-11-24T18:53:54:     port: 3000
+2025-11-24T18:53:54:   }
+2025-11-24T18:53:54: }
+2025-11-24T18:53:54: Error fetching public slides: TypeError: fetch failed
+2025-11-24T18:53:54:     at async m (.next/server/app/portal/page.js:3:8722) {
+2025-11-24T18:53:54:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:54:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:54:     errno: -111,
+2025-11-24T18:53:54:     code: 'ECONNREFUSED',
+2025-11-24T18:53:54:     syscall: 'connect',
+2025-11-24T18:53:54:     address: '72.61.6.232',
+2025-11-24T18:53:54:     port: 3000
+2025-11-24T18:53:54:   }
+2025-11-24T18:53:54: }
+2025-11-24T18:53:55:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:55:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:55:   digest: '3046482884',
+2025-11-24T18:53:55:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:55:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:55:     errno: -111,
+2025-11-24T18:53:55:     code: 'ECONNREFUSED',
+2025-11-24T18:53:55:     syscall: 'connect',
+2025-11-24T18:53:55:     address: '72.61.6.232',
+2025-11-24T18:53:55:     port: 3000
+2025-11-24T18:53:55:   }
+2025-11-24T18:53:55: }
+2025-11-24T18:53:55:  ⨯ TypeError: fetch failed
+2025-11-24T18:53:55:     at async d (.next/server/chunks/5291.js:1:872) {
+2025-11-24T18:53:55:   digest: '3046482884',
+2025-11-24T18:53:55:   [cause]: Error: connect ECONNREFUSED 72.61.6.232:3000
+2025-11-24T18:53:55:       at <unknown> (Error: connect ECONNREFUSED 72.61.6.232:3000) {
+2025-11-24T18:53:55:     errno: -111,
+2025-11-24T18:53:55:     code: 'ECONNREFUSED',
+2025-11-24T18:53:55:     syscall: 'connect',
+2025-11-24T18:53:55:     address: '72.61.6.232',
+2025-11-24T18:53:55:     port: 3000
+2025-11-24T18:53:55:   }
+2025-11-24T18:53:55: }

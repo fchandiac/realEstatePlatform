@@ -1045,3 +1045,2459 @@
 2025-11-23T14:06:11:   opText: 'En Arriendo',
 2025-11-23T14:06:11:   hasOpText: true
 2025-11-23T14:06:11: }
+2025-11-24T18:26:14:    ▲ Next.js 15.3.3
+2025-11-24T18:26:14:    - Local:        http://localhost:3001
+2025-11-24T18:26:14:    - Network:      http://0.0.0.0:3001
+2025-11-24T18:26:14: 
+2025-11-24T18:26:14:  ✓ Starting...
+2025-11-24T18:26:14:  ✓ Ready in 140ms
+2025-11-24T18:26:17: Middleware - Acceso a backoffice: /backOffice/cms/articles
+2025-11-24T18:26:17: Middleware - Token presente: true
+2025-11-24T18:26:17: Middleware - Token role: ADMIN
+2025-11-24T18:26:17: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:26:17: ArticlesPage result: {
+2025-11-24T18:26:17:   success: true,
+2025-11-24T18:26:17:   data: [
+2025-11-24T18:26:17:     {
+2025-11-24T18:26:17:       id: '074102f2-2e98-41ef-b37f-2517ad2246e2',
+2025-11-24T18:26:17:       title: '5 Consejos para Comprar tu Primera Casa',
+2025-11-24T18:26:17:       subtitle: 'Guía práctica para compradores primerizos',
+2025-11-24T18:26:17:       text: 'Comprar una casa es una de las decisiones más importantes de tu vida. En este artículo te compartimos 5 consejos fundamentales para hacer una compra inteligente y segura. Desde evaluar tu presupuesto, revisar la ubicación, inspeccionar el estado de la propiedad, revisar documentos legales, y negociar el precio. Sigue estos pasos para tomar la mejor decisión.',
+2025-11-24T18:26:17:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008106043-pexels-luis-yanez-57302-206172.jpg',
+2025-11-24T18:26:17:       category: 'Comprar',
+2025-11-24T18:26:17:       isActive: true,
+2025-11-24T18:26:17:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:17:       updatedAt: '2025-11-24T18:15:06.000Z',
+2025-11-24T18:26:17:       deletedAt: null
+2025-11-24T18:26:17:     },
+2025-11-24T18:26:17:     {
+2025-11-24T18:26:17:       id: '256c4cc1-fdba-4dbe-aa2f-a7a3ab24df56',
+2025-11-24T18:26:17:       title: 'Inversión Inmobiliaria: Rentabilidad a Largo Plazo',
+2025-11-24T18:26:17:       subtitle: 'Por qué el inmueble sigue siendo la mejor inversión',
+2025-11-24T18:26:17:       text: 'La inversión inmobiliaria ofrece múltiples ventajas: genera flujo de caja a través de arriendos, se aprecia con el tiempo, permite apalancamiento con hipotecas, y es tangible. Diferente a acciones o criptomonedas, la propiedad es un activo sólido. Analiza la ubicación, proyecciones de crecimiento, y potencial de arriendo.',
+2025-11-24T18:26:17:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008118805-pexels-pixabay-208736.jpg',
+2025-11-24T18:26:17:       category: 'Inversión',
+2025-11-24T18:26:17:       isActive: true,
+2025-11-24T18:26:17:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:17:       updatedAt: '2025-11-24T18:15:18.000Z',
+2025-11-24T18:26:17:       deletedAt: null
+2025-11-24T18:26:17:     },
+2025-11-24T18:26:17:     {
+2025-11-24T18:26:17:       id: '27fc6843-af1d-456e-9733-72ec15f15080',
+2025-11-24T18:26:17:       title: 'Cómo Preparar tu Casa para la Venta',
+2025-11-24T18:26:17:       subtitle: 'Estrategias para obtener el mejor precio',
+2025-11-24T18:26:17:       text: 'Si estás pensando en vender tu propiedad, preparación es la clave. Desde mejorar la presentación exterior, pintar las paredes, reparar detalles, limpiar profundamente, hasta organizar los espacios. Todas estas acciones pueden incrementar significativamente el valor percibido de tu propiedad y atraer compradores de calidad. Descubre cómo maximizar el potencial de venta de tu casa.',
+2025-11-24T18:26:17:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008131187-pexels-pixasquare-1115804.jpg',
+2025-11-24T18:26:17:       category: 'Comprar',
+2025-11-24T18:26:17:       isActive: true,
+2025-11-24T18:26:17:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:17:       updatedAt: '2025-11-24T18:15:31.000Z',
+2025-11-24T18:26:17:       deletedAt: null
+2025-11-24T18:26:17:     },
+2025-11-24T18:26:17:     {
+2025-11-24T18:26:17:       id: '35808792-98e1-46ea-a614-1d54e7b5e275',
+2025-11-24T18:26:17:       title: 'Análisis del Mercado Inmobiliario 2024',
+2025-11-24T18:26:17:       subtitle: 'Tendencias y proyecciones para el sector',
+2025-11-24T18:26:17:       text: 'El mercado inmobiliario chileno ha mostrado importante dinamismo en los últimos meses. Los precios han experimentado variaciones según zona y tipo de propiedad. Santiago concentra la mayor demanda, con zonas premium manteniendo estabilidad. El sector de departamentos pequeños ha visto crecimiento',
+2025-11-24T18:26:17:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008143893-pexels-pixabay-259588.jpg',
+2025-11-24T18:26:17:       category: 'Mercado',
+2025-11-24T18:26:17:       isActive: true,
+2025-11-24T18:26:17:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:17:       updatedAt: '2025-11-24T18:15:43.000Z',
+2025-11-24T18:26:17:       deletedAt: null
+2025-11-24T18:26:17:     },
+2025-11-24T18:26:17:     {
+2025-11-24T18:26:17:       id: '5a2f8ea9-5c4d-42cd-9c79-0c23a00bc542',
+2025-11-24T18:26:17:       title: 'Colores que Transforman tus Ambientes',
+2025-11-24T18:26:17:       subtitle: 'Psicología del color en diseño de interiores',
+2025-11-24T18:26:17:       text: 'Cada color tiene un impacto psicológico diferente. Los azules transmiten calma, ideales para dormitorios. Los verdes conectan con la naturaleza. Los tonos cálidos crean intimidad. El blanco amplía espacios. La combinación correcta de colores puede transformar completamente la atmósfera de tu hogar. Aprende a usar el color a tu favor.',
+2025-11-24T18:26:17:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008159033-pexels-pixabay-280222.jpg',
+2025-11-24T18:26:17:       category: 'Decoración',
+2025-11-24T18:26:17:       isActive: true,
+2025-11-24T18:26:17:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:17:       updatedAt: '2025-11-24T18:15:59.000Z',
+2025-11-24T18:26:17:       deletedAt: null
+2025-11-24T18:26:17:     },
+2025-11-24T18:26:17:     {
+2025-11-24T18:26:17:       id: '5c6b8644-981a-4ebc-aa5b-7d99850fbf17',
+2025-11-24T18:26:17:       title: 'Decoración Minimalista: Espacio Limpio y Moderno',
+2025-11-24T18:26:17:       subtitle: 'Cómo crear ambientes acogedores con menos',
+2025-11-24T18:26:17:       text: 'El minimalismo no significa vivir sin comodidad. Se trata de elegir cuidadosamente cada elemento, dejando de lado lo innecesario. Los colores neutros amplían visualmente los espacios. La iluminación natural es tu mejor aliada. Muebles funcionales y atemporales son inversiones inteligentes. Descubre cómo crear un hogar moderno, limpio y acogedor.',
+2025-11-24T18:26:17:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008172131-pexels-itsterrymag-2635038.jpg',
+2025-11-24T18:26:17:       category: 'Decoración',
+2025-11-24T18:26:17:       isActive: true,
+2025-11-24T18:26:17:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:17:       updatedAt: '2025-11-24T18:16:12.000Z',
+2025-11-24T18:26:17:       deletedAt: null
+2025-11-24T18:26:17:     },
+2025-11-24T18:26:17:     {
+2025-11-24T18:26:17:       id: '6b09926b-8704-4f83-9667-ee26ff4afbc0',
+2025-11-24T18:26:17:       title: 'Zonas con Mayor Potencial de Crecimiento en Santiago',
+2025-11-24T18:26:17:       subtitle: 'Dónde invertir en 2024 y 2025',
+2025-11-24T18:26:17:       text: 'Identificar zonas de crecimiento es crucial para inversiones inmobiliarias. Comunas como Colina, Lampa y Puente Alto muestran fuerte expansión residencial. Las nuevas conexiones viales y proyectos de transporte están impulsando valores. Analiza la infraestructura disponible, proyectos futuros y tendencias demográficas. La mejor inversión es aquella bien informada.',
+2025-11-24T18:26:17:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008186617-pexels-pixabay-277667.jpg',
+2025-11-24T18:26:17:       category: 'Mercado',
+2025-11-24T18:26:17:       isActive: true,
+2025-11-24T18:26:17:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:17:       updatedAt: '2025-11-24T18:16:26.000Z',
+2025-11-24T18:26:17:       deletedAt: null
+2025-11-24T18:26:17:     },
+2025-11-24T18:26:17:     {
+2025-11-24T18:26:17:       id: '7d5e85ae-c315-4e5c-8f39-0f9155e83e6d',
+2025-11-24T18:26:17:       title: 'Estrategias de Arriendo: Maximiza tus Ingresos',
+2025-11-24T18:26:17:       subtitle: 'Cómo arrendar inteligentemente y con seguridad',
+2025-11-24T18:26:17:       text: 'Si inviertes en propiedad para arriendo, la estrategia es fundamental. Evalúa el potencial de arrendamiento de la zona. Fija precios competitivos pero rentables. Selecciona arrendatarios cuidadosamente. Mantén la propiedad en excelente condición. Los gastos deben controlarse para maximizar ganancias. Un buen arrendamiento es un negocio ganador.',
+2025-11-24T18:26:17:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008201184-pexels-jessica-bryant-592135-1370704.jpg',
+2025-11-24T18:26:17:       category: 'Inversión',
+2025-11-24T18:26:17:       isActive: true,
+2025-11-24T18:26:17:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:17:       updatedAt: '2025-11-24T18:16:41.000Z',
+2025-11-24T18:26:17:       deletedAt: null
+2025-11-24T18:26:17:     }
+2025-11-24T18:26:17:   ]
+2025-11-24T18:26:17: }
+2025-11-24T18:26:21: Middleware - Acceso a backoffice: /backOffice/cms/articles
+2025-11-24T18:26:21: Middleware - Token presente: true
+2025-11-24T18:26:21: Middleware - Token role: ADMIN
+2025-11-24T18:26:21: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:26:21: ArticlesPage result: {
+2025-11-24T18:26:21:   success: true,
+2025-11-24T18:26:21:   data: [
+2025-11-24T18:26:21:     {
+2025-11-24T18:26:21:       id: '074102f2-2e98-41ef-b37f-2517ad2246e2',
+2025-11-24T18:26:21:       title: '5 Consejos para Comprar tu Primera Casa',
+2025-11-24T18:26:21:       subtitle: 'Guía práctica para compradores primerizos',
+2025-11-24T18:26:21:       text: 'Comprar una casa es una de las decisiones más importantes de tu vida. En este artículo te compartimos 5 consejos fundamentales para hacer una compra inteligente y segura. Desde evaluar tu presupuesto, revisar la ubicación, inspeccionar el estado de la propiedad, revisar documentos legales, y negociar el precio. Sigue estos pasos para tomar la mejor decisión.',
+2025-11-24T18:26:21:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008106043-pexels-luis-yanez-57302-206172.jpg',
+2025-11-24T18:26:21:       category: 'Comprar',
+2025-11-24T18:26:21:       isActive: true,
+2025-11-24T18:26:21:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:21:       updatedAt: '2025-11-24T18:15:06.000Z',
+2025-11-24T18:26:21:       deletedAt: null
+2025-11-24T18:26:21:     },
+2025-11-24T18:26:21:     {
+2025-11-24T18:26:21:       id: '256c4cc1-fdba-4dbe-aa2f-a7a3ab24df56',
+2025-11-24T18:26:21:       title: 'Inversión Inmobiliaria: Rentabilidad a Largo Plazo',
+2025-11-24T18:26:21:       subtitle: 'Por qué el inmueble sigue siendo la mejor inversión',
+2025-11-24T18:26:21:       text: 'La inversión inmobiliaria ofrece múltiples ventajas: genera flujo de caja a través de arriendos, se aprecia con el tiempo, permite apalancamiento con hipotecas, y es tangible. Diferente a acciones o criptomonedas, la propiedad es un activo sólido. Analiza la ubicación, proyecciones de crecimiento, y potencial de arriendo.',
+2025-11-24T18:26:21:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008118805-pexels-pixabay-208736.jpg',
+2025-11-24T18:26:21:       category: 'Inversión',
+2025-11-24T18:26:21:       isActive: true,
+2025-11-24T18:26:21:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:21:       updatedAt: '2025-11-24T18:15:18.000Z',
+2025-11-24T18:26:21:       deletedAt: null
+2025-11-24T18:26:21:     },
+2025-11-24T18:26:21:     {
+2025-11-24T18:26:21:       id: '27fc6843-af1d-456e-9733-72ec15f15080',
+2025-11-24T18:26:21:       title: 'Cómo Preparar tu Casa para la Venta',
+2025-11-24T18:26:21:       subtitle: 'Estrategias para obtener el mejor precio',
+2025-11-24T18:26:21:       text: 'Si estás pensando en vender tu propiedad, preparación es la clave. Desde mejorar la presentación exterior, pintar las paredes, reparar detalles, limpiar profundamente, hasta organizar los espacios. Todas estas acciones pueden incrementar significativamente el valor percibido de tu propiedad y atraer compradores de calidad. Descubre cómo maximizar el potencial de venta de tu casa.',
+2025-11-24T18:26:21:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008131187-pexels-pixasquare-1115804.jpg',
+2025-11-24T18:26:21:       category: 'Comprar',
+2025-11-24T18:26:21:       isActive: true,
+2025-11-24T18:26:21:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:21:       updatedAt: '2025-11-24T18:15:31.000Z',
+2025-11-24T18:26:21:       deletedAt: null
+2025-11-24T18:26:21:     },
+2025-11-24T18:26:21:     {
+2025-11-24T18:26:21:       id: '35808792-98e1-46ea-a614-1d54e7b5e275',
+2025-11-24T18:26:21:       title: 'Análisis del Mercado Inmobiliario 2024',
+2025-11-24T18:26:21:       subtitle: 'Tendencias y proyecciones para el sector',
+2025-11-24T18:26:21:       text: 'El mercado inmobiliario chileno ha mostrado importante dinamismo en los últimos meses. Los precios han experimentado variaciones según zona y tipo de propiedad. Santiago concentra la mayor demanda, con zonas premium manteniendo estabilidad. El sector de departamentos pequeños ha visto crecimiento',
+2025-11-24T18:26:21:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008143893-pexels-pixabay-259588.jpg',
+2025-11-24T18:26:21:       category: 'Mercado',
+2025-11-24T18:26:21:       isActive: true,
+2025-11-24T18:26:21:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:21:       updatedAt: '2025-11-24T18:15:43.000Z',
+2025-11-24T18:26:21:       deletedAt: null
+2025-11-24T18:26:21:     },
+2025-11-24T18:26:21:     {
+2025-11-24T18:26:21:       id: '5a2f8ea9-5c4d-42cd-9c79-0c23a00bc542',
+2025-11-24T18:26:21:       title: 'Colores que Transforman tus Ambientes',
+2025-11-24T18:26:21:       subtitle: 'Psicología del color en diseño de interiores',
+2025-11-24T18:26:21:       text: 'Cada color tiene un impacto psicológico diferente. Los azules transmiten calma, ideales para dormitorios. Los verdes conectan con la naturaleza. Los tonos cálidos crean intimidad. El blanco amplía espacios. La combinación correcta de colores puede transformar completamente la atmósfera de tu hogar. Aprende a usar el color a tu favor.',
+2025-11-24T18:26:21:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008159033-pexels-pixabay-280222.jpg',
+2025-11-24T18:26:21:       category: 'Decoración',
+2025-11-24T18:26:21:       isActive: true,
+2025-11-24T18:26:21:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:21:       updatedAt: '2025-11-24T18:15:59.000Z',
+2025-11-24T18:26:21:       deletedAt: null
+2025-11-24T18:26:21:     },
+2025-11-24T18:26:21:     {
+2025-11-24T18:26:21:       id: '5c6b8644-981a-4ebc-aa5b-7d99850fbf17',
+2025-11-24T18:26:21:       title: 'Decoración Minimalista: Espacio Limpio y Moderno',
+2025-11-24T18:26:21:       subtitle: 'Cómo crear ambientes acogedores con menos',
+2025-11-24T18:26:21:       text: 'El minimalismo no significa vivir sin comodidad. Se trata de elegir cuidadosamente cada elemento, dejando de lado lo innecesario. Los colores neutros amplían visualmente los espacios. La iluminación natural es tu mejor aliada. Muebles funcionales y atemporales son inversiones inteligentes. Descubre cómo crear un hogar moderno, limpio y acogedor.',
+2025-11-24T18:26:21:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008172131-pexels-itsterrymag-2635038.jpg',
+2025-11-24T18:26:21:       category: 'Decoración',
+2025-11-24T18:26:21:       isActive: true,
+2025-11-24T18:26:21:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:21:       updatedAt: '2025-11-24T18:16:12.000Z',
+2025-11-24T18:26:21:       deletedAt: null
+2025-11-24T18:26:21:     },
+2025-11-24T18:26:21:     {
+2025-11-24T18:26:21:       id: '6b09926b-8704-4f83-9667-ee26ff4afbc0',
+2025-11-24T18:26:21:       title: 'Zonas con Mayor Potencial de Crecimiento en Santiago',
+2025-11-24T18:26:21:       subtitle: 'Dónde invertir en 2024 y 2025',
+2025-11-24T18:26:21:       text: 'Identificar zonas de crecimiento es crucial para inversiones inmobiliarias. Comunas como Colina, Lampa y Puente Alto muestran fuerte expansión residencial. Las nuevas conexiones viales y proyectos de transporte están impulsando valores. Analiza la infraestructura disponible, proyectos futuros y tendencias demográficas. La mejor inversión es aquella bien informada.',
+2025-11-24T18:26:21:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008186617-pexels-pixabay-277667.jpg',
+2025-11-24T18:26:21:       category: 'Mercado',
+2025-11-24T18:26:21:       isActive: true,
+2025-11-24T18:26:21:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:21:       updatedAt: '2025-11-24T18:16:26.000Z',
+2025-11-24T18:26:21:       deletedAt: null
+2025-11-24T18:26:21:     },
+2025-11-24T18:26:21:     {
+2025-11-24T18:26:21:       id: '7d5e85ae-c315-4e5c-8f39-0f9155e83e6d',
+2025-11-24T18:26:21:       title: 'Estrategias de Arriendo: Maximiza tus Ingresos',
+2025-11-24T18:26:21:       subtitle: 'Cómo arrendar inteligentemente y con seguridad',
+2025-11-24T18:26:21:       text: 'Si inviertes en propiedad para arriendo, la estrategia es fundamental. Evalúa el potencial de arrendamiento de la zona. Fija precios competitivos pero rentables. Selecciona arrendatarios cuidadosamente. Mantén la propiedad en excelente condición. Los gastos deben controlarse para maximizar ganancias. Un buen arrendamiento es un negocio ganador.',
+2025-11-24T18:26:21:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008201184-pexels-jessica-bryant-592135-1370704.jpg',
+2025-11-24T18:26:21:       category: 'Inversión',
+2025-11-24T18:26:21:       isActive: true,
+2025-11-24T18:26:21:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:21:       updatedAt: '2025-11-24T18:16:41.000Z',
+2025-11-24T18:26:21:       deletedAt: null
+2025-11-24T18:26:21:     }
+2025-11-24T18:26:21:   ]
+2025-11-24T18:26:21: }
+2025-11-24T18:26:33: Middleware - Acceso a backoffice: /backOffice/cms/articles
+2025-11-24T18:26:33: Middleware - Token presente: true
+2025-11-24T18:26:33: Middleware - Token role: ADMIN
+2025-11-24T18:26:33: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:26:33: ArticlesPage result: {
+2025-11-24T18:26:33:   success: true,
+2025-11-24T18:26:33:   data: [
+2025-11-24T18:26:33:     {
+2025-11-24T18:26:33:       id: '074102f2-2e98-41ef-b37f-2517ad2246e2',
+2025-11-24T18:26:33:       title: '5 Consejos para Comprar tu Primera Casa',
+2025-11-24T18:26:33:       subtitle: 'Guía práctica para compradores primerizos',
+2025-11-24T18:26:33:       text: 'Comprar una casa es una de las decisiones más importantes de tu vida. En este artículo te compartimos 5 consejos fundamentales para hacer una compra inteligente y segura. Desde evaluar tu presupuesto, revisar la ubicación, inspeccionar el estado de la propiedad, revisar documentos legales, y negociar el precio. Sigue estos pasos para tomar la mejor decisión.',
+2025-11-24T18:26:33:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008106043-pexels-luis-yanez-57302-206172.jpg',
+2025-11-24T18:26:33:       category: 'Comprar',
+2025-11-24T18:26:33:       isActive: true,
+2025-11-24T18:26:33:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:33:       updatedAt: '2025-11-24T18:15:06.000Z',
+2025-11-24T18:26:33:       deletedAt: null
+2025-11-24T18:26:33:     },
+2025-11-24T18:26:33:     {
+2025-11-24T18:26:33:       id: '256c4cc1-fdba-4dbe-aa2f-a7a3ab24df56',
+2025-11-24T18:26:33:       title: 'Inversión Inmobiliaria: Rentabilidad a Largo Plazo',
+2025-11-24T18:26:33:       subtitle: 'Por qué el inmueble sigue siendo la mejor inversión',
+2025-11-24T18:26:33:       text: 'La inversión inmobiliaria ofrece múltiples ventajas: genera flujo de caja a través de arriendos, se aprecia con el tiempo, permite apalancamiento con hipotecas, y es tangible. Diferente a acciones o criptomonedas, la propiedad es un activo sólido. Analiza la ubicación, proyecciones de crecimiento, y potencial de arriendo.',
+2025-11-24T18:26:33:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008118805-pexels-pixabay-208736.jpg',
+2025-11-24T18:26:33:       category: 'Inversión',
+2025-11-24T18:26:33:       isActive: true,
+2025-11-24T18:26:33:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:33:       updatedAt: '2025-11-24T18:15:18.000Z',
+2025-11-24T18:26:33:       deletedAt: null
+2025-11-24T18:26:33:     },
+2025-11-24T18:26:33:     {
+2025-11-24T18:26:33:       id: '27fc6843-af1d-456e-9733-72ec15f15080',
+2025-11-24T18:26:33:       title: 'Cómo Preparar tu Casa para la Venta',
+2025-11-24T18:26:33:       subtitle: 'Estrategias para obtener el mejor precio',
+2025-11-24T18:26:33:       text: 'Si estás pensando en vender tu propiedad, preparación es la clave. Desde mejorar la presentación exterior, pintar las paredes, reparar detalles, limpiar profundamente, hasta organizar los espacios. Todas estas acciones pueden incrementar significativamente el valor percibido de tu propiedad y atraer compradores de calidad. Descubre cómo maximizar el potencial de venta de tu casa.',
+2025-11-24T18:26:33:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008131187-pexels-pixasquare-1115804.jpg',
+2025-11-24T18:26:33:       category: 'Comprar',
+2025-11-24T18:26:33:       isActive: true,
+2025-11-24T18:26:33:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:33:       updatedAt: '2025-11-24T18:15:31.000Z',
+2025-11-24T18:26:33:       deletedAt: null
+2025-11-24T18:26:33:     },
+2025-11-24T18:26:33:     {
+2025-11-24T18:26:33:       id: '35808792-98e1-46ea-a614-1d54e7b5e275',
+2025-11-24T18:26:33:       title: 'Análisis del Mercado Inmobiliario 2024',
+2025-11-24T18:26:33:       subtitle: 'Tendencias y proyecciones para el sector',
+2025-11-24T18:26:33:       text: 'El mercado inmobiliario chileno ha mostrado importante dinamismo en los últimos meses. Los precios han experimentado variaciones según zona y tipo de propiedad. Santiago concentra la mayor demanda, con zonas premium manteniendo estabilidad. El sector de departamentos pequeños ha visto crecimiento',
+2025-11-24T18:26:33:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008143893-pexels-pixabay-259588.jpg',
+2025-11-24T18:26:33:       category: 'Mercado',
+2025-11-24T18:26:33:       isActive: true,
+2025-11-24T18:26:33:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:33:       updatedAt: '2025-11-24T18:15:43.000Z',
+2025-11-24T18:26:33:       deletedAt: null
+2025-11-24T18:26:33:     },
+2025-11-24T18:26:33:     {
+2025-11-24T18:26:33:       id: '5a2f8ea9-5c4d-42cd-9c79-0c23a00bc542',
+2025-11-24T18:26:33:       title: 'Colores que Transforman tus Ambientes',
+2025-11-24T18:26:33:       subtitle: 'Psicología del color en diseño de interiores',
+2025-11-24T18:26:33:       text: 'Cada color tiene un impacto psicológico diferente. Los azules transmiten calma, ideales para dormitorios. Los verdes conectan con la naturaleza. Los tonos cálidos crean intimidad. El blanco amplía espacios. La combinación correcta de colores puede transformar completamente la atmósfera de tu hogar. Aprende a usar el color a tu favor.',
+2025-11-24T18:26:33:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008159033-pexels-pixabay-280222.jpg',
+2025-11-24T18:26:33:       category: 'Decoración',
+2025-11-24T18:26:33:       isActive: true,
+2025-11-24T18:26:33:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:33:       updatedAt: '2025-11-24T18:15:59.000Z',
+2025-11-24T18:26:33:       deletedAt: null
+2025-11-24T18:26:33:     },
+2025-11-24T18:26:33:     {
+2025-11-24T18:26:33:       id: '5c6b8644-981a-4ebc-aa5b-7d99850fbf17',
+2025-11-24T18:26:33:       title: 'Decoración Minimalista: Espacio Limpio y Moderno',
+2025-11-24T18:26:33:       subtitle: 'Cómo crear ambientes acogedores con menos',
+2025-11-24T18:26:33:       text: 'El minimalismo no significa vivir sin comodidad. Se trata de elegir cuidadosamente cada elemento, dejando de lado lo innecesario. Los colores neutros amplían visualmente los espacios. La iluminación natural es tu mejor aliada. Muebles funcionales y atemporales son inversiones inteligentes. Descubre cómo crear un hogar moderno, limpio y acogedor.',
+2025-11-24T18:26:33:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008172131-pexels-itsterrymag-2635038.jpg',
+2025-11-24T18:26:33:       category: 'Decoración',
+2025-11-24T18:26:33:       isActive: true,
+2025-11-24T18:26:33:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:33:       updatedAt: '2025-11-24T18:16:12.000Z',
+2025-11-24T18:26:33:       deletedAt: null
+2025-11-24T18:26:33:     },
+2025-11-24T18:26:33:     {
+2025-11-24T18:26:33:       id: '6b09926b-8704-4f83-9667-ee26ff4afbc0',
+2025-11-24T18:26:33:       title: 'Zonas con Mayor Potencial de Crecimiento en Santiago',
+2025-11-24T18:26:33:       subtitle: 'Dónde invertir en 2024 y 2025',
+2025-11-24T18:26:33:       text: 'Identificar zonas de crecimiento es crucial para inversiones inmobiliarias. Comunas como Colina, Lampa y Puente Alto muestran fuerte expansión residencial. Las nuevas conexiones viales y proyectos de transporte están impulsando valores. Analiza la infraestructura disponible, proyectos futuros y tendencias demográficas. La mejor inversión es aquella bien informada.',
+2025-11-24T18:26:33:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008186617-pexels-pixabay-277667.jpg',
+2025-11-24T18:26:33:       category: 'Mercado',
+2025-11-24T18:26:33:       isActive: true,
+2025-11-24T18:26:33:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:33:       updatedAt: '2025-11-24T18:16:26.000Z',
+2025-11-24T18:26:33:       deletedAt: null
+2025-11-24T18:26:33:     },
+2025-11-24T18:26:33:     {
+2025-11-24T18:26:33:       id: '7d5e85ae-c315-4e5c-8f39-0f9155e83e6d',
+2025-11-24T18:26:33:       title: 'Estrategias de Arriendo: Maximiza tus Ingresos',
+2025-11-24T18:26:33:       subtitle: 'Cómo arrendar inteligentemente y con seguridad',
+2025-11-24T18:26:33:       text: 'Si inviertes en propiedad para arriendo, la estrategia es fundamental. Evalúa el potencial de arrendamiento de la zona. Fija precios competitivos pero rentables. Selecciona arrendatarios cuidadosamente. Mantén la propiedad en excelente condición. Los gastos deben controlarse para maximizar ganancias. Un buen arrendamiento es un negocio ganador.',
+2025-11-24T18:26:33:       multimediaUrl: 'http://72.61.6.232:3000/public/web/articles/1764008201184-pexels-jessica-bryant-592135-1370704.jpg',
+2025-11-24T18:26:33:       category: 'Inversión',
+2025-11-24T18:26:33:       isActive: true,
+2025-11-24T18:26:33:       createdAt: '2025-11-24T17:45:48.172Z',
+2025-11-24T18:26:33:       updatedAt: '2025-11-24T18:16:41.000Z',
+2025-11-24T18:26:33:       deletedAt: null
+2025-11-24T18:26:33:     }
+2025-11-24T18:26:33:   ]
+2025-11-24T18:26:33: }
+2025-11-24T18:36:54:    ▲ Next.js 15.3.3
+2025-11-24T18:36:54:    - Local:        http://localhost:3001
+2025-11-24T18:36:54:    - Network:      http://0.0.0.0:3001
+2025-11-24T18:36:54: 
+2025-11-24T18:36:54:  ✓ Starting...
+2025-11-24T18:36:54:  ✓ Ready in 185ms
+2025-11-24T18:44:42:    ▲ Next.js 15.3.3
+2025-11-24T18:44:42:    - Local:        http://localhost:3001
+2025-11-24T18:44:42:    - Network:      http://0.0.0.0:3001
+2025-11-24T18:44:42: 
+2025-11-24T18:44:42:  ✓ Starting...
+2025-11-24T18:44:42:  ✓ Ready in 251ms
+2025-11-24T18:44:44: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-24T18:44:44: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:44:44: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:44:44: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:44:44: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:44:44: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:44:44: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:44:44: ✅ Properties fetched: 9 items
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:44:44:   type: 'image',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:44:44:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:44:44:   totalMultimedia: 0,
+2025-11-24T18:44:44:   imagesFound: 1,
+2025-11-24T18:44:44:   images: [
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:44:44:   ]
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:44:44:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 1,
+2025-11-24T18:44:44:   hasImages: true,
+2025-11-24T18:44:44:   currentImageIndex: 0,
+2025-11-24T18:44:44:   allImages: [
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:44:44:   ]
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:44:44:   type: 'image',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:44:44:   type: 'image',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:44:44:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:44:44:   totalMultimedia: 0,
+2025-11-24T18:44:44:   imagesFound: 1,
+2025-11-24T18:44:44:   images: [
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:44:44:   ]
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:44:44:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 1,
+2025-11-24T18:44:44:   hasImages: true,
+2025-11-24T18:44:44:   currentImageIndex: 0,
+2025-11-24T18:44:44:   allImages: [
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:44:44:   ]
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:44:44:   type: 'image',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 9787e932-3a88-4ea1-abbc-14953e1f5955
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:44:44:   type: 'image',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:44:44:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:44:44:   multimedia: [
+2025-11-24T18:44:44:     {
+2025-11-24T18:44:44:       id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-24T18:44:44:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:44:44:       type: 'PROPERTY_IMG',
+2025-11-24T18:44:44:       format: 'IMG'
+2025-11-24T18:44:44:     },
+2025-11-24T18:44:44:     {
+2025-11-24T18:44:44:       id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-24T18:44:44:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:44:44:       type: 'PROPERTY_IMG',
+2025-11-24T18:44:44:       format: 'IMG'
+2025-11-24T18:44:44:     }
+2025-11-24T18:44:44:   ]
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Processing 2 multimedia items
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Processing media 1/2: {
+2025-11-24T18:44:44:   id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:44:44:   type: 'PROPERTY_IMG',
+2025-11-24T18:44:44:   format: 'IMG',
+2025-11-24T18:44:44:   isVideo: false,
+2025-11-24T18:44:44:   urlLength: 73
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-24T18:44:44:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:44:44:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:44:44:   isValidImage: true,
+2025-11-24T18:44:44:   isVideo: false,
+2025-11-24T18:44:44:   hasUrl: true
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 1: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Processing media 2/2: {
+2025-11-24T18:44:44:   id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:44:44:   type: 'PROPERTY_IMG',
+2025-11-24T18:44:44:   format: 'IMG',
+2025-11-24T18:44:44:   isVideo: false,
+2025-11-24T18:44:44:   urlLength: 73
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-24T18:44:44:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:44:44:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:44:44:   isValidImage: true,
+2025-11-24T18:44:44:   isVideo: false,
+2025-11-24T18:44:44:   hasUrl: true
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] ✅ Added multimedia image 2: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:44:44:   totalMultimedia: 2,
+2025-11-24T18:44:44:   imagesFound: 2,
+2025-11-24T18:44:44:   images: [
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-24T18:44:44:   ]
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:44:44:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:44:44:   multimediaCount: 2,
+2025-11-24T18:44:44:   imagesFound: 2,
+2025-11-24T18:44:44:   hasImages: true,
+2025-11-24T18:44:44:   currentImageIndex: 0,
+2025-11-24T18:44:44:   allImages: [
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-24T18:44:44:   ]
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:44:44:   type: 'image',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:44:44:   type: 'image',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:44:44:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:44:44:   multimedia: [
+2025-11-24T18:44:44:     {
+2025-11-24T18:44:44:       id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-24T18:44:44:       url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:44:44:       type: 'PROPERTY_IMG',
+2025-11-24T18:44:44:       format: 'IMG'
+2025-11-24T18:44:44:     },
+2025-11-24T18:44:44:     {
+2025-11-24T18:44:44:       id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:44:44:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:44:44:       type: 'PROPERTY_IMG',
+2025-11-24T18:44:44:       format: 'IMG'
+2025-11-24T18:44:44:     },
+2025-11-24T18:44:44:     {
+2025-11-24T18:44:44:       id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:44:44:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:44:44:       type: 'PROPERTY_IMG',
+2025-11-24T18:44:44:       format: 'IMG'
+2025-11-24T18:44:44:     }
+2025-11-24T18:44:44:   ]
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Processing 3 multimedia items
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Processing media 1/3: {
+2025-11-24T18:44:44:   id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:44:44:   type: 'PROPERTY_IMG',
+2025-11-24T18:44:44:   format: 'IMG',
+2025-11-24T18:44:44:   isVideo: false,
+2025-11-24T18:44:44:   urlLength: 73
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-24T18:44:44:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:44:44:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:44:44:   isValidImage: true,
+2025-11-24T18:44:44:   isVideo: false,
+2025-11-24T18:44:44:   hasUrl: true
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] ✅ Added multimedia image 1: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Processing media 2/3: {
+2025-11-24T18:44:44:   id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:44:44:   type: 'PROPERTY_IMG',
+2025-11-24T18:44:44:   format: 'IMG',
+2025-11-24T18:44:44:   isVideo: false,
+2025-11-24T18:44:44:   urlLength: 73
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-24T18:44:44:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:44:44:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:44:44:   isValidImage: true,
+2025-11-24T18:44:44:   isVideo: false,
+2025-11-24T18:44:44:   hasUrl: true
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 2: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Processing media 3/3: {
+2025-11-24T18:44:44:   id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:44:44:   type: 'PROPERTY_IMG',
+2025-11-24T18:44:44:   format: 'IMG',
+2025-11-24T18:44:44:   isVideo: false,
+2025-11-24T18:44:44:   urlLength: 72
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Media 3 validation: {
+2025-11-24T18:44:44:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:44:44:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:44:44:   isValidImage: true,
+2025-11-24T18:44:44:   isVideo: false,
+2025-11-24T18:44:44:   hasUrl: true
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] ✅ Added multimedia image 3: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:44:44:   totalMultimedia: 3,
+2025-11-24T18:44:44:   imagesFound: 3,
+2025-11-24T18:44:44:   images: [
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-24T18:44:44:   ]
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:44:44:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:44:44:   multimediaCount: 3,
+2025-11-24T18:44:44:   imagesFound: 3,
+2025-11-24T18:44:44:   hasImages: true,
+2025-11-24T18:44:44:   currentImageIndex: 0,
+2025-11-24T18:44:44:   allImages: [
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:44:44:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-24T18:44:44:   ]
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:44:44:   type: 'image',
+2025-11-24T18:44:44:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 5071a598-ff69-46b4-bee9-5e17086adfca
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 562e0504-25fc-4b64-8b65-785d028e4be7
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: a695ce66-af9b-4930-aad1-3521241770f6
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:44: 🎯 [PropertyCard] Property ID: aa5b90c8-4a74-49e6-aef1-4f2adaf97430
+2025-11-24T18:44:44: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:44:44: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:44:44:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimedia: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:44:44: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:44:44:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-24T18:44:44:   mainImageUrl: null,
+2025-11-24T18:44:44:   multimediaCount: 0,
+2025-11-24T18:44:44:   imagesFound: 0,
+2025-11-24T18:44:44:   hasImages: false,
+2025-11-24T18:44:44:   currentImageIndex: -1,
+2025-11-24T18:44:44:   allImages: []
+2025-11-24T18:44:44: }
+2025-11-24T18:44:44: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:44:46: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:44:46: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:44:46: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-24T18:44:46: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:44:46: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:44:46: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:44:46: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:44:46: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid
+2025-11-24T18:44:46: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:44:46: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:45:00: Middleware - Acceso a backoffice: /backOffice
+2025-11-24T18:45:00: Middleware - Token presente: true
+2025-11-24T18:45:00: Middleware - Token role: ADMIN
+2025-11-24T18:45:00: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:45:00: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:45:00: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:45:00: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-24T18:45:00: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:45:00: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:45:00: Middleware - Acceso a backoffice: /backOffice
+2025-11-24T18:45:00: Middleware - Token presente: true
+2025-11-24T18:45:00: Middleware - Token role: ADMIN
+2025-11-24T18:45:00: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:45:03: Middleware - Acceso a backoffice: /backOffice
+2025-11-24T18:45:03: Middleware - Token presente: true
+2025-11-24T18:45:03: Middleware - Token role: ADMIN
+2025-11-24T18:45:03: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:45:04: Middleware - Acceso a backoffice: /backOffice
+2025-11-24T18:45:04: Middleware - Token presente: true
+2025-11-24T18:45:04: Middleware - Token role: ADMIN
+2025-11-24T18:45:04: Middleware - Acceso permitido para rol: ADMIN
+2025-11-24T18:45:11: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-24T18:45:11: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:45:11: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:45:11: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:45:11: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:45:11: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:45:11: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:45:11: ✅ Properties fetched: 9 items
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:45:11:   type: 'image',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:45:11:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:45:11:   totalMultimedia: 0,
+2025-11-24T18:45:11:   imagesFound: 1,
+2025-11-24T18:45:11:   images: [
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:11:   ]
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:45:11:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 1,
+2025-11-24T18:45:11:   hasImages: true,
+2025-11-24T18:45:11:   currentImageIndex: 0,
+2025-11-24T18:45:11:   allImages: [
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:11:   ]
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:45:11:   type: 'image',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:45:11:   type: 'image',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:45:11:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:45:11:   totalMultimedia: 0,
+2025-11-24T18:45:11:   imagesFound: 1,
+2025-11-24T18:45:11:   images: [
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:45:11:   ]
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:45:11:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 1,
+2025-11-24T18:45:11:   hasImages: true,
+2025-11-24T18:45:11:   currentImageIndex: 0,
+2025-11-24T18:45:11:   allImages: [
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:45:11:   ]
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:45:11:   type: 'image',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 9787e932-3a88-4ea1-abbc-14953e1f5955
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:45:11:   type: 'image',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:45:11:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:11:   multimedia: [
+2025-11-24T18:45:11:     {
+2025-11-24T18:45:11:       id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-24T18:45:11:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:11:       type: 'PROPERTY_IMG',
+2025-11-24T18:45:11:       format: 'IMG'
+2025-11-24T18:45:11:     },
+2025-11-24T18:45:11:     {
+2025-11-24T18:45:11:       id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-24T18:45:11:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:45:11:       type: 'PROPERTY_IMG',
+2025-11-24T18:45:11:       format: 'IMG'
+2025-11-24T18:45:11:     }
+2025-11-24T18:45:11:   ]
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Processing 2 multimedia items
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Processing media 1/2: {
+2025-11-24T18:45:11:   id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:11:   type: 'PROPERTY_IMG',
+2025-11-24T18:45:11:   format: 'IMG',
+2025-11-24T18:45:11:   isVideo: false,
+2025-11-24T18:45:11:   urlLength: 73
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-24T18:45:11:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:11:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:11:   isValidImage: true,
+2025-11-24T18:45:11:   isVideo: false,
+2025-11-24T18:45:11:   hasUrl: true
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 1: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Processing media 2/2: {
+2025-11-24T18:45:11:   id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:45:11:   type: 'PROPERTY_IMG',
+2025-11-24T18:45:11:   format: 'IMG',
+2025-11-24T18:45:11:   isVideo: false,
+2025-11-24T18:45:11:   urlLength: 73
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-24T18:45:11:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:45:11:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:45:11:   isValidImage: true,
+2025-11-24T18:45:11:   isVideo: false,
+2025-11-24T18:45:11:   hasUrl: true
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] ✅ Added multimedia image 2: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:45:11:   totalMultimedia: 2,
+2025-11-24T18:45:11:   imagesFound: 2,
+2025-11-24T18:45:11:   images: [
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-24T18:45:11:   ]
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:45:11:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:11:   multimediaCount: 2,
+2025-11-24T18:45:11:   imagesFound: 2,
+2025-11-24T18:45:11:   hasImages: true,
+2025-11-24T18:45:11:   currentImageIndex: 0,
+2025-11-24T18:45:11:   allImages: [
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-24T18:45:11:   ]
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:45:11:   type: 'image',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:45:11:   type: 'image',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:45:11:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:11:   multimedia: [
+2025-11-24T18:45:11:     {
+2025-11-24T18:45:11:       id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-24T18:45:11:       url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:11:       type: 'PROPERTY_IMG',
+2025-11-24T18:45:11:       format: 'IMG'
+2025-11-24T18:45:11:     },
+2025-11-24T18:45:11:     {
+2025-11-24T18:45:11:       id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:45:11:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:11:       type: 'PROPERTY_IMG',
+2025-11-24T18:45:11:       format: 'IMG'
+2025-11-24T18:45:11:     },
+2025-11-24T18:45:11:     {
+2025-11-24T18:45:11:       id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:45:11:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:45:11:       type: 'PROPERTY_IMG',
+2025-11-24T18:45:11:       format: 'IMG'
+2025-11-24T18:45:11:     }
+2025-11-24T18:45:11:   ]
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Processing 3 multimedia items
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Processing media 1/3: {
+2025-11-24T18:45:11:   id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:11:   type: 'PROPERTY_IMG',
+2025-11-24T18:45:11:   format: 'IMG',
+2025-11-24T18:45:11:   isVideo: false,
+2025-11-24T18:45:11:   urlLength: 73
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-24T18:45:11:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:11:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:11:   isValidImage: true,
+2025-11-24T18:45:11:   isVideo: false,
+2025-11-24T18:45:11:   hasUrl: true
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] ✅ Added multimedia image 1: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Processing media 2/3: {
+2025-11-24T18:45:11:   id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:11:   type: 'PROPERTY_IMG',
+2025-11-24T18:45:11:   format: 'IMG',
+2025-11-24T18:45:11:   isVideo: false,
+2025-11-24T18:45:11:   urlLength: 73
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-24T18:45:11:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:11:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:11:   isValidImage: true,
+2025-11-24T18:45:11:   isVideo: false,
+2025-11-24T18:45:11:   hasUrl: true
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 2: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Processing media 3/3: {
+2025-11-24T18:45:11:   id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:45:11:   type: 'PROPERTY_IMG',
+2025-11-24T18:45:11:   format: 'IMG',
+2025-11-24T18:45:11:   isVideo: false,
+2025-11-24T18:45:11:   urlLength: 72
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Media 3 validation: {
+2025-11-24T18:45:11:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:45:11:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:45:11:   isValidImage: true,
+2025-11-24T18:45:11:   isVideo: false,
+2025-11-24T18:45:11:   hasUrl: true
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] ✅ Added multimedia image 3: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:45:11:   totalMultimedia: 3,
+2025-11-24T18:45:11:   imagesFound: 3,
+2025-11-24T18:45:11:   images: [
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-24T18:45:11:   ]
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:45:11:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:11:   multimediaCount: 3,
+2025-11-24T18:45:11:   imagesFound: 3,
+2025-11-24T18:45:11:   hasImages: true,
+2025-11-24T18:45:11:   currentImageIndex: 0,
+2025-11-24T18:45:11:   allImages: [
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:11:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-24T18:45:11:   ]
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:45:11:   type: 'image',
+2025-11-24T18:45:11:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 5071a598-ff69-46b4-bee9-5e17086adfca
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 562e0504-25fc-4b64-8b65-785d028e4be7
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: a695ce66-af9b-4930-aad1-3521241770f6
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:11: 🎯 [PropertyCard] Property ID: aa5b90c8-4a74-49e6-aef1-4f2adaf97430
+2025-11-24T18:45:11: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:11: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:11:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimedia: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:11: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:11:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-24T18:45:11:   mainImageUrl: null,
+2025-11-24T18:45:11:   multimediaCount: 0,
+2025-11-24T18:45:11:   imagesFound: 0,
+2025-11-24T18:45:11:   hasImages: false,
+2025-11-24T18:45:11:   currentImageIndex: -1,
+2025-11-24T18:45:11:   allImages: []
+2025-11-24T18:45:11: }
+2025-11-24T18:45:11: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:12: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:45:12: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:45:12: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-24T18:45:12: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:45:12: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:45:12: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:45:12: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:45:12: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid
+2025-11-24T18:45:12: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:45:12: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:45:14: Property fetched from /full endpoint: {
+2025-11-24T18:45:14:   id: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:45:14:   title: 'Casa familiar amplia',
+2025-11-24T18:45:14:   status: 'PUBLISHED',
+2025-11-24T18:45:14:   state: 'Metropolitana de Santiago',
+2025-11-24T18:45:14:   city: 'Ñuñoa',
+2025-11-24T18:45:14:   address: null,
+2025-11-24T18:45:14:   latitude: '-33.42740000',
+2025-11-24T18:45:14:   longitude: '-70.57400000',
+2025-11-24T18:45:14:   multimedia: 3
+2025-11-24T18:45:14: }
+2025-11-24T18:45:14: [MultimediaGrid] Debug: {
+2025-11-24T18:45:14:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:14:   multimediaCount: 2,
+2025-11-24T18:45:14:   allMediaCount: 3,
+2025-11-24T18:45:14:   items: [
+2025-11-24T18:45:14:     {
+2025-11-24T18:45:14:       id: 'main',
+2025-11-24T18:45:14:       url: 'http://72.61.6.232:3000/public/properties/img/1764'
+2025-11-24T18:45:14:     },
+2025-11-24T18:45:14:     {
+2025-11-24T18:45:14:       id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:45:14:       url: 'http://72.61.6.232:3000/public/properties/img/1764'
+2025-11-24T18:45:14:     },
+2025-11-24T18:45:14:     {
+2025-11-24T18:45:14:       id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:45:14:       url: 'http://72.61.6.232:3000/public/properties/img/1764'
+2025-11-24T18:45:14:     }
+2025-11-24T18:45:14:   ]
+2025-11-24T18:45:14: }
+2025-11-24T18:45:41: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:45:41: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:45:41: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-24T18:45:41: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:45:41: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:45:41: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:45:41: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:45:41: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid
+2025-11-24T18:45:41: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:45:41: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:45:50: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-24T18:45:50: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:45:50: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:45:50: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:45:50: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:45:50: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:45:50: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:45:50: ✅ Properties fetched: 9 items
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:45:50:   type: 'image',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:45:50:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:45:50:   totalMultimedia: 0,
+2025-11-24T18:45:50:   imagesFound: 1,
+2025-11-24T18:45:50:   images: [
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:50:   ]
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:45:50:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 1,
+2025-11-24T18:45:50:   hasImages: true,
+2025-11-24T18:45:50:   currentImageIndex: 0,
+2025-11-24T18:45:50:   allImages: [
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:50:   ]
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:45:50:   type: 'image',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:45:50:   type: 'image',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:45:50:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:45:50:   totalMultimedia: 0,
+2025-11-24T18:45:50:   imagesFound: 1,
+2025-11-24T18:45:50:   images: [
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:45:50:   ]
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:45:50:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 1,
+2025-11-24T18:45:50:   hasImages: true,
+2025-11-24T18:45:50:   currentImageIndex: 0,
+2025-11-24T18:45:50:   allImages: [
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:45:50:   ]
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:45:50:   type: 'image',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 9787e932-3a88-4ea1-abbc-14953e1f5955
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:45:50:   type: 'image',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:45:50:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:50:   multimedia: [
+2025-11-24T18:45:50:     {
+2025-11-24T18:45:50:       id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-24T18:45:50:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:50:       type: 'PROPERTY_IMG',
+2025-11-24T18:45:50:       format: 'IMG'
+2025-11-24T18:45:50:     },
+2025-11-24T18:45:50:     {
+2025-11-24T18:45:50:       id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-24T18:45:50:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:45:50:       type: 'PROPERTY_IMG',
+2025-11-24T18:45:50:       format: 'IMG'
+2025-11-24T18:45:50:     }
+2025-11-24T18:45:50:   ]
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Processing 2 multimedia items
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Processing media 1/2: {
+2025-11-24T18:45:50:   id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:50:   type: 'PROPERTY_IMG',
+2025-11-24T18:45:50:   format: 'IMG',
+2025-11-24T18:45:50:   isVideo: false,
+2025-11-24T18:45:50:   urlLength: 73
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-24T18:45:50:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:50:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:50:   isValidImage: true,
+2025-11-24T18:45:50:   isVideo: false,
+2025-11-24T18:45:50:   hasUrl: true
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 1: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Processing media 2/2: {
+2025-11-24T18:45:50:   id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:45:50:   type: 'PROPERTY_IMG',
+2025-11-24T18:45:50:   format: 'IMG',
+2025-11-24T18:45:50:   isVideo: false,
+2025-11-24T18:45:50:   urlLength: 73
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-24T18:45:50:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:45:50:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:45:50:   isValidImage: true,
+2025-11-24T18:45:50:   isVideo: false,
+2025-11-24T18:45:50:   hasUrl: true
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] ✅ Added multimedia image 2: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:45:50:   totalMultimedia: 2,
+2025-11-24T18:45:50:   imagesFound: 2,
+2025-11-24T18:45:50:   images: [
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-24T18:45:50:   ]
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:45:50:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:50:   multimediaCount: 2,
+2025-11-24T18:45:50:   imagesFound: 2,
+2025-11-24T18:45:50:   hasImages: true,
+2025-11-24T18:45:50:   currentImageIndex: 0,
+2025-11-24T18:45:50:   allImages: [
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-24T18:45:50:   ]
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:45:50:   type: 'image',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:45:50:   type: 'image',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:45:50:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:50:   multimedia: [
+2025-11-24T18:45:50:     {
+2025-11-24T18:45:50:       id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-24T18:45:50:       url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:50:       type: 'PROPERTY_IMG',
+2025-11-24T18:45:50:       format: 'IMG'
+2025-11-24T18:45:50:     },
+2025-11-24T18:45:50:     {
+2025-11-24T18:45:50:       id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:45:50:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:50:       type: 'PROPERTY_IMG',
+2025-11-24T18:45:50:       format: 'IMG'
+2025-11-24T18:45:50:     },
+2025-11-24T18:45:50:     {
+2025-11-24T18:45:50:       id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:45:50:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:45:50:       type: 'PROPERTY_IMG',
+2025-11-24T18:45:50:       format: 'IMG'
+2025-11-24T18:45:50:     }
+2025-11-24T18:45:50:   ]
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Processing 3 multimedia items
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Processing media 1/3: {
+2025-11-24T18:45:50:   id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:50:   type: 'PROPERTY_IMG',
+2025-11-24T18:45:50:   format: 'IMG',
+2025-11-24T18:45:50:   isVideo: false,
+2025-11-24T18:45:50:   urlLength: 73
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-24T18:45:50:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:50:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:50:   isValidImage: true,
+2025-11-24T18:45:50:   isVideo: false,
+2025-11-24T18:45:50:   hasUrl: true
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] ✅ Added multimedia image 1: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Processing media 2/3: {
+2025-11-24T18:45:50:   id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:50:   type: 'PROPERTY_IMG',
+2025-11-24T18:45:50:   format: 'IMG',
+2025-11-24T18:45:50:   isVideo: false,
+2025-11-24T18:45:50:   urlLength: 73
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-24T18:45:50:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:50:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:50:   isValidImage: true,
+2025-11-24T18:45:50:   isVideo: false,
+2025-11-24T18:45:50:   hasUrl: true
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 2: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Processing media 3/3: {
+2025-11-24T18:45:50:   id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:45:50:   type: 'PROPERTY_IMG',
+2025-11-24T18:45:50:   format: 'IMG',
+2025-11-24T18:45:50:   isVideo: false,
+2025-11-24T18:45:50:   urlLength: 72
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Media 3 validation: {
+2025-11-24T18:45:50:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:45:50:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:45:50:   isValidImage: true,
+2025-11-24T18:45:50:   isVideo: false,
+2025-11-24T18:45:50:   hasUrl: true
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] ✅ Added multimedia image 3: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:45:50:   totalMultimedia: 3,
+2025-11-24T18:45:50:   imagesFound: 3,
+2025-11-24T18:45:50:   images: [
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-24T18:45:50:   ]
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:45:50:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:50:   multimediaCount: 3,
+2025-11-24T18:45:50:   imagesFound: 3,
+2025-11-24T18:45:50:   hasImages: true,
+2025-11-24T18:45:50:   currentImageIndex: 0,
+2025-11-24T18:45:50:   allImages: [
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:45:50:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-24T18:45:50:   ]
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:45:50:   type: 'image',
+2025-11-24T18:45:50:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 5071a598-ff69-46b4-bee9-5e17086adfca
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 562e0504-25fc-4b64-8b65-785d028e4be7
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: a695ce66-af9b-4930-aad1-3521241770f6
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:50: 🎯 [PropertyCard] Property ID: aa5b90c8-4a74-49e6-aef1-4f2adaf97430
+2025-11-24T18:45:50: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:45:50: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:45:50:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimedia: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:45:50: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:45:50:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-24T18:45:50:   mainImageUrl: null,
+2025-11-24T18:45:50:   multimediaCount: 0,
+2025-11-24T18:45:50:   imagesFound: 0,
+2025-11-24T18:45:50:   hasImages: false,
+2025-11-24T18:45:50:   currentImageIndex: -1,
+2025-11-24T18:45:50:   allImages: []
+2025-11-24T18:45:50: }
+2025-11-24T18:45:50: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:45:51: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:45:51: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:45:51: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid?fields=id%2Cstatus&pagination=false
+2025-11-24T18:45:51: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:45:51: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:45:51: [DEBUG] getUserGridNotifications - params.filters received: undefined
+2025-11-24T18:45:51: [DEBUG] getUserGridNotifications - params.filtration: undefined
+2025-11-24T18:45:51: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/fda0224f-7ce5-4474-96ae-44d5ec884954/grid
+2025-11-24T18:45:51: [DEBUG] getUserGridNotifications - Response status: 200
+2025-11-24T18:45:51: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-24T18:46:13: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-24T18:46:13: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:46:13: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:46:13: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:46:13: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:46:13: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:46:13: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:46:13: ✅ Properties fetched: 9 items
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:46:13:   type: 'image',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:46:13:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:46:13:   totalMultimedia: 0,
+2025-11-24T18:46:13:   imagesFound: 1,
+2025-11-24T18:46:13:   images: [
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:46:13:   ]
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:46:13:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 1,
+2025-11-24T18:46:13:   hasImages: true,
+2025-11-24T18:46:13:   currentImageIndex: 0,
+2025-11-24T18:46:13:   allImages: [
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:46:13:   ]
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:46:13:   type: 'image',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:46:13:   type: 'image',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:46:13:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:46:13:   totalMultimedia: 0,
+2025-11-24T18:46:13:   imagesFound: 1,
+2025-11-24T18:46:13:   images: [
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:46:13:   ]
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:46:13:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 1,
+2025-11-24T18:46:13:   hasImages: true,
+2025-11-24T18:46:13:   currentImageIndex: 0,
+2025-11-24T18:46:13:   allImages: [
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:46:13:   ]
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:46:13:   type: 'image',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg'
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 9787e932-3a88-4ea1-abbc-14953e1f5955
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '9787e932-3a88-4ea1-abbc-14953e1f5955',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 02bf13fe-17e4-4bfd-af1c-2e8809002aef
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:46:13:   type: 'image',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:46:13:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:46:13:   multimedia: [
+2025-11-24T18:46:13:     {
+2025-11-24T18:46:13:       id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-24T18:46:13:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:46:13:       type: 'PROPERTY_IMG',
+2025-11-24T18:46:13:       format: 'IMG'
+2025-11-24T18:46:13:     },
+2025-11-24T18:46:13:     {
+2025-11-24T18:46:13:       id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-24T18:46:13:       url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:46:13:       type: 'PROPERTY_IMG',
+2025-11-24T18:46:13:       format: 'IMG'
+2025-11-24T18:46:13:     }
+2025-11-24T18:46:13:   ]
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Processing 2 multimedia items
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Processing media 1/2: {
+2025-11-24T18:46:13:   id: '49d1b8ad-f4df-4e44-af9f-f89230e3bd5f',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:46:13:   type: 'PROPERTY_IMG',
+2025-11-24T18:46:13:   format: 'IMG',
+2025-11-24T18:46:13:   isVideo: false,
+2025-11-24T18:46:13:   urlLength: 73
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-24T18:46:13:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:46:13:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:46:13:   isValidImage: true,
+2025-11-24T18:46:13:   isVideo: false,
+2025-11-24T18:46:13:   hasUrl: true
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 1: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Processing media 2/2: {
+2025-11-24T18:46:13:   id: '96356fa4-23ee-4582-a4a5-c74630484ab0',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:46:13:   type: 'PROPERTY_IMG',
+2025-11-24T18:46:13:   format: 'IMG',
+2025-11-24T18:46:13:   isVideo: false,
+2025-11-24T18:46:13:   urlLength: 73
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-24T18:46:13:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:46:13:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg',
+2025-11-24T18:46:13:   isValidImage: true,
+2025-11-24T18:46:13:   isVideo: false,
+2025-11-24T18:46:13:   hasUrl: true
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] ✅ Added multimedia image 2: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:46:13:   totalMultimedia: 2,
+2025-11-24T18:46:13:   imagesFound: 2,
+2025-11-24T18:46:13:   images: [
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-24T18:46:13:   ]
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '02bf13fe-17e4-4bfd-af1c-2e8809002aef',
+2025-11-24T18:46:13:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:46:13:   multimediaCount: 2,
+2025-11-24T18:46:13:   imagesFound: 2,
+2025-11-24T18:46:13:   hasImages: true,
+2025-11-24T18:46:13:   currentImageIndex: 0,
+2025-11-24T18:46:13:   allImages: [
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg',
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg'
+2025-11-24T18:46:13:   ]
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:46:13:   type: 'image',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg'
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 1934091d-4a00-44e5-9b43-0d8579a15213
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): {
+2025-11-24T18:46:13:   type: 'image',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:46:13:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:46:13:   multimedia: [
+2025-11-24T18:46:13:     {
+2025-11-24T18:46:13:       id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-24T18:46:13:       url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:46:13:       type: 'PROPERTY_IMG',
+2025-11-24T18:46:13:       format: 'IMG'
+2025-11-24T18:46:13:     },
+2025-11-24T18:46:13:     {
+2025-11-24T18:46:13:       id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:46:13:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:46:13:       type: 'PROPERTY_IMG',
+2025-11-24T18:46:13:       format: 'IMG'
+2025-11-24T18:46:13:     },
+2025-11-24T18:46:13:     {
+2025-11-24T18:46:13:       id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:46:13:       url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:46:13:       type: 'PROPERTY_IMG',
+2025-11-24T18:46:13:       format: 'IMG'
+2025-11-24T18:46:13:     }
+2025-11-24T18:46:13:   ]
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Added mainImageUrl: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Processing 3 multimedia items
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Processing media 1/3: {
+2025-11-24T18:46:13:   id: '1871e2ac-b85e-456e-8a96-3c0a3d9ea808',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:46:13:   type: 'PROPERTY_IMG',
+2025-11-24T18:46:13:   format: 'IMG',
+2025-11-24T18:46:13:   isVideo: false,
+2025-11-24T18:46:13:   urlLength: 73
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Media 1 validation: {
+2025-11-24T18:46:13:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:46:13:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:46:13:   isValidImage: true,
+2025-11-24T18:46:13:   isVideo: false,
+2025-11-24T18:46:13:   hasUrl: true
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] ✅ Added multimedia image 1: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Processing media 2/3: {
+2025-11-24T18:46:13:   id: '5edd4867-96e2-4fb5-960c-523c73419828',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:46:13:   type: 'PROPERTY_IMG',
+2025-11-24T18:46:13:   format: 'IMG',
+2025-11-24T18:46:13:   isVideo: false,
+2025-11-24T18:46:13:   urlLength: 73
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Media 2 validation: {
+2025-11-24T18:46:13:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:46:13:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:46:13:   isValidImage: true,
+2025-11-24T18:46:13:   isVideo: false,
+2025-11-24T18:46:13:   hasUrl: true
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] ⚠️ Skipped duplicate 2: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Processing media 3/3: {
+2025-11-24T18:46:13:   id: 'de9a8093-4cf9-4d3e-8b63-fdb9971f8c94',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:46:13:   type: 'PROPERTY_IMG',
+2025-11-24T18:46:13:   format: 'IMG',
+2025-11-24T18:46:13:   isVideo: false,
+2025-11-24T18:46:13:   urlLength: 72
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: ✅ [PropertyCard] Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Media 3 validation: {
+2025-11-24T18:46:13:   originalUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:46:13:   normalizedUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg',
+2025-11-24T18:46:13:   isValidImage: true,
+2025-11-24T18:46:13:   isVideo: false,
+2025-11-24T18:46:13:   hasUrl: true
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] ✅ Added multimedia image 3: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: {
+2025-11-24T18:46:13:   totalMultimedia: 3,
+2025-11-24T18:46:13:   imagesFound: 3,
+2025-11-24T18:46:13:   images: [
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-24T18:46:13:   ]
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '1934091d-4a00-44e5-9b43-0d8579a15213',
+2025-11-24T18:46:13:   mainImageUrl: 'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:46:13:   multimediaCount: 3,
+2025-11-24T18:46:13:   imagesFound: 3,
+2025-11-24T18:46:13:   hasImages: true,
+2025-11-24T18:46:13:   currentImageIndex: 0,
+2025-11-24T18:46:13:   allImages: [
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg',
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg',
+2025-11-24T18:46:13:     'http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg'
+2025-11-24T18:46:13:   ]
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: {
+2025-11-24T18:46:13:   type: 'image',
+2025-11-24T18:46:13:   url: 'http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg'
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 3d326d26-cea6-4439-a4d5-609af0b15f63
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '3d326d26-cea6-4439-a4d5-609af0b15f63',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 5071a598-ff69-46b4-bee9-5e17086adfca
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '5071a598-ff69-46b4-bee9-5e17086adfca',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 562e0504-25fc-4b64-8b65-785d028e4be7
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '562e0504-25fc-4b64-8b65-785d028e4be7',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 5ff03264-a545-4462-ae9c-62421a5824ca
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '5ff03264-a545-4462-ae9c-62421a5824ca',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: 669a5f73-f8a9-4811-b345-2b5a9d8f438d
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: '669a5f73-f8a9-4811-b345-2b5a9d8f438d',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: a695ce66-af9b-4930-aad1-3521241770f6
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: 'a695ce66-af9b-4930-aad1-3521241770f6',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined
+2025-11-24T18:46:13: 🎯 [PropertyCard] Property ID: aa5b90c8-4a74-49e6-aef1-4f2adaf97430
+2025-11-24T18:46:13: 🎯 [PropertyCard] mainImageUrl: null
+2025-11-24T18:46:13: 🎯 [PropertyCard] primaryMedia (after getPrimaryMedia): undefined
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Property multimedia details: {
+2025-11-24T18:46:13:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimedia: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🔍 [getOrderedImages] No multimedia array found
+2025-11-24T18:46:13: 🔍 [getOrderedImages] Final result: { totalMultimedia: 0, imagesFound: 0, images: [] }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Debug info: {
+2025-11-24T18:46:13:   propertyId: 'aa5b90c8-4a74-49e6-aef1-4f2adaf97430',
+2025-11-24T18:46:13:   mainImageUrl: null,
+2025-11-24T18:46:13:   multimediaCount: 0,
+2025-11-24T18:46:13:   imagesFound: 0,
+2025-11-24T18:46:13:   hasImages: false,
+2025-11-24T18:46:13:   currentImageIndex: -1,
+2025-11-24T18:46:13:   allImages: []
+2025-11-24T18:46:13: }
+2025-11-24T18:46:13: 🎯 [PropertyCard] Initial mediaSrc state: undefined

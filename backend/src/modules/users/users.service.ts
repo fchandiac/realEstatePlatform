@@ -572,4 +572,157 @@ export class UsersService {
 
     return plainToInstance(UserProfileResponseDto, profile, { excludeExtraneousValues: true });
   }
+
+  /**
+   * Create a new COMMUNITY user from portal registration
+   * User is created with email verification required
+   */
+  async createCommunityUser(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ): Promise<User> {
+    // Check if email already exists
+    const existingUser = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException(
+        'Este correo electrónico ya está registrado',
+      );
+    }
+
+    // Generate email verification token (random string)
+    const emailVerificationToken = Math.random()
+      .toString(36)
+      .substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+    // Token expires in 24 hours
+    const emailVerificationExpires = new Date();
+    emailVerificationExpires.setHours(emailVerificationExpires.getHours() + 24);
+
+    // Use transaction to ensure both user and person are created together
+    const queryRunner =
+      this.userRepository.manager.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Create user with email not verified
+      const user = this.userRepository.create({
+        username: email, // Use email as username for community users
+        email,
+        role: UserRole.COMMUNITY,
+        status: UserStatus.ACTIVE,
+        emailVerified: false,
+        emailVerificationToken,
+        emailVerificationExpires,
+        personalInfo: {
+          firstName,
+          lastName,
+        } as any,
+      });
+
+      // Hash password
+      await user.setPassword(password);
+
+      // Save user
+      const savedUser = await queryRunner.manager.save(User, user);
+
+      // Create associated person
+      const person = this.personRepository.create({
+        verified: false,
+        user: savedUser,
+      } as any);
+
+      await queryRunner.manager.save(Person, person);
+
+      // Commit transaction
+      await queryRunner.commitTransaction();
+
+      return savedUser;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  /**
+   * Verify user email using token
+   * Returns user if successful
+   */
+  async verifyUserEmail(token: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: {
+        emailVerificationToken: token,
+        emailVerified: false,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        'Token de verificación inválido o ya fue utilizado',
+      );
+    }
+
+    // Check if token has expired
+    if (
+      user.emailVerificationExpires &&
+      user.emailVerificationExpires < new Date()
+    ) {
+      throw new BadRequestException(
+        'El token de verificación ha expirado. Solicita uno nuevo.',
+      );
+    }
+
+    // Mark email as verified
+    user.emailVerified = true;
+    user.emailVerificationToken = null;
+    user.emailVerificationExpires = null;
+
+    return await this.userRepository.save(user);
+  }
+
+  /**
+   * Resend verification email for a community user
+   * Generates a new token
+   */
+  async resendVerificationEmail(email: string): Promise<{
+    token: string;
+    expiresAt: Date;
+  }> {
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    if (user.emailVerified) {
+      throw new BadRequestException(
+        'El correo de este usuario ya está verificado',
+      );
+    }
+
+    // Generate new token
+    const emailVerificationToken = Math.random()
+      .toString(36)
+      .substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+    const emailVerificationExpires = new Date();
+    emailVerificationExpires.setHours(emailVerificationExpires.getHours() + 24);
+
+    user.emailVerificationToken = emailVerificationToken;
+    user.emailVerificationExpires = emailVerificationExpires;
+
+    await this.userRepository.save(user);
+
+    return {
+      token: emailVerificationToken,
+      expiresAt: emailVerificationExpires,
+    };
+  }
 }

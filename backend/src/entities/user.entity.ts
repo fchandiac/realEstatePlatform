@@ -122,6 +122,15 @@ export class User {
   @Column({ type: 'uuid', nullable: true })
   personId?: string;
 
+  @Column({ type: 'boolean', default: false })
+  emailVerified: boolean;
+
+  @Column({ type: 'varchar', nullable: true })
+  emailVerificationToken?: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  emailVerificationExpires?: Date;
+
   // Relaciones navegables (OneToMany)
   @OneToMany(() => Property, (p) => p.creatorUser)
   createdProperties?: Property[];

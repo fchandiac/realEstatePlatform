@@ -114,4 +114,70 @@ export class MailService {
       return { success: false, message: `Error enviando correo: ${error.message}` };
     }
   }
+
+  /**
+   * Envía correo de verificación de email para nuevos usuarios
+   */
+  async sendEmailVerification(
+    email: string,
+    firstName: string,
+    verificationLink: string,
+  ): Promise<void> {
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        subject: 'Verifica tu correo electrónico - Real Estate Platform',
+        template: 'email-verification',
+        context: {
+          firstName,
+          verificationLink,
+          companyName: 'Real Estate Platform',
+          currentYear: new Date().getFullYear(),
+        },
+      });
+      console.log(
+        `✅ Correo de verificación enviado a ${email}`,
+      );
+    } catch (error) {
+      console.error(
+        `❌ Error enviando correo de verificación a ${email}:`,
+        error,
+      );
+      if (process.env.NODE_ENV !== 'production') {
+        throw error;
+      }
+    }
+  }
+
+  /**
+   * Envía correo de bienvenida tras verificar email
+   */
+  async sendWelcomeEmail(
+    email: string,
+    firstName: string,
+  ): Promise<void> {
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        subject: '¡Bienvenido a Real Estate Platform!',
+        template: 'welcome',
+        context: {
+          firstName,
+          companyName: 'Real Estate Platform',
+          currentYear: new Date().getFullYear(),
+        },
+      });
+      console.log(
+        `✅ Correo de bienvenida enviado a ${email}`,
+      );
+    } catch (error) {
+      console.error(
+        `❌ Error enviando correo de bienvenida a ${email}:`,
+        error,
+      );
+      if (process.env.NODE_ENV !== 'production') {
+        throw error;
+      }
+    }
+  }
 }
