@@ -77,7 +77,7 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+        className="fixed inset-0 bg-transparent z-40 transition-opacity duration-300"
         onClick={onClose}
         data-test-id="sidebar-overlay"
       />
@@ -100,9 +100,6 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
               }}
             />
           ) : null}
-          <span className="material-symbols-outlined text-muted-foreground w-12 h-12 flex items-center justify-center hidden">
-            image_not_supported
-          </span>
           <span className="font-medium text-foreground text-sm">
             {identity?.name || "Plataforma Inmobiliaria"}
           </span>
