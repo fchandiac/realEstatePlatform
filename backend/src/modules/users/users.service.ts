@@ -744,17 +744,6 @@ export class UsersService {
       'updatedAt',
     ];
 
-    const fieldMappings: Record<string, string> = {
-      id: 'u.id',
-      username: 'u.username',
-      email: 'u.email',
-      firstName: 'u.personalInfo',
-      lastName: 'u.personalInfo',
-      status: 'u.status',
-      createdAt: 'u.createdAt',
-      updatedAt: 'u.updatedAt',
-    };
-
     const textSearchFields = [
       'LOWER(u.username)',
       'LOWER(u.email)',
@@ -778,25 +767,7 @@ export class UsersService {
       return [];
     }
 
-    // Build select (raw) for non-derived fields
-    const rawSelects = fields
-      .filter((f: string) => !['firstName', 'lastName'].includes(f))
-      .map((f: string) => {
-        if (fieldMappings[f]) return `${fieldMappings[f]} AS ${f}`;
-        return `u.${f} AS ${f}`;
-      });
-
-    // Always include personalInfo for firstName/lastName derivations if requested
-    const needPersonalInfo = fields.includes('firstName') || fields.includes('lastName');
-    if (needPersonalInfo) {
-      rawSelects.push('u.personalInfo');
-    }
-
-    // Fallback: ensure id exists
-    if (!rawSelects.find((s: string) => s.startsWith('u.id'))) {
-      rawSelects.unshift('u.id');
-    }
-
+    // Build query - select only needed fields from user table
     const qb = this.userRepository
       .createQueryBuilder('u')
       .where('u.deletedAt IS NULL')
@@ -833,11 +804,9 @@ export class UsersService {
             `LOWER(JSON_UNQUOTE(JSON_EXTRACT(u.personalInfo, '${jsonPath}'))) LIKE :f_${f.column}`,
             { [`f_${f.column}`]: param }
           );
-        } else {
-          const mapping = fieldMappings[f.column] || `u.${f.column}`;
-          const dbField = mapping.split(' AS ')[0];
+        } else if (f.column === 'id' || f.column === 'username' || f.column === 'email' || f.column === 'status') {
           const param = `%${f.value.toLowerCase()}%`;
-          qb.andWhere(`LOWER(${dbField}) LIKE :f_${f.column}`, {
+          qb.andWhere(`LOWER(u.${f.column}) LIKE :f_${f.column}`, {
             [`f_${f.column}`]: param,
           });
         }
@@ -847,11 +816,15 @@ export class UsersService {
     // Sorting
     const sortField = query.sortField || 'createdAt';
     const sortOrder = query.sort === 'desc' ? 'DESC' : 'ASC';
-    const sortMapping = fieldMappings[sortField] || `u.${sortField}`;
-    const dbSortField = sortMapping.split(' AS ')[0];
 
-    if (availableFields.includes(sortField)) {
-      qb.orderBy(dbSortField, sortOrder as 'ASC' | 'DESC');
+    if (sortField === 'firstName' || sortField === 'lastName') {
+      const jsonPath = sortField === 'firstName' ? '$.firstName' : '$.lastName';
+      qb.orderBy(
+        `JSON_UNQUOTE(JSON_EXTRACT(u.personalInfo, '${jsonPath}'))`,
+        sortOrder as 'ASC' | 'DESC'
+      );
+    } else if (availableFields.includes(sortField)) {
+      qb.orderBy(`u.${sortField}`, sortOrder as 'ASC' | 'DESC');
     } else {
       qb.orderBy('u.createdAt', 'DESC');
     }
@@ -868,22 +841,33 @@ export class UsersService {
       qb.skip((page - 1) * limit).take(limit);
     }
 
-    // Execute query
-    const rows = await qb.getRawMany();
+    // Execute query and get full user objects
+    const users = await qb.getMany();
 
-    // Derive firstName/lastName from personalInfo JSON
-    const mappedRows = rows.map((row: any) => {
-      const personalInfo = row.personalInfo ? JSON.parse(row.personalInfo) : {};
-      if (fields.includes('firstName')) {
-        row.firstName = personalInfo.firstName || '';
+    // Map to grid row format with only requested fields
+    const mappedRows = users.map((user: User) => {
+      const row: any = {};
+      
+      for (const field of fields) {
+        if (field === 'id') {
+          row.id = user.id;
+        } else if (field === 'username') {
+          row.username = user.username;
+        } else if (field === 'email') {
+          row.email = user.email;
+        } else if (field === 'status') {
+          row.status = user.status;
+        } else if (field === 'createdAt') {
+          row.createdAt = user.createdAt;
+        } else if (field === 'updatedAt') {
+          row.updatedAt = user.updatedAt;
+        } else if (field === 'firstName') {
+          row.firstName = user.personalInfo?.firstName || '';
+        } else if (field === 'lastName') {
+          row.lastName = user.personalInfo?.lastName || '';
+        }
       }
-      if (fields.includes('lastName')) {
-        row.lastName = personalInfo.lastName || '';
-      }
-      // Remove personalInfo from output if not explicitly requested
-      if (!fields.includes('personalInfo')) {
-        delete row.personalInfo;
-      }
+      
       return row;
     });
 
