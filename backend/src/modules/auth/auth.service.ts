@@ -84,9 +84,21 @@ export class AuthService {
       );
 
       // Build verification link
-      const frontendUrl =
-        this.configService.get<string>('FRONTEND_PUBLIC_URL') ||
-        'http://localhost:3001';
+      // Get frontend URL from environment, fallback to deriving from backend URL
+      let frontendUrl = this.configService.get<string>('FRONTEND_PUBLIC_URL');
+      
+      if (!frontendUrl) {
+        // If FRONTEND_PUBLIC_URL is not set, try to derive it from BACKEND_PUBLIC_URL
+        const backendUrl = this.configService.get<string>('BACKEND_PUBLIC_URL');
+        if (backendUrl) {
+          // Replace port 3000 with 3001 for frontend
+          frontendUrl = backendUrl.replace(':3000', ':3001');
+        } else {
+          // Last resort fallback
+          frontendUrl = 'http://localhost:3001';
+        }
+      }
+      
       const verificationLink = `${frontendUrl}/portal/verify-email?token=${user.emailVerificationToken}`;
 
       // Send verification email
@@ -169,9 +181,21 @@ export class AuthService {
         await this.usersService.resendVerificationEmail(email);
 
       // Build verification link
-      const frontendUrl =
-        this.configService.get<string>('FRONTEND_URL') ||
-        'http://localhost:3001';
+      // Get frontend URL from environment, fallback to deriving from backend URL
+      let frontendUrl = this.configService.get<string>('FRONTEND_PUBLIC_URL');
+      
+      if (!frontendUrl) {
+        // If FRONTEND_PUBLIC_URL is not set, try to derive it from BACKEND_PUBLIC_URL
+        const backendUrl = this.configService.get<string>('BACKEND_PUBLIC_URL');
+        if (backendUrl) {
+          // Replace port 3000 with 3001 for frontend
+          frontendUrl = backendUrl.replace(':3000', ':3001');
+        } else {
+          // Last resort fallback
+          frontendUrl = 'http://localhost:3001';
+        }
+      }
+      
       const verificationLink = `${frontendUrl}/portal/verify-email?token=${token}`;
 
       // Send email
