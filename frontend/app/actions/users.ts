@@ -936,3 +936,45 @@ export async function getCurrentUserProfile(): Promise<{
 	}
 }
 
+/**
+ * Delete a community user (soft delete)
+ * Follows the same pattern as deleteProperty
+ */
+export async function deleteCommunityUser(userId: string): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' };
+    }
+
+    const response = await fetch(`${env.backendApiUrl}/users/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return { 
+        success: false, 
+        error: errorData?.message || `Error al eliminar usuario: ${response.status}` 
+      };
+    }
+
+    // Revalidate the community users grid path
+    revalidatePath('/backOffice/users/community');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting community user:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Error al eliminar usuario' 
+    };
+  }
+}

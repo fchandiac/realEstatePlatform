@@ -5,6 +5,7 @@ import DataGrid from '@/components/DataGrid/DataGridWrapper';
 import type { DataGridColumn } from '@/components/DataGrid/DataGrid';
 import type { CommunityUserGridRow } from '@/app/actions/users';
 import { useAlert } from '@/app/contexts/AlertContext';
+import DeleteCommunityUserButton from './DeleteCommunityUserButton';
 
 type CommunityUsersDataGridProps = {
   rows: CommunityUserGridRow[];
@@ -29,6 +30,12 @@ function mapRow(row: any) {
 export default function CommunityUsersDataGrid({ rows, totalRows, title }: CommunityUsersDataGridProps) {
   const alert = useAlert();
   const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
+
+  const handleDeleteSuccess = () => {
+    setIsDeleting(null);
+    router.refresh();
+  };
 
   const columns: DataGridColumn[] = [
     { field: 'username', headerName: 'Usuario', flex: 1.2, minWidth: 150, sortable: true, filterable: true },
@@ -48,7 +55,7 @@ export default function CommunityUsersDataGrid({ rows, totalRows, title }: Commu
     {
       field: 'actions',
       headerName: '',
-      width: 80,
+      width: 120,
       sortable: false,
       filterable: false,
       actionComponent: ({ row }) => (
@@ -67,6 +74,14 @@ export default function CommunityUsersDataGrid({ rows, totalRows, title }: Commu
           >
             <span className="material-symbols-outlined text-lg">visibility</span>
           </button>
+          <DeleteCommunityUserButton
+            userId={row.id}
+            username={row.username}
+            onSuccess={handleDeleteSuccess}
+            icon="delete"
+            buttonText=""
+            variant="text"
+          />
         </div>
       ),
     },
@@ -89,3 +104,4 @@ export default function CommunityUsersDataGrid({ rows, totalRows, title }: Commu
     </>
   );
 }
+
