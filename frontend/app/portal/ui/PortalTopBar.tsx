@@ -77,14 +77,14 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 bg-gray/10 z-45 transition-opacity duration-300"
+        className="fixed inset-0 bg-transparent z-35 transition-opacity duration-300"
         onClick={onClose}
         data-test-id="sidebar-overlay"
       />
 
       {/* Sidebar Panel */}
       <div
-        className="fixed left-0 top-0 h-full w-64 bg-white/60 backdrop-blur backdrop-saturate-150 z-50 shadow-xl transform transition-transform duration-300 ease-in-out border border-white/20"
+        className="fixed left-0 top-0 h-full w-64 bg-white/60 backdrop-blur backdrop-saturate-150 z-40 shadow-xl transform transition-transform duration-300 ease-in-out border border-white/20"
         data-test-id="sidebar-panel"
       >
         {/* Header */}
@@ -340,7 +340,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
 
       {/* Main TopBar */}
       <div
-        className="flex items-center justify-between h-16 w-full bg-background sm:px-8 md:px-24 box-border sticky top-0 left-0 z-40"
+        className="flex items-center justify-between h-16 w-full bg-background sm:px-8 md:px-24 box-border sticky top-0 left-0 z-30"
         data-test-id="topBar"
       >
         {/* Izquierda: icono imagen y nombre empresa */}
