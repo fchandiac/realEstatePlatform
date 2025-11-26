@@ -52,7 +52,7 @@ export default function NavBar() {
           </button>
           
           {openMenu === 'nosotros' && (
-            <ul className="absolute left-0 top-full mt-1 w-56 bg-white border border-neutral-200 rounded shadow-lg z-50">
+            <ul className="absolute left-0 top-full mt-1 w-56 bg-white border border-neutral-200 rounded shadow-lg z-20">
               <li>
                 <button onClick={() => handleNavigation('/portal/aboutUs')} className="w-full text-left px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">
                   Quiénes somos
@@ -85,7 +85,7 @@ export default function NavBar() {
           </button>
           
           {openMenu === 'propiedades' && (
-            <ul className="absolute left-0 top-full mt-1 w-56 bg-white border border-neutral-200 rounded shadow-lg z-50">
+            <ul className="absolute left-0 top-full mt-1 w-56 bg-white border border-neutral-200 rounded shadow-lg z-20">
               <li><button onClick={() => handleNavigation('/portal/properties/rent')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">En Arriendo</button></li>
               <li><button onClick={() => handleNavigation('/portal/properties/sale')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">En Venta</button></li>
               <li><button onClick={() => handleNavigation('/portal/services/management')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">Servicio de Administración</button></li>
