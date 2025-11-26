@@ -14,7 +14,7 @@ const menuItems = [
     label: 'Propiedades',
     children: [
       { label: 'Venta', url: '/backOffice/properties/sales' },
-      { label: 'Alquiler', url: '/backOffice/properties/rent' },
+      { label: 'Arriendo', url: '/backOffice/properties/rent' },
       { label: 'Tipos de propiedad', url: '/backOffice/properties/propertyTypes' },
       // { label: 'Solicitudes de publicación' },
       // { label: 'Valoraciones' },
