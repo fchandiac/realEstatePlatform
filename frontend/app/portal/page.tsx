@@ -2,7 +2,6 @@ import FeaturedPropertiesList from './ui/FeaturedPropertiesList';
 import { getPublishedFeaturedProperties } from '@/app/actions/properties';
 import { getPublishedPropertiesFiltered } from '@/app/actions/portalProperties';
 import Slider from './ui/Slider';
-import NavBar from './ui/NavBar';
 import PortalClient from './PortalClient';
 
 interface PortalPageProps {
@@ -54,10 +53,7 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
       {/* Hero Slider */}
       <Slider />
 
-      {/* NavBar - Sticky under Slider with proper z-index */}
-      <div className="sticky top-16 bg-background shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)] z-50">
-        <NavBar />
-      </div>
+   
 
       {/* Featured Properties Section */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 relative z-0">

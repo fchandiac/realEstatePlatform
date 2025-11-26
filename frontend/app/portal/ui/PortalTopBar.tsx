@@ -7,6 +7,7 @@ import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import { getIdentity } from "@/app/actions/identity";
 import { useRouter } from 'next/navigation';
+import NavBar from "./NavBar";
 
 interface RegisterData {
   firstName: string;
@@ -84,7 +85,7 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
 
       {/* Sidebar Panel */}
       <div
-        className="fixed left-0 top-0 h-full w-64 bg-white/60 backdrop-blur backdrop-saturate-150 z-40 shadow-xl transform transition-transform duration-300 ease-in-out border border-white/20"
+        className="fixed left-0 top-0 h-full w-64 bg-white/60 backdrop-blur backdrop-saturate-150 z-50 shadow-xl transform transition-transform duration-300 ease-in-out border border-white/20"
         data-test-id="sidebar-panel"
       >
         {/* Header */}
@@ -109,6 +110,29 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
         <div className="p-4 flex-1 overflow-y-auto">
           <nav className="w-full" aria-label="Mobile navigation">
             <ul className="flex flex-col gap-2">
+              {/* --- Mi Datos (Solo usuarios logueados) --- */}
+              {isUserLoggedIn && (
+                <li>
+                  <button 
+                    onClick={() => handleNavigation('/portal/myData')} 
+                    className="flex items-center justify-between w-full text-left px-3 py-3 text-sm font-medium text-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="material-symbols-sharp text-xl text-primary" aria-hidden>
+                        person
+                      </span>
+                      <span>Mis Datos</span>
+                    </div>
+                    {/* Check icon - por ahora siempre oculto (datos incompletos) */}
+                    {false && (
+                      <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary text-white" aria-hidden>
+                        <span className="material-symbols-outlined text-xs">check</span>
+                      </span>
+                    )}
+                  </button>
+                </li>
+              )}
+
               {/* --- Home Link --- */}
               <li>
                 <button 

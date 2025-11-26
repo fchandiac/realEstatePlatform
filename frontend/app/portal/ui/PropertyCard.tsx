@@ -468,7 +468,7 @@ export default function PropertyCard({ property, href, onClick }: PropertyCardPr
 
   const CardInner = (
     <div
-      className="relative bg-white rounded-lg w-full text-left property-card shadow-lg overflow-hidden"
+      className="relative bg-white rounded-lg w-full text-left property-card shadow-lg overflow-hidden z-0"
       data-test-id="property-card-root"
     >
       {featured && (
