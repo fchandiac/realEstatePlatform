@@ -23,8 +23,6 @@ export default function LoginForm({ onClose, logoSrc, companyName, onRegisterCli
   const { login } = useAuth();
   const { showAlert } = useAlert();
 
-  const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
@@ -38,10 +36,11 @@ export default function LoginForm({ onClose, logoSrc, companyName, onRegisterCli
       if (!ok) {
         const err = (result as any)?.error ?? "Credenciales inválidas";
         setError(err);
+        setIsSubmitting(false);
         return;
       }
 
-      // Mostrar alerta de bienvenida
+      // Mostrar alerta de bienvenida con nombre extraído del email
       const firstName = email.split('@')[0];
       showAlert({
         message: `¡Bienvenido ${firstName}! Login exitoso.`,
@@ -49,39 +48,21 @@ export default function LoginForm({ onClose, logoSrc, companyName, onRegisterCli
         duration: 3000,
       });
 
-      // Cerrar el dialog inmediatamente
-      if (onClose) {
-        onClose();
-      }
-
-      // Poll session until role appears (up to ~2s)
-      const maxAttempts = 10;
-      for (let i = 0; i < maxAttempts; i++) {
-        try {
-          const res = await fetch('/api/auth/session');
-          if (res.ok) {
-            const session = await res.json();
-            const role = session?.user?.role;
-            if (role) {
-              if (role === 'ADMIN' || role === 'AGENT') {
-                router.push('/backOffice');
-                return;
-              }
-              break; // role present but not admin/agent
-            }
-          }
-        } catch (sessErr) {
-          // ignore and retry
+      // Cerrar el dialog inmediatamente - sin delay
+      setTimeout(() => {
+        if (onClose) {
+          onClose();
         }
-        await delay(200);
-      }
+      }, 100);
 
-      // fallback: refresh page
-      router.refresh();
+      // Refrescar la página para que el middleware pueda redirigir si es necesario
+      // (ADMIN/AGENT irán a backOffice, COMMUNITY permanecerán en portal)
+      setTimeout(() => {
+        router.refresh();
+      }, 500);
     } catch (unknownError) {
       console.error("Error en login", unknownError);
       setError("Ocurrió un error inesperado. Intenta nuevamente.");
-    } finally {
       setIsSubmitting(false);
     }
   };
