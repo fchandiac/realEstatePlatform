@@ -37,6 +37,7 @@ import { UpdateMainImageDto } from './dto/create-property.dto';
 import { UpdatePropertyPriceDto } from './dto/update-property-price.dto';
 import { UpdatePropertySeoDto } from './dto/update-property-seo.dto';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
+import { GridRentQueryDto } from './dto/grid-rent.dto';
 import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { FilterRentPropertiesDto } from './dto/filter-rent-properties.dto';
 import { FilterSalePropertiesDto } from './dto/filter-sale-properties.dto';
@@ -86,6 +87,25 @@ export class PropertyController {
     res.set({
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'Content-Disposition': 'attachment; filename="propiedades-en-venta.xlsx"',
+    });
+    res.send(buffer);
+  }
+
+  @Get('grid-rent/excel')
+  @ApiOperation({ summary: 'Export rent properties to Excel' })
+  @ApiResponse({ status: 200, description: 'Excel file exported successfully' })
+  @ApiQuery({ name: 'fields', required: false, type: String, description: 'Comma-separated fields to export' })
+  @ApiQuery({ name: 'sort', required: false, enum: ['asc', 'desc'], description: 'Sort order' })
+  @ApiQuery({ name: 'sortField', required: false, type: String, description: 'Field to sort by' })
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Rent properties Excel exported')
+  async exportRentGridExcel(
+    @Query(ValidationPipe) query: GridRentQueryDto,
+    @Res() res: Response,
+  ) {
+    const buffer = await this.propertyService.exportRentPropertiesExcel(query);
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename="propiedades-en-arriendo.xlsx"',
     });
     res.send(buffer);
   }
@@ -262,6 +282,17 @@ export class PropertyController {
   @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Sale properties grid viewed')
   gridSale(@Query(ValidationPipe) query: GridSaleQueryDto) {
     return this.propertyService.gridSaleProperties(query);
+  }
+
+  @Get('grid-rent')
+  @ApiOperation({ summary: 'Get rent properties grid with pagination' })
+  @ApiResponse({ status: 200, description: 'Grid of rent properties' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'sort', required: false, enum: ['asc', 'desc'] })
+  @Audit(AuditAction.READ, AuditEntityType.PROPERTY, 'Rent properties grid viewed')
+  gridRent(@Query(ValidationPipe) query: GridRentQueryDto) {
+    return this.propertyService.gridRentProperties(query);
   }
 
   /**

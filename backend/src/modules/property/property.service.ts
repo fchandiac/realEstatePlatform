@@ -15,6 +15,7 @@ import { PropertyStatus } from '../../common/enums/property-status.enum';
 import { PropertyOperationType } from '../../common/enums/property-operation-type.enum';
 import { ChangeHistoryEntry, ViewEntry, LeadEntry } from '../../common/interfaces/property.interfaces';
 import { GridSaleQueryDto } from './dto/grid-sale.dto';
+import { GridRentQueryDto } from './dto/grid-rent.dto';
 import { GetFullPropertyDto } from './dto/get-full-property.dto';
 import { plainToClass } from 'class-transformer';
 import * as ExcelJS from 'exceljs';
@@ -468,7 +469,58 @@ export class PropertyService {
     return Buffer.from(buffer);
   }
 
+  async exportRentPropertiesExcel(query: GridRentQueryDto): Promise<Buffer> {
+    // Columnas del DataGrid de rent (deben coincidir con el frontend)
+    const columns = [
+      { key: 'id', header: 'ID' },
+      { key: 'title', header: 'Título' },
+      { key: 'status', header: 'Estado' },
+      { key: 'operationType', header: 'Operación' },
+      { key: 'typeName', header: 'Tipo' },
+      { key: 'assignedAgentName', header: 'Agente' },
+      { key: 'city', header: 'Ciudad' },
+      { key: 'state', header: 'Región' },
+      { key: 'price', header: 'Precio' },
+      { key: 'createdAt', header: 'Creado' },
+    ];
 
+    // Forzar siempre el parámetro fields para que gridRentProperties devuelva todos los datos necesarios
+    const fields = columns.map(c => c.key).join(',');
+    const gridResult = await this.gridRentProperties({ ...query, fields, pagination: 'false' });
+    const rows = Array.isArray(gridResult) ? gridResult : gridResult.data;
+
+    // Crear workbook y hoja
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('Propiedades en Arriendo');
+
+    // Definir columnas
+    sheet.columns = columns.map(col => ({ key: col.key, header: col.header, width: 22 }));
+
+    // Agregar filas
+    rows.forEach(row => {
+      const excelRow: Record<string, any> = {};
+      columns.forEach(col => {
+        excelRow[col.key] = row[col.key] ?? '';
+      });
+      sheet.addRow(excelRow);
+    });
+
+    // Estilo: bordes en todas las celdas
+    sheet.eachRow({ includeEmpty: true }, (row) => {
+      row.eachCell({ includeEmpty: true }, (cell) => {
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
+      });
+    });
+
+    // Generar buffer
+    const buffer = await workbook.xlsx.writeBuffer();
+    return Buffer.from(buffer);
+  }
 
   async create(
     createPropertyDto: CreatePropertyDto,
@@ -1160,6 +1212,209 @@ export class PropertyService {
   if (!fields.includes('assignedUsername') && 'assignedUsername' in row) delete row.assignedUsername;
 
     return row;
+  }
+
+  async gridRentProperties(query: GridRentQueryDto) {
+    console.log('gridRentProperties called with query:', query);
+    // Allowed fields and mappings
+    const availableFields = [
+      'id',
+      'title',
+      'status',
+      'operationType',
+      'typeName',
+      'characteristics',
+      'assignedAgentName',
+      'city',
+      'state',
+      'priceDisplay',
+      'price',
+      'currencyPrice',
+      'createdAt',
+      'updatedAt',
+    ];
+
+    const fieldMappings: Record<string, string> = {
+      id: 'p.id',
+      title: 'p.title',
+      status: 'p.status',
+      operationType: 'p.operationType',
+      typeName: 'pt.name AS typeName',
+      city: 'p.city',
+      state: 'p.state',
+      price: 'p.price',
+      currencyPrice: 'p.currencyPrice',
+      createdAt: 'p.createdAt',
+      updatedAt: 'p.updatedAt',
+      // assignedAgentName should sort by agent username
+      assignedAgentName: 'a.username',
+      // characteristics and priceDisplay are derived post-query
+    };
+
+    const textSearchFields = [
+      'LOWER(p.title)',
+      'LOWER(pt.name)',
+      'LOWER(a.username)',
+      'LOWER(p.city)',
+      'LOWER(p.state)',
+    ];
+
+    // Parse fields
+    const requested = (query.fields || '')
+      .split(',')
+      .map((f) => f.trim())
+      .filter((f) => f);
+    const fields = requested.length
+      ? requested.filter((f) => availableFields.includes(f))
+      : availableFields;
+
+    if (fields.length === 0) {
+      if (query.pagination === 'true') {
+        return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 };
+      }
+      return [];
+    }
+
+    // Build select (raw) for non-derived fields, usando alias exactos para cada campo
+    const rawSelects = fields
+      .filter((f) => !['characteristics', 'priceDisplay', 'assignedAgentName'].includes(f))
+      .map((f) => {
+        // Si el mapping ya tiene un alias (AS ...), úsalo tal cual
+        if (fieldMappings[f] && fieldMappings[f].includes(' AS ')) return fieldMappings[f];
+        // Si es un campo directo, forzar alias igual al nombre esperado
+        if (fieldMappings[f]) return `${fieldMappings[f]} AS ${f}`;
+        return `p.${f} AS ${f}`;
+      });
+
+    // Always include needed base fields for derivations if requested
+    const needCharacteristics = fields.includes('characteristics');
+    const needPriceDisplay = fields.includes('priceDisplay');
+    if (needCharacteristics) {
+      rawSelects.push(
+        'p.bedrooms',
+        'p.bathrooms',
+        'p.landSquareMeters',
+        'p.builtSquareMeters',
+        'p.parkingSpaces',
+        'p.floors',
+      );
+    }
+    if (needPriceDisplay) {
+      rawSelects.push('p.price', 'p.currencyPrice');
+    }
+
+    // assignedAgentName derivation needs agent personalInfo and username
+    const needAgentName = fields.includes('assignedAgentName');
+    if (needAgentName) {
+      rawSelects.push('a.personalInfo AS assignedPersonalInfo');
+      rawSelects.push('a.username AS assignedUsername');
+    }
+
+    // Fallback: ensure id exists in selection for identity mapping
+    if (!rawSelects.find((s) => s.startsWith('p.id'))) rawSelects.unshift('p.id');
+
+    const qb = this.propertyRepository
+      .createQueryBuilder('p')
+      .leftJoin('p.propertyType', 'pt')
+      .leftJoin('p.assignedAgent', 'a')
+      .where('p.deletedAt IS NULL')
+      .andWhere('p.operationType = :op', { op: PropertyOperationType.RENT });
+
+        // Column filters
+    const filtration = query.filtration === 'true';
+    console.log('[DEBUG] gridRentProperties - filtration enabled:', filtration);
+    if (filtration && query.filters) {
+      const items = query.filters
+        .split(',')
+        .map((f) => f.trim())
+        .filter((f) => f.includes('-'))
+        .map((f) => {
+          const dash = f.indexOf('-');
+          return {
+            column: f.substring(0, dash).trim(),
+            value: decodeURIComponent(f.substring(dash + 1).trim()),
+          };
+        })
+        .filter((f) => f.column && f.value && availableFields.includes(f.column));
+
+      console.log('[DEBUG] gridRentProperties - Parsed filter items:', items);
+
+      for (const f of items) {
+        if (f.column === 'assignedAgentName') {
+          // Filtrar por username o por nombre en personalInfo (JSON)
+          const param = `%${f.value.toLowerCase()}%`;
+          // Busca en username y en personalInfo (firstName, lastName)
+          qb.andWhere(
+            `(
+              LOWER(a.username) LIKE :f_assignedAgentName
+              OR LOWER(JSON_UNQUOTE(JSON_EXTRACT(a.personalInfo, '$.firstName'))) LIKE :f_assignedAgentName
+              OR LOWER(JSON_UNQUOTE(JSON_EXTRACT(a.personalInfo, '$.lastName'))) LIKE :f_assignedAgentName
+            )`,
+            { f_assignedAgentName: param }
+          );
+          console.log('[DEBUG] gridRentProperties - Applying filter: assignedAgentName LIKE', param);
+        } else {
+          const mapping = fieldMappings[f.column] || `p.${f.column}`;
+          const dbField = mapping.split(' AS ')[0];
+          console.log(`[DEBUG] gridRentProperties - Applying filter: ${f.column} LIKE '%${f.value}%' on field ${dbField}`);
+          const param = `%${f.value.toLowerCase()}%`;
+          qb.andWhere(`LOWER(${dbField}) LIKE :f_${f.column}`, {
+            [`f_${f.column}`]: param,
+          });
+        }
+      }
+    }
+
+    // Global search
+    if (query.search && query.search.trim() !== '') {
+      const needle = query.search.trim().toLowerCase();
+      const orExpr = textSearchFields
+        .map((f, idx) => `${f} LIKE :s${idx}`)
+        .join(' OR ');
+      const params = Object.fromEntries(
+        textSearchFields.map((_, idx) => [`s${idx}`, `%${needle}%`]),
+      );
+      qb.andWhere(`(${orExpr})`, params);
+    }
+
+    // Sorting
+    const sortDir = query.sort === 'desc' ? 'DESC' : 'ASC';
+    const sortField = query.sortField && availableFields.includes(query.sortField)
+      ? query.sortField
+      : undefined;
+    if (sortField) {
+      const mapping = fieldMappings[sortField] || `p.${sortField}`;
+      const dbField = mapping.split(' AS ')[0];
+      qb.orderBy(dbField, sortDir as 'ASC' | 'DESC');
+    } else {
+      qb.orderBy('p.publishedAt', 'DESC').addOrderBy('p.createdAt', 'DESC');
+    }
+
+    // Selects
+    qb.select(rawSelects);
+
+    // Pagination
+    const doPaginate = query.pagination === 'true';
+    let total = 0;
+    let page = Math.max(1, query.page || 1);
+    let limit = Math.min(Math.max(1, query.limit || 10), 100);
+
+    if (doPaginate) {
+      total = await qb.getCount();
+      console.log('Total properties with operationType RENT:', total);
+      const totalPages = Math.ceil(total / limit);
+      const offset = (page - 1) * limit;
+      qb.limit(limit).offset(offset);
+      const rows = await qb.getRawMany();
+      console.log('Raw rows from query:', rows.length);
+      const data = rows.map((r: any) => this.mapGridRow(r, fields));
+      console.log('Mapped data:', data.length);
+      return { data, total, page, limit, totalPages };
+    }
+
+    const rows = await qb.getRawMany();
+    console.log('Raw rows from non-paginated query:', rows.length);
+    return rows.map((r: any) => this.mapGridRow(r, fields));
   }
 
   @InjectRepository(Multimedia)
