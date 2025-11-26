@@ -112,7 +112,7 @@ export default function RegisterForm({ onClose, onRegisterClick }: RegisterFormP
         required
         value={firstName}
         onChange={(event) => setFirstName(event.target.value)}
-        placeholder="Juan"
+        placeholder="Nombre"
         className="w-full"
         disabled={isSubmitting}
         data-test-id="portal-register-firstname"
@@ -123,7 +123,7 @@ export default function RegisterForm({ onClose, onRegisterClick }: RegisterFormP
         required
         value={lastName}
         onChange={(event) => setLastName(event.target.value)}
-        placeholder="Pérez"
+        placeholder="Apellido"
         className="w-full"
         disabled={isSubmitting}
         data-test-id="portal-register-lastname"

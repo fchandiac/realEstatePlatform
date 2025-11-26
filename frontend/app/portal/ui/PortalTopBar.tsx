@@ -442,7 +442,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
           open={registerDialogOpen}
           onClose={() => setRegisterDialogOpen(false)}
           title="Crear Cuenta"
-          size="md"
+          size="xs"
         >
           <RegisterForm 
             onClose={() => setRegisterDialogOpen(false)}
