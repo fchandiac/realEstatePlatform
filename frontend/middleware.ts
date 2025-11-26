@@ -6,6 +6,12 @@ export default withAuth(
     const { pathname } = req.nextUrl;
     const token = req.nextauth.token;
 
+    // Redirigir ADMIN y AGENT del portal al backOffice
+    if (pathname.startsWith('/portal') && token && ['ADMIN', 'AGENT'].includes(token.role as string)) {
+      console.log('Middleware - Usuario', token.role, 'en portal, redirigiendo a backOffice');
+      return NextResponse.redirect(new URL('/backOffice', req.url));
+    }
+
     // Solo aplicar restricciones a rutas del backoffice
     if (pathname.startsWith('/backOffice')) {
       console.log('Middleware - Acceso a backoffice:', pathname);
@@ -25,7 +31,7 @@ export default withAuth(
 
       console.log('Middleware - Acceso permitido para rol:', token.role);
     }
-    // Rutas públicas (portal, etc.) no tienen restricciones
+    // Rutas públicas (portal, etc.) no tienen restricciones para usuarios COMMUNITY
   },
   {
     callbacks: {
