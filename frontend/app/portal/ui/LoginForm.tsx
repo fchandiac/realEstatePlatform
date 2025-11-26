@@ -3,6 +3,7 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { TextField } from "@/components/TextField/TextField";
 import { useAuth } from "@/app/providers";
+import { useAlert } from "@/app/hooks/useAlert";
 import Logo from "@/components/Logo/Logo";
 import { Button } from "@/components/Button/Button";
 
@@ -20,6 +21,7 @@ export default function LoginForm({ onClose, logoSrc, companyName, onRegisterCli
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const { login } = useAuth();
+  const { showAlert } = useAlert();
 
   const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -38,6 +40,14 @@ export default function LoginForm({ onClose, logoSrc, companyName, onRegisterCli
         setError(err);
         return;
       }
+
+      // Mostrar alerta de bienvenida
+      const firstName = email.split('@')[0];
+      showAlert({
+        message: `¡Bienvenido ${firstName}! Login exitoso.`,
+        type: 'success',
+        duration: 3000,
+      });
 
       if (onClose) onClose();
 
