@@ -372,18 +372,13 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
           
           {/* Show user info when logged in, otherwise show login/register buttons */}
           {session?.user ? (
-            // Usuario logueado: mostrar nombre + ícono + menú
-            <div className="flex items-center gap-2 ml-4">
+            // Usuario logueado: mostrar nombre + ícono
+            <div className="hidden sm:flex items-center gap-2 ml-4">
               <div className="h-6 w-px bg-foreground mx-2" />
               <span className="material-symbols-outlined text-primary">person</span>
-              <span className="hidden sm:inline text-xs text-foreground">
+              <span className="text-xs text-foreground">
                 {session.user.name?.split(' ')[0] || 'Usuario'}
               </span>
-              <IconButton 
-                variant="basic" 
-                className="hidden md:flex"
-                icon="menu"
-              />
             </div>
           ) : (
             // Usuario no logueado: mostrar botones de login/register
@@ -400,11 +395,11 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
           )}
         </div>
 
-        <div className="flex sm:hidden items-center mr-2 gap-2">
-          {/* Menu button for xs/sm screens - opens sidebar */}
+        <div className={`flex items-center mr-2 gap-2 ${session?.user ? 'flex' : 'sm:flex'}`}>
+          {/* Menu button for xs/sm screens - opens sidebar, or for md+ when logged in */}
           <IconButton 
             variant="basic" 
-            className="ml-0" 
+            className={`ml-0 ${session?.user ? 'md:flex' : 'sm:hidden'}`}
             onClick={() => setSidebarOpen(true)} 
             icon="menu"
           />
