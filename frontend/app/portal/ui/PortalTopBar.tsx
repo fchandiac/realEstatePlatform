@@ -372,13 +372,18 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
           
           {/* Show user info when logged in, otherwise show login/register buttons */}
           {session?.user ? (
-            // Usuario logueado: mostrar nombre + ícono
-            <div className="hidden sm:flex items-center gap-3 ml-4 mr-4">
+            // Usuario logueado: mostrar nombre + ícono + menú
+            <div className="hidden sm:flex items-center gap-2 ml-4 mr-4">
               <div className="h-6 w-px bg-foreground mx-2" />
               <span className="material-symbols-outlined text-primary">person</span>
               <span className="text-xs text-foreground">
                 {session.user.name?.split(' ')[0] || 'Usuario'}
               </span>
+              <IconButton 
+                variant="text" 
+                icon="more_vert" 
+                className="text-foreground hover:text-primary"
+              />
             </div>
           ) : (
             // Usuario no logueado: mostrar botones de login/register
