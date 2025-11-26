@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import IconButton from "@/components/IconButton/IconButton";
 import { Button } from "@/components/Button/Button";
 import Dialog from "@/components/Dialog/Dialog";
@@ -241,10 +241,24 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
         {/* Action Buttons */}
         <div className="p-4 border-t border-border">
           {isUserLoggedIn ? (
-            // Usuario logueado: mostrar nombre
-            <div className="flex items-center gap-2 px-3 py-3 text-sm font-medium text-foreground">
-              <span className="material-symbols-outlined text-primary">person</span>
-              <span>{userName?.split(' ')[0] || 'Usuario'}</span>
+            // Usuario logueado: mostrar nombre + botón logout
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 px-3 py-3 text-sm font-medium text-foreground">
+                <span className="material-symbols-outlined text-primary">person</span>
+                <span>{userName?.split(' ')[0] || 'Usuario'}</span>
+              </div>
+              <Button
+                variant="outlined"
+                className="w-full justify-start"
+                onClick={() => { 
+                  signOut({ redirect: true, callbackUrl: '/portal' });
+                  onClose();
+                }}
+                data-test-id="sidebar-logout-btn"
+              >
+                <span className="material-symbols-outlined mr-2">logout</span>
+                Cerrar Sesión
+              </Button>
             </div>
           ) : (
             // Usuario no logueado: mostrar botones
@@ -399,7 +413,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
           {/* Menu button for xs/sm screens - opens sidebar, or for md+ when logged in */}
           <IconButton 
             variant="basic" 
-            className={`ml-0 ${session?.user ? 'md:flex' : 'sm:hidden'}`}
+            className={`ml-4 ${session?.user ? 'md:flex' : 'sm:hidden'}`}
             onClick={() => setSidebarOpen(true)} 
             icon="menu"
           />
