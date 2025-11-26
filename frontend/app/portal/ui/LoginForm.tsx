@@ -49,7 +49,10 @@ export default function LoginForm({ onClose, logoSrc, companyName, onRegisterCli
         duration: 3000,
       });
 
-      if (onClose) onClose();
+      // Cerrar el dialog inmediatamente
+      if (onClose) {
+        onClose();
+      }
 
       // Poll session until role appears (up to ~2s)
       const maxAttempts = 10;
