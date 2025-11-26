@@ -28,7 +28,7 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="w-full bg-background" aria-label="Main navigation">
+    <nav className="w-full bg-background z-10" aria-label="Main navigation">
       <ul className="flex items-center justify-center gap-3 px-4 py-3">
         {/* --- Home Link --- */}
         <li>
