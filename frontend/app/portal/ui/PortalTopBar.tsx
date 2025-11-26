@@ -429,6 +429,7 @@ export default function PortalTopBar({ onMenuClick, nombreEmpresa = "Plataforma 
           <LoginForm
             logoSrc={identity?.urlLogo || "/PropLogo2.png"}
             companyName={identity?.name}
+            onClose={() => setLoginDialogOpen(false)}
             onRegisterClick={() => {
               setLoginDialogOpen(false);
               setRegisterDialogOpen(true);
