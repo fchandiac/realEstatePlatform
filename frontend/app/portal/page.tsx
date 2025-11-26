@@ -54,13 +54,13 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
       {/* Hero Slider */}
       <Slider />
 
-      {/* NavBar - Sticky under Slider */}
-      <div className="sticky top-16 z-10 bg-background shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)]">
+      {/* NavBar - Sticky under Slider with proper z-index */}
+      <div className="sticky top-16 bg-background shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)] z-50">
         <NavBar />
       </div>
 
       {/* Featured Properties Section */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 relative z-0">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-extrabold text-gray-900">
             Propiedades destacadas
@@ -79,7 +79,7 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
       </div>
 
       {/* Regular Portal Properties Section */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 relative z-0">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-extrabold text-gray-900">
             Busca tu propiedad ideal

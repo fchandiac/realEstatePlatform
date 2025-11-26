@@ -158,7 +158,7 @@ export default function FeaturedPropertiesList({
   }, [router]);
 
   return (
-    <div className="w-full">
+    <div className="w-full relative z-0">
       <div
         className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-opacity duration-200 ${
           isLoading ? 'opacity-70' : 'opacity-100'

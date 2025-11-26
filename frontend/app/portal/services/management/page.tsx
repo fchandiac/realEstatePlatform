@@ -17,7 +17,7 @@ export default function PropertyManagementServicePage() {
       <div className="mb-12">
         <div className="relative h-64 md:h-96 rounded-lg overflow-hidden shadow-lg">
           <img
-            src="/portal/img/property-management.jpg"
+            src="http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg"
             alt="Administración de propiedades"
             className="w-full h-full object-cover"
           />
