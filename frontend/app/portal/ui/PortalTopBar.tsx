@@ -114,7 +114,7 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
               {isUserLoggedIn && (
                 <li>
                   <button 
-                    onClick={() => handleNavigation('/portal/myData')} 
+                    onClick={() => handleNavigation('/portal/personalInfo')} 
                     className="flex items-center justify-between w-full text-left px-3 py-3 text-sm font-medium text-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
                   >
                     <div className="flex items-center gap-3">
