@@ -55,7 +55,7 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
       <Slider />
 
       {/* NavBar - Sticky under Slider */}
-      <div className="sticky top-16 z-40 bg-background shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)]">
+      <div className="sticky top-16 z-10 bg-background shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)]">
         <NavBar />
       </div>
 
