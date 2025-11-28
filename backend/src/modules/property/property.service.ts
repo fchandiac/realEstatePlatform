@@ -2702,49 +2702,45 @@ export class PropertyService {
         console.log('🔎 Applied search filter:', dto.search);
       }
 
-      // Apply additional filters
-      if (dto.filters) {
-        console.log('🔎 Applying additional filters:', dto.filters);
+      // Apply additional filters (direct properties, not nested)
+      if (dto.priceMin !== undefined) {
+        query.andWhere('property.price >= :priceMin', { priceMin: dto.priceMin });
+        console.log('🔎 Applied priceMin filter:', dto.priceMin);
+      }
 
-        if (dto.filters.priceMin !== undefined) {
-          query.andWhere('property.price >= :priceMin', { priceMin: dto.filters.priceMin });
-          console.log('🔎 Applied priceMin filter:', dto.filters.priceMin);
-        }
+      if (dto.priceMax !== undefined) {
+        query.andWhere('property.price <= :priceMax', { priceMax: dto.priceMax });
+        console.log('🔎 Applied priceMax filter:', dto.priceMax);
+      }
 
-        if (dto.filters.priceMax !== undefined) {
-          query.andWhere('property.price <= :priceMax', { priceMax: dto.filters.priceMax });
-          console.log('🔎 Applied priceMax filter:', dto.filters.priceMax);
-        }
+      if (dto.bedrooms !== undefined) {
+        query.andWhere('property.bedrooms >= :bedrooms', { bedrooms: dto.bedrooms });
+        console.log('🔎 Applied bedrooms filter:', dto.bedrooms);
+      }
 
-        if (dto.filters.bedrooms !== undefined) {
-          query.andWhere('property.bedrooms >= :bedrooms', { bedrooms: dto.filters.bedrooms });
-          console.log('🔎 Applied bedrooms filter:', dto.filters.bedrooms);
-        }
+      if (dto.bathrooms !== undefined) {
+        query.andWhere('property.bathrooms >= :bathrooms', { bathrooms: dto.bathrooms });
+        console.log('🔎 Applied bathrooms filter:', dto.bathrooms);
+      }
 
-        if (dto.filters.bathrooms !== undefined) {
-          query.andWhere('property.bathrooms >= :bathrooms', { bathrooms: dto.filters.bathrooms });
-          console.log('🔎 Applied bathrooms filter:', dto.filters.bathrooms);
-        }
+      if (dto.typeProperty) {
+        query.andWhere('pt.name = :typeProperty', { typeProperty: dto.typeProperty });
+        console.log('🔎 Applied typeProperty filter:', dto.typeProperty);
+      }
 
-        if (dto.filters.typeProperty) {
-          query.andWhere('pt.name = :typeProperty', { typeProperty: dto.filters.typeProperty });
-          console.log('🔎 Applied typeProperty filter:', dto.filters.typeProperty);
-        }
+      if (dto.state) {
+        query.andWhere('property.state = :state', { state: dto.state });
+        console.log('🔎 Applied state filter:', dto.state);
+      }
 
-        if (dto.filters.state) {
-          query.andWhere('property.state = :state', { state: dto.filters.state });
-          console.log('🔎 Applied state filter:', dto.filters.state);
-        }
+      if (dto.city) {
+        query.andWhere('property.city = :city', { city: dto.city });
+        console.log('🔎 Applied city filter:', dto.city);
+      }
 
-        if (dto.filters.city) {
-          query.andWhere('property.city = :city', { city: dto.filters.city });
-          console.log('🔎 Applied city filter:', dto.filters.city);
-        }
-
-        if (dto.filters.currency && dto.filters.currency !== 'all') {
-          query.andWhere('property.currencyPrice = :currency', { currency: dto.filters.currency });
-          console.log('🔎 Applied currency filter:', dto.filters.currency);
-        }
+      if (dto.currency && dto.currency !== 'all') {
+        query.andWhere('property.currencyPrice = :currency', { currency: dto.currency });
+        console.log('🔎 Applied currency filter:', dto.currency);
       }
 
       // Apply sorting
@@ -2868,49 +2864,45 @@ export class PropertyService {
         console.log('🔎 Applied search filter:', dto.search);
       }
 
-      // Apply additional filters
-      if (dto.filters) {
-        console.log('🔎 Applying additional filters:', dto.filters);
+      // Apply additional filters (direct properties, not nested)
+      if (dto.priceMin !== undefined) {
+        query.andWhere('property.price >= :priceMin', { priceMin: dto.priceMin });
+        console.log('🔎 Applied priceMin filter:', dto.priceMin);
+      }
 
-        if (dto.filters.priceMin !== undefined) {
-          query.andWhere('property.price >= :priceMin', { priceMin: dto.filters.priceMin });
-          console.log('🔎 Applied priceMin filter:', dto.filters.priceMin);
-        }
+      if (dto.priceMax !== undefined) {
+        query.andWhere('property.price <= :priceMax', { priceMax: dto.priceMax });
+        console.log('🔎 Applied priceMax filter:', dto.priceMax);
+      }
 
-        if (dto.filters.priceMax !== undefined) {
-          query.andWhere('property.price <= :priceMax', { priceMax: dto.filters.priceMax });
-          console.log('🔎 Applied priceMax filter:', dto.filters.priceMax);
-        }
+      if (dto.bedrooms !== undefined) {
+        query.andWhere('property.bedrooms >= :bedrooms', { bedrooms: dto.bedrooms });
+        console.log('🔎 Applied bedrooms filter:', dto.bedrooms);
+      }
 
-        if (dto.filters.bedrooms !== undefined) {
-          query.andWhere('property.bedrooms >= :bedrooms', { bedrooms: dto.filters.bedrooms });
-          console.log('🔎 Applied bedrooms filter:', dto.filters.bedrooms);
-        }
+      if (dto.bathrooms !== undefined) {
+        query.andWhere('property.bathrooms >= :bathrooms', { bathrooms: dto.bathrooms });
+        console.log('🔎 Applied bathrooms filter:', dto.bathrooms);
+      }
 
-        if (dto.filters.bathrooms !== undefined) {
-          query.andWhere('property.bathrooms >= :bathrooms', { bathrooms: dto.filters.bathrooms });
-          console.log('🔎 Applied bathrooms filter:', dto.filters.bathrooms);
-        }
+      if (dto.typeProperty) {
+        query.andWhere('pt.name = :typeProperty', { typeProperty: dto.typeProperty });
+        console.log('🔎 Applied typeProperty filter:', dto.typeProperty);
+      }
 
-        if (dto.filters.typeProperty) {
-          query.andWhere('pt.name = :typeProperty', { typeProperty: dto.filters.typeProperty });
-          console.log('🔎 Applied typeProperty filter:', dto.filters.typeProperty);
-        }
+      if (dto.state) {
+        query.andWhere('property.state = :state', { state: dto.state });
+        console.log('🔎 Applied state filter:', dto.state);
+      }
 
-        if (dto.filters.state) {
-          query.andWhere('property.state = :state', { state: dto.filters.state });
-          console.log('🔎 Applied state filter:', dto.filters.state);
-        }
+      if (dto.city) {
+        query.andWhere('property.city = :city', { city: dto.city });
+        console.log('🔎 Applied city filter:', dto.city);
+      }
 
-        if (dto.filters.city) {
-          query.andWhere('property.city = :city', { city: dto.filters.city });
-          console.log('🔎 Applied city filter:', dto.filters.city);
-        }
-
-        if (dto.filters.currency && dto.filters.currency !== 'all') {
-          query.andWhere('property.currencyPrice = :currency', { currency: dto.filters.currency });
-          console.log('🔎 Applied currency filter:', dto.filters.currency);
-        }
+      if (dto.currency && dto.currency !== 'all') {
+        query.andWhere('property.currencyPrice = :currency', { currency: dto.currency });
+        console.log('🔎 Applied currency filter:', dto.currency);
       }
 
       // Apply sorting
