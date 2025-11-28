@@ -5,6 +5,7 @@ import { getPublishedPropertyPublic, notifyPropertyInterest, Property } from './
 import { Button } from '@/components/Button/Button';
 import { TextField } from '@/components/TextField/TextField';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
+import Dialog from '@/components/Dialog/Dialog';
 import { useAlert } from '@/app/hooks/useAlert';
 import FontAwesome from '@/components/FontAwesome/FontAwesome';
 import { env } from '@/lib/env';
@@ -40,6 +41,18 @@ function normalizeImageUrl(url?: string | null): string | undefined {
   return cleaned;
 }
 
+// Helper function to count words
+function countWords(text: string): number {
+  return text.trim().split(/\s+/).length;
+}
+
+// Helper function to get preview text (first 200 words)
+function getPreviewText(text: string): string {
+  const words = text.trim().split(/\s+/);
+  if (words.length <= 200) return text;
+  return words.slice(0, 200).join(' ') + '...';
+}
+
 interface PropertyDetailClientProps {
   property: Property;
 }
@@ -49,6 +62,7 @@ export default function PropertyDetailClient({
 }: PropertyDetailClientProps) {
   const { showAlert } = useAlert();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDescriptionDialog, setShowDescriptionDialog] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -368,8 +382,24 @@ export default function PropertyDetailClient({
                   Descripción
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed text-justify">
-                  {property.description}
+                  {countWords(property.description) > 200 
+                    ? getPreviewText(property.description) 
+                    : property.description}
                 </p>
+                {countWords(property.description) > 200 && (
+                  <div className="mt-4">
+                    <Button
+                      variant="outlined"
+                      onClick={() => setShowDescriptionDialog(true)}
+                      className="w-full sm:w-auto"
+                    >
+                      <span className="material-symbols-outlined text-sm mr-2">
+                        add
+                      </span>
+                      Ver todo
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -481,6 +511,27 @@ export default function PropertyDetailClient({
           </div>
         </div>
       </div>
+
+      {/* Description Dialog */}
+      <Dialog
+        open={showDescriptionDialog}
+        title="Descripción Completa"
+        onClose={() => setShowDescriptionDialog(false)}
+      >
+        <div className="max-h-96 overflow-y-auto">
+          <p className="text-sm text-muted-foreground leading-relaxed text-justify whitespace-pre-wrap">
+            {property.description}
+          </p>
+        </div>
+        <div className="flex justify-end gap-2 mt-6">
+          <Button
+            variant="outlined"
+            onClick={() => setShowDescriptionDialog(false)}
+          >
+            Cerrar
+          </Button>
+        </div>
+      </Dialog>
     </main>
   );
 }

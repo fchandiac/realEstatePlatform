@@ -211,7 +211,7 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
                         onClick={() => handleNavigation('/portal/properties/rent')} 
                         className="w-full text-left px-3 py-2 text-sm text-foreground hover:text-primary hover:bg-primary/5 rounded transition-colors"
                       >
-                        En Arriendo
+                        Arriendos
                       </button>
                     </li>
                     <li>
@@ -219,7 +219,7 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
                         onClick={() => handleNavigation('/portal/properties/sale')} 
                         className="w-full text-left px-3 py-2 text-sm text-foreground hover:text-primary hover:bg-primary/5 rounded transition-colors"
                       >
-                        En Venta
+                        Ventas
                       </button>
                     </li>
                     <li>
@@ -227,7 +227,7 @@ function Sidebar({ open, onClose, identity, onLoginClick, onRegisterClick, isUse
                         onClick={() => handleNavigation('/portal/services/management')} 
                         className="w-full text-left px-3 py-2 text-sm text-foreground hover:text-primary hover:bg-primary/5 rounded transition-colors"
                       >
-                        Servicio de Administración
+                        Administraciones
                       </button>
                     </li>
                   </ul>

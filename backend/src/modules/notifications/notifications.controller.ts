@@ -92,9 +92,12 @@ export class NotificationsController {
     @ApiOperation({ summary: 'Enviar notificación de contacto general desde portal público' })
     @ApiBody({ type: ContactDto })
     async notifyPublicContact(@Body() body: ContactDto) {
+      console.log('📨 [CONTACT] Received body:', body);
+      console.log('📨 [CONTACT] Phone value:', body.phone);
       return this.notificationsService.notifyContactToAdmins(
         body.name,
         body.email,
+        body.phone,
         body.message
       );
     }

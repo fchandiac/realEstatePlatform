@@ -1,11 +1,13 @@
 'use client'
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
+import ContactDialog from '@/components/ContactDialog/ContactDialog'
 
 export default function NavBar() {
   const router = useRouter();
   // Un solo estado para controlar qué menú está abierto
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [showContactDialog, setShowContactDialog] = useState(false);
 
   // Función para navegar y cerrar todos los menús
   const handleNavigation = (path: string) => {
@@ -37,6 +39,27 @@ export default function NavBar() {
               home
             </span>
           </button>
+        </li>
+
+        {/* --- DROPDOWN PROPIEDADES --- */}
+        <li className="relative" onBlur={handleBlur}>
+          <button
+            onClick={() => toggleMenu('propiedades')}
+            aria-haspopup="true"
+            aria-expanded={openMenu === 'propiedades'}
+            className="flex items-center gap-1 cursor-pointer py-2 px-1"
+          >
+            <span className="text-sm font-medium text-neutral-900">Propiedades</span>
+            <span className="material-symbols-outlined text-base text-primary">arrow_drop_down</span>
+          </button>
+          
+          {openMenu === 'propiedades' && (
+            <ul className="absolute left-0 top-full mt-1 w-56 bg-white border border-neutral-200 rounded shadow-lg z-20">
+              <li><button onClick={() => handleNavigation('/portal/properties/rent')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">Arriendos</button></li>
+              <li><button onClick={() => handleNavigation('/portal/properties/sale')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">Ventas</button></li>
+              <li><button onClick={() => handleNavigation('/portal/services/management')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">Administraciones</button></li>
+            </ul>
+          )}
         </li>
 
         {/* --- DROPDOWN NOSOTROS --- */}
@@ -72,44 +95,25 @@ export default function NavBar() {
           )}
         </li>
 
-        {/* --- DROPDOWN PROPIEDADES --- */}
-        <li className="relative" onBlur={handleBlur}>
-          <button
-            onClick={() => toggleMenu('propiedades')}
-            aria-haspopup="true"
-            aria-expanded={openMenu === 'propiedades'}
-            className="flex items-center gap-1 cursor-pointer py-2 px-1"
-          >
-            <span className="text-sm font-medium text-neutral-900">Propiedades</span>
-            <span className="material-symbols-outlined text-base text-primary">arrow_drop_down</span>
-          </button>
-          
-          {openMenu === 'propiedades' && (
-            <ul className="absolute left-0 top-full mt-1 w-56 bg-white border border-neutral-200 rounded shadow-lg z-20">
-              <li><button onClick={() => handleNavigation('/portal/properties/rent')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">En Arriendo</button></li>
-              <li><button onClick={() => handleNavigation('/portal/properties/sale')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">En Venta</button></li>
-              <li><button onClick={() => handleNavigation('/portal/services/management')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">Servicio de Administración</button></li>
-            </ul>
-          )}
-        </li>
-
         {/* --- Otros Links --- */}
         <li>
           <button onClick={() => handleNavigation('/portal/publish')} className="text-sm font-medium text-neutral-900 hover:text-primary">
             Publica tu propiedad
           </button>
         </li>
-        {/* <li>
-          <button onClick={() => handleNavigation('/portal/valuation')} className="text-sm font-medium text-neutral-900 hover:text-primary">
-            Valoriza tu propiedad
-          </button>
-        </li> */}
         <li className="hidden sm:block">
           <button onClick={() => handleNavigation('/portal/blog')} className="text-sm font-medium text-neutral-900 hover:text-primary">
             Blog
           </button>
         </li>
+        <li>
+          <button onClick={() => setShowContactDialog(true)} className="text-sm font-medium text-neutral-900 hover:text-primary">
+            Contacto
+          </button>
+        </li>
       </ul>
+
+      <ContactDialog open={showContactDialog} onClose={() => setShowContactDialog(false)} />
     </nav>
   )
 }

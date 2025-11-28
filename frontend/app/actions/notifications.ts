@@ -144,6 +144,38 @@ export async function getUserGridNotifications(
 }
 
 /**
+ * Submit contact form - sends a public contact message to administrators
+ */
+export async function submitContactForm(data: {
+  name: string
+  email: string
+  phone: string
+  message: string
+}): Promise<{ success: boolean; error?: string; notification?: any }> {
+  try {
+    const url = `${env.backendApiUrl}/notifications/public/contact`;
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return { success: false, error: errorData?.message || `HTTP ${response.status}` };
+    }
+
+    const notification = await response.json();
+    return { success: true, notification };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+/**
  * Get all notifications for a specific user
  */
 export async function getUserNotifications(userId: string): Promise<{ success: boolean; error?: string; notifications?: any[] }> {

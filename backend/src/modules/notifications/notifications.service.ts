@@ -113,11 +113,13 @@ export class NotificationsService {
   async notifyContactToAdmins(
     contactName: string,
     contactEmail: string,
+    contactPhone: string,
     contactMessage: string
   ): Promise<Notification[]> {
     console.log('🔄 notifyContactToAdmins called with:', {
       contactName,
       contactEmail,
+      contactPhone,
       contactMessage,
     });
 
@@ -126,7 +128,7 @@ export class NotificationsService {
     console.log('👥 Found admins:', admins);
 
     // Construir mensaje completo
-    const fullMessage = `${contactName} (${contactEmail}): ${contactMessage}`;
+    const fullMessage = `${contactName} (${contactEmail}) ${contactPhone}: ${contactMessage}`;
 
     console.log('📝 Full message:', fullMessage);
 
