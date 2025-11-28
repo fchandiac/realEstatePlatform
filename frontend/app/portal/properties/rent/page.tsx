@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import NavBar from '../../ui/NavBar';
 import PropertyFilterRent from '@/components/PropertyFilterRent/PropertyFilterRent';
 import ListProperties from '../../ui/ListProperties';
 import { getRentPropertiesFiltered, FilterRentPropertiesDto } from '@/app/actions/rentProperties';
@@ -55,8 +54,6 @@ export default async function RentPage({ searchParams }: RentPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <NavBar />
-
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">

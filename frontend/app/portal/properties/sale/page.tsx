@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import NavBar from '../../ui/NavBar';
 import PropertyFilterSale from '@/components/PropertyFilterSale/PropertyFilterSale';
 import ListProperties from '../../ui/ListProperties';
 import { getSalePropertiesFiltered, FilterSalePropertiesDto } from '@/app/actions/saleProperties';
@@ -56,8 +55,6 @@ export default async function SalePage({ searchParams }: SalePageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <NavBar />
-
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">

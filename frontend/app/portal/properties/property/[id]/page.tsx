@@ -1,7 +1,6 @@
 import React from 'react';
 import { getPublishedPropertyPublic } from './actions';
 import PropertyDetailClient from './PropertyDetailClient';
-import NavBar from '../../../ui/NavBar';
 
 interface PropertyDetailPageProps {
   params: Promise<{ id: string }>;
@@ -34,15 +33,5 @@ export default async function PropertyDetailPage({
   }
 
   // Pass data to client component for interactivity
-  return (
-    <>
-      {/* NavBar - Sticky */}
-      <div className="sticky top-16 z-40 bg-background shadow-[0_4px_8px_-4px_rgba(0,0,0,0.12)]">
-        <NavBar />
-      </div>
-
-      {/* Property Detail */}
-      <PropertyDetailClient property={propertyResult.data} />
-    </>
-  );
+  return <PropertyDetailClient property={propertyResult.data} />;
 }
