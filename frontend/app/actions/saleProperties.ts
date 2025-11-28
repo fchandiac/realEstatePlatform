@@ -2,16 +2,14 @@ import { env } from '@/lib/env';
 
 export interface FilterSalePropertiesDto {
   search?: string;
-  filters?: {
-    priceMin?: number;
-    priceMax?: number;
-    bedrooms?: number;
-    bathrooms?: number;
-    typeProperty?: string;
-    state?: string;
-    city?: string;
-    currency?: string;
-  };
+  priceMin?: number;
+  priceMax?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  typeProperty?: string;
+  state?: string;
+  city?: string;
+  currency?: string;
   sort?: string;
   page?: number;
   limit?: number;
@@ -41,31 +39,29 @@ export async function getSalePropertiesFiltered(
       params.append('search', filters.search);
     }
 
-    if (filters.filters) {
-      if (filters.filters.priceMin !== undefined) {
-        params.append('priceMin', filters.filters.priceMin.toString());
-      }
-      if (filters.filters.priceMax !== undefined) {
-        params.append('priceMax', filters.filters.priceMax.toString());
-      }
-      if (filters.filters.bedrooms !== undefined) {
-        params.append('bedrooms', filters.filters.bedrooms.toString());
-      }
-      if (filters.filters.bathrooms !== undefined) {
-        params.append('bathrooms', filters.filters.bathrooms.toString());
-      }
-      if (filters.filters.typeProperty) {
-        params.append('typeProperty', filters.filters.typeProperty);
-      }
-      if (filters.filters.state) {
-        params.append('state', filters.filters.state);
-      }
-      if (filters.filters.city) {
-        params.append('city', filters.filters.city);
-      }
-      if (filters.filters.currency) {
-        params.append('currency', filters.filters.currency);
-      }
+    if (filters.priceMin !== undefined) {
+      params.append('priceMin', filters.priceMin.toString());
+    }
+    if (filters.priceMax !== undefined) {
+      params.append('priceMax', filters.priceMax.toString());
+    }
+    if (filters.bedrooms !== undefined) {
+      params.append('bedrooms', filters.bedrooms.toString());
+    }
+    if (filters.bathrooms !== undefined) {
+      params.append('bathrooms', filters.bathrooms.toString());
+    }
+    if (filters.typeProperty) {
+      params.append('typeProperty', filters.typeProperty);
+    }
+    if (filters.state) {
+      params.append('state', filters.state);
+    }
+    if (filters.city) {
+      params.append('city', filters.city);
+    }
+    if (filters.currency) {
+      params.append('currency', filters.currency);
     }
 
     if (filters.sort) {

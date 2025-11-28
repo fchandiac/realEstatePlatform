@@ -12,16 +12,14 @@ async function getSaleProperties(searchParams: { [key: string]: string | string[
   console.log('🔍 [getSaleProperties] Raw searchParams:', searchParams);
 
   const filters: FilterSalePropertiesDto = {
-    filters: {
-      typeProperty: typeof searchParams.typeProperty === 'string' && searchParams.typeProperty ?
-        decodeURIComponent(searchParams.typeProperty) : undefined,
-      state: typeof searchParams.state === 'string' && searchParams.state ?
-        decodeURIComponent(searchParams.state) : undefined,
-      city: typeof searchParams.city === 'string' && searchParams.city ?
-        decodeURIComponent(searchParams.city) : undefined,
-      currency: typeof searchParams.currency === 'string' && searchParams.currency ?
-        decodeURIComponent(searchParams.currency) : 'CLP',
-    },
+    typeProperty: typeof searchParams.typeProperty === 'string' && searchParams.typeProperty ?
+      decodeURIComponent(searchParams.typeProperty) : undefined,
+    state: typeof searchParams.state === 'string' && searchParams.state ?
+      decodeURIComponent(searchParams.state) : undefined,
+    city: typeof searchParams.city === 'string' && searchParams.city ?
+      decodeURIComponent(searchParams.city) : undefined,
+    currency: typeof searchParams.currency === 'string' && searchParams.currency ?
+      decodeURIComponent(searchParams.currency) : 'CLP',
     sort: typeof searchParams.sort === 'string' && searchParams.sort ?
       decodeURIComponent(searchParams.sort) : 'created_desc',
     page: typeof searchParams.page === 'string' && searchParams.page ?
