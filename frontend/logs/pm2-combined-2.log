@@ -1,0 +1,2 @@
+2025-11-28T23:17:17:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2025-11-28T23:17:17: > Ready on http://localhost:3001

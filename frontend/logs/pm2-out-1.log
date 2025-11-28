@@ -9258,3 +9258,21 @@
 2025-11-28T18:53:44: [DEBUG] getUserGridNotifications - Final URL sent to backend: http://72.61.6.232:3000/notifications/user/12a116e0-abe7-46b8-8c9b-bcce59c8c703/grid
 2025-11-28T18:53:44: [DEBUG] getUserGridNotifications - Response status: 200
 2025-11-28T18:53:44: [DEBUG] getUserGridNotifications - Response data length: Not an array
+2025-11-28T23:18:11: > Ready on http://localhost:3001
+2025-11-28T23:18:23: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-11-28T23:18:23: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-28T23:18:23: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-28T23:18:23: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-28T23:18:23: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-28T23:18:23: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-11-28T23:18:23: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-28T23:18:23: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-11-28T23:18:23: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-28T23:18:23: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-28T23:18:23: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-28T23:18:23: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-11-28T23:18:23: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-28T23:18:23: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-11-28T23:18:23: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-28T23:18:23: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-11-28T23:18:23: ✅ Properties fetched: 9 items
