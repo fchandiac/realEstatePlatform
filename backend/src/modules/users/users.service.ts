@@ -533,7 +533,7 @@ export class UsersService {
   async getUserProfile(userId: string): Promise<UserProfileResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id: userId, deletedAt: IsNull() },
-      relations: ['person'],
+      relations: ['person', 'person.dniCardFront', 'person.dniCardRear'],
     });
 
     if (!user) {
@@ -559,10 +559,8 @@ export class UsersService {
         phone: user.person.phone,
         email: user.person.email,
         verified: user.person.verified,
-        dniCardFrontUrl: user.person.dniCardFront ?
-          `${backendUrl}/public/${user.person.dniCardFront.id}` : undefined,
-        dniCardRearUrl: user.person.dniCardRear ?
-          `${backendUrl}/public/${user.person.dniCardRear.id}` : undefined,
+        dniCardFrontUrl: user.person.dniCardFront?.url || undefined,
+        dniCardRearUrl: user.person.dniCardRear?.url || undefined,
       } : undefined,
       role: user.role,
       status: user.status,

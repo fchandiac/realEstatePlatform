@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import UpdateBaseForm, { BaseUpdateFormField, BaseUpdateFormFieldGroup } from '@/components/BaseForm/UpdateBaseForm';
-import { getCurrentUserProfile, updateUserProfile, updateUserAvatar, updatePerson } from '@/app/actions/users';
+import { getCurrentUserProfile, updateUserProfile, updateUserAvatar, updatePerson, uploadMultimediaDni } from '@/app/actions/users';
 import { useAlert } from '@/app/hooks/useAlert';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
 
@@ -230,6 +230,33 @@ export default function PersonalInfoPage() {
         },
       ] as BaseUpdateFormField[],
     },
+    {
+      title: 'Documentos de Identidad',
+      subtitle: 'Copia de tu documento de identidad (frente y reverso)',
+      columns: 2,
+      fields: [
+        {
+          name: 'dniCardFront',
+          label: 'Foto Frente del DNI',
+          type: 'image',
+          currentUrl: userProfile?.person?.dniCardFrontUrl,
+          maxSize: 5,
+          aspectRatio: '16:9',
+          buttonText: 'Subir Frente',
+          startIcon: 'image',
+        },
+        {
+          name: 'dniCardRear',
+          label: 'Foto Reverso del DNI',
+          type: 'image',
+          currentUrl: userProfile?.person?.dniCardRearUrl,
+          maxSize: 5,
+          aspectRatio: '16:9',
+          buttonText: 'Subir Reverso',
+          startIcon: 'image',
+        },
+      ] as BaseUpdateFormField[],
+    },
   ];
 
   const handleSubmit = async (values: Record<string, any>) => {
@@ -263,6 +290,40 @@ export default function PersonalInfoPage() {
         avatarUrl = avatarResult.data?.avatarUrl;
       }
 
+      // Handle DNI document uploads
+      let dniCardFrontId: string | undefined = undefined;
+      let dniCardRearId: string | undefined = undefined;
+
+      // Upload DNI front if it's a File
+      if (values.dniCardFront instanceof File) {
+        const frontResult = await uploadMultimediaDni(values.dniCardFront, 'DNI_FRONT');
+        if (!frontResult.success) {
+          showAlert({
+            message: frontResult.error || 'Error al subir foto del frente del DNI',
+            type: 'error',
+            duration: 3000,
+          });
+          setSubmitting(false);
+          return;
+        }
+        dniCardFrontId = frontResult.data?.id;
+      }
+
+      // Upload DNI rear if it's a File
+      if (values.dniCardRear instanceof File) {
+        const rearResult = await uploadMultimediaDni(values.dniCardRear, 'DNI_REAR');
+        if (!rearResult.success) {
+          showAlert({
+            message: rearResult.error || 'Error al subir foto del reverso del DNI',
+            type: 'error',
+            duration: 3000,
+          });
+          setSubmitting(false);
+          return;
+        }
+        dniCardRearId = rearResult.data?.id;
+      }
+
       // Prepare User (personalInfo) update data
       const userUpdateData = {
         personalInfo: {
@@ -286,6 +347,14 @@ export default function PersonalInfoPage() {
           phone: values.phone || userProfile.person?.phone,
           email: userProfile.email,
         };
+
+        // Add DNI IDs if they were uploaded
+        if (dniCardFrontId) {
+          personUpdateData.dniCardFrontId = dniCardFrontId;
+        }
+        if (dniCardRearId) {
+          personUpdateData.dniCardRearId = dniCardRearId;
+        }
       }
 
       // Update user profile
@@ -381,6 +450,9 @@ export default function PersonalInfoPage() {
     nationality: '',
     gender: '',
     maritalStatus: '',
+    // DNI documents
+    dniCardFront: userProfile.person?.dniCardFrontUrl || null,
+    dniCardRear: userProfile.person?.dniCardRearUrl || null,
   };
 
   return (

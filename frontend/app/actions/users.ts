@@ -978,3 +978,53 @@ export async function deleteCommunityUser(userId: string): Promise<{
     };
   }
 }
+
+/**
+ * Upload DNI front or rear image for person
+ * @param file - The image file to upload
+ * @param type - 'DNI_FRONT' or 'DNI_REAR'
+ */
+export async function uploadMultimediaDni(
+  file: File,
+  type: 'DNI_FRONT' | 'DNI_REAR'
+): Promise<{
+  success: boolean;
+  data?: { id: string; url: string; type: string };
+  error?: string;
+}> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.accessToken) {
+      return { success: false, error: 'No authenticated' };
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', type);
+
+    const response = await fetch(`${env.backendApiUrl}/multimedia/upload`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${session.accessToken}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      return { 
+        success: false, 
+        error: errorData?.message || `Error al subir documento: ${response.status}` 
+      };
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error('Error uploading DNI image:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Error al subir documento' 
+    };
+  }
+}
