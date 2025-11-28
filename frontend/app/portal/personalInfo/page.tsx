@@ -96,7 +96,7 @@ export default function PersonalInfoPage() {
     {
       title: 'Información Básica',
       subtitle: 'Tu información de cuenta y perfil',
-      columns: 2,
+      columns: 1,
       fields: [
         {
           name: 'avatar',
@@ -109,6 +109,12 @@ export default function PersonalInfoPage() {
           labelText: 'Foto de Perfil',
           previewSize: 'md',
         },
+      ] as BaseUpdateFormField[],
+    },
+    {
+      title: '',
+      columns: 2,
+      fields: [
         {
           name: 'firstName',
           label: 'Nombre',
