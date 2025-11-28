@@ -1,9 +1,6 @@
 'use client'
 
 import React, { useState, useEffect } from "react";
-import { TextField } from "@/components/TextField/TextField";
-import { Button } from "@/components/Button/Button";
-import IconButton from "@/components/Button/IconButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faInstagram,
@@ -12,9 +9,6 @@ import {
   faYoutube
 } from "@fortawesome/free-brands-svg-icons";
 import { getIdentity } from "@/app/actions/identity";
-import { submitContactForm } from "@/app/actions/contact";
-import { env } from "@/lib/env";
-import { useAlert } from "@/app/hooks/useAlert";
 
 interface SocialMediaItem {
   url?: string;
@@ -170,7 +164,7 @@ const PortalFooter: React.FC = () => {
           </div>
         </div>
         <hr className="my-8 border-t border-gray-400/30" />
-        <div className={`container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left ${identity?.faqs && identity.faqs.length > 0 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}`}>
+        <div className={`container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-left ${identity?.faqs && identity.faqs.length > 0 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'}`}>
           {/* Columna 1: Información de Contacto */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">
@@ -255,10 +249,23 @@ const PortalFooter: React.FC = () => {
             <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">Navegación</h3>
             <ul className="mt-2 custom-footer-menu-gap">
               <li>
-                <a href="#" className="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-background transition-colors">
+                <a href="/portal" className="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-background transition-colors">
                   <span className="material-symbols-sharp text-xl text-background">home</span>
                   Inicio
                 </a>
+              </li>
+              <li>
+                <div className="flex flex-col gap-1 px-3 py-1 rounded-lg">
+                  <span className="flex items-center gap-2 text-sm font-semibold text-background">
+                    <span className="material-symbols-sharp text-xl text-background">apartment</span>
+                    Propiedades
+                  </span>
+                  <ul className="ml-6 mt-1 space-y-1">
+                    <li><a href="/portal/properties/rent" className="block text-xs text-background hover:underline">Arriendos</a></li>
+                    <li><a href="/portal/properties/sale" className="block text-xs text-background hover:underline">Ventas</a></li>
+                    <li><a href="/portal/services/management" className="block text-xs text-background hover:underline">Administraciones</a></li>
+                  </ul>
+                </div>
               </li>
               <li>
                 <div className="flex flex-col gap-1 px-3 py-1 rounded-lg">
@@ -267,47 +274,25 @@ const PortalFooter: React.FC = () => {
                     Nosotros
                   </span>
                   <ul className="ml-6 mt-1 space-y-1">
-                    <li><a href="#" className="block text-xs text-background hover:underline">Historia</a></li>
-                    <li><a href="#" className="block text-xs text-background hover:underline">Equipo</a></li>
+                    <li><a href="/portal/aboutUs" className="block text-xs text-background hover:underline">Quiénes somos</a></li>
+                    <li><a href="/portal/ourTeam" className="block text-xs text-background hover:underline">Nuestro Equipo</a></li>
+                    <li><a href="/portal/testimonials" className="block text-xs text-background hover:underline">Testimonios</a></li>
                   </ul>
                 </div>
               </li>
               <li>
-                <div className="flex flex-col gap-1 px-3 py-2 rounded-lg">
-                  <span className="flex items-center gap-2 text-sm font-semibold text-background">
-                    <span className="material-symbols-sharp text-xl text-background">apartment</span>
-                    Propiedades
-                  </span>
-                  <ul className="ml-6 mt-1 space-y-1">
-                    <li><a href="#" className="block text-xs text-background hover:underline">En venta</a></li>
-                    <li><a href="#" className="block text-xs text-background hover:underline">En arriendo</a></li>
-                  </ul>
-                </div>
-              </li>
-              <li>
-                <a href="#" className="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-background transition-colors">
+                <a href="/portal/publish" className="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-background transition-colors">
                   <span className="material-symbols-sharp text-xl text-background">edit_note</span>
                   Publica tu propiedad
                 </a>
               </li>
               <li>
-                <a href="#" className="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-background transition-colors">
-                  <span className="material-symbols-sharp text-xl text-background">price_check</span>
-                  Valoriza tu propiedad
-                </a>
-              </li>
-              <li>
-                <a href="#" className="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-background transition-colors">
+                <a href="/portal/blog" className="flex items-center gap-3 px-3 py-1 rounded-lg text-sm font-semibold text-background transition-colors">
                   <span className="material-symbols-sharp text-xl text-background">edit_note</span>
                   Blog
                 </a>
               </li>
             </ul>
-          </div>
-          {/* Columna 3: Formulario de Contacto */}
-          <div>
-            <h3 className="text-xl font-bold mb-6 text-background border-b border-primary/30 pb-2">Contacto</h3>
-            <ContactForm />
           </div>
           {/* Columna 4: Preguntas Frecuentes - Solo visible si hay FAQs del backend */}
           {identity?.faqs && identity.faqs.length > 0 && (
@@ -332,104 +317,5 @@ const PortalFooter: React.FC = () => {
   );
 };
 
-
-// Formulario de contacto usando TextField y Button
-export const ContactForm: React.FC = () => {
-  const { showAlert } = useAlert();
-  const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
-  const [mensaje, setMensaje] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!nombre.trim() || !email.trim() || !mensaje.trim()) {
-      showAlert({
-        message: 'Por favor completa todos los campos',
-        type: 'error',
-        duration: 3000
-      });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await submitContactForm({
-        name: nombre.trim(),
-        email: email.trim(),
-        message: mensaje.trim(),
-      });
-
-      showAlert({
-        message: 'Mensaje enviado exitosamente. Nos pondremos en contacto contigo pronto.',
-        type: 'success',
-        duration: 5000
-      });
-
-      // Limpiar formulario
-      setNombre("");
-      setEmail("");
-      setMensaje("");
-    } catch (error) {
-      console.error('Error submitting contact form:', error);
-      showAlert({
-        message: 'Error al enviar el mensaje. Por favor intenta nuevamente.',
-        type: 'error',
-        duration: 5000
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      <TextField
-        label="Tu Nombre"
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-        name="nombre"
-        placeholder="Nombre"
-        className="text-sm font-extralight"
-        disabled={loading}
-      />
-      <TextField
-        label="Tu Correo Electrónico"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        name="email"
-        type="email"
-        placeholder="Correo Electrónico"
-        className="text-sm font-extralight"
-        disabled={loading}
-      />
-      <TextField
-        label="Tu Mensaje"
-        value={mensaje}
-        onChange={(e) => setMensaje(e.target.value)}
-        name="mensaje"
-        type="text"
-        placeholder="Mensaje"
-        className="text-sm font-extralight"
-        rows={4}
-        disabled={loading}
-      />
-      <div className="flex justify-end">
-        <IconButton
-          icon="send"
-          variant="text"
-          type="submit"
-          className="bg-background text-foreground"
-          disabled={loading}
-        >
-          <span className="material-symbols-rounded text-2xl text-foreground">
-            {loading ? 'hourglass_empty' : 'send'}
-          </span>
-        </IconButton>
-      </div>
-    </form>
-  );
-};
 
 export default PortalFooter;
