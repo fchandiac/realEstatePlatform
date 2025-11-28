@@ -3,10 +3,21 @@
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import UpdateBaseForm, { BaseUpdateFormField } from '@/components/BaseForm/UpdateBaseForm';
-import { getCurrentUserProfile, updateUserProfile, updateUserAvatar } from '@/app/actions/users';
+import UpdateBaseForm, { BaseUpdateFormField, BaseUpdateFormFieldGroup } from '@/components/BaseForm/UpdateBaseForm';
+import { getCurrentUserProfile, updateUserProfile, updateUserAvatar, updatePerson } from '@/app/actions/users';
 import { useAlert } from '@/app/hooks/useAlert';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
+
+interface PersonData {
+  id: string;
+  dni?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  dniCardFrontUrl?: string;
+  dniCardRearUrl?: string;
+  verified: boolean;
+}
 
 interface UserProfile {
   id: string;
@@ -22,9 +33,11 @@ interface UserProfile {
     country?: string;
     avatarUrl?: string;
   };
+  person?: PersonData;
   role: string;
   status: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export default function PersonalInfoPage() {
@@ -78,70 +91,138 @@ export default function PersonalInfoPage() {
     loadProfile();
   }, [status, router, showAlert]);
 
-  // Define form fields
-  const formFields: BaseUpdateFormField[] = [
+  // Define form field groups (User + Person data combined)
+  const formFieldGroups: BaseUpdateFormFieldGroup[] = [
     {
-      name: 'avatar',
-      label: 'Foto de Perfil',
-      type: 'avatar',
-      currentUrl: userProfile?.personalInfo?.avatarUrl,
-      maxSize: 5,
-      aspectRatio: '1:1',
-      buttonText: 'Cambiar Foto',
-      labelText: 'Foto de Perfil',
-      previewSize: 'md',
+      title: 'Información Básica',
+      subtitle: 'Tu información de cuenta y perfil',
+      columns: 2,
+      fields: [
+        {
+          name: 'avatar',
+          label: 'Foto de Perfil',
+          type: 'avatar',
+          currentUrl: userProfile?.personalInfo?.avatarUrl,
+          maxSize: 5,
+          aspectRatio: '1:1',
+          buttonText: 'Cambiar Foto',
+          labelText: 'Foto de Perfil',
+          previewSize: 'md',
+        },
+        {
+          name: 'firstName',
+          label: 'Nombre',
+          type: 'text',
+          required: true,
+          startIcon: 'person',
+        },
+        {
+          name: 'lastName',
+          label: 'Apellido',
+          type: 'text',
+          required: true,
+          startIcon: 'person',
+        },
+        {
+          name: 'email',
+          label: 'Correo Electrónico',
+          type: 'email',
+          required: true,
+          startIcon: 'email',
+          disabled: true,
+        },
+        {
+          name: 'phone',
+          label: 'Teléfono',
+          type: 'text',
+          startIcon: 'phone',
+        },
+      ] as BaseUpdateFormField[],
     },
     {
-      name: 'firstName',
-      label: 'Nombre',
-      type: 'text',
-      required: true,
-      startIcon: 'person',
+      title: 'Información Personal Detallada',
+      subtitle: 'Datos adicionales de identificación y ubicación',
+      columns: 2,
+      fields: [
+        {
+          name: 'dni',
+          label: 'Documento de Identidad (DNI)',
+          type: 'dni',
+          startIcon: 'badge',
+        },
+        {
+          name: 'profession',
+          label: 'Profesión',
+          type: 'text',
+          startIcon: 'work',
+        },
+        {
+          name: 'company',
+          label: 'Empresa',
+          type: 'text',
+          startIcon: 'business',
+        },
+        {
+          name: 'nationality',
+          label: 'Nacionalidad',
+          type: 'text',
+          startIcon: 'public',
+        },
+        {
+          name: 'gender',
+          label: 'Género',
+          type: 'select',
+          options: [
+            { value: 'MALE', label: 'Masculino' },
+            { value: 'FEMALE', label: 'Femenino' },
+            { value: 'OTHER', label: 'Otro' },
+          ],
+          startIcon: 'person',
+        },
+        {
+          name: 'maritalStatus',
+          label: 'Estado Civil',
+          type: 'select',
+          options: [
+            { value: 'SINGLE', label: 'Soltero(a)' },
+            { value: 'MARRIED', label: 'Casado(a)' },
+            { value: 'DIVORCED', label: 'Divorciado(a)' },
+            { value: 'WIDOWED', label: 'Viudo(a)' },
+          ],
+          startIcon: 'people',
+        },
+      ] as BaseUpdateFormField[],
     },
     {
-      name: 'lastName',
-      label: 'Apellido',
-      type: 'text',
-      required: true,
-      startIcon: 'person',
-    },
-    {
-      name: 'email',
-      label: 'Correo Electrónico',
-      type: 'email',
-      required: true,
-      startIcon: 'email',
-      disabled: true, // Email no se puede cambiar desde aquí
-    },
-    {
-      name: 'phone',
-      label: 'Teléfono',
-      type: 'text',
-      startIcon: 'phone',
-    },
-    {
-      name: 'address',
-      label: 'Dirección',
-      type: 'text',
-      startIcon: 'location_on',
-    },
-    {
-      name: 'city',
-      label: 'Ciudad',
-      type: 'text',
-      startIcon: 'location_city',
-    },
-    {
-      name: 'state',
-      label: 'Región',
-      type: 'text',
-      startIcon: 'public',
-    },
-    {
-      name: 'country',
-      label: 'País',
-      type: 'text',
-      startIcon: 'public',
+      title: 'Información de Ubicación',
+      subtitle: 'Tu domicilio y ubicación geográfica',
+      columns: 2,
+      fields: [
+        {
+          name: 'address',
+          label: 'Dirección',
+          type: 'text',
+          startIcon: 'location_on',
+        },
+        {
+          name: 'city',
+          label: 'Ciudad',
+          type: 'text',
+          startIcon: 'location_city',
+        },
+        {
+          name: 'state',
+          label: 'Región',
+          type: 'text',
+          startIcon: 'map',
+        },
+        {
+          name: 'country',
+          label: 'País',
+          type: 'text',
+          startIcon: 'public',
+        },
+      ] as BaseUpdateFormField[],
     },
   ];
 
@@ -176,8 +257,8 @@ export default function PersonalInfoPage() {
         avatarUrl = avatarResult.data?.avatarUrl;
       }
 
-      // Prepare update data
-      const updateData = {
+      // Prepare User (personalInfo) update data
+      const userUpdateData = {
         personalInfo: {
           firstName: values.firstName || userProfile.personalInfo?.firstName,
           lastName: values.lastName || userProfile.personalInfo?.lastName,
@@ -190,22 +271,49 @@ export default function PersonalInfoPage() {
         },
       };
 
+      // Prepare Person update data if Person exists
+      let personUpdateData: Record<string, any> | null = null;
+      if (userProfile.person?.id) {
+        personUpdateData = {
+          dni: values.dni || userProfile.person?.dni,
+          address: values.address || userProfile.person?.address,
+          phone: values.phone || userProfile.person?.phone,
+          email: userProfile.email,
+        };
+      }
+
       // Update user profile
-      const result = await updateUserProfile(userProfile.id, updateData);
-      if (result.success) {
-        setUserProfile(result.data as UserProfile);
+      const userResult = await updateUserProfile(userProfile.id, userUpdateData);
+      if (!userResult.success) {
         showAlert({
-          message: 'Perfil actualizado exitosamente',
-          type: 'success',
-          duration: 3000,
-        });
-      } else {
-        showAlert({
-          message: result.error || 'Error al actualizar el perfil',
+          message: userResult.error || 'Error al actualizar el perfil',
           type: 'error',
           duration: 3000,
         });
+        setSubmitting(false);
+        return;
       }
+
+      // Update person data if exists
+      if (personUpdateData && userProfile.person?.id) {
+        const personResult = await updatePerson(userProfile.person.id, personUpdateData);
+        if (!personResult.success) {
+          showAlert({
+            message: personResult.error || 'Error al actualizar información personal',
+            type: 'warning',
+            duration: 3000,
+          });
+          // Don't return here, as user data was updated successfully
+        }
+      }
+
+      // Update local state with new profile
+      setUserProfile(userResult.data as UserProfile);
+      showAlert({
+        message: 'Perfil actualizado exitosamente',
+        type: 'success',
+        duration: 3000,
+      });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Error desconocido';
       showAlert({
@@ -255,11 +363,18 @@ export default function PersonalInfoPage() {
     firstName: userProfile.personalInfo?.firstName || '',
     lastName: userProfile.personalInfo?.lastName || '',
     email: userProfile.email,
-    phone: userProfile.personalInfo?.phone || '',
-    address: userProfile.personalInfo?.address || '',
+    phone: userProfile.personalInfo?.phone || userProfile.person?.phone || '',
+    address: userProfile.personalInfo?.address || userProfile.person?.address || '',
     city: userProfile.personalInfo?.city || '',
     state: userProfile.personalInfo?.state || '',
     country: userProfile.personalInfo?.country || '',
+    // Person data
+    dni: userProfile.person?.dni || '',
+    profession: '',
+    company: '',
+    nationality: '',
+    gender: '',
+    maritalStatus: '',
   };
 
   return (
@@ -275,14 +390,12 @@ export default function PersonalInfoPage() {
 
       <div className="bg-white rounded-lg shadow p-6">
         <UpdateBaseForm
-          fields={formFields}
+          fields={formFieldGroups}
           initialState={initialValues}
           onSubmit={handleSubmit}
           isSubmitting={submitting}
-          title="Información Personal"
           submitLabel="Guardar Cambios"
           submitVariant="primary"
-          columns={2}
           cancelButton
           onCancel={() => router.back()}
         />
