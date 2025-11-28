@@ -31,12 +31,10 @@ export default function PropertyFilterRent({
 
     // Otherwise, initialize from URL params
     return {
-      filters: {
-        typeProperty: searchParams.get('typeProperty') || '',
-        state: searchParams.get('state') || '',
-        city: searchParams.get('city') || '',
-        currency: searchParams.get('currency') || 'CLP',
-      },
+      typeProperty: searchParams.get('typeProperty') || '',
+      state: searchParams.get('state') || '',
+      city: searchParams.get('city') || '',
+      currency: searchParams.get('currency') || 'CLP',
       sort: searchParams.get('sort') || 'created_desc',
       page: 1,
       limit: 9,
@@ -47,19 +45,17 @@ export default function PropertyFilterRent({
   const updateURL = useCallback((newFilters: FilterRentPropertiesDto) => {
     const params = new URLSearchParams();
 
-    if (newFilters.filters) {
-      if (newFilters.filters.typeProperty) {
-        params.set('typeProperty', newFilters.filters.typeProperty);
-      }
-      if (newFilters.filters.state) {
-        params.set('state', newFilters.filters.state);
-      }
-      if (newFilters.filters.city) {
-        params.set('city', newFilters.filters.city);
-      }
-      if (newFilters.filters.currency) {
-        params.set('currency', newFilters.filters.currency);
-      }
+    if (newFilters.typeProperty) {
+      params.set('typeProperty', newFilters.typeProperty);
+    }
+    if (newFilters.state) {
+      params.set('state', newFilters.state);
+    }
+    if (newFilters.city) {
+      params.set('city', newFilters.city);
+    }
+    if (newFilters.currency) {
+      params.set('currency', newFilters.currency);
     }
 
     if (newFilters.sort) {
@@ -76,18 +72,7 @@ export default function PropertyFilterRent({
   // Handle filter changes
   const handleFilterChange = (key: string, value: any) => {
     const newFilters = { ...filters };
-
-    if (key === 'sort') {
-      newFilters.sort = value;
-    } else {
-      // It's a filter field
-      if (!newFilters.filters) {
-        newFilters.filters = {};
-      }
-      (newFilters.filters as any)[key] = value;
-    }
-
-    // Reset page to 1 when filters change
+    (newFilters as any)[key] = value;
     newFilters.page = 1;
 
     setFilters(newFilters);
@@ -101,9 +86,7 @@ export default function PropertyFilterRent({
   // Handle clear filters
   const handleClearFilters = () => {
     const clearedFilters: FilterRentPropertiesDto = {
-      filters: {
-        currency: 'CLP',
-      },
+      currency: 'CLP',
       sort: 'created_desc',
       page: 1,
       limit: 9,
@@ -307,7 +290,7 @@ export default function PropertyFilterRent({
         {/* Property Type */}
         <Select
           placeholder="Tipo de propiedad"
-          value={filters.filters?.typeProperty || ''}
+          value={filters.typeProperty || ''}
           onChange={(value) => handleFilterChange('typeProperty', value)}
           options={propertyTypes}
         />
@@ -315,15 +298,12 @@ export default function PropertyFilterRent({
         {/* Region */}
         <Select
           placeholder="Región"
-          value={filters.filters?.state || ''}
+          value={filters.state || ''}
           onChange={(value) => {
             // Update both state and clear city in a single state update
             const newFilters = { ...filters };
-            if (!newFilters.filters) {
-              newFilters.filters = {};
-            }
-            newFilters.filters.state = value === null ? undefined : String(value);
-            newFilters.filters.city = ''; // Clear commune when region changes
+            newFilters.state = value === null ? undefined : String(value);
+            newFilters.city = ''; // Clear commune when region changes
             newFilters.page = 1;
 
             setFilters(newFilters);
@@ -339,9 +319,9 @@ export default function PropertyFilterRent({
         {/* Commune */}
         <Select
           placeholder="Comuna"
-          value={filters.filters?.city || ''}
+          value={filters.city || ''}
           onChange={(value) => handleFilterChange('city', value)}
-          options={getCommunesForRegion(filters.filters?.state || '')}
+          options={getCommunesForRegion(filters.state || '')}
         />
 
         {/* Sort */}
@@ -355,7 +335,7 @@ export default function PropertyFilterRent({
         {/* Currency */}
         <Select
           placeholder="Moneda"
-          value={filters.filters?.currency || 'CLP'}
+          value={filters.currency || 'CLP'}
           onChange={(value) => handleFilterChange('currency', value)}
           options={[
             { id: 'CLP', label: 'CLP' },

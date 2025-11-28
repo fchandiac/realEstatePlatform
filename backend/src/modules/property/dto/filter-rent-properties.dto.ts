@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumber, IsObject } from 'class-validator';
+import { IsOptional, IsString, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class FilterRentPropertiesDto {
@@ -7,12 +7,44 @@ export class FilterRentPropertiesDto {
   search?: string;
 
   @IsOptional()
-  @IsObject()
-  filters?: Record<string, any>; // e.g., { priceMin: number, bedrooms: number }
+  @Type(() => Number)
+  @IsNumber()
+  priceMin?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  priceMax?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  bedrooms?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  bathrooms?: number;
 
   @IsOptional()
   @IsString()
-  sort?: string; // e.g., 'price_asc'
+  typeProperty?: string;
+
+  @IsOptional()
+  @IsString()
+  state?: string;
+
+  @IsOptional()
+  @IsString()
+  city?: string;
+
+  @IsOptional()
+  @IsString()
+  currency?: string;
+
+  @IsOptional()
+  @IsString()
+  sort?: string;
 
   @IsOptional()
   @Type(() => Number)
