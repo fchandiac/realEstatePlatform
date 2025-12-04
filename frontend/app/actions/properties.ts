@@ -421,6 +421,7 @@ export async function publishPropertyPublic(
     const propertyData = {
       title: payload.title,
       propertyTypeId: payload.propertyTypeId,
+      status: 'REQUEST', // Status por defecto para propiedades públicas
       operationType: payload.operationType || 'SALE',
       builtSquareMeters: payload.builtSquareMeters,
       landSquareMeters: payload.landSquareMeters,

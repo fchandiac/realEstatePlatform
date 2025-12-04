@@ -43,6 +43,13 @@ export class CreatePropertyDto {
   description?: string;
 
   @Transform(({ value }) => {
+    // Convert frontend number to backend enum string, or pass through string if valid
+    if (typeof value === 'string') {
+      // If already a string, validate it's a valid status
+      const validStatuses = ['REQUEST', 'PRE-APPROVED', 'PUBLISHED', 'INACTIVE', 'SOLD', 'RENTED'];
+      return validStatuses.includes(value) ? value : 'REQUEST';
+    }
+    
     // Convert frontend number to backend enum string
     const statusMap: Record<number, string> = {
       1: 'REQUEST',
