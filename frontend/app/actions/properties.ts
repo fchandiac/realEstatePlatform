@@ -432,10 +432,13 @@ export async function publishPropertyPublic(
       constructionYear: payload.constructionYear,
       price: payload.price,
       currencyPrice: payload.currencyPrice,
-      region: payload.region,
+      state: payload.region,
       city: payload.city,
       address: payload.address,
-      coordinates: payload.coordinates,
+      location: payload.coordinates ? {
+        lat: payload.coordinates.latitude,
+        lng: payload.coordinates.longitude
+      } : undefined,
       contactName: payload.contactName,
       contactPhone: payload.contactPhone,
       contactEmail: payload.contactEmail,

@@ -55,8 +55,8 @@ export default function NavBar() {
           
           {openMenu === 'propiedades' && (
             <ul className="absolute left-0 top-full mt-1 w-56 bg-white border border-neutral-200 rounded shadow-lg z-20">
-              <li><button onClick={() => handleNavigation('/portal/properties/rent')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">Arriendos</button></li>
               <li><button onClick={() => handleNavigation('/portal/properties/sale')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">Ventas</button></li>
+              <li><button onClick={() => handleNavigation('/portal/properties/rent')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">Arriendos</button></li>
               <li><button onClick={() => handleNavigation('/portal/services/management')} className="w-full text-left block px-4 py-2 text-sm text-neutral-900 hover:bg-primary/10 transition-colors">Administraciones</button></li>
             </ul>
           )}
