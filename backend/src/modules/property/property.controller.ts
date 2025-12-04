@@ -17,6 +17,7 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Response, Request } from 'express';
+import { plainToClass } from 'class-transformer';
 import {
   ApiTags,
   ApiOperation,
@@ -108,6 +109,93 @@ export class PropertyController {
       'Content-Disposition': 'attachment; filename="propiedades-en-arriendo.xlsx"',
     });
     res.send(buffer);
+  }
+
+  /**
+   * Public endpoint to publish property with multimedia (no authentication required)
+   */
+  @Post('public/publish')
+  @ApiTags('Properties')
+  @ApiOperation({ summary: 'Publish a property with multimedia (public - no auth required)' })
+  @ApiResponse({ status: 201, description: 'Property created successfully', type: Property })
+  @ApiResponse({ status: 400, description: 'Invalid input' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: CreatePropertyPayloadDto,
+    description: 'Property data with multimedia files',
+  })
+  @UseInterceptors(FilesInterceptor('multimediaFiles', 10, {
+    storage: diskStorage({
+      destination: (req, file, callback) => {
+        const isVideo = file.mimetype.startsWith('video/');
+        const subfolder = isVideo ? 'video' : 'img';
+        callback(null, `./public/properties/${subfolder}`);
+      },
+      filename: (req, file, callback) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = extname(file.originalname);
+        callback(null, `${uniqueSuffix}${ext}`);
+      },
+    }),
+    limits: { 
+      fileSize: 70 * 1024 * 1024,
+      files: 10
+    },
+    fileFilter: (req, file, callback) => {
+      const allowedMimes = [
+        'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+        'video/mp4', 'video/mpeg', 'video/quicktime', 'video/webm'
+      ];
+      
+      if (!allowedMimes.includes(file.mimetype)) {
+        callback(new Error(`Tipo de archivo ${file.mimetype} no permitido`), false);
+        return;
+      }
+
+      const isVideo = file.mimetype.startsWith('video/');
+      const maxSizeInBytes = isVideo ? 70 * 1024 * 1024 : 10 * 1024 * 1024;
+      const maxSizeLabel = isVideo ? '70MB' : '10MB';
+      const fileType = isVideo ? 'videos' : 'imágenes';
+
+      if (file.size > maxSizeInBytes) {
+        callback(new Error(`Archivo demasiado grande. Máximo permitido: ${maxSizeLabel} para ${fileType}`), false);
+        return;
+      }
+
+      callback(null, true);
+    }
+  }))
+  async publishPublic(
+    @Body() body: any,
+    @Req() request: any,
+    @UploadedFiles() files?: Express.Multer.File[]
+  ) {
+    console.log('🏠 [PropertyController] PUBLIC PUBLISH - STARTING PROPERTY CREATION');
+    
+    let createPropertyDto: CreatePropertyPayloadDto;
+    try {
+      if (body.data) {
+        createPropertyDto = typeof body.data === 'string'
+          ? JSON.parse(body.data)
+          : body.data;
+      } else {
+        createPropertyDto = body;
+      }
+    } catch (error) {
+      throw new BadRequestException(`Invalid JSON in data field: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+
+    // Validate the DTO
+    const validatedDto = await new ValidationPipe({
+      transform: true,
+      transformOptions: { enableImplicitConversion: true }
+    }).transform(createPropertyDto, { type: 'body', metatype: CreatePropertyPayloadDto });
+
+    console.log('✅ [PropertyController] DTO validated successfully');
+
+    // Call the service using createPropertyWithFiles with anonymous user
+    // The creatorId will be undefined, marking it as public submission
+    return this.propertyService.createPropertyWithFiles(validatedDto, 'anonymous', files || []);
   }
 
   @Post()

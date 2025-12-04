@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import StepperBaseForm, { StepperStep, BaseFormField } from '@/components/BaseForm/StepperBaseForm';
-import { listPropertyTypesPublic, getPropertyTypeCharacteristics, PropertyTypeWithFeatures, publishProperty } from '@/app/actions/properties';
+import { listPropertyTypesPublic, getPropertyTypeCharacteristics, PropertyTypeWithFeatures, publishPropertyPublic } from '@/app/actions/properties';
 import { getRegiones, getComunasByRegion } from '@/app/actions/commons';
 import Alert from '@/components/Alert/Alert';
 import PropertyCard, { PortalProperty } from '@/app/portal/ui/PropertyCard';
@@ -221,7 +221,7 @@ export default function PublishPropertyPage() {
         multimediaCount: multimedia?.length || 0
       });
       
-      const result = await publishProperty({
+      const result = await publishPropertyPublic({
         title: values.title as string,
         propertyTypeId: values.propertyTypeId as string,
         operationType: 'SALE', // o RENT según sea necesario

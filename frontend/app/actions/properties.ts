@@ -400,6 +400,81 @@ export interface PublishPropertyPayload {
   multimediaFiles?: File[];
 }
 
+export async function publishPropertyPublic(
+  payload: PublishPropertyPayload,
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  try {
+    console.log('📤 [publishPropertyPublic] Iniciando publicación de propiedad (público)');
+
+    // Crear FormData para enviar archivos y datos
+    const formData = new FormData();
+
+    // Agregar archivos de multimedia
+    if (payload.multimediaFiles && payload.multimediaFiles.length > 0) {
+      console.log('📸 [publishPropertyPublic] Agregando', payload.multimediaFiles.length, 'archivos de multimedia');
+      payload.multimediaFiles.forEach((file) => {
+        formData.append('multimediaFiles', file);
+      });
+    }
+
+    // Agregar datos de la propiedad como JSON string
+    const propertyData = {
+      title: payload.title,
+      propertyTypeId: payload.propertyTypeId,
+      operationType: payload.operationType || 'SALE',
+      builtSquareMeters: payload.builtSquareMeters,
+      landSquareMeters: payload.landSquareMeters,
+      bedrooms: payload.bedrooms,
+      bathrooms: payload.bathrooms,
+      parkingSpaces: payload.parkingSpaces,
+      floors: payload.floors,
+      constructionYear: payload.constructionYear,
+      price: payload.price,
+      currencyPrice: payload.currencyPrice,
+      region: payload.region,
+      city: payload.city,
+      address: payload.address,
+      coordinates: payload.coordinates,
+      contactName: payload.contactName,
+      contactPhone: payload.contactPhone,
+      contactEmail: payload.contactEmail,
+    };
+
+    formData.append('data', JSON.stringify(propertyData));
+
+    console.log('🌐 [publishPropertyPublic] Enviando a:', `${env.backendApiUrl}/properties/public/publish`);
+
+    const response = await fetch(
+      `${env.backendApiUrl}/properties/public/publish`,
+      {
+        method: 'POST',
+        body: formData,
+      },
+    );
+
+    console.log('📡 [publishPropertyPublic] Response status:', response.status);
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => null);
+      console.error('❌ [publishPropertyPublic] Error:', error);
+      return {
+        success: false,
+        error: error?.message || `HTTP ${response.status}`,
+      };
+    }
+
+    const propertyCreated = await response.json();
+    console.log('✅ [publishPropertyPublic] Propiedad publicada:', propertyCreated.id);
+    return { success: true, data: propertyCreated };
+  } catch (error) {
+    console.error('❌ [publishPropertyPublic] Error:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
 export async function publishProperty(
   payload: PublishPropertyPayload,
 ): Promise<{ success: boolean; data?: any; error?: string }> {
