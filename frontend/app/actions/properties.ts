@@ -244,6 +244,46 @@ export interface PropertyTypeWithFeatures {
   hasConstructionYear: boolean;
 }
 
+export async function listPropertyTypesPublic(): Promise<{
+  success: boolean;
+  data?: Array<{ id: string; name: string }>;
+  error?: string;
+}> {
+  try {
+    console.log('📥 [listPropertyTypesPublic] Starting (no auth required)...');
+    const url = `${env.backendApiUrl}/property-types/public/list`;
+    console.log('🌐 [listPropertyTypesPublic] Fetching from:', url);
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log('📡 [listPropertyTypesPublic] Response status:', response.status);
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      console.error('❌ [listPropertyTypesPublic] Error response:', errorData);
+      return { 
+        success: false, 
+        error: errorData?.message || `HTTP ${response.status}` 
+      };
+    }
+
+    const data = await response.json();
+    console.log('✅ [listPropertyTypesPublic] Data received:', data);
+    return { success: true, data };
+  } catch (error) {
+    console.error('❌ [listPropertyTypesPublic] Error:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    };
+  }
+}
+
 export async function listPropertyTypes(): Promise<{
   success: boolean;
   data?: Array<{ id: string; name: string }>;

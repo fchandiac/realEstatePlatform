@@ -59,6 +59,19 @@ export class PropertyTypesController {
   }
 
   /**
+   * Get all property types (public endpoint - no authentication required)
+   */
+  @Get('public/list')
+  @ApiOperation({ summary: 'Get property types (public - no auth required)' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of property types',
+  })
+  findAllPublic() {
+    return this.propertyTypesService.findAll();
+  }
+
+  /**
    * Get all property types (minimal data)
    */
   @Get('minimal')

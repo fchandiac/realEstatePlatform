@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import StepperBaseForm, { StepperStep, BaseFormField } from '@/components/BaseForm/StepperBaseForm';
-import { listPropertyTypes, getPropertyTypeCharacteristics, PropertyTypeWithFeatures, publishProperty } from '@/app/actions/properties';
+import { listPropertyTypesPublic, getPropertyTypeCharacteristics, PropertyTypeWithFeatures, publishProperty } from '@/app/actions/properties';
 import { getRegiones, getComunasByRegion } from '@/app/actions/commons';
 import Alert from '@/components/Alert/Alert';
 import PropertyCard, { PortalProperty } from '@/app/portal/ui/PropertyCard';
@@ -99,7 +99,7 @@ export default function PublishPropertyPage() {
       try {
         console.log('📥 [PublishProperty] Loading initial data...');
         const [typesResult, regionsResult] = await Promise.all([
-          listPropertyTypes(),
+          listPropertyTypesPublic(),
           getRegiones(),
         ]);
 
