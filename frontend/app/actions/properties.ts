@@ -250,12 +250,17 @@ export async function listPropertyTypes(): Promise<{
   error?: string;
 }> {
   try {
+    console.log('📥 [listPropertyTypes] Starting...');
     const session = await getServerSession(authOptions);
+    console.log('🔐 [listPropertyTypes] Session:', session?.user?.email, 'hasToken:', !!session?.accessToken);
+    
     if (!session?.accessToken) {
+      console.warn('⚠️ [listPropertyTypes] No access token');
       return { success: false, error: 'No authenticated' };
     }
 
     const url = `${env.backendApiUrl}/property-types`;
+    console.log('🌐 [listPropertyTypes] Fetching from:', url);
     
     const response = await fetch(url, {
       method: 'GET',
@@ -265,13 +270,17 @@ export async function listPropertyTypes(): Promise<{
       },
     });
 
+    console.log('📡 [listPropertyTypes] Response status:', response.status);
+
     // Si es 401, redirigir a inicio
     if (response.status === 401) {
+      console.warn('⚠️ [listPropertyTypes] Unauthorized (401)');
       redirect('/');
     }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
+      console.error('❌ [listPropertyTypes] Error response:', errorData);
       return { 
         success: false, 
         error: errorData?.message || `HTTP ${response.status}` 
@@ -279,9 +288,10 @@ export async function listPropertyTypes(): Promise<{
     }
 
     const data = await response.json();
+    console.log('✅ [listPropertyTypes] Data received:', data);
     return { success: true, data };
   } catch (error) {
-    console.error('Error listing property types:', error);
+    console.error('❌ [listPropertyTypes] Error:', error);
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Unknown error' 

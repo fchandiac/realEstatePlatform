@@ -97,20 +97,26 @@ export default function PublishPropertyPage() {
   useEffect(() => {
     const loadInitialData = async () => {
       try {
+        console.log('📥 [PublishProperty] Loading initial data...');
         const [typesResult, regionsResult] = await Promise.all([
           listPropertyTypes(),
           getRegiones(),
         ]);
 
+        console.log('📦 [PublishProperty] Types result:', typesResult);
+        console.log('📦 [PublishProperty] Regions result:', regionsResult);
+
         if (typesResult.success && typesResult.data) {
-          setPropertyTypes(
-            typesResult.data.map(pt => ({ id: pt.id, label: pt.name }))
-          );
+          const mappedTypes = typesResult.data.map(pt => ({ id: pt.id, label: pt.name }));
+          console.log('✅ [PublishProperty] Property types loaded:', mappedTypes);
+          setPropertyTypes(mappedTypes);
+        } else {
+          console.warn('⚠️ [PublishProperty] Types result not successful:', typesResult);
         }
 
         setRegions(regionsResult);
       } catch (error) {
-        console.error('Error loading initial data:', error);
+        console.error('❌ [PublishProperty] Error loading initial data:', error);
       }
     };
 
