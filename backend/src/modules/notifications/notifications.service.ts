@@ -38,6 +38,7 @@ export class NotificationsService {
     interestedUserId?: string,
     interestedUserName?: string,
     interestedUserEmail?: string,
+    interestedUserPhone?: string,
     interestedUserMessage?: string
   ): Promise<Notification[]> {
     console.log('🔄 notifyInterestOnProperty called with:', {
@@ -46,6 +47,7 @@ export class NotificationsService {
       interestedUserId,
       interestedUserName,
       interestedUserEmail,
+      interestedUserPhone,
       interestedUserMessage,
     });
 
@@ -67,7 +69,7 @@ export class NotificationsService {
 
     // Construir mensaje completo
     const fullMessage = interestedUserEmail && interestedUserMessage
-      ? `${interestedUserName || 'Usuario'} (${interestedUserEmail}): ${interestedUserMessage}`
+      ? `${interestedUserName || 'Usuario'} (${interestedUserEmail}, ${interestedUserPhone}): ${interestedUserMessage}`
       : `El usuario ${senderName} está interesado en la propiedad ${propertyId}.`;
 
     console.log('📝 Full message:', fullMessage);
@@ -89,12 +91,14 @@ export class NotificationsService {
         targetMails: interestedUserEmail ? [interestedUserEmail] : undefined,
         interestedUserEmail,
         interestedUserName,
+        interestedUserPhone,
         interestedUserMessage,
       };
 
       console.log(`📧 DTO being created:`, {
         interestedUserEmail: dto.interestedUserEmail,
         interestedUserName: dto.interestedUserName,
+        interestedUserPhone: dto.interestedUserPhone,
         interestedUserMessage: dto.interestedUserMessage,
       });
 

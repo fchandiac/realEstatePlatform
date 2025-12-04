@@ -130,6 +130,7 @@ export async function notifyPropertyInterest(data: {
   assignedAgentId?: string;
   name: string;
   email: string;
+  phone: string;
   message: string;
 }): Promise<{ success: boolean; error?: string }> {
   try {
@@ -146,6 +147,7 @@ export async function notifyPropertyInterest(data: {
       interestedUserId: currentUser?.id, // Will be undefined if not logged in
       interestedUserName: data.name,
       interestedUserEmail: data.email,
+      interestedUserPhone: data.phone,
       interestedUserMessage: data.message,
     };
 

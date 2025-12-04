@@ -81,6 +81,7 @@ export class NotificationsController {
         body.interestedUserId,
         body.interestedUserName,
         body.interestedUserEmail,
+        body.interestedUserPhone,
         body.interestedUserMessage
       );
     }
@@ -117,6 +118,7 @@ export class NotificationsController {
         body.interestedUserId,
         body.interestedUserName,
         body.interestedUserEmail,
+        body.interestedUserPhone,
         body.interestedUserMessage
       );
     }

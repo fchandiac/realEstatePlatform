@@ -66,6 +66,7 @@ export default function PropertyDetailClient({
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     message: '',
   });
   const [favoritesCount, setFavoritesCount] = useState(property.favoritesCount || 0);
@@ -200,7 +201,7 @@ export default function PropertyDetailClient({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.message) {
+    if (!formData.name || !formData.email || !formData.phone || !formData.message) {
       showAlert({
         message: 'Por favor completa todos los campos',
         type: 'warning',
@@ -217,6 +218,7 @@ export default function PropertyDetailClient({
         assignedAgentId: property.assignedAgent?.id,
         name: formData.name,
         email: formData.email,
+        phone: formData.phone,
         message: formData.message,
       });
 
@@ -235,7 +237,7 @@ export default function PropertyDetailClient({
         duration: 3000,
       });
 
-      setFormData({ name: '', email: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', message: '' });
     } catch (error) {
       showAlert({
         message: 'Error al enviar el mensaje. Intenta nuevamente.',
@@ -474,6 +476,16 @@ export default function PropertyDetailClient({
                   placeholder="Tu Correo Electrónico"
                   name="email"
                   value={formData.email}
+                  onChange={handleFormChange}
+                  disabled={isSubmitting}
+                />
+
+                <TextField
+                  label="Teléfono"
+                  type="tel"
+                  placeholder="+56 9 1234 5678"
+                  name="phone"
+                  value={formData.phone}
                   onChange={handleFormChange}
                   disabled={isSubmitting}
                 />

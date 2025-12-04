@@ -32,6 +32,10 @@ export class PropertyInterestDto {
 
   @IsString()
   @IsNotEmpty()
+  interestedUserPhone: string;
+
+  @IsString()
+  @IsNotEmpty()
   interestedUserMessage: string;
 }
 
@@ -91,6 +95,10 @@ export class CreateNotificationDto {
   @IsString()
   @IsOptional()
   interestedUserName?: string;
+
+  @IsString()
+  @IsOptional()
+  interestedUserPhone?: string;
 
   @IsString()
   @IsOptional()
