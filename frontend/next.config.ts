@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const webpack = require('webpack');
+
 const nextConfig: NextConfig = {
   // Ignore ESLint errors during `next build` to allow compiling while
   // we address linter/type issues incrementally.
@@ -48,7 +50,26 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  /* other config options here */
+  webpack: (config) => {
+    config.resolve = config.resolve || {};
+    config.resolve.fallback = {
+      ...(config.resolve.fallback || {}),
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
+      assert: require.resolve('assert'),
+      buffer: require.resolve('buffer'),
+      util: require.resolve('util'),
+      process: require.resolve('process/browser'),
+    };
+    config.plugins = config.plugins || [];
+    config.plugins.push(
+      new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+        process: ['process'],
+      })
+    );
+    return config;
+  },
 };
 
 export default nextConfig;

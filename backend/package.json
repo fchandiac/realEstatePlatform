@@ -75,7 +75,7 @@
     "@types/exceljs": "^0.5.3",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22.18.8",
+    "@types/node": "^22.19.2",
     "@types/nodemailer": "^7.0.4",
     "@types/supertest": "^6.0.2",
     "class-transformer": "^0.5.1",

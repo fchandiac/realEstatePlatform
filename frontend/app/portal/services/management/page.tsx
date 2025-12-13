@@ -1,79 +1,99 @@
 
 
-import React from 'react';
+
+'use client'
+
+
+
+import { ShieldCheck, ClipboardList, HeartHandshake } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+
+const ContactDialog = dynamic(() => import('@/components/ContactDialog/ContactDialog'), { ssr: false });
 
 export default function PropertyManagementServicePage() {
+  const COMPANY_NAME = "BRAVO SCHOTT PROPIEDADES";
+  const servicePoints = [
+    {
+      icon: ShieldCheck,
+      title: "30 Años de Experiencia",
+      description: "Durante tres décadas hemos administrado propiedades de forma eficiente y transparente. Más de 3.000 propietarios han confiado en nosotros para proteger y potenciar su inversión.",
+      keyStat: "Más de 3.000 propietarios confían en nosotros.",
+    },
+    {
+      icon: ClipboardList,
+      title: "Nos Hacemos Cargo de Todo",
+      description: "Gestionamos tu propiedad como si fuera nuestra: cobranza, mantenciones, coordinación de servicios, inspecciones, contratos y seguimiento continuo. Tú solo recibes resultados claros y actualizados.",
+      keyStat: "Gestión integral, cero preocupaciones.",
+    },
+    {
+      icon: HeartHandshake,
+      title: "Pasión por el Crecimiento Comunitario",
+      description: "Conocemos el mercado local, su comportamiento y oportunidades. Creemos en el desarrollo de nuestra ciudad y trabajamos para que cada propiedad que administramos aporte valor y estabilidad.",
+      keyStat: "Aportamos valor y estabilidad a la comunidad.",
+    },
+  ];
+
+  const [openContact, setOpenContact] = useState(false);
+  useEffect(() => {
+    const prev = document.body.style.background;
+    document.body.style.background = 'linear-gradient(180deg, #A3CED8 0%, #fff 100%)';
+    return () => { document.body.style.background = prev; };
+  }, []);
+
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-      {/* Header Section */}
-      <div className="mb-12 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary mb-4">Administración de Propiedades</h1>
-        <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-          Tu inversión, nuestra prioridad. Gestión integral, arriendo, mantención y cobranza para tu tranquilidad.
-        </p>
-      </div>
-
-      {/* Hero Multimedia */}
-      <div className="mb-12">
-        <div className="relative h-64 md:h-96 rounded-lg overflow-hidden shadow-lg">
-          <img
-            src="http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg"
-            alt="Administración de propiedades"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/20"></div>
-        </div>
-      </div>
-
-      {/* Descripción principal */}
-      <div className="mb-12">
-        <div className="bg-card rounded-lg p-6 md:p-8 shadow-sm">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6 text-center">¿Por qué elegirnos?</h2>
-          <div className="prose prose-lg max-w-none text-foreground">
-            <p className="text-base md:text-lg leading-relaxed whitespace-pre-line">
-              Administrar una propiedad puede volverse complicado: pagos atrasados, reparaciones urgentes, trámites legales y la preocupación constante por mantener el inmueble en buen estado. Nuestro objetivo es que tu inversión te dé tranquilidad, no problemas.
-            </p>
-            <p className="text-base md:text-lg leading-relaxed whitespace-pre-line">
-              Nos ocupamos de todo lo relacionado con tu alquiler: <span className="font-semibold text-primary">selección del inquilino, contratos, cobranza, control de gastos y mantenimiento preventivo</span> con proveedores de confianza. Cuidamos tu propiedad para preservar y potenciar su valor en el tiempo.
-            </p>
-            <p className="text-base md:text-lg leading-relaxed whitespace-pre-line">
-              Centralizamos la comunicación con el inquilino y la gestión operativa de la propiedad, mientras tú recibes <span className="font-semibold text-primary">reportes claros sobre tu rentabilidad</span>. Menos vacancia, ingresos estables y cero complicaciones.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Servicios Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        {/* Gestión de arriendo */}
-        <div className="bg-card border border-border rounded-lg p-6 md:p-8 shadow-sm">
-          <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
-              <span className="material-symbols-outlined text-primary text-2xl">person_search</span>
-            </div>
-            <h3 className="text-xl md:text-2xl font-bold text-primary">Gestión de arriendo</h3>
-          </div>
-          <p className="text-foreground leading-relaxed whitespace-pre-line">
-            Selección de arrendatarios, contratos, cobranza y administración de pagos.
+    <div className="min-h-screen font-sans antialiased text-foreground flex flex-col items-center py-0 mb-16">
+      {/* Hero Section */}
+      <header className="relative py-20 sm:py-28 overflow-hidden mb-12 w-full bg-transparent">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center bg-transparent">
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-primary mb-4 bg-transparent" style={{background: 'transparent'}}>
+            Servicios de Administración
+          </h1>
+          <p className="mt-2 text-lg sm:text-2xl font-light text-muted-foreground bg-transparent" style={{background: 'transparent'}}>
+            Protege, Potencia y Despreocúpate de tu Inversión Inmobiliaria con {COMPANY_NAME}
           </p>
         </div>
+      </header>
 
-        {/* Mantención y reportes */}
-        <div className="bg-card border border-border rounded-lg p-6 md:p-8 shadow-sm">
-          <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
-              <span className="material-symbols-outlined text-primary text-2xl">build</span>
-            </div>
-            <h3 className="text-xl md:text-2xl font-bold text-primary">Mantención y reportes</h3>
+      {/* Feature Cards */}
+      <section className="py-12 sm:py-20 w-full">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
+            {servicePoints.map((point, index) => (
+              <div
+                key={index}
+                className="bg-white p-8 sm:p-10 rounded-2xl shadow-lg border border-border flex flex-col h-full hover:shadow-xl transition-shadow"
+              >
+                <div className="flex items-center justify-center h-16 w-16 rounded-full mb-6 shadow" style={{ background: '#D4ECF4' }}>
+                  <point.icon size={32} strokeWidth={2} color="#2563eb" />
+                </div>
+                <h2 className="text-2xl font-bold mb-3 text-primary text-center">{point.title}</h2>
+                <p className="text-muted-foreground leading-relaxed mb-4 text-center">{point.description}</p>
+                <div className="mt-4 pt-4 border-t-2" style={{ borderColor: '#2563eb' }}>
+                  <p className="text-primary font-semibold italic text-sm">{point.keyStat}</p>
+                </div>
+              </div>
+            ))}
           </div>
-          <p className="text-foreground leading-relaxed whitespace-pre-line">
-            Mantención preventiva y correctiva, reportes mensuales y atención personalizada.
-          </p>
         </div>
-      </div>
+      </section>
 
-      {/* CTA final */}
-    
+
+      {/* CTA Final */}
+      <section className="py-12 w-full">
+        <div className="max-w-2xl mx-auto px-4 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-4">¿Listo para despreocuparte de tu propiedad?</h2>
+          <p className="text-muted-foreground mb-6">Solicita información y recibe una asesoría personalizada para la administración de tu inmueble.</p>
+          <button
+            type="button"
+            onClick={() => setOpenContact(true)}
+            className="inline-block bg-primary text-white font-semibold px-8 py-3 rounded-lg shadow hover:bg-primary/90 transition"
+          >
+            Solicita información de administración
+          </button>
+          <ContactDialog open={openContact} onClose={() => setOpenContact(false)} />
+        </div>
+      </section>
     </div>
   );
 }

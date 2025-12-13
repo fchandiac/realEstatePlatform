@@ -91,38 +91,42 @@ const ContactDialog: React.FC<ContactDialogProps> = ({ open, onClose }) => {
       scroll="paper"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
+
         <TextField
-          label="Tu Nombre"
-          placeholder="Juan Pérez"
+          label="Nombre"
+          placeholder="Nombre"
           value={nombre}
           onChange={(e: any) => setNombre(e.target.value)}
           disabled={loading}
           required
         />
 
+
         <TextField
-          label="Tu Correo Electrónico"
+          label="Correo Electrónico"
           type="email"
-          placeholder="tu@email.com"
+          placeholder="Correo Electrónico"
           value={email}
           onChange={(e: any) => setEmail(e.target.value)}
           disabled={loading}
           required
         />
 
+
         <TextField
-          label="Tu Teléfono"
+          label="Teléfono"
           type="tel"
-          placeholder="+56 9 1234 5678"
+          placeholder="Teléfono"
           value={telefono}
           onChange={(e: any) => setTelefono(e.target.value)}
           disabled={loading}
           required
         />
 
+
         <TextField
-          label="Tu Mensaje"
-          placeholder="Cuéntanos cómo podemos ayudarte..."
+          label="Mensaje"
+          placeholder="Mensaje"
           value={mensaje}
           onChange={(e: any) => setMensaje(e.target.value)}
           rows={4}
