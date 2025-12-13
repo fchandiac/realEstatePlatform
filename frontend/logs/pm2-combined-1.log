@@ -36032,3 +36032,77 @@
 2025-12-13T11:58:55:     }
 2025-12-13T11:58:55:   ]
 2025-12-13T11:58:55: }
+2025-12-13T15:16:43: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:16:46: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:16:49: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:16:52: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:16:56: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:16:59: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:02: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:05: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:08: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:11: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:14: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:17: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:20: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:23: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:26: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:29: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:33: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:36: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:39: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:42: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:17:45: [Error: Could not find a production build in the '.next' directory. Try building your app with 'next build' before starting the production server. https://nextjs.org/docs/messages/production-start-no-build-id]
+2025-12-13T15:18:54:  ⚠ "next start" does not work with "output: standalone" configuration. Use "node .next/standalone/server.js" instead.
+2025-12-13T15:18:54: > Ready on http://0.0.0.0:3001
+2025-12-13T15:19:09: 📡 Fetching from: http://72.61.6.232:3000/properties/published/filtered?page=1
+2025-12-13T15:19:09: 📦 Raw data from backend (first property mainImageUrl): http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612876-682533393.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007612900-759263497.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007717244-230787282.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648233-221757827.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1764007648264-32838595.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/video/1765567541502-737328412.mp4
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/video/1765567541502-737328412.mp4
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/video/1765567541502-737328412.mp4
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/video/1765567541502-737328412.mp4
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765563456808-527982013.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765563456808-527982013.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765563456808-527982013.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765563456808-527982013.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/video/1765563456814-905264095.mp4
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/video/1765563456814-905264095.mp4
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765567586151-414279297.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765567586151-414279297.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765567586151-414279297.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765567586151-414279297.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765626865918-483103210.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765626865918-483103210.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765626865945-784355394.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765626865945-784355394.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765626865918-483103210.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765626865918-483103210.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765626902459-265376793.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765626902459-265376793.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765626902459-265376793.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765626902459-265376793.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765626902400-218874266.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765626902400-218874266.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765626937096-298033765.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765626937096-298033765.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765626937096-298033765.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765626937096-298033765.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765564936099-385591590.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765564936099-385591590.jpg
+2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765564936099-385591590.jpg
+2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765564936099-385591590.jpg
+2025-12-13T15:19:09: ✅ Properties fetched: 9 items

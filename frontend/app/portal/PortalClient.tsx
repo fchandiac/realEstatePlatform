@@ -93,6 +93,13 @@ export default function PortalClient({ initialProperties, initialPagination }: P
         <PropertyFilter initialFilters={currentFilters} onFiltersChange={handleFiltersChange} isLoading={isLoading} />
       </div>
 
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-6 text-center">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-primary mb-2 tracking-tight">BRAVO SCHOTT PROPIEDADES</h1>
+        <p className="text-lg sm:text-xl text-muted-foreground font-light">
+          Seleccionamos propiedades con carácter, diseño y alto valor. Te acompañamos con un servicio personalizado y discreto para que encuentres un lugar a la altura de tus expectativas.
+        </p>
+      </div>
+
       {properties && properties.length > 0 ? (
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
           <ListProperties
