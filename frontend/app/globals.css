@@ -21,30 +21,33 @@
 /* Load Material Symbols Fonts locally first (before Google Fonts fallback) */
 @font-face {
   font-family: 'Material Symbols Outlined';
-  src: url('/fonts/Material_Symbols_Outlined/MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf') format('truetype');
+  src:
+    url('/fonts/Material_Symbols_Outlined/MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.woff2') format('woff2'),
+    url('/fonts/Material_Symbols_Outlined/MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf') format('truetype');
   font-weight: 100 700;
   font-style: normal;
-  font-display: block;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Material Symbols Rounded';
-  src: url('/fonts/Material_Symbols_Rounded/MaterialSymbolsRounded-VariableFont_FILL,GRAD,opsz,wght.ttf') format('truetype');
+  src:
+    url('/fonts/Material_Symbols_Rounded/MaterialSymbolsRounded-VariableFont_FILL,GRAD,opsz,wght.woff2') format('woff2'),
+    url('/fonts/Material_Symbols_Rounded/MaterialSymbolsRounded-VariableFont_FILL,GRAD,opsz,wght.ttf') format('truetype');
   font-weight: 100 700;
   font-style: normal;
-  font-display: block;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Material Symbols Sharp';
-  src: url('/fonts/Material_Symbols_Sharp/MaterialSymbolsSharp-VariableFont_FILL,GRAD,opsz,wght.ttf') format('truetype');
+  src:
+    url('/fonts/Material_Symbols_Sharp/MaterialSymbolsSharp-VariableFont_FILL,GRAD,opsz,wght.woff2') format('woff2'),
+    url('/fonts/Material_Symbols_Sharp/MaterialSymbolsSharp-VariableFont_FILL,GRAD,opsz,wght.ttf') format('truetype');
   font-weight: 100 700;
   font-style: normal;
-  font-display: block;
+  font-display: swap;
 }
-
-/* Fallback to Google Fonts if local fonts are not available */
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200&display=swap') layer(fallback);
 
 .material-symbols-outlined {
   font-family: "Material Symbols Outlined";

@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 };
 
 interface ResetPasswordPageProps {
-  searchParams: {
+  searchParams: Promise<{
     token?: string;
-  };
+  }>;
 }
 
 async function validatePasswordResetToken(token: string) {
@@ -47,7 +47,8 @@ async function validatePasswordResetToken(token: string) {
 }
 
 export default async function ResetPasswordPage({ searchParams }: ResetPasswordPageProps) {
-  const token = searchParams.token;
+  const params = await searchParams;
+  const token = params?.token;
 
   if (!token) {
     return (

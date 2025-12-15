@@ -86,9 +86,10 @@ const PortalFooter: React.FC = () => {
 
   const navigationLinks = [
     { label: "Inicio", href: "/portal" },
-    { label: "Propiedades", href: "/portal/properties" },
+    { label: "Arriendos", href: "/portal/properties/rent" },
+    { label: "Ventas", href: "/portal/properties/sale" },
+    { label: "Administraciones", href: "/portal/services/management" },
     { label: "Publica tu propiedad", href: "/portal/publish" },
-    { label: "Servicios", href: "/portal/services" },
     { label: "Nuestro equipo", href: "/portal/ourTeam" },
     { label: "Testimonios", href: "/portal/testimonials" },
     { label: "Blog", href: "/portal/blog" },
@@ -222,8 +223,9 @@ const PortalFooter: React.FC = () => {
             </div>
           </div>
 
-          <div className="md:col-span-2">
-            <div className="flex flex-wrap gap-4 mt-4">
+          <div className="md:col-span-2 space-y-4">
+            <h3 className="text-lg font-semibold text-background">Síguenos en redes sociales</h3>
+            <div className="flex flex-wrap gap-4">
               {identity?.socialMedia?.instagram?.available && (
                 <a
                   href={identity.socialMedia.instagram.url || '#'}
@@ -281,7 +283,6 @@ const PortalFooter: React.FC = () => {
         onClose={() => setFaqDialogOpen(false)}
         title="Preguntas frecuentes"
         size="md"
-        showCloseButton
         closeButtonText="Cerrar"
         actions={(
           <div className="flex justify-end">
