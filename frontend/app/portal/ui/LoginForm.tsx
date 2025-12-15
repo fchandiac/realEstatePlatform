@@ -1,6 +1,7 @@
 "use client";
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { TextField } from "@/components/TextField/TextField";
 import { useAuth } from "@/app/providers";
 import { useAlert } from "@/app/hooks/useAlert";
@@ -103,6 +104,16 @@ export default function LoginForm({ onClose, logoSrc, companyName, onRegisterCli
           className="w-full"
           data-test-id="portal-login-password"
         />
+        <div className="flex justify-end mt-2">
+          <Link
+            href="/portal/forgot-password"
+            className="text-xs text-primary hover:underline"
+            onClick={() => onClose?.()}
+            data-test-id="portal-login-forgot-password-link"
+          >
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </div>
         {error && (
           <p className="text-sm text-red-600" role="alert">
             {error}

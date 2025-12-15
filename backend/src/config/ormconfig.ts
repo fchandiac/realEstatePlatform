@@ -3,19 +3,22 @@ import { ConfigService } from '@nestjs/config';
 import * as mysql from 'mysql2';
 
 export const ormConfig = (
-  configService: ConfigService,
+	configService: ConfigService,
 ): TypeOrmModuleOptions => ({
-  type: 'mysql',
-  connectorPackage: 'mysql2',
-  host: configService.get<string>('DB_HOST') === 'localhost' ? '127.0.0.1' : configService.get<string>('DB_HOST'),
-  port: configService.get<number>('DB_PORT'),
-  username: configService.get<string>('DB_USERNAME'),
-  password: configService.get<string>('DB_PASSWORD'),
-  database: configService.get<string>('DB_DATABASE'),
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  synchronize: configService.get<string>('NODE_ENV') === 'development',
-  logging: configService.get<string>('NODE_ENV') === 'development',
-  migrations: [__dirname + '/../migrations/*{.ts,.js}'],
-  migrationsRun: false,
-  driver: mysql,
+	type: 'mysql',
+	connectorPackage: 'mysql2',
+	host:
+		configService.get<string>('DB_HOST') === 'localhost'
+			? '127.0.0.1'
+			: configService.get<string>('DB_HOST'),
+	port: configService.get<number>('DB_PORT'),
+	username: configService.get<string>('DB_USERNAME'),
+	password: configService.get<string>('DB_PASSWORD'),
+	database: configService.get<string>('DB_DATABASE'),
+	entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+	synchronize: configService.get<string>('NODE_ENV') === 'development',
+	logging: configService.get<string>('NODE_ENV') === 'development',
+	migrations: [__dirname + '/../migrations/*{.ts,.js}'],
+	migrationsRun: false,
+	driver: mysql,
 });

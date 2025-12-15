@@ -36106,3 +36106,10 @@
 2025-12-13T15:19:09: 🔗 Converting URL: http://72.61.6.232:3000/public/properties/img/1765564936099-385591590.jpg
 2025-12-13T15:19:09: ✅ Already absolute: http://72.61.6.232:3000/public/properties/img/1765564936099-385591590.jpg
 2025-12-13T15:19:09: ✅ Properties fetched: 9 items
+2025-12-13T16:49:12:  ⨯ SyntaxError: Bad escaped character in JSON at position 184
+2025-12-13T16:49:12:     at JSON.parse (<anonymous>) {
+2025-12-13T16:49:12:   digest: '2750327230'
+2025-12-13T16:49:12: }
+2025-12-13T16:49:13:   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2025-12-13T16:49:13:                                  Dload  Upload   Total   Spent    Left  Speed
+2025-12-13T16:49:13:   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  1723  100  1723    0     0   8920      0 --:--:-- --:--:-- --:--:--  8927

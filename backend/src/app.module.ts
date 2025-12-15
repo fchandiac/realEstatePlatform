@@ -28,6 +28,7 @@ import { SlideModule } from './modules/slide/slide.module';
 import { FileUploadService } from './common/services/file-upload.service';
 import { ConfigModule as CustomConfigModule } from './modules/config/config.module';
 import { MailModule } from './modules/mail/mail.module';
+import { PasswordRecoveryModule } from './modules/password-recovery/password-recovery.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { MailModule } from './modules/mail/mail.module';
     SlideModule,
     CustomConfigModule,
     MailModule,
+    PasswordRecoveryModule,
     // CustomConfigModule,
   ],
   controllers: [AppController],

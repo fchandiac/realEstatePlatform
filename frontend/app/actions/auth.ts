@@ -52,6 +52,7 @@ export interface PasswordResetRequest {
 export interface PasswordReset {
   token: string;
   newPassword: string;
+  confirmPassword?: string;
 }
 
 export interface ChangePasswordRequest {
@@ -187,7 +188,7 @@ export async function requestPasswordReset(data: PasswordResetRequest): Promise<
   error?: string;
 }> {
   try {
-    const response = await fetch(`${env.backendApiUrl}/auth/forgot-password`, {
+    const response = await fetch(`${env.backendApiUrl}/auth/password-recovery/request`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -203,8 +204,13 @@ export async function requestPasswordReset(data: PasswordResetRequest): Promise<
       };
     }
 
-    const result = await response.json();
-    return { success: true, message: result.message || 'Password reset email sent' };
+    const result = await response.json().catch(() => null);
+    return { 
+      success: true, 
+      message:
+        result?.message ||
+        'Si el correo existe, recibirás instrucciones para restablecer tu contraseña.',
+    };
   } catch (error) {
     console.error('Error requesting password reset:', error);
     return { 
@@ -223,12 +229,16 @@ export async function resetPassword(data: PasswordReset): Promise<{
   error?: string;
 }> {
   try {
-    const response = await fetch(`${env.backendApiUrl}/auth/reset-password`, {
+    const response = await fetch(`${env.backendApiUrl}/auth/password-recovery/reset`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        token: data.token,
+        password: data.newPassword,
+        confirmPassword: data.confirmPassword ?? data.newPassword,
+      }),
     });
 
     if (!response.ok) {

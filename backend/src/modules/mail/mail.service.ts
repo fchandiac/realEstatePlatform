@@ -180,4 +180,35 @@ export class MailService {
       }
     }
   }
+
+  /**
+   * Envía instrucciones para restablecer contraseña
+   */
+  async sendPasswordReset(
+    email: string,
+    firstName: string,
+    resetLink: string,
+    expiresInMinutes: number,
+  ): Promise<void> {
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        subject: 'Restablece tu contraseña - Real Estate Platform',
+        template: 'password-reset',
+        context: {
+          firstName,
+          resetLink,
+          expiresInMinutes,
+          companyName: 'Real Estate Platform',
+          currentYear: new Date().getFullYear(),
+        },
+      });
+      console.log(`✅ Correo de recuperación enviado a ${email}`);
+    } catch (error) {
+      console.error(`❌ Error enviando correo de recuperación a ${email}:`, error);
+      if (process.env.NODE_ENV !== 'production') {
+        throw error;
+      }
+    }
+  }
 }
