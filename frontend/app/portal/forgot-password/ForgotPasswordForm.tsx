@@ -54,24 +54,26 @@ export default function ForgotPasswordForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-md space-y-4"
+      className="w-full max-w-md flex flex-col items-center gap-4"
       data-test-id="portal-forgot-password-form"
     >
-      <TextField
-        label="Correo electrónico"
-        type="email"
-        required
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        placeholder="nombre@correo.com"
-        disabled={isSubmitting || isCompleted}
-        data-test-id="portal-forgot-password-email"
-      />
+      <div className="w-full max-w-sm">
+        <TextField
+          label="Correo electrónico"
+          type="email"
+          required
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          placeholder="nombre@correo.com"
+          disabled={isSubmitting || isCompleted}
+          data-test-id="portal-forgot-password-email"
+        />
+      </div>
 
       <Button
         type="submit"
         variant="primary"
-        className="w-full"
+        className="px-8 mx-auto"
         disabled={isSubmitting || isCompleted}
         data-test-id="portal-forgot-password-submit"
       >
