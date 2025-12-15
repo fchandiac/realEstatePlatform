@@ -222,11 +222,8 @@ const PortalFooter: React.FC = () => {
             </div>
           </div>
 
-          <div className="md:col-span-2 md:text-right">
-            <h3 className="text-lg font-semibold text-background">
-              Síguenos en redes sociales
-            </h3>
-            <div className="flex flex-wrap gap-4 mt-4 md:justify-end">
+          <div className="md:col-span-2">
+            <div className="flex flex-wrap gap-4 mt-4">
               {identity?.socialMedia?.instagram?.available && (
                 <a
                   href={identity.socialMedia.instagram.url || '#'}
